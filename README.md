@@ -12,7 +12,7 @@ The public header identifies this release with `LKS_VERSION_MAJOR == 1` and `LKS
 
 ## Build requirements
 
-The checked-in Visual Studio project was built with MSVC for x64 in C17 mode. Open `001.slnx` or `LayerKeySort.vcxproj` and select one of the existing x64 configurations:
+The checked-in Visual Studio project was built with MSVC for x64 in C17 mode. Open `LayerKeySort.slnx` or `LayerKeySort.vcxproj` and select one of the existing x64 configurations:
 
 - **Debug**
 - **Release**
@@ -93,7 +93,7 @@ This release does not provide serialization, a text parser for Path values, a fi
 
 ## License
 
-No `LICENSE` file is present. The license decision is pending; this repository does not declare a license here.
+Licensed under the MIT License. See [`LICENSE`](LICENSE).
 
 ## Project layout
 
@@ -103,7 +103,7 @@ src/                C implementation and private headers
 tests/              Property, stress, benchmark, and API-usage checks
 examples/basic.c    Minimal public-API example
 demo/main.c         Test and validation runner
-001.slnx            Visual Studio solution
+LayerKeySort.slnx            Visual Studio solution
 LayerKeySort.vcxproj         Visual Studio C project
 README.md           User documentation
 ```
