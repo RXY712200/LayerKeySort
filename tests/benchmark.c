@@ -5,16 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "hps.h"
+#include "layerkeysort.h"
 #include "benchmark.h"
-#include "../src/hps_alloc_internal.h"
-#include "../src/hps_path_internal.h"
-#include "../src/hps_group_internal.h"
-#include "../src/hps_tree_internal.h"
+#include "../src/lks_alloc_internal.h"
+#include "../src/lks_path_internal.h"
+#include "../src/lks_group_internal.h"
+#include "../src/lks_tree_internal.h"
 
-int hps_public_api_usage_smoke(void);
+int lks_public_api_usage_smoke(void);
 
-enum { HPS_BENCHMARK_ITEM_COUNT = 1000 };
+enum { LKS_BENCHMARK_ITEM_COUNT = 1000 };
 
 static const size_t benchmark_group_sizes[] = {
     1, 10, 26, 52, 100, 256, 500, 1000
@@ -49,7 +49,7 @@ typedef struct BenchmarkRow {
     BenchmarkPathStats final_stats;
 } BenchmarkRow;
 
-enum { HPS_ROBUSTNESS_SEED_COUNT = 20 };
+enum { LKS_ROBUSTNESS_SEED_COUNT = 20 };
 
 typedef struct BenchmarkSample {
     size_t build_comparisons;
@@ -138,7 +138,7 @@ static int benchmark_elapsed_ms(clock_t begin, clock_t end, double *out_ms)
 }
 
 static int benchmark_collect_path(
-    const HpsPath *path,
+    const LksPath *path,
     BenchmarkPathStats *stats
 )
 {
@@ -149,8 +149,8 @@ static int benchmark_collect_path(
     if (path == NULL || stats == NULL) {
         return 0;
     }
-    depth = hps_path_depth(path);
-    text_length = hps_path_text_length(path);
+    depth = lks_path_depth(path);
+    text_length = lks_path_text_length(path);
     if (!benchmark_add_size(&stats->total_depth, depth) ||
         !benchmark_add_size(&stats->total_text_length, text_length)) {
         return 0;
@@ -163,7 +163,7 @@ static int benchmark_collect_path(
     }
     for (index = 0; index < depth; ++index) {
         size_t level;
-        if (hps_path_get_level(path, index, &level) != HPS_STATUS_OK) {
+        if (lks_path_get_level(path, index, &level) != LKS_STATUS_OK) {
             return 0;
         }
         if (level > stats->max_level) {
@@ -174,23 +174,23 @@ static int benchmark_collect_path(
 }
 
 static int benchmark_collect_batch_paths(
-    const HpsGroupBatch *batch,
+    const LksGroupBatch *batch,
     BenchmarkPathStats *stats
 )
 {
     size_t group_index;
 
     for (group_index = 0;
-         group_index < hps_group_batch_group_count(batch);
+         group_index < lks_group_batch_group_count(batch);
          ++group_index) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
+        const LksGroup *group = lks_group_batch_group_at(batch, group_index);
         size_t item_index;
 
         if (group == NULL) {
             return 0;
         }
-        for (item_index = 0; item_index < hps_group_size(group); ++item_index) {
-            if (!benchmark_collect_path(hps_group_path_at(group, item_index), stats)) {
+        for (item_index = 0; item_index < lks_group_size(group); ++item_index) {
+            if (!benchmark_collect_path(lks_group_path_at(group, item_index), stats)) {
                 return 0;
             }
         }
@@ -199,26 +199,26 @@ static int benchmark_collect_batch_paths(
 }
 
 static int benchmark_validate_final(
-    const HpsGroup *group,
+    const LksGroup *group,
     size_t count,
     BenchmarkPathStats *stats
 )
 {
     size_t index;
 
-    if (hps_group_size(group) != count) {
+    if (lks_group_size(group) != count) {
         return 0;
     }
     for (index = 0; index < count; ++index) {
-        void *item = hps_group_item_at(group, index);
+        void *item = lks_group_item_at(group, index);
         if (item == NULL || *(const int *)item != (int)index ||
-            !benchmark_collect_path(hps_group_path_at(group, index), stats)) {
+            !benchmark_collect_path(lks_group_path_at(group, index), stats)) {
             return 0;
         }
         if (index > 0) {
             int path_order;
-            if (hps_path_compare(hps_group_path_at(group, index - 1),
-                    hps_group_path_at(group, index), &path_order) != HPS_STATUS_OK ||
+            if (lks_path_compare(lks_group_path_at(group, index - 1),
+                    lks_group_path_at(group, index), &path_order) != LKS_STATUS_OK ||
                 path_order != -1) {
                 return 0;
             }
@@ -244,26 +244,26 @@ static void benchmark_shuffle(int *values, size_t count, uint32_t seed)
     }
 }
 
-int hps_run_group_size_benchmark(void)
+int lks_run_group_size_benchmark(void)
 {
-    int values[HPS_BENCHMARK_ITEM_COUNT];
-    void *items[HPS_BENCHMARK_ITEM_COUNT];
+    int values[LKS_BENCHMARK_ITEM_COUNT];
+    void *items[LKS_BENCHMARK_ITEM_COUNT];
     BenchmarkRow rows[sizeof(benchmark_group_sizes) / sizeof(benchmark_group_sizes[0])];
     size_t index;
-    HpsComparator comparator;
+    LksComparator comparator;
     BenchmarkCompareContext counter;
 
-    for (index = 0; index < HPS_BENCHMARK_ITEM_COUNT; ++index) {
+    for (index = 0; index < LKS_BENCHMARK_ITEM_COUNT; ++index) {
         values[index] = (int)index;
     }
-    benchmark_shuffle(values, HPS_BENCHMARK_ITEM_COUNT, UINT32_C(0xC0FFEE));
-    for (index = 0; index < HPS_BENCHMARK_ITEM_COUNT; ++index) {
+    benchmark_shuffle(values, LKS_BENCHMARK_ITEM_COUNT, UINT32_C(0xC0FFEE));
+    for (index = 0; index < LKS_BENCHMARK_ITEM_COUNT; ++index) {
         items[index] = &values[index];
     }
 
     comparator.compare = benchmark_compare_int;
     comparator.context = &counter;
-    printf("HPSort GroupSize Benchmark\n");
+    printf("LayerKeySort GroupSize Benchmark\n");
     printf("N=1000\n");
     printf("Dataset=Deterministic shuffled permutation 0..999\n");
     printf("Seed=0xC0FFEE\n");
@@ -272,48 +272,48 @@ int hps_run_group_size_benchmark(void)
     for (index = 0; index < sizeof(benchmark_group_sizes) /
             sizeof(benchmark_group_sizes[0]); ++index) {
         BenchmarkRow *row = &rows[index];
-        HpsGroupBatch *batch = NULL;
-        HpsGroup *final_group = NULL;
+        LksGroupBatch *batch = NULL;
+        LksGroup *final_group = NULL;
         clock_t begin;
         clock_t end;
-        HpsStatus status;
+        LksStatus status;
 
         memset(row, 0, sizeof(*row));
         row->group_size = benchmark_group_sizes[index];
         counter.comparison_count = 0;
         counter.overflowed = 0;
         begin = clock();
-        status = hps_group_batch_build(items, HPS_BENCHMARK_ITEM_COUNT,
+        status = lks_group_batch_build(items, LKS_BENCHMARK_ITEM_COUNT,
             row->group_size, &comparator, &batch);
         end = clock();
-        if (status != HPS_STATUS_OK || batch == NULL || counter.overflowed ||
+        if (status != LKS_STATUS_OK || batch == NULL || counter.overflowed ||
             !benchmark_elapsed_ms(begin, end, &row->build_ms)) {
             printf("BENCHMARK FAILED GroupSize=%lu: Batch build failed\n",
                 (unsigned long)row->group_size);
-            hps_group_batch_destroy(batch);
+            lks_group_batch_destroy(batch);
             return 1;
         }
         row->build_comparisons = counter.comparison_count;
-        row->groups = hps_group_batch_group_count(batch);
-        if (hps_group_batch_total_size(batch) != HPS_BENCHMARK_ITEM_COUNT ||
+        row->groups = lks_group_batch_group_count(batch);
+        if (lks_group_batch_total_size(batch) != LKS_BENCHMARK_ITEM_COUNT ||
             !benchmark_collect_batch_paths(batch, &row->local_stats)) {
             printf("BENCHMARK FAILED GroupSize=%lu: local Group validation/statistics failed\n",
                 (unsigned long)row->group_size);
-            hps_group_batch_destroy(batch);
+            lks_group_batch_destroy(batch);
             return 1;
         }
 
         counter.comparison_count = 0;
         counter.overflowed = 0;
         begin = clock();
-        status = hps_group_batch_merge_all(batch, &comparator, &final_group);
+        status = lks_group_batch_merge_all(batch, &comparator, &final_group);
         end = clock();
-        if (status != HPS_STATUS_OK || final_group == NULL || counter.overflowed ||
+        if (status != LKS_STATUS_OK || final_group == NULL || counter.overflowed ||
             !benchmark_elapsed_ms(begin, end, &row->merge_ms)) {
             printf("BENCHMARK FAILED GroupSize=%lu: merge_all failed\n",
                 (unsigned long)row->group_size);
-            hps_group_destroy(final_group);
-            hps_group_batch_destroy(batch);
+            lks_group_destroy(final_group);
+            lks_group_batch_destroy(batch);
             return 1;
         }
         row->merge_comparisons = counter.comparison_count;
@@ -321,18 +321,18 @@ int hps_run_group_size_benchmark(void)
             !benchmark_add_size(&row->total_comparisons, row->merge_comparisons)) {
             printf("BENCHMARK FAILED GroupSize=%lu: comparison count overflow\n",
                 (unsigned long)row->group_size);
-            hps_group_destroy(final_group);
-            hps_group_batch_destroy(batch);
+            lks_group_destroy(final_group);
+            lks_group_batch_destroy(batch);
             return 1;
         }
         row->total_ms = row->build_ms + row->merge_ms;
 
-        if (!benchmark_validate_final(final_group, HPS_BENCHMARK_ITEM_COUNT,
+        if (!benchmark_validate_final(final_group, LKS_BENCHMARK_ITEM_COUNT,
                 &row->final_stats)) {
             printf("BENCHMARK FAILED GroupSize=%lu: Final Group incorrect\n",
                 (unsigned long)row->group_size);
-            hps_group_destroy(final_group);
-            hps_group_batch_destroy(batch);
+            lks_group_destroy(final_group);
+            lks_group_batch_destroy(batch);
             return 1;
         }
 
@@ -345,16 +345,16 @@ int hps_run_group_size_benchmark(void)
             row->build_ms,
             row->merge_ms,
             row->total_ms,
-            (double)row->local_stats.total_depth / HPS_BENCHMARK_ITEM_COUNT,
+            (double)row->local_stats.total_depth / LKS_BENCHMARK_ITEM_COUNT,
             (unsigned long)row->local_stats.max_depth,
             (unsigned long)row->local_stats.max_level,
-            (double)row->final_stats.total_depth / HPS_BENCHMARK_ITEM_COUNT,
+            (double)row->final_stats.total_depth / LKS_BENCHMARK_ITEM_COUNT,
             (unsigned long)row->final_stats.max_depth,
             (unsigned long)row->final_stats.max_level,
-            (double)row->final_stats.total_text_length / HPS_BENCHMARK_ITEM_COUNT);
+            (double)row->final_stats.total_text_length / LKS_BENCHMARK_ITEM_COUNT);
 
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
     }
 
     printf("PathStructureProxy,GroupSize,LocalTotalDepth,LocalAvgDepth,LocalMaxDepth,LocalTotalTextLength,LocalAvgTextLength,LocalMaxTextLength,LocalMaxLevel,FinalTotalDepth,FinalAvgDepth,FinalMaxDepth,FinalTotalTextLength,FinalAvgTextLength,FinalMaxTextLength,FinalMaxLevel\n");
@@ -364,17 +364,17 @@ int hps_run_group_size_benchmark(void)
         printf("STRUCTURE,%lu,%lu,%.3f,%lu,%lu,%.3f,%lu,%lu,%lu,%.3f,%lu,%lu,%.3f,%lu,%lu\n",
             (unsigned long)row->group_size,
             (unsigned long)row->local_stats.total_depth,
-            (double)row->local_stats.total_depth / HPS_BENCHMARK_ITEM_COUNT,
+            (double)row->local_stats.total_depth / LKS_BENCHMARK_ITEM_COUNT,
             (unsigned long)row->local_stats.max_depth,
             (unsigned long)row->local_stats.total_text_length,
-            (double)row->local_stats.total_text_length / HPS_BENCHMARK_ITEM_COUNT,
+            (double)row->local_stats.total_text_length / LKS_BENCHMARK_ITEM_COUNT,
             (unsigned long)row->local_stats.max_text_length,
             (unsigned long)row->local_stats.max_level,
             (unsigned long)row->final_stats.total_depth,
-            (double)row->final_stats.total_depth / HPS_BENCHMARK_ITEM_COUNT,
+            (double)row->final_stats.total_depth / LKS_BENCHMARK_ITEM_COUNT,
             (unsigned long)row->final_stats.max_depth,
             (unsigned long)row->final_stats.total_text_length,
-            (double)row->final_stats.total_text_length / HPS_BENCHMARK_ITEM_COUNT,
+            (double)row->final_stats.total_text_length / LKS_BENCHMARK_ITEM_COUNT,
             (unsigned long)row->final_stats.max_text_length,
             (unsigned long)row->final_stats.max_level);
     }
@@ -412,7 +412,7 @@ static double benchmark_distribution_stddev(
     const BenchmarkDistribution *distribution
 )
 {
-    return sqrt(distribution->m2 / (double)HPS_ROBUSTNESS_SEED_COUNT);
+    return sqrt(distribution->m2 / (double)LKS_ROBUSTNESS_SEED_COUNT);
 }
 
 static int benchmark_run_robustness_sample(
@@ -420,25 +420,25 @@ static int benchmark_run_robustness_sample(
     uint32_t seed,
     int *values,
     void **items,
-    HpsComparator *comparator,
+    LksComparator *comparator,
     BenchmarkSample *sample,
     size_t *out_groups
 )
 {
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *final_group = NULL;
+    LksGroupBatch *batch = NULL;
+    LksGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     clock_t begin;
     clock_t end;
-    HpsStatus status;
+    LksStatus status;
     size_t index;
 
-    for (index = 0; index < HPS_BENCHMARK_ITEM_COUNT; ++index) {
+    for (index = 0; index < LKS_BENCHMARK_ITEM_COUNT; ++index) {
         values[index] = (int)index;
     }
-    benchmark_shuffle(values, HPS_BENCHMARK_ITEM_COUNT, seed);
-    for (index = 0; index < HPS_BENCHMARK_ITEM_COUNT; ++index) {
+    benchmark_shuffle(values, LKS_BENCHMARK_ITEM_COUNT, seed);
+    for (index = 0; index < LKS_BENCHMARK_ITEM_COUNT; ++index) {
         items[index] = &values[index];
     }
     memset(sample, 0, sizeof(*sample));
@@ -446,76 +446,76 @@ static int benchmark_run_robustness_sample(
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = hps_group_batch_build(items, HPS_BENCHMARK_ITEM_COUNT,
+    status = lks_group_batch_build(items, LKS_BENCHMARK_ITEM_COUNT,
         group_size, comparator, &batch);
     end = clock();
-    if (status != HPS_STATUS_OK || batch == NULL || counter->overflowed ||
+    if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->build_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: Batch build failed\n",
             (unsigned long)seed, (unsigned long)group_size);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->build_comparisons = counter->comparison_count;
-    *out_groups = hps_group_batch_group_count(batch);
-    if (hps_group_batch_total_size(batch) != HPS_BENCHMARK_ITEM_COUNT ||
+    *out_groups = lks_group_batch_group_count(batch);
+    if (lks_group_batch_total_size(batch) != LKS_BENCHMARK_ITEM_COUNT ||
         !benchmark_collect_batch_paths(batch, &sample->local_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: local Group validation/statistics failed\n",
             (unsigned long)seed, (unsigned long)group_size);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = hps_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_group_batch_merge_all(batch, comparator, &final_group);
     end = clock();
-    if (status != HPS_STATUS_OK || final_group == NULL || counter->overflowed ||
+    if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->merge_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: merge_all failed\n",
             (unsigned long)seed, (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->merge_comparisons = counter->comparison_count;
     if (sample->build_comparisons > (size_t)-1 - sample->merge_comparisons) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: comparison count overflow\n",
             (unsigned long)seed, (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->total_comparisons = sample->build_comparisons +
         sample->merge_comparisons;
     sample->total_ms = sample->build_ms + sample->merge_ms;
-    if (!benchmark_validate_final(final_group, HPS_BENCHMARK_ITEM_COUNT,
+    if (!benchmark_validate_final(final_group, LKS_BENCHMARK_ITEM_COUNT,
             &sample->final_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: Final Group incorrect\n",
             (unsigned long)seed, (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
 
-    hps_group_destroy(final_group);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(final_group);
+    lks_group_batch_destroy(batch);
     return 1;
 }
 
-int hps_run_group_size_robustness_benchmark(void)
+int lks_run_group_size_robustness_benchmark(void)
 {
     enum {
         GROUP_SIZE_COUNT = sizeof(robustness_group_sizes) /
             sizeof(robustness_group_sizes[0])
     };
-    BenchmarkSample samples[GROUP_SIZE_COUNT][HPS_ROBUSTNESS_SEED_COUNT];
+    BenchmarkSample samples[GROUP_SIZE_COUNT][LKS_ROBUSTNESS_SEED_COUNT];
     BenchmarkAggregate aggregates[GROUP_SIZE_COUNT];
     size_t wins[GROUP_SIZE_COUNT];
-    int values[HPS_BENCHMARK_ITEM_COUNT];
-    void *items[HPS_BENCHMARK_ITEM_COUNT];
-    HpsComparator comparator;
+    int values[LKS_BENCHMARK_ITEM_COUNT];
+    void *items[LKS_BENCHMARK_ITEM_COUNT];
+    LksComparator comparator;
     BenchmarkCompareContext counter;
     size_t group_index;
     size_t seed_index;
@@ -530,12 +530,12 @@ int hps_run_group_size_robustness_benchmark(void)
     comparator.compare = benchmark_compare_int;
     comparator.context = &counter;
 
-    printf("HPSort GroupSize Robustness Benchmark\n");
+    printf("LayerKeySort GroupSize Robustness Benchmark\n");
     printf("N=1000\n");
     printf("Seeds=20\n");
     printf("SeedStart=0xC0FFEE\n");
 
-    for (seed_index = 0; seed_index < HPS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
         uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
         for (group_index = 0; group_index < GROUP_SIZE_COUNT; ++group_index) {
             size_t groups = 0;
@@ -560,7 +560,7 @@ int hps_run_group_size_robustness_benchmark(void)
         }
     }
 
-    if (completed_samples != GROUP_SIZE_COUNT * HPS_ROBUSTNESS_SEED_COUNT) {
+    if (completed_samples != GROUP_SIZE_COUNT * LKS_ROBUSTNESS_SEED_COUNT) {
         printf("BENCHMARK FAILED: completed sample count mismatch\n");
         return 1;
     }
@@ -575,15 +575,15 @@ int hps_run_group_size_robustness_benchmark(void)
         double final_avg_depth_total = 0.0;
         double final_avg_text_length_total = 0.0;
 
-        for (seed_index = 0; seed_index < HPS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
+        for (seed_index = 0; seed_index < LKS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
             const BenchmarkSample *sample = &samples[group_index][seed_index];
             double local_avg_depth = (double)sample->local_stats.total_depth /
-                HPS_BENCHMARK_ITEM_COUNT;
+                LKS_BENCHMARK_ITEM_COUNT;
             double final_avg_depth = (double)sample->final_stats.total_depth /
-                HPS_BENCHMARK_ITEM_COUNT;
+                LKS_BENCHMARK_ITEM_COUNT;
             double final_avg_text_length =
                 (double)sample->final_stats.total_text_length /
-                HPS_BENCHMARK_ITEM_COUNT;
+                LKS_BENCHMARK_ITEM_COUNT;
 
             benchmark_distribution_add(&aggregate->build_comparisons,
                 sample->build_comparisons, seed_index);
@@ -611,21 +611,21 @@ int hps_run_group_size_robustness_benchmark(void)
                 aggregate->final_max_level_worst = sample->final_stats.max_level;
             }
         }
-        aggregate->build_ms_mean = build_ms_total / HPS_ROBUSTNESS_SEED_COUNT;
-        aggregate->merge_ms_mean = merge_ms_total / HPS_ROBUSTNESS_SEED_COUNT;
-        aggregate->total_ms_mean = total_ms_total / HPS_ROBUSTNESS_SEED_COUNT;
+        aggregate->build_ms_mean = build_ms_total / LKS_ROBUSTNESS_SEED_COUNT;
+        aggregate->merge_ms_mean = merge_ms_total / LKS_ROBUSTNESS_SEED_COUNT;
+        aggregate->total_ms_mean = total_ms_total / LKS_ROBUSTNESS_SEED_COUNT;
         aggregate->local_avg_depth_mean = local_avg_depth_total /
-            HPS_ROBUSTNESS_SEED_COUNT;
+            LKS_ROBUSTNESS_SEED_COUNT;
         aggregate->final_avg_depth_mean = final_avg_depth_total /
-            HPS_ROBUSTNESS_SEED_COUNT;
+            LKS_ROBUSTNESS_SEED_COUNT;
         aggregate->final_avg_text_length_mean = final_avg_text_length_total /
-            HPS_ROBUSTNESS_SEED_COUNT;
+            LKS_ROBUSTNESS_SEED_COUNT;
         if (aggregate->group_size == 500) {
             group_500_index = group_index;
         }
     }
 
-    for (seed_index = 0; seed_index < HPS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
         size_t minimum = (size_t)-1;
         for (group_index = 0; group_index < GROUP_SIZE_COUNT; ++group_index) {
             if (samples[group_index][seed_index].total_comparisons < minimum) {
@@ -687,7 +687,7 @@ int hps_run_group_size_robustness_benchmark(void)
     }
 
     printf("Seed,GS64,GS100,GS128,GS192,GS256,GS320,GS384,GS448,GS500,GS512,GS640,GS768,GS1000\n");
-    for (seed_index = 0; seed_index < HPS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_ROBUSTNESS_SEED_COUNT; ++seed_index) {
         uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
         printf("0x%08lX", (unsigned long)seed);
         for (group_index = 0; group_index < GROUP_SIZE_COUNT; ++group_index) {
@@ -716,16 +716,16 @@ int hps_run_group_size_robustness_benchmark(void)
 }
 
 enum {
-    HPS_SCALE_N_COUNT = 4,
-    HPS_SCALE_SEED_COUNT = 5,
-    HPS_SCALE_MAX_CANDIDATES = 7
+    LKS_SCALE_N_COUNT = 4,
+    LKS_SCALE_SEED_COUNT = 5,
+    LKS_SCALE_MAX_CANDIDATES = 7
 };
 
 typedef struct BenchmarkScaleCandidate {
     size_t count;
     size_t group_size;
     size_t groups;
-    BenchmarkSample samples[HPS_SCALE_SEED_COUNT];
+    BenchmarkSample samples[LKS_SCALE_SEED_COUNT];
     BenchmarkAggregate aggregate;
     size_t total_comparison_sum;
 } BenchmarkScaleCandidate;
@@ -733,13 +733,13 @@ typedef struct BenchmarkScaleCandidate {
 typedef struct BenchmarkScaleRun {
     size_t count;
     size_t candidate_count;
-    BenchmarkScaleCandidate candidates[HPS_SCALE_MAX_CANDIDATES];
+    BenchmarkScaleCandidate candidates[LKS_SCALE_MAX_CANDIDATES];
 } BenchmarkScaleRun;
 
 static size_t benchmark_scale_candidates(size_t count, size_t *candidates)
 {
     static const size_t fixed_sizes[] = { 128, 256, 512, 1024 };
-    size_t raw[HPS_SCALE_MAX_CANDIDATES];
+    size_t raw[LKS_SCALE_MAX_CANDIDATES];
     size_t raw_count = 0;
     size_t index;
     size_t unique_count = 0;
@@ -781,56 +781,56 @@ static int benchmark_run_scale_sample(
     size_t group_size,
     uint32_t seed,
     void **items,
-    HpsComparator *comparator,
+    LksComparator *comparator,
     BenchmarkSample *sample,
     size_t *out_groups
 )
 {
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *final_group = NULL;
+    LksGroupBatch *batch = NULL;
+    LksGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     clock_t begin;
     clock_t end;
-    HpsStatus status;
+    LksStatus status;
 
     memset(sample, 0, sizeof(*sample));
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = hps_group_batch_build(items, count, group_size, comparator, &batch);
+    status = lks_group_batch_build(items, count, group_size, comparator, &batch);
     end = clock();
-    if (status != HPS_STATUS_OK || batch == NULL || counter->overflowed ||
+    if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->build_ms)) {
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: Batch build failed (%s)\n",
             (unsigned long)count, (unsigned long)seed,
-            (unsigned long)group_size, hps_status_string(status));
-        hps_group_batch_destroy(batch);
+            (unsigned long)group_size, lks_status_string(status));
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->build_comparisons = counter->comparison_count;
-    *out_groups = hps_group_batch_group_count(batch);
-    if (hps_group_batch_total_size(batch) != count ||
+    *out_groups = lks_group_batch_group_count(batch);
+    if (lks_group_batch_total_size(batch) != count ||
         !benchmark_collect_batch_paths(batch, &sample->local_stats)) {
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: local Path statistics failed\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = hps_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_group_batch_merge_all(batch, comparator, &final_group);
     end = clock();
-    if (status != HPS_STATUS_OK || final_group == NULL || counter->overflowed ||
+    if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->merge_ms)) {
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: merge_all failed (%s)\n",
             (unsigned long)count, (unsigned long)seed,
-            (unsigned long)group_size, hps_status_string(status));
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+            (unsigned long)group_size, lks_status_string(status));
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->merge_comparisons = counter->comparison_count;
@@ -838,8 +838,8 @@ static int benchmark_run_scale_sample(
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: comparison count overflow\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->total_comparisons = sample->build_comparisons +
@@ -849,13 +849,13 @@ static int benchmark_run_scale_sample(
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: Final Group or adjacent Path order incorrect\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
 
-    hps_group_destroy(final_group);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(final_group);
+    lks_group_batch_destroy(batch);
     return 1;
 }
 
@@ -873,7 +873,7 @@ static int benchmark_scale_aggregate(BenchmarkScaleCandidate *candidate)
     candidate->aggregate.group_size = candidate->group_size;
     candidate->aggregate.groups = candidate->groups;
     candidate->total_comparison_sum = 0;
-    for (seed_index = 0; seed_index < HPS_SCALE_SEED_COUNT; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_SCALE_SEED_COUNT; ++seed_index) {
         const BenchmarkSample *sample = &candidate->samples[seed_index];
         double local_avg_depth = (double)sample->local_stats.total_depth /
             (double)candidate->count;
@@ -920,15 +920,15 @@ static int benchmark_scale_aggregate(BenchmarkScaleCandidate *candidate)
                 sample->final_stats.max_level;
         }
     }
-    candidate->aggregate.build_ms_mean = build_ms_total / HPS_SCALE_SEED_COUNT;
-    candidate->aggregate.merge_ms_mean = merge_ms_total / HPS_SCALE_SEED_COUNT;
-    candidate->aggregate.total_ms_mean = total_ms_total / HPS_SCALE_SEED_COUNT;
+    candidate->aggregate.build_ms_mean = build_ms_total / LKS_SCALE_SEED_COUNT;
+    candidate->aggregate.merge_ms_mean = merge_ms_total / LKS_SCALE_SEED_COUNT;
+    candidate->aggregate.total_ms_mean = total_ms_total / LKS_SCALE_SEED_COUNT;
     candidate->aggregate.local_avg_depth_mean = local_depth_total /
-        HPS_SCALE_SEED_COUNT;
+        LKS_SCALE_SEED_COUNT;
     candidate->aggregate.final_avg_depth_mean = final_depth_total /
-        HPS_SCALE_SEED_COUNT;
+        LKS_SCALE_SEED_COUNT;
     candidate->aggregate.final_avg_text_length_mean = final_text_total /
-        HPS_SCALE_SEED_COUNT;
+        LKS_SCALE_SEED_COUNT;
     return 1;
 }
 
@@ -946,24 +946,24 @@ static const BenchmarkScaleCandidate *benchmark_scale_find_candidate(
     return NULL;
 }
 
-int hps_run_group_size_scale_benchmark(void)
+int lks_run_group_size_scale_benchmark(void)
 {
-    static const size_t scale_counts[HPS_SCALE_N_COUNT] = {
+    static const size_t scale_counts[LKS_SCALE_N_COUNT] = {
         1000, 2000, 5000, 10000
     };
-    BenchmarkScaleRun runs[HPS_SCALE_N_COUNT];
+    BenchmarkScaleRun runs[LKS_SCALE_N_COUNT];
     size_t run_index;
     size_t completed_samples = 0;
 
     memset(runs, 0, sizeof(runs));
-    printf("HPSort Scale Benchmark\n");
+    printf("LayerKeySort Scale Benchmark\n");
     printf("N=1000,2000,5000,10000; Seeds=5; SeedStart=0xC0FFEE\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         BenchmarkScaleRun *run = &runs[run_index];
         size_t count = scale_counts[run_index];
         int *values;
         void **items;
-        size_t candidate_sizes[HPS_SCALE_MAX_CANDIDATES];
+        size_t candidate_sizes[LKS_SCALE_MAX_CANDIDATES];
         size_t candidate_index;
 
         run->count = count;
@@ -992,14 +992,14 @@ int hps_run_group_size_scale_benchmark(void)
 
         {
             size_t seed_index;
-            HpsComparator comparator;
+            LksComparator comparator;
             BenchmarkCompareContext counter;
 
             counter.comparison_count = 0;
             counter.overflowed = 0;
             comparator.compare = benchmark_compare_int;
             comparator.context = &counter;
-            for (seed_index = 0; seed_index < HPS_SCALE_SEED_COUNT; ++seed_index) {
+            for (seed_index = 0; seed_index < LKS_SCALE_SEED_COUNT; ++seed_index) {
                 uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
                 size_t value_index;
 
@@ -1061,7 +1061,7 @@ int hps_run_group_size_scale_benchmark(void)
         free(values);
     }
 
-    if (completed_samples != HPS_SCALE_SEED_COUNT *
+    if (completed_samples != LKS_SCALE_SEED_COUNT *
             (runs[0].candidate_count + runs[1].candidate_count +
              runs[2].candidate_count + runs[3].candidate_count)) {
         printf("BENCHMARK FAILED: sample count mismatch\n");
@@ -1070,7 +1070,7 @@ int hps_run_group_size_scale_benchmark(void)
     printf("CompletedSamples=%lu\n", (unsigned long)completed_samples);
 
     printf("N,GroupSize,Groups,BuildCmpMean,MergeCmpMean,TotalCmpMean,TotalCmpMin,TotalCmpMax,TotalCmpStdDev,BuildCmpPerItem,MergeCmpPerItem,TotalCmpPerItem,BuildMsMean,MergeMsMean,TotalMsMean,TotalUsPerItem\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         size_t candidate_index;
         for (candidate_index = 0; candidate_index < run->candidate_count;
@@ -1100,7 +1100,7 @@ int hps_run_group_size_scale_benchmark(void)
     }
 
     printf("N,GroupSize,MeanLocalAvgDepth,WorstLocalMaxDepth,MeanFinalAvgDepth,WorstFinalMaxDepth,MeanFinalAvgTextLen,WorstFinalMaxTextLen,WorstFinalMaxLevel\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         size_t candidate_index;
         for (candidate_index = 0; candidate_index < run->candidate_count;
@@ -1121,7 +1121,7 @@ int hps_run_group_size_scale_benchmark(void)
         }
     }
 
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         size_t seed_index;
         size_t candidate_index;
@@ -1135,7 +1135,7 @@ int hps_run_group_size_scale_benchmark(void)
         }
         printf("\n");
         expected_columns = run->candidate_count + 1;
-        for (seed_index = 0; seed_index < HPS_SCALE_SEED_COUNT; ++seed_index) {
+        for (seed_index = 0; seed_index < LKS_SCALE_SEED_COUNT; ++seed_index) {
             uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
             size_t emitted_columns = 1;
             printf("0x%08lX", (unsigned long)seed);
@@ -1155,7 +1155,7 @@ int hps_run_group_size_scale_benchmark(void)
     }
 
     printf("N,LowestObservedMeanTotalCmp,GroupSizeAtThatObservedMean,TotalCmpPerItem,GroupSizeOverN\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         size_t candidate_index;
         size_t minimum_sum = (size_t)-1;
@@ -1170,7 +1170,7 @@ int hps_run_group_size_scale_benchmark(void)
             const BenchmarkScaleCandidate *candidate =
                 &run->candidates[candidate_index];
             if (candidate->total_comparison_sum == minimum_sum) {
-                double mean = (double)minimum_sum / HPS_SCALE_SEED_COUNT;
+                double mean = (double)minimum_sum / LKS_SCALE_SEED_COUNT;
                 printf("%lu,%.3f,%lu,%.6f,%.6f\n",
                     (unsigned long)run->count,
                     mean,
@@ -1182,7 +1182,7 @@ int hps_run_group_size_scale_benchmark(void)
     }
 
     printf("N,GS512TotalCmpMean,GS512TotalCmpPerItem,GS512MeanFinalAvgDepth\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         const BenchmarkScaleCandidate *candidate =
             benchmark_scale_find_candidate(run, 512);
@@ -1199,7 +1199,7 @@ int hps_run_group_size_scale_benchmark(void)
     }
 
     printf("N,GS256TotalCmpMean,GS256TotalCmpPerItem,GS256MeanFinalAvgDepth\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         const BenchmarkScaleCandidate *candidate =
             benchmark_scale_find_candidate(run, 256);
@@ -1216,7 +1216,7 @@ int hps_run_group_size_scale_benchmark(void)
     }
 
     printf("N,HalfNGroupSize,TotalCmpMean,TotalCmpPerItem,MeanFinalAvgDepth\n");
-    for (run_index = 0; run_index < HPS_SCALE_N_COUNT; ++run_index) {
+    for (run_index = 0; run_index < LKS_SCALE_N_COUNT; ++run_index) {
         const BenchmarkScaleRun *run = &runs[run_index];
         size_t half_size = run->count / 2;
         const BenchmarkScaleCandidate *candidate =
@@ -1238,17 +1238,17 @@ int hps_run_group_size_scale_benchmark(void)
 }
 
 enum {
-    HPS_GROUP_COUNT_TARGETS = 18,
-    HPS_GROUP_COUNT_SEEDS = 10,
-    HPS_GROUP_COUNT_ITEMS = 10000,
-    HPS_GROUP_COUNT_MAX_GROUPS = 80
+    LKS_GROUP_COUNT_TARGETS = 18,
+    LKS_GROUP_COUNT_SEEDS = 10,
+    LKS_GROUP_COUNT_ITEMS = 10000,
+    LKS_GROUP_COUNT_MAX_GROUPS = 80
 };
 
 typedef struct BenchmarkGroupCountCandidate {
     size_t target_groups;
     size_t group_size;
     size_t actual_groups;
-    BenchmarkSample samples[HPS_GROUP_COUNT_SEEDS];
+    BenchmarkSample samples[LKS_GROUP_COUNT_SEEDS];
     BenchmarkDistribution build_comparisons;
     BenchmarkDistribution merge_comparisons;
     BenchmarkDistribution total_comparisons;
@@ -1289,8 +1289,8 @@ static int benchmark_predict_merge_upper(
     BenchmarkMergePrediction *prediction
 )
 {
-    size_t current[HPS_GROUP_COUNT_MAX_GROUPS];
-    size_t next[HPS_GROUP_COUNT_MAX_GROUPS];
+    size_t current[LKS_GROUP_COUNT_MAX_GROUPS];
+    size_t next[LKS_GROUP_COUNT_MAX_GROUPS];
     size_t index;
     size_t current_count = group_count;
     size_t size_sum = 0;
@@ -1300,7 +1300,7 @@ static int benchmark_predict_merge_upper(
 
     if (prediction == NULL ||
         (group_count != 0 && initial_sizes == NULL) ||
-        group_count > HPS_GROUP_COUNT_MAX_GROUPS) {
+        group_count > LKS_GROUP_COUNT_MAX_GROUPS) {
         return 0;
     }
     memset(prediction, 0, sizeof(*prediction));
@@ -1362,24 +1362,24 @@ static int benchmark_predict_merge_upper(
 }
 
 static int benchmark_predict_batch_merge_upper(
-    const HpsGroupBatch *batch,
+    const LksGroupBatch *batch,
     size_t total_items,
     BenchmarkMergePrediction *prediction
 )
 {
-    size_t group_count = hps_group_batch_group_count(batch);
-    size_t sizes[HPS_GROUP_COUNT_MAX_GROUPS];
+    size_t group_count = lks_group_batch_group_count(batch);
+    size_t sizes[LKS_GROUP_COUNT_MAX_GROUPS];
     size_t index;
 
-    if (batch == NULL || group_count > HPS_GROUP_COUNT_MAX_GROUPS) {
+    if (batch == NULL || group_count > LKS_GROUP_COUNT_MAX_GROUPS) {
         return 0;
     }
     for (index = 0; index < group_count; ++index) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, index);
+        const LksGroup *group = lks_group_batch_group_at(batch, index);
         if (group == NULL) {
             return 0;
         }
-        sizes[index] = hps_group_size(group);
+        sizes[index] = lks_group_size(group);
     }
     return benchmark_predict_merge_upper(sizes, group_count, total_items,
         prediction);
@@ -1390,73 +1390,73 @@ static int benchmark_run_group_count_sample(
     size_t group_size,
     uint32_t seed,
     void **items,
-    HpsComparator *comparator,
+    LksComparator *comparator,
     BenchmarkSample *sample,
     size_t *out_groups,
     BenchmarkMergePrediction *prediction
 )
 {
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *final_group = NULL;
+    LksGroupBatch *batch = NULL;
+    LksGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     clock_t begin;
     clock_t end;
-    HpsStatus status;
+    LksStatus status;
 
     memset(sample, 0, sizeof(*sample));
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = hps_group_batch_build(items, HPS_GROUP_COUNT_ITEMS, group_size,
+    status = lks_group_batch_build(items, LKS_GROUP_COUNT_ITEMS, group_size,
         comparator, &batch);
     end = clock();
-    if (status != HPS_STATUS_OK || batch == NULL || counter->overflowed ||
+    if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->build_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: build failed (%s)\n",
             (unsigned long)seed, (unsigned long)target_groups,
-            (unsigned long)group_size, hps_status_string(status));
-        hps_group_batch_destroy(batch);
+            (unsigned long)group_size, lks_status_string(status));
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->build_comparisons = counter->comparison_count;
-    *out_groups = hps_group_batch_group_count(batch);
+    *out_groups = lks_group_batch_group_count(batch);
     if (*out_groups != target_groups) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu ActualGroups=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, (unsigned long)*out_groups);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
-    if (hps_group_batch_total_size(batch) != HPS_GROUP_COUNT_ITEMS ||
+    if (lks_group_batch_total_size(batch) != LKS_GROUP_COUNT_ITEMS ||
         !benchmark_collect_batch_paths(batch, &sample->local_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: local Path statistics failed\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
-    if (!benchmark_predict_batch_merge_upper(batch, HPS_GROUP_COUNT_ITEMS,
+    if (!benchmark_predict_batch_merge_upper(batch, LKS_GROUP_COUNT_ITEMS,
             prediction)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: theoretical merge prediction overflow/invalid sizes\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = hps_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_group_batch_merge_all(batch, comparator, &final_group);
     end = clock();
-    if (status != HPS_STATUS_OK || final_group == NULL || counter->overflowed ||
+    if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->merge_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: merge failed (%s)\n",
             (unsigned long)seed, (unsigned long)target_groups,
-            (unsigned long)group_size, hps_status_string(status));
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+            (unsigned long)group_size, lks_status_string(status));
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->merge_comparisons = counter->comparison_count;
@@ -1466,8 +1466,8 @@ static int benchmark_run_group_count_sample(
             (unsigned long)group_size,
             (unsigned long)sample->merge_comparisons,
             (unsigned long)prediction->upper_bound);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->predicted_merge_upper = prediction->upper_bound;
@@ -1479,24 +1479,24 @@ static int benchmark_run_group_count_sample(
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: comparison count overflow\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     sample->total_comparisons = sample->build_comparisons +
         sample->merge_comparisons;
     sample->total_ms = sample->build_ms + sample->merge_ms;
-    if (!benchmark_validate_final(final_group, HPS_GROUP_COUNT_ITEMS,
+    if (!benchmark_validate_final(final_group, LKS_GROUP_COUNT_ITEMS,
             &sample->final_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: result size/order/adjacent Path validation failed\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
-    hps_group_destroy(final_group);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(final_group);
+    lks_group_batch_destroy(batch);
     return 1;
 }
 
@@ -1519,7 +1519,7 @@ static void benchmark_group_count_aggregate(
     memset(&candidate->total_comparisons, 0,
         sizeof(candidate->total_comparisons));
     memset(&candidate->merge_gaps, 0, sizeof(candidate->merge_gaps));
-    for (seed_index = 0; seed_index < HPS_GROUP_COUNT_SEEDS; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_GROUP_COUNT_SEEDS; ++seed_index) {
         const BenchmarkSample *sample = &candidate->samples[seed_index];
         benchmark_distribution_add(&candidate->build_comparisons,
             sample->build_comparisons, seed_index);
@@ -1541,11 +1541,11 @@ static void benchmark_group_count_aggregate(
         merge_ms += sample->merge_ms;
         total_ms += sample->total_ms;
         local_depth += (double)sample->local_stats.total_depth /
-            (double)HPS_GROUP_COUNT_ITEMS;
+            (double)LKS_GROUP_COUNT_ITEMS;
         final_depth += (double)sample->final_stats.total_depth /
-            (double)HPS_GROUP_COUNT_ITEMS;
+            (double)LKS_GROUP_COUNT_ITEMS;
         final_text += (double)sample->final_stats.total_text_length /
-            (double)HPS_GROUP_COUNT_ITEMS;
+            (double)LKS_GROUP_COUNT_ITEMS;
         if (seed_index == 0 || sample->final_stats.max_depth >
                 candidate->final_max_depth_worst) {
             candidate->final_max_depth_worst = sample->final_stats.max_depth;
@@ -1555,37 +1555,37 @@ static void benchmark_group_count_aggregate(
             candidate->final_max_level_worst = sample->final_stats.max_level;
         }
     }
-    candidate->build_ms_mean = build_ms / HPS_GROUP_COUNT_SEEDS;
-    candidate->merge_ms_mean = merge_ms / HPS_GROUP_COUNT_SEEDS;
-    candidate->total_ms_mean = total_ms / HPS_GROUP_COUNT_SEEDS;
-    candidate->local_avg_depth_mean = local_depth / HPS_GROUP_COUNT_SEEDS;
-    candidate->final_avg_depth_mean = final_depth / HPS_GROUP_COUNT_SEEDS;
-    candidate->final_avg_text_length_mean = final_text / HPS_GROUP_COUNT_SEEDS;
-    candidate->mean_gap_percent = gap_percent_total / HPS_GROUP_COUNT_SEEDS;
+    candidate->build_ms_mean = build_ms / LKS_GROUP_COUNT_SEEDS;
+    candidate->merge_ms_mean = merge_ms / LKS_GROUP_COUNT_SEEDS;
+    candidate->total_ms_mean = total_ms / LKS_GROUP_COUNT_SEEDS;
+    candidate->local_avg_depth_mean = local_depth / LKS_GROUP_COUNT_SEEDS;
+    candidate->final_avg_depth_mean = final_depth / LKS_GROUP_COUNT_SEEDS;
+    candidate->final_avg_text_length_mean = final_text / LKS_GROUP_COUNT_SEEDS;
+    candidate->mean_gap_percent = gap_percent_total / LKS_GROUP_COUNT_SEEDS;
 }
 
-int hps_run_group_count_cost_benchmark(void)
+int lks_run_group_count_cost_benchmark(void)
 {
-    static const size_t targets[HPS_GROUP_COUNT_TARGETS] = {
+    static const size_t targets[LKS_GROUP_COUNT_TARGETS] = {
         1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 25, 32, 40, 50, 64, 80
     };
-    BenchmarkGroupCountCandidate candidates[HPS_GROUP_COUNT_TARGETS];
+    BenchmarkGroupCountCandidate candidates[LKS_GROUP_COUNT_TARGETS];
     int *values = NULL;
     void **items = NULL;
-    HpsComparator comparator;
+    LksComparator comparator;
     BenchmarkCompareContext counter;
     size_t candidate_index;
     size_t seed_index;
     size_t completed = 0;
 
     memset(candidates, 0, sizeof(candidates));
-    if ((size_t)HPS_GROUP_COUNT_ITEMS > (size_t)-1 / sizeof(*values) ||
-        (size_t)HPS_GROUP_COUNT_ITEMS > (size_t)-1 / sizeof(*items)) {
+    if ((size_t)LKS_GROUP_COUNT_ITEMS > (size_t)-1 / sizeof(*values) ||
+        (size_t)LKS_GROUP_COUNT_ITEMS > (size_t)-1 / sizeof(*items)) {
         printf("BENCHMARK FAILED: input allocation size overflow\n");
         return 1;
     }
-    values = (int *)malloc((size_t)HPS_GROUP_COUNT_ITEMS * sizeof(*values));
-    items = (void **)malloc((size_t)HPS_GROUP_COUNT_ITEMS * sizeof(*items));
+    values = (int *)malloc((size_t)LKS_GROUP_COUNT_ITEMS * sizeof(*values));
+    items = (void **)malloc((size_t)LKS_GROUP_COUNT_ITEMS * sizeof(*items));
     if (values == NULL || items == NULL) {
         printf("BENCHMARK FAILED: out of memory for input arrays\n");
         free(items);
@@ -1596,31 +1596,31 @@ int hps_run_group_count_cost_benchmark(void)
     counter.overflowed = 0;
     comparator.compare = benchmark_compare_int;
     comparator.context = &counter;
-    for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+    for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
             ++candidate_index) {
         size_t groups = targets[candidate_index];
-        size_t quotient = (size_t)HPS_GROUP_COUNT_ITEMS / groups;
-        size_t remainder = (size_t)HPS_GROUP_COUNT_ITEMS % groups;
+        size_t quotient = (size_t)LKS_GROUP_COUNT_ITEMS / groups;
+        size_t remainder = (size_t)LKS_GROUP_COUNT_ITEMS % groups;
         candidates[candidate_index].target_groups = groups;
         candidates[candidate_index].group_size = quotient +
             (remainder != 0 ? 1u : 0u);
     }
 
-    printf("HPSort Group Count Cost Benchmark\n");
+    printf("LayerKeySort Group Count Cost Benchmark\n");
     printf("N=10000; Seeds=10; SeedStart=0x00C0FFEE; SeedEnd=0x00C0FFF7; each seed shuffled once and shared across targets\n");
-    for (seed_index = 0; seed_index < HPS_GROUP_COUNT_SEEDS; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_GROUP_COUNT_SEEDS; ++seed_index) {
         uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
         size_t item_index;
-        for (item_index = 0; item_index < (size_t)HPS_GROUP_COUNT_ITEMS;
+        for (item_index = 0; item_index < (size_t)LKS_GROUP_COUNT_ITEMS;
                 ++item_index) {
             values[item_index] = (int)item_index;
         }
-        benchmark_shuffle(values, (size_t)HPS_GROUP_COUNT_ITEMS, seed);
-        for (item_index = 0; item_index < (size_t)HPS_GROUP_COUNT_ITEMS;
+        benchmark_shuffle(values, (size_t)LKS_GROUP_COUNT_ITEMS, seed);
+        for (item_index = 0; item_index < (size_t)LKS_GROUP_COUNT_ITEMS;
                 ++item_index) {
             items[item_index] = &values[item_index];
         }
-        for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+        for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
                 ++candidate_index) {
             BenchmarkGroupCountCandidate *candidate = &candidates[candidate_index];
             size_t actual_groups = 0;
@@ -1668,19 +1668,19 @@ int hps_run_group_count_cost_benchmark(void)
     }
     free(items);
     free(values);
-    if (completed != HPS_GROUP_COUNT_TARGETS * HPS_GROUP_COUNT_SEEDS) {
+    if (completed != LKS_GROUP_COUNT_TARGETS * LKS_GROUP_COUNT_SEEDS) {
         printf("BENCHMARK FAILED: completed sample count=%lu expected=%u\n",
             (unsigned long)completed,
-            HPS_GROUP_COUNT_TARGETS * HPS_GROUP_COUNT_SEEDS);
+            LKS_GROUP_COUNT_TARGETS * LKS_GROUP_COUNT_SEEDS);
         return 1;
     }
-    for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+    for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
             ++candidate_index) {
         benchmark_group_count_aggregate(&candidates[candidate_index]);
     }
     printf("CompletedSamples=%lu\n", (unsigned long)completed);
     printf("Groups,GroupSize,MergeRounds,MergePairCount,MergeElementWork,PredictedMergeUpper,ActualMergeCmpMean,MeanGap,MaxGap,MeanGapPercent,MaxGapPercent\n");
-    for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+    for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
             ++candidate_index) {
         const BenchmarkGroupCountCandidate *c = &candidates[candidate_index];
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%.3f,%.3f,%lu,%.4f,%.4f\n",
@@ -1695,10 +1695,10 @@ int hps_run_group_count_cost_benchmark(void)
     }
 
     printf("GapMatrix\nSeed,G1,G2,G3,G4,G5,G6,G7,G8,G10,G12,G16,G20,G25,G32,G40,G50,G64,G80\n");
-    for (seed_index = 0; seed_index < HPS_GROUP_COUNT_SEEDS; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_GROUP_COUNT_SEEDS; ++seed_index) {
         uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
         printf("0x%08lX", (unsigned long)seed);
-        for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+        for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
                 ++candidate_index) {
             printf(",%lu", (unsigned long)candidates[candidate_index]
                 .samples[seed_index].merge_gap);
@@ -1706,10 +1706,10 @@ int hps_run_group_count_cost_benchmark(void)
         printf("\n");
     }
     printf("GapPercentMatrix\nSeed,G1,G2,G3,G4,G5,G6,G7,G8,G10,G12,G16,G20,G25,G32,G40,G50,G64,G80\n");
-    for (seed_index = 0; seed_index < HPS_GROUP_COUNT_SEEDS; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_GROUP_COUNT_SEEDS; ++seed_index) {
         uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
         printf("0x%08lX", (unsigned long)seed);
-        for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+        for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
                 ++candidate_index) {
             printf(",%.4f", candidates[candidate_index]
                 .samples[seed_index].merge_gap_percent);
@@ -1726,7 +1726,7 @@ int hps_run_group_count_cost_benchmark(void)
         size_t reference_index;
         for (reference_index = 0; reference_index < 3; ++reference_index) {
             size_t index;
-            for (index = 0; index < HPS_GROUP_COUNT_TARGETS; ++index) {
+            for (index = 0; index < LKS_GROUP_COUNT_TARGETS; ++index) {
                 const BenchmarkGroupCountCandidate *c = &candidates[index];
                 if (c->actual_groups == expected_groups[reference_index]) {
                     if (c->merge_element_work != expected_work[reference_index] ||
@@ -1746,7 +1746,7 @@ int hps_run_group_count_cost_benchmark(void)
                     break;
                 }
             }
-            if (index == HPS_GROUP_COUNT_TARGETS) {
+            if (index == LKS_GROUP_COUNT_TARGETS) {
                 printf("BENCHMARK FAILED: reference GroupCount=%lu missing\n",
                     (unsigned long)expected_groups[reference_index]);
                 return 1;
@@ -1761,7 +1761,7 @@ int hps_run_group_count_cost_benchmark(void)
         double max_gap_percent = 0.0;
         double group_mean_min = 0.0;
         double group_mean_max = 0.0;
-        for (candidate_index = 0; candidate_index < HPS_GROUP_COUNT_TARGETS;
+        for (candidate_index = 0; candidate_index < LKS_GROUP_COUNT_TARGETS;
                 ++candidate_index) {
             const BenchmarkGroupCountCandidate *c = &candidates[candidate_index];
             if (candidate_index == 0 || c->mean_gap_percent < group_mean_min) {
@@ -1770,7 +1770,7 @@ int hps_run_group_count_cost_benchmark(void)
             if (candidate_index == 0 || c->mean_gap_percent > group_mean_max) {
                 group_mean_max = c->mean_gap_percent;
             }
-            for (seed_index_local = 0; seed_index_local < HPS_GROUP_COUNT_SEEDS;
+            for (seed_index_local = 0; seed_index_local < LKS_GROUP_COUNT_SEEDS;
                     ++seed_index_local) {
                 double value = c->samples[seed_index_local].merge_gap_percent;
                 if (sample_count == 0 || value < min_gap_percent) {
@@ -1793,11 +1793,11 @@ int hps_run_group_count_cost_benchmark(void)
 }
 
 enum {
-    HPS_STAGE76_SEEDS = 10,
-    HPS_STAGE76_TRAIN_COUNT = 9,
-    HPS_STAGE76_VALIDATION_COUNT = 9,
-    HPS_STAGE76_BATCH_COUNT = 18,
-    HPS_STAGE76_MAX_ITEMS = 10000
+    LKS_STAGE76_SEEDS = 10,
+    LKS_STAGE76_TRAIN_COUNT = 9,
+    LKS_STAGE76_VALIDATION_COUNT = 9,
+    LKS_STAGE76_BATCH_COUNT = 18,
+    LKS_STAGE76_MAX_ITEMS = 10000
 };
 
 typedef struct BenchmarkBuildPoint {
@@ -1823,7 +1823,7 @@ typedef struct BenchmarkBatchModelRow {
     size_t actual_groups;
     size_t group_size;
     size_t predicted_merge_upper;
-    BenchmarkSample samples[HPS_STAGE76_SEEDS];
+    BenchmarkSample samples[LKS_STAGE76_SEEDS];
     BenchmarkDistribution actual_build;
     BenchmarkDistribution actual_merge;
     BenchmarkDistribution actual_total;
@@ -1866,16 +1866,16 @@ static int benchmark_run_single_group_build(
     uint32_t seed,
     int *values,
     void **items,
-    HpsComparator *comparator,
+    LksComparator *comparator,
     size_t *out_comparisons
 )
 {
-    HpsGroup *group = NULL;
+    LksGroup *group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     BenchmarkPathStats path_stats;
     size_t index;
-    HpsStatus status;
+    LksStatus status;
 
     for (index = 0; index < count; ++index) {
         values[index] = (int)index;
@@ -1886,12 +1886,12 @@ static int benchmark_run_single_group_build(
     }
     counter->comparison_count = 0;
     counter->overflowed = 0;
-    status = hps_group_build(items, count, comparator, &group);
-    if (status != HPS_STATUS_OK || group == NULL || counter->overflowed) {
+    status = lks_group_build(items, count, comparator, &group);
+    if (status != LKS_STATUS_OK || group == NULL || counter->overflowed) {
         printf("BENCHMARK FAILED single Group Build size=%lu seed=0x%08lX: %s\n",
             (unsigned long)count, (unsigned long)seed,
-            hps_status_string(status));
-        hps_group_destroy(group);
+            lks_status_string(status));
+        lks_group_destroy(group);
         return 0;
     }
     *out_comparisons = counter->comparison_count;
@@ -1899,10 +1899,10 @@ static int benchmark_run_single_group_build(
     if (!benchmark_validate_final(group, count, &path_stats)) {
         printf("BENCHMARK FAILED single Group Build size=%lu seed=0x%08lX: size/order/adjacent Path validation failed\n",
             (unsigned long)count, (unsigned long)seed);
-        hps_group_destroy(group);
+        lks_group_destroy(group);
         return 0;
     }
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     return 1;
 }
 
@@ -2066,7 +2066,7 @@ static BenchmarkErrorMetrics benchmark_model_metrics(
 }
 
 static int benchmark_predict_batch_build(
-    const HpsGroupBatch *batch,
+    const LksGroupBatch *batch,
     const BenchmarkBuildModel *model,
     int quadratic,
     double *out_prediction
@@ -2079,15 +2079,15 @@ static int benchmark_predict_batch_build(
     if (batch == NULL || model == NULL || out_prediction == NULL) {
         return 0;
     }
-    groups = hps_group_batch_group_count(batch);
+    groups = lks_group_batch_group_count(batch);
     for (index = 0; index < groups; ++index) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, index);
+        const LksGroup *group = lks_group_batch_group_at(batch, index);
         size_t group_size;
         double value;
         if (group == NULL) {
             return 0;
         }
-        group_size = hps_group_size(group);
+        group_size = lks_group_size(group);
         value = benchmark_build_model_predict(model, group_size, quadratic);
         if (value != value || value > 1.0e300 || value < -1.0e300) {
             return 0;
@@ -2135,15 +2135,15 @@ static int benchmark_run_stage76_batch_sample(
     size_t group_size,
     uint32_t seed,
     void **items,
-    HpsComparator *comparator,
+    LksComparator *comparator,
     BenchmarkBatchModelRow *row,
     const BenchmarkBuildModel *model_l,
     const BenchmarkBuildModel *model_q,
     size_t seed_index
 )
 {
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *final_group = NULL;
+    LksGroupBatch *batch = NULL;
+    LksGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     BenchmarkMergePrediction merge_prediction;
@@ -2152,24 +2152,24 @@ static int benchmark_run_stage76_batch_sample(
     size_t build_comparisons;
     double predicted_build_l;
     double predicted_build_q;
-    HpsStatus status;
+    LksStatus status;
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
-    status = hps_group_batch_build(items, HPS_STAGE76_MAX_ITEMS, group_size,
+    status = lks_group_batch_build(items, LKS_STAGE76_MAX_ITEMS, group_size,
         comparator, &batch);
-    if (status != HPS_STATUS_OK || batch == NULL || counter->overflowed) {
+    if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed) {
         printf("BENCHMARK FAILED BatchBuild seed=0x%08lX Groups=%lu GroupSize=%lu: %s\n",
             (unsigned long)seed, (unsigned long)target_groups,
-            (unsigned long)group_size, hps_status_string(status));
-        hps_group_batch_destroy(batch);
+            (unsigned long)group_size, lks_status_string(status));
+        lks_group_batch_destroy(batch);
         return 0;
     }
     build_comparisons = counter->comparison_count;
-    groups = hps_group_batch_group_count(batch);
+    groups = lks_group_batch_group_count(batch);
     if (groups != target_groups ||
-        hps_group_batch_total_size(batch) != HPS_STAGE76_MAX_ITEMS ||
-        !benchmark_predict_batch_merge_upper(batch, HPS_STAGE76_MAX_ITEMS,
+        lks_group_batch_total_size(batch) != LKS_STAGE76_MAX_ITEMS ||
+        !benchmark_predict_batch_merge_upper(batch, LKS_STAGE76_MAX_ITEMS,
             &merge_prediction) ||
         !benchmark_predict_batch_build(batch, model_l, 0,
             &predicted_build_l) ||
@@ -2178,7 +2178,7 @@ static int benchmark_run_stage76_batch_sample(
         printf("BENCHMARK FAILED Batch structure/prediction seed=0x%08lX TargetGroups=%lu GroupSize=%lu ActualGroups=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, (unsigned long)groups);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     if (seed_index == 0) {
@@ -2195,66 +2195,66 @@ static int benchmark_run_stage76_batch_sample(
         printf("BENCHMARK FAILED batch structure changed seed=0x%08lX TargetGroups=%lu GroupSize=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
-    status = hps_group_batch_merge_all(batch, comparator, &final_group);
-    if (status != HPS_STATUS_OK || final_group == NULL || counter->overflowed) {
+    status = lks_group_batch_merge_all(batch, comparator, &final_group);
+    if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed) {
         printf("BENCHMARK FAILED BatchMerge seed=0x%08lX TargetGroups=%lu GroupSize=%lu: %s\n",
             (unsigned long)seed, (unsigned long)target_groups,
-            (unsigned long)group_size, hps_status_string(status));
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+            (unsigned long)group_size, lks_status_string(status));
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     memset(&path_stats, 0, sizeof(path_stats));
-    if (!benchmark_validate_final(final_group, HPS_STAGE76_MAX_ITEMS,
+    if (!benchmark_validate_final(final_group, LKS_STAGE76_MAX_ITEMS,
             &path_stats)) {
         printf("BENCHMARK FAILED BatchMerge validation seed=0x%08lX TargetGroups=%lu GroupSize=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        hps_group_destroy(final_group);
-        hps_group_batch_destroy(batch);
+        lks_group_destroy(final_group);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     row->samples[seed_index].build_comparisons = build_comparisons;
     row->samples[seed_index].merge_comparisons = counter->comparison_count;
     row->samples[seed_index].total_comparisons = build_comparisons +
         counter->comparison_count;
-    hps_group_destroy(final_group);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(final_group);
+    lks_group_batch_destroy(batch);
     return 1;
 }
 
-int hps_run_stage7_6_benchmark(void)
+int lks_run_stage7_6_benchmark(void)
 {
-    static const size_t train_sizes[HPS_STAGE76_TRAIN_COUNT] = {
+    static const size_t train_sizes[LKS_STAGE76_TRAIN_COUNT] = {
         32, 64, 128, 256, 512, 1024, 2048, 4096, 8192
     };
-    static const size_t validation_sizes[HPS_STAGE76_VALIDATION_COUNT] = {
+    static const size_t validation_sizes[LKS_STAGE76_VALIDATION_COUNT] = {
         48, 96, 192, 384, 768, 1536, 3072, 6144, 10000
     };
-    static const size_t target_groups[HPS_STAGE76_BATCH_COUNT] = {
+    static const size_t target_groups[LKS_STAGE76_BATCH_COUNT] = {
         1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 25, 32, 40, 50, 64, 80
     };
-    BenchmarkBuildPoint train[HPS_STAGE76_TRAIN_COUNT];
-    BenchmarkBuildPoint validation[HPS_STAGE76_VALIDATION_COUNT];
+    BenchmarkBuildPoint train[LKS_STAGE76_TRAIN_COUNT];
+    BenchmarkBuildPoint validation[LKS_STAGE76_VALIDATION_COUNT];
     BenchmarkBuildModel model_l;
     BenchmarkBuildModel model_q;
-    BenchmarkBatchModelRow batch_rows[HPS_STAGE76_BATCH_COUNT];
-    int values[HPS_STAGE76_MAX_ITEMS];
-    void *items[HPS_STAGE76_MAX_ITEMS];
-    HpsComparator comparator;
+    BenchmarkBatchModelRow batch_rows[LKS_STAGE76_BATCH_COUNT];
+    int values[LKS_STAGE76_MAX_ITEMS];
+    void *items[LKS_STAGE76_MAX_ITEMS];
+    LksComparator comparator;
     BenchmarkCompareContext counter;
-    double batch_build_actual[HPS_STAGE76_BATCH_COUNT];
-    double batch_build_l[HPS_STAGE76_BATCH_COUNT];
-    double batch_build_q[HPS_STAGE76_BATCH_COUNT];
-    double total_actual[HPS_STAGE76_BATCH_COUNT];
-    double total_predicted_l[HPS_STAGE76_BATCH_COUNT];
-    double total_predicted_q[HPS_STAGE76_BATCH_COUNT];
+    double batch_build_actual[LKS_STAGE76_BATCH_COUNT];
+    double batch_build_l[LKS_STAGE76_BATCH_COUNT];
+    double batch_build_q[LKS_STAGE76_BATCH_COUNT];
+    double total_actual[LKS_STAGE76_BATCH_COUNT];
+    double total_predicted_l[LKS_STAGE76_BATCH_COUNT];
+    double total_predicted_q[LKS_STAGE76_BATCH_COUNT];
     size_t index;
     size_t seed_index;
 
@@ -2266,11 +2266,11 @@ int hps_run_stage7_6_benchmark(void)
     comparator.compare = benchmark_compare_int;
     comparator.context = &counter;
 
-    printf("HPSort Stage 7.6 Build Cost Model\n");
+    printf("LayerKeySort Stage 7.6 Build Cost Model\n");
     printf("Seeds=10; SeedRange=0xC0FFEE..0xC0FFF7\n");
-    for (index = 0; index < HPS_STAGE76_TRAIN_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_TRAIN_COUNT; ++index) {
         train[index].group_size = train_sizes[index];
-        for (seed_index = 0; seed_index < HPS_STAGE76_SEEDS; ++seed_index) {
+        for (seed_index = 0; seed_index < LKS_STAGE76_SEEDS; ++seed_index) {
             size_t comparisons;
             uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
             if (!benchmark_run_single_group_build(train_sizes[index], seed,
@@ -2283,9 +2283,9 @@ int hps_run_stage7_6_benchmark(void)
         train[index].per_item_mean = train[index].comparisons.mean /
             (double)train[index].group_size;
     }
-    for (index = 0; index < HPS_STAGE76_VALIDATION_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_VALIDATION_COUNT; ++index) {
         validation[index].group_size = validation_sizes[index];
-        for (seed_index = 0; seed_index < HPS_STAGE76_SEEDS; ++seed_index) {
+        for (seed_index = 0; seed_index < LKS_STAGE76_SEEDS; ++seed_index) {
             size_t comparisons;
             uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
             if (!benchmark_run_single_group_build(validation_sizes[index], seed,
@@ -2298,29 +2298,29 @@ int hps_run_stage7_6_benchmark(void)
         validation[index].per_item_mean = validation[index].comparisons.mean /
             (double)validation[index].group_size;
     }
-    if (!benchmark_fit_linear_model(train, HPS_STAGE76_TRAIN_COUNT, &model_l) ||
-        !benchmark_fit_quadratic_model(train, HPS_STAGE76_TRAIN_COUNT, &model_q)) {
+    if (!benchmark_fit_linear_model(train, LKS_STAGE76_TRAIN_COUNT, &model_l) ||
+        !benchmark_fit_quadratic_model(train, LKS_STAGE76_TRAIN_COUNT, &model_q)) {
         printf("BENCHMARK FAILED: Build model fit singular/invalid\n");
         return 1;
     }
 
     printf("Set,GroupSize,BuildCmpMean,BuildCmpMin,BuildCmpMax,BuildCmpStdDev,BuildCmpPerItemMean\n");
-    for (index = 0; index < HPS_STAGE76_TRAIN_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_TRAIN_COUNT; ++index) {
         printf("Train,%lu,%.3f,%lu,%lu,%.3f,%.9f\n",
             (unsigned long)train[index].group_size,
             train[index].comparisons.mean,
             (unsigned long)train[index].comparisons.minimum,
             (unsigned long)train[index].comparisons.maximum,
-            sqrt(train[index].comparisons.m2 / HPS_STAGE76_SEEDS),
+            sqrt(train[index].comparisons.m2 / LKS_STAGE76_SEEDS),
             train[index].per_item_mean);
     }
-    for (index = 0; index < HPS_STAGE76_VALIDATION_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_VALIDATION_COUNT; ++index) {
         printf("Validation,%lu,%.3f,%lu,%lu,%.3f,%.9f\n",
             (unsigned long)validation[index].group_size,
             validation[index].comparisons.mean,
             (unsigned long)validation[index].comparisons.minimum,
             (unsigned long)validation[index].comparisons.maximum,
-            sqrt(validation[index].comparisons.m2 / HPS_STAGE76_SEEDS),
+            sqrt(validation[index].comparisons.m2 / LKS_STAGE76_SEEDS),
             validation[index].per_item_mean);
     }
     printf("ModelCoefficients\nModel,a,b,c\n");
@@ -2329,24 +2329,24 @@ int hps_run_stage7_6_benchmark(void)
     printf("Model,Dataset,RMSEPerItem,MAPEPercent,MaxAbsPercentError\n");
     {
         BenchmarkErrorMetrics metrics = benchmark_model_metrics(train,
-            HPS_STAGE76_TRAIN_COUNT, &model_l, 0);
+            LKS_STAGE76_TRAIN_COUNT, &model_l, 0);
         printf("L,Train,%.9f,%.6f,%.6f\n", metrics.rmse,
             metrics.mape_percent, metrics.max_abs_percent_error);
         metrics = benchmark_model_metrics(validation,
-            HPS_STAGE76_VALIDATION_COUNT, &model_l, 0);
+            LKS_STAGE76_VALIDATION_COUNT, &model_l, 0);
         printf("L,Validation,%.9f,%.6f,%.6f\n", metrics.rmse,
             metrics.mape_percent, metrics.max_abs_percent_error);
-        metrics = benchmark_model_metrics(train, HPS_STAGE76_TRAIN_COUNT,
+        metrics = benchmark_model_metrics(train, LKS_STAGE76_TRAIN_COUNT,
             &model_q, 1);
         printf("Q,Train,%.9f,%.6f,%.6f\n", metrics.rmse,
             metrics.mape_percent, metrics.max_abs_percent_error);
         metrics = benchmark_model_metrics(validation,
-            HPS_STAGE76_VALIDATION_COUNT, &model_q, 1);
+            LKS_STAGE76_VALIDATION_COUNT, &model_q, 1);
         printf("Q,Validation,%.9f,%.6f,%.6f\n", metrics.rmse,
             metrics.mape_percent, metrics.max_abs_percent_error);
     }
     printf("GroupSize,ActualPerItem,PredLPerItem,ErrorLPercent,PredQPerItem,ErrorQPercent\n");
-    for (index = 0; index < HPS_STAGE76_VALIDATION_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_VALIDATION_COUNT; ++index) {
         double pred_l = benchmark_build_model_predict(&model_l,
             validation[index].group_size, 0) /
             (double)validation[index].group_size;
@@ -2361,18 +2361,18 @@ int hps_run_stage7_6_benchmark(void)
             benchmark_percent_error(pred_q, validation[index].per_item_mean));
     }
 
-    for (seed_index = 0; seed_index < HPS_STAGE76_SEEDS; ++seed_index) {
+    for (seed_index = 0; seed_index < LKS_STAGE76_SEEDS; ++seed_index) {
         uint32_t seed = UINT32_C(0xC0FFEE) + (uint32_t)seed_index;
-        for (index = 0; index < HPS_STAGE76_MAX_ITEMS; ++index) {
+        for (index = 0; index < LKS_STAGE76_MAX_ITEMS; ++index) {
             values[index] = (int)index;
         }
-        benchmark_shuffle(values, HPS_STAGE76_MAX_ITEMS, seed);
-        for (index = 0; index < HPS_STAGE76_MAX_ITEMS; ++index) {
+        benchmark_shuffle(values, LKS_STAGE76_MAX_ITEMS, seed);
+        for (index = 0; index < LKS_STAGE76_MAX_ITEMS; ++index) {
             items[index] = &values[index];
         }
-        for (index = 0; index < HPS_STAGE76_BATCH_COUNT; ++index) {
-            size_t quotient = HPS_STAGE76_MAX_ITEMS / target_groups[index];
-            size_t remainder = HPS_STAGE76_MAX_ITEMS % target_groups[index];
+        for (index = 0; index < LKS_STAGE76_BATCH_COUNT; ++index) {
+            size_t quotient = LKS_STAGE76_MAX_ITEMS / target_groups[index];
+            size_t remainder = LKS_STAGE76_MAX_ITEMS % target_groups[index];
             size_t group_size = quotient + (remainder != 0 ? 1u : 0u);
             if (!benchmark_run_stage76_batch_sample(target_groups[index],
                     group_size, seed, items, &comparator,
@@ -2382,9 +2382,9 @@ int hps_run_stage7_6_benchmark(void)
         }
     }
 
-    for (index = 0; index < HPS_STAGE76_BATCH_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_BATCH_COUNT; ++index) {
         BenchmarkBatchModelRow *row = &batch_rows[index];
-        for (seed_index = 0; seed_index < HPS_STAGE76_SEEDS; ++seed_index) {
+        for (seed_index = 0; seed_index < LKS_STAGE76_SEEDS; ++seed_index) {
             benchmark_distribution_add(&row->actual_build,
                 row->samples[seed_index].build_comparisons, seed_index);
             benchmark_distribution_add(&row->actual_merge,
@@ -2408,7 +2408,7 @@ int hps_run_stage7_6_benchmark(void)
     }
 
     printf("BatchBuildModel\nGroups,GroupSize,ActualBuildCmpMean,PredBuildL,ErrorLPercent,PredBuildQ,ErrorQPercent\n");
-    for (index = 0; index < HPS_STAGE76_BATCH_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_BATCH_COUNT; ++index) {
         const BenchmarkBatchModelRow *row = &batch_rows[index];
         printf("%lu,%lu,%.3f,%.6f,%.6f,%.6f,%.6f\n",
             (unsigned long)row->actual_groups, (unsigned long)row->group_size,
@@ -2421,9 +2421,9 @@ int hps_run_stage7_6_benchmark(void)
     }
     {
         BenchmarkErrorMetrics metrics_l = benchmark_comparison_metrics(
-            batch_build_actual, batch_build_l, HPS_STAGE76_BATCH_COUNT);
+            batch_build_actual, batch_build_l, LKS_STAGE76_BATCH_COUNT);
         BenchmarkErrorMetrics metrics_q = benchmark_comparison_metrics(
-            batch_build_actual, batch_build_q, HPS_STAGE76_BATCH_COUNT);
+            batch_build_actual, batch_build_q, LKS_STAGE76_BATCH_COUNT);
         printf("BatchBuildMetrics\nModel,MAPEPercent,RMSEComparisons,MaxAbsPercentError\n");
         printf("L,%.6f,%.6f,%.6f\n", metrics_l.mape_percent,
             metrics_l.rmse, metrics_l.max_abs_percent_error);
@@ -2432,7 +2432,7 @@ int hps_run_stage7_6_benchmark(void)
     }
 
     printf("TotalModel\nGroups,GroupSize,ActualBuildMean,PredBuildL,BuildErrLPercent,PredBuildQ,BuildErrQPercent,PredMergeUpper,ActualMergeMean,ActualTotalMean,PredTotalModelL,TotalErrLPercent,PredTotalModelQ,TotalErrQPercent\n");
-    for (index = 0; index < HPS_STAGE76_BATCH_COUNT; ++index) {
+    for (index = 0; index < LKS_STAGE76_BATCH_COUNT; ++index) {
         const BenchmarkBatchModelRow *row = &batch_rows[index];
         printf("%lu,%lu,%.3f,%.6f,%.6f,%.6f,%.6f,%lu,%.3f,%.3f,%.6f,%.6f,%.6f,%.6f\n",
             (unsigned long)row->actual_groups, (unsigned long)row->group_size,
@@ -2453,9 +2453,9 @@ int hps_run_stage7_6_benchmark(void)
     }
     {
         BenchmarkErrorMetrics metrics_l = benchmark_comparison_metrics(
-            total_actual, total_predicted_l, HPS_STAGE76_BATCH_COUNT);
+            total_actual, total_predicted_l, LKS_STAGE76_BATCH_COUNT);
         BenchmarkErrorMetrics metrics_q = benchmark_comparison_metrics(
-            total_actual, total_predicted_q, HPS_STAGE76_BATCH_COUNT);
+            total_actual, total_predicted_q, LKS_STAGE76_BATCH_COUNT);
         printf("TotalModelMetrics\nModel,MAPEPercent,RMSEComparisons,MaxAbsPercentError\n");
         printf("L,%.6f,%.6f,%.6f\n", metrics_l.mape_percent,
             metrics_l.rmse, metrics_l.max_abs_percent_error);
@@ -2466,7 +2466,7 @@ int hps_run_stage7_6_benchmark(void)
         size_t actual_low = 0;
         size_t predicted_l_low = 0;
         size_t predicted_q_low = 0;
-        for (index = 1; index < HPS_STAGE76_BATCH_COUNT; ++index) {
+        for (index = 1; index < LKS_STAGE76_BATCH_COUNT; ++index) {
             if (total_actual[index] < total_actual[actual_low]) {
                 actual_low = index;
             }
@@ -2492,21 +2492,21 @@ int hps_run_stage7_6_benchmark(void)
     }
     {
         BenchmarkErrorMetrics train_l = benchmark_model_metrics(train,
-            HPS_STAGE76_TRAIN_COUNT, &model_l, 0);
+            LKS_STAGE76_TRAIN_COUNT, &model_l, 0);
         BenchmarkErrorMetrics validation_l = benchmark_model_metrics(validation,
-            HPS_STAGE76_VALIDATION_COUNT, &model_l, 0);
+            LKS_STAGE76_VALIDATION_COUNT, &model_l, 0);
         BenchmarkErrorMetrics train_q = benchmark_model_metrics(train,
-            HPS_STAGE76_TRAIN_COUNT, &model_q, 1);
+            LKS_STAGE76_TRAIN_COUNT, &model_q, 1);
         BenchmarkErrorMetrics validation_q = benchmark_model_metrics(validation,
-            HPS_STAGE76_VALIDATION_COUNT, &model_q, 1);
+            LKS_STAGE76_VALIDATION_COUNT, &model_q, 1);
         BenchmarkErrorMetrics batch_l = benchmark_comparison_metrics(
-            batch_build_actual, batch_build_l, HPS_STAGE76_BATCH_COUNT);
+            batch_build_actual, batch_build_l, LKS_STAGE76_BATCH_COUNT);
         BenchmarkErrorMetrics batch_q = benchmark_comparison_metrics(
-            batch_build_actual, batch_build_q, HPS_STAGE76_BATCH_COUNT);
+            batch_build_actual, batch_build_q, LKS_STAGE76_BATCH_COUNT);
         BenchmarkErrorMetrics total_l = benchmark_comparison_metrics(
-            total_actual, total_predicted_l, HPS_STAGE76_BATCH_COUNT);
+            total_actual, total_predicted_l, LKS_STAGE76_BATCH_COUNT);
         BenchmarkErrorMetrics total_q = benchmark_comparison_metrics(
-            total_actual, total_predicted_q, HPS_STAGE76_BATCH_COUNT);
+            total_actual, total_predicted_q, LKS_STAGE76_BATCH_COUNT);
         printf("Stage7SummaryFacts\n");
         printf("MergeModelMeanGapPercent=0.0229\n");
         printf("MergeModelObservedMaxGapPercent=0.0986\n");
@@ -2523,8 +2523,8 @@ int hps_run_stage7_6_benchmark(void)
 }
 
 static int benchmark_alloc_stats_equal(
-    const HpsAllocStats *left,
-    const HpsAllocStats *right
+    const LksAllocStats *left,
+    const LksAllocStats *right
 )
 {
     size_t tag;
@@ -2543,9 +2543,9 @@ static int benchmark_alloc_stats_equal(
         left->blocks_when_global_byte_peak == right->blocks_when_global_byte_peak)) {
         return 0;
     }
-    for (tag = 0; tag < HPS_ALLOC_TAG_COUNT; ++tag) {
-        const HpsAllocTagStats *a = &left->tags[tag];
-        const HpsAllocTagStats *b = &right->tags[tag];
+    for (tag = 0; tag < LKS_ALLOC_TAG_COUNT; ++tag) {
+        const LksAllocTagStats *a = &left->tags[tag];
+        const LksAllocTagStats *b = &right->tags[tag];
         if (a->live_bytes != b->live_bytes ||
             a->peak_live_bytes != b->peak_live_bytes ||
             a->live_blocks != b->live_blocks ||
@@ -2561,18 +2561,18 @@ static int benchmark_alloc_stats_equal(
     return 1;
 }
 
-static int benchmark_alloc_stats_empty(const HpsAllocStats *stats)
+static int benchmark_alloc_stats_empty(const LksAllocStats *stats)
 {
     return stats->live_bytes == 0 && stats->live_blocks == 0;
 }
 
-int hps_run_stage8_1_tests(void)
+int lks_run_stage8_1_tests(void)
 {
-    HpsAllocStats stats;
-    HpsAllocStats before_reset;
-    HpsComparator comparator;
+    LksAllocStats stats;
+    LksAllocStats before_reset;
+    LksComparator comparator;
     BenchmarkCompareContext counter;
-    HpsStatus status;
+    LksStatus status;
     void *memory = NULL;
     size_t index;
 
@@ -2580,15 +2580,15 @@ int hps_run_stage8_1_tests(void)
     counter.overflowed = 0;
     comparator.compare = benchmark_compare_int;
     comparator.context = &counter;
-    printf("HPSort Stage 8.1 Private Allocator Tests\n");
-    stats = hps_alloc_stats_get();
+    printf("LayerKeySort Stage 8.1 Private Allocator Tests\n");
+    stats = lks_alloc_stats_get();
     printf("Allocator pre-test live bytes=%lu live blocks=%lu\n",
         (unsigned long)stats.live_bytes, (unsigned long)stats.live_blocks);
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test A failed: live allocations before reset\n");
         return 1;
     }
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (stats.live_bytes != 0 || stats.live_blocks != 0 ||
         stats.peak_live_bytes != 0 || stats.peak_live_blocks != 0) {
         printf("Allocator test A failed: reset did not clear empty stats\n");
@@ -2596,28 +2596,28 @@ int hps_run_stage8_1_tests(void)
     }
     printf("Allocator test A: empty reset passed\n");
 
-    memory = hps_alloc(16);
-    stats = hps_alloc_stats_get();
+    memory = lks_alloc(16);
+    stats = lks_alloc_stats_get();
     if (memory == NULL || stats.live_bytes != 16 || stats.live_blocks != 1 ||
         stats.peak_live_bytes < 16 || stats.peak_live_blocks < 1) {
         printf("Allocator test B failed: alloc(16) accounting mismatch\n");
-        hps_free(memory);
+        lks_free(memory);
         return 1;
     }
-    hps_free(memory);
-    hps_free(NULL);
-    stats = hps_alloc_stats_get();
+    lks_free(memory);
+    lks_free(NULL);
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.free_calls != 1) {
         printf("Allocator test B failed: free accounting mismatch\n");
         return 1;
     }
     printf("Allocator test B: 16-byte alloc/free and free(NULL) passed\n");
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test C failed: reset rejected empty stats\n");
         return 1;
     }
-    memory = hps_alloc(16);
+    memory = lks_alloc(16);
     if (memory == NULL) {
         printf("Allocator test C failed: alloc(16)\n");
         return 1;
@@ -2626,180 +2626,180 @@ int hps_run_stage8_1_tests(void)
         ((unsigned char *)memory)[index] = (unsigned char)(index + 1);
     }
     {
-        void *resized = hps_realloc(memory, 64);
+        void *resized = lks_realloc(memory, 64);
         if (resized == NULL) {
-            hps_free(memory);
+            lks_free(memory);
             printf("Allocator test C failed: realloc grow returned NULL\n");
             return 1;
         }
         memory = resized;
     }
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (memory == NULL || stats.live_bytes != 64 || stats.live_blocks != 1 ||
         stats.peak_live_bytes < 64) {
         printf("Allocator test C failed: realloc grow accounting mismatch\n");
-        hps_free(memory);
+        lks_free(memory);
         return 1;
     }
     for (index = 0; index < 16; ++index) {
         if (((unsigned char *)memory)[index] != (unsigned char)(index + 1)) {
             printf("Allocator test C failed: realloc grow lost payload\n");
-            hps_free(memory);
+            lks_free(memory);
             return 1;
         }
     }
     {
-        void *resized = hps_realloc(memory, 8);
+        void *resized = lks_realloc(memory, 8);
         if (resized == NULL) {
-            hps_free(memory);
+            lks_free(memory);
             printf("Allocator test C failed: realloc shrink returned NULL\n");
             return 1;
         }
         memory = resized;
     }
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (memory == NULL || stats.live_bytes != 8 || stats.live_blocks != 1 ||
         stats.peak_live_bytes < 64) {
         printf("Allocator test C failed: realloc shrink accounting mismatch\n");
-        hps_free(memory);
+        lks_free(memory);
         return 1;
     }
     for (index = 0; index < 8; ++index) {
         if (((unsigned char *)memory)[index] != (unsigned char)(index + 1)) {
             printf("Allocator test C failed: realloc shrink lost payload\n");
-            hps_free(memory);
+            lks_free(memory);
             return 1;
         }
     }
-    hps_free(memory);
-    stats = hps_alloc_stats_get();
+    lks_free(memory);
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.realloc_calls != 2) {
         printf("Allocator test C failed: final accounting mismatch\n");
         return 1;
     }
     printf("Allocator test C: realloc grow 16->64, shrink 64->8, payload retained\n");
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test D failed: reset\n");
         return 1;
     }
-    memory = hps_alloc(32);
-    if (memory == NULL || hps_realloc(memory, 0) != NULL) {
-        hps_free(memory);
+    memory = lks_alloc(32);
+    if (memory == NULL || lks_realloc(memory, 0) != NULL) {
+        lks_free(memory);
         printf("Allocator test D failed: realloc(ptr,0) return\n");
         return 1;
     }
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.realloc_calls != 1) {
         printf("Allocator test D failed: realloc(ptr,0) accounting\n");
         return 1;
     }
     printf("Allocator test D: realloc(ptr,0) released block and returned NULL\n");
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test E failed: reset\n");
         return 1;
     }
-    memory = hps_alloc((size_t)-1);
-    stats = hps_alloc_stats_get();
+    memory = lks_alloc((size_t)-1);
+    stats = lks_alloc_stats_get();
     if (memory != NULL || stats.failed_calls != 1 || stats.live_bytes != 0 ||
         stats.live_blocks != 0) {
-        hps_free(memory);
+        lks_free(memory);
         printf("Allocator test E failed: size overflow handling\n");
         return 1;
     }
     printf("Allocator test E: SIZE_MAX request rejected before malloc\n");
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test F failed: reset\n");
         return 1;
     }
-    memory = hps_alloc(8);
+    memory = lks_alloc(8);
     if (memory == NULL) {
         printf("Allocator test F failed: alloc\n");
         return 1;
     }
     memset(memory, 0x5a, 8);
-    before_reset = hps_alloc_stats_get();
-    if (hps_alloc_stats_reset() == 0 ||
-        !benchmark_alloc_stats_equal(&before_reset, &(HpsAllocStats){ 0 })) {
-        stats = hps_alloc_stats_get();
+    before_reset = lks_alloc_stats_get();
+    if (lks_alloc_stats_reset() == 0 ||
+        !benchmark_alloc_stats_equal(&before_reset, &(LksAllocStats){ 0 })) {
+        stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_equal(&before_reset, &stats)) {
-            hps_free(memory);
+            lks_free(memory);
             printf("Allocator test F failed: rejected reset changed live stats\n");
             return 1;
         }
     }
     {
-        void *failed_realloc = hps_realloc(memory, (size_t)-1);
+        void *failed_realloc = lks_realloc(memory, (size_t)-1);
         if (failed_realloc != NULL) {
-            hps_free(failed_realloc);
-            hps_free(memory);
+            lks_free(failed_realloc);
+            lks_free(memory);
             printf("Allocator test F failed: overflow realloc unexpectedly succeeded\n");
             return 1;
         }
     }
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (stats.live_bytes != 8 || stats.live_blocks != 1 ||
         ((unsigned char *)memory)[0] != 0x5a) {
-        hps_free(memory);
+        lks_free(memory);
         printf("Allocator test F failed: failed realloc damaged old block\n");
         return 1;
     }
-    hps_free(memory);
+    lks_free(memory);
     printf("Allocator test F: reset refused live block; failed realloc preserved it\n");
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test G failed: reset\n");
         return 1;
     }
-    memory = hps_alloc(0);
+    memory = lks_alloc(0);
     if (memory == NULL) {
         printf("Allocator test G failed: alloc(0) returned NULL\n");
         return 1;
     }
-    hps_free(memory);
-    if (hps_alloc_stats_reset() != 0) {
+    lks_free(memory);
+    if (lks_alloc_stats_reset() != 0) {
         printf("Allocator test G failed: reset after alloc(0)\n");
         return 1;
     }
-    memory = hps_realloc(NULL, 24);
-    stats = hps_alloc_stats_get();
+    memory = lks_realloc(NULL, 24);
+    stats = lks_alloc_stats_get();
     if (memory == NULL || stats.alloc_calls != 0 || stats.realloc_calls != 1 ||
         stats.live_bytes != 24 || stats.live_blocks != 1) {
-        hps_free(memory);
+        lks_free(memory);
         printf("Allocator test G failed: zero-size / realloc(NULL,size) semantics\n");
         return 1;
     }
-    hps_free(memory);
-    stats = hps_alloc_stats_get();
+    lks_free(memory);
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats)) {
         printf("Allocator test G failed: live allocation remains\n");
         return 1;
     }
     printf("Allocator test G: alloc(0) and realloc(NULL,24) semantics passed\n");
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Path lifecycle test failed: reset\n");
         return 1;
     }
     {
-        HpsPath *path = hps_path_create(HPS_DIRECTION_POSITIVE, 3u);
-        if (path == NULL || hps_path_append(path, 259u) != HPS_STATUS_OK ||
-            hps_path_append(path, 0u) != HPS_STATUS_OK ||
-            hps_path_append(path, 0u) != HPS_STATUS_OK) {
-            hps_path_destroy(path);
+        LksPath *path = lks_path_create(LKS_DIRECTION_POSITIVE, 3u);
+        if (path == NULL || lks_path_append(path, 259u) != LKS_STATUS_OK ||
+            lks_path_append(path, 0u) != LKS_STATUS_OK ||
+            lks_path_append(path, 0u) != LKS_STATUS_OK) {
+            lks_path_destroy(path);
             printf("Path lifecycle test failed: construction\n");
             return 1;
         }
-        stats = hps_alloc_stats_get();
+        stats = lks_alloc_stats_get();
         if (stats.peak_live_bytes == 0 || stats.peak_live_blocks == 0) {
-            hps_path_destroy(path);
+            lks_path_destroy(path);
             printf("Path lifecycle test failed: no allocations recorded\n");
             return 1;
         }
-        hps_path_destroy(path);
-        stats = hps_alloc_stats_get();
+        lks_path_destroy(path);
+        stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("Path lifecycle test failed: live bytes=%lu blocks=%lu\n",
                 (unsigned long)stats.live_bytes,
@@ -2807,28 +2807,28 @@ int hps_run_stage8_1_tests(void)
             return 1;
         }
     }
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Path realloc test failed: reset\n");
         return 1;
     }
     {
-        HpsPath *path = hps_path_create(HPS_DIRECTION_POSITIVE, 1u);
+        LksPath *path = lks_path_create(LKS_DIRECTION_POSITIVE, 1u);
         for (index = 0; path != NULL && index < 100; ++index) {
-            if (hps_path_append(path, (unsigned int)(index % 260)) !=
-                    HPS_STATUS_OK) {
-                hps_path_destroy(path);
+            if (lks_path_append(path, (unsigned int)(index % 260)) !=
+                    LKS_STATUS_OK) {
+                lks_path_destroy(path);
                 path = NULL;
             }
         }
-        stats = hps_alloc_stats_get();
-        if (path == NULL || hps_path_depth(path) != 101 ||
+        stats = lks_alloc_stats_get();
+        if (path == NULL || lks_path_depth(path) != 101 ||
             stats.realloc_calls == 0) {
-            hps_path_destroy(path);
+            lks_path_destroy(path);
             printf("Path realloc test failed: append/capacity growth\n");
             return 1;
         }
-        hps_path_destroy(path);
-        stats = hps_alloc_stats_get();
+        lks_path_destroy(path);
+        stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("Path realloc test failed: live bytes=%lu blocks=%lu\n",
                 (unsigned long)stats.live_bytes,
@@ -2839,38 +2839,38 @@ int hps_run_stage8_1_tests(void)
             (unsigned long)stats.realloc_calls);
     }
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Tree lifecycle test failed: reset\n");
         return 1;
     }
     {
         static const unsigned int slots[] = { 100, 50, 150, 125, 75, 25, 175 };
         int item_values[sizeof(slots) / sizeof(slots[0])];
-        HpsTree *tree = hps_tree_create();
+        LksTree *tree = lks_tree_create();
         size_t tree_peak_bytes;
         for (index = 0; tree != NULL &&
                 index < sizeof(slots) / sizeof(slots[0]); ++index) {
-            HpsPath *path = hps_path_create(HPS_DIRECTION_POSITIVE, slots[index]);
+            LksPath *path = lks_path_create(LKS_DIRECTION_POSITIVE, slots[index]);
             item_values[index] = (int)slots[index];
-            if (path == NULL || hps_tree_insert(tree, path,
-                    &item_values[index], NULL) != HPS_STATUS_OK) {
-                hps_path_destroy(path);
-                hps_tree_destroy(tree);
+            if (path == NULL || lks_tree_insert(tree, path,
+                    &item_values[index], NULL) != LKS_STATUS_OK) {
+                lks_path_destroy(path);
+                lks_tree_destroy(tree);
                 tree = NULL;
                 break;
             }
-            hps_path_destroy(path);
+            lks_path_destroy(path);
         }
-        stats = hps_alloc_stats_get();
-        if (tree == NULL || hps_tree_size(tree) !=
+        stats = lks_alloc_stats_get();
+        if (tree == NULL || lks_tree_size(tree) !=
                 sizeof(slots) / sizeof(slots[0]) || stats.peak_live_bytes == 0) {
-            hps_tree_destroy(tree);
+            lks_tree_destroy(tree);
             printf("Tree lifecycle test failed: construction\n");
             return 1;
         }
         tree_peak_bytes = stats.peak_live_bytes;
-        hps_tree_destroy(tree);
-        stats = hps_alloc_stats_get();
+        lks_tree_destroy(tree);
+        stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("Tree lifecycle test failed: live bytes=%lu blocks=%lu\n",
                 (unsigned long)stats.live_bytes,
@@ -2881,14 +2881,14 @@ int hps_run_stage8_1_tests(void)
             (unsigned long)tree_peak_bytes);
     }
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Group lifecycle test failed: reset\n");
         return 1;
     }
     {
         int group_values[100];
         void *group_items[100];
-        HpsGroup *group = NULL;
+        LksGroup *group = NULL;
         size_t build_live_bytes;
         size_t build_peak_bytes;
         size_t build_live_blocks;
@@ -2896,20 +2896,20 @@ int hps_run_stage8_1_tests(void)
             group_values[index] = (int)(99 - index);
             group_items[index] = &group_values[index];
         }
-        status = hps_group_build(group_items, 100, &comparator, &group);
-        stats = hps_alloc_stats_get();
+        status = lks_group_build(group_items, 100, &comparator, &group);
+        stats = lks_alloc_stats_get();
         build_live_bytes = stats.live_bytes;
         build_peak_bytes = stats.peak_live_bytes;
         build_live_blocks = stats.live_blocks;
-        if (status != HPS_STATUS_OK || group == NULL ||
-            hps_group_size(group) != 100 || build_live_bytes == 0 ||
+        if (status != LKS_STATUS_OK || group == NULL ||
+            lks_group_size(group) != 100 || build_live_bytes == 0 ||
             !benchmark_validate_final(group, 100, &(BenchmarkPathStats){ 0 })) {
-            hps_group_destroy(group);
+            lks_group_destroy(group);
             printf("Group lifecycle test failed: build/validation\n");
             return 1;
         }
-        hps_group_destroy(group);
-        stats = hps_alloc_stats_get();
+        lks_group_destroy(group);
+        stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("Group lifecycle test failed: live bytes=%lu blocks=%lu\n",
                 (unsigned long)stats.live_bytes,
@@ -2921,15 +2921,15 @@ int hps_run_stage8_1_tests(void)
             (unsigned long)build_peak_bytes);
     }
 
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("GroupBatch lifecycle test failed: reset\n");
         return 1;
     }
     {
         int batch_values[1000];
         void *batch_items[1000];
-        HpsGroupBatch *batch = NULL;
-        HpsGroup *result = NULL;
+        LksGroupBatch *batch = NULL;
+        LksGroup *result = NULL;
         size_t after_batch_build;
         size_t after_merge_all;
         size_t after_destroy_batch;
@@ -2939,49 +2939,49 @@ int hps_run_stage8_1_tests(void)
             batch_values[index] = (int)((index * 613u) % 1000u);
             batch_items[index] = &batch_values[index];
         }
-        status = hps_group_batch_build(batch_items, 1000, 100,
+        status = lks_group_batch_build(batch_items, 1000, 100,
             &comparator, &batch);
-        if (status != HPS_STATUS_OK || batch == NULL ||
-            hps_group_batch_group_count(batch) != 10) {
-            hps_group_batch_destroy(batch);
+        if (status != LKS_STATUS_OK || batch == NULL ||
+            lks_group_batch_group_count(batch) != 10) {
+            lks_group_batch_destroy(batch);
             printf("GroupBatch lifecycle test failed: Batch build\n");
             return 1;
         }
-        stats = hps_alloc_stats_get();
+        stats = lks_alloc_stats_get();
         after_batch_build = stats.live_bytes;
         counter.comparison_count = 0;
         counter.overflowed = 0;
-        status = hps_group_batch_merge_all(batch, &comparator, &result);
-        if (status != HPS_STATUS_OK || result == NULL ||
-            hps_group_size(result) != 1000) {
-            hps_group_destroy(result);
-            hps_group_batch_destroy(batch);
+        status = lks_group_batch_merge_all(batch, &comparator, &result);
+        if (status != LKS_STATUS_OK || result == NULL ||
+            lks_group_size(result) != 1000) {
+            lks_group_destroy(result);
+            lks_group_batch_destroy(batch);
             printf("GroupBatch lifecycle test failed: MergeAll\n");
             return 1;
         }
         memset(&path_stats, 0, sizeof(path_stats));
         if (!benchmark_validate_final(result, 1000, &path_stats)) {
-            hps_group_destroy(result);
-            hps_group_batch_destroy(batch);
+            lks_group_destroy(result);
+            lks_group_batch_destroy(batch);
             printf("GroupBatch lifecycle test failed: Result invalid\n");
             return 1;
         }
-        stats = hps_alloc_stats_get();
+        stats = lks_alloc_stats_get();
         after_merge_all = stats.live_bytes;
         peak_live_bytes = stats.peak_live_bytes;
-        hps_group_batch_destroy(batch);
-        stats = hps_alloc_stats_get();
+        lks_group_batch_destroy(batch);
+        stats = lks_alloc_stats_get();
         after_destroy_batch = stats.live_bytes;
         if (after_batch_build == 0 || after_merge_all == 0 ||
-            after_destroy_batch == 0 || hps_group_size(result) != 1000 ||
-            hps_group_item_at(result, 0) == NULL ||
-            *(const int *)hps_group_item_at(result, 0) != 0) {
-            hps_group_destroy(result);
+            after_destroy_batch == 0 || lks_group_size(result) != 1000 ||
+            lks_group_item_at(result, 0) == NULL ||
+            *(const int *)lks_group_item_at(result, 0) != 0) {
+            lks_group_destroy(result);
             printf("GroupBatch lifecycle test failed: result lifetime after Batch destroy\n");
             return 1;
         }
-        hps_group_destroy(result);
-        stats = hps_alloc_stats_get();
+        lks_group_destroy(result);
+        stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("GroupBatch lifecycle test failed: final live bytes=%lu blocks=%lu\n",
                 (unsigned long)stats.live_bytes,
@@ -2993,30 +2993,30 @@ int hps_run_stage8_1_tests(void)
             (unsigned long)after_destroy_batch, (unsigned long)peak_live_bytes);
     }
 
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats)) {
         printf("Stage 8.1 failed: final live bytes=%lu blocks=%lu\n",
             (unsigned long)stats.live_bytes,
             (unsigned long)stats.live_blocks);
         return 1;
     }
-    printf("Stage 8.1 final allocator state: live bytes=0 live blocks=0; no HPSort allocation leak detected\n");
+    printf("Stage 8.1 final allocator state: live bytes=0 live blocks=0; no LayerKeySort allocation leak detected\n");
     return 0;
 }
 
 enum {
-    HPS_STAGE82_MAIN_N = 10000,
-    HPS_STAGE82_GROUP_COUNT = 18,
-    HPS_STAGE82_MAIN_SEEDS = 5,
-    HPS_STAGE82_SCALE_SEEDS = 3,
-    HPS_STAGE82_SCALE_N_COUNT = 4,
-    HPS_STAGE82_SCALE_GROUPS = 3
+    LKS_STAGE82_MAIN_N = 10000,
+    LKS_STAGE82_GROUP_COUNT = 18,
+    LKS_STAGE82_MAIN_SEEDS = 5,
+    LKS_STAGE82_SCALE_SEEDS = 3,
+    LKS_STAGE82_SCALE_N_COUNT = 4,
+    LKS_STAGE82_SCALE_GROUPS = 3
 };
 
-static const size_t stage82_groups[HPS_STAGE82_GROUP_COUNT] = {
+static const size_t stage82_groups[LKS_STAGE82_GROUP_COUNT] = {
     1, 2, 3, 4, 5, 6, 7, 8, 10, 12, 16, 20, 25, 32, 40, 50, 64, 80
 };
-static const uint32_t stage82_seeds[HPS_STAGE82_MAIN_SEEDS] = {
+static const uint32_t stage82_seeds[LKS_STAGE82_MAIN_SEEDS] = {
     UINT32_C(0xC0FFEE), UINT32_C(0xC0FFEF), UINT32_C(0xC0FFF0),
     UINT32_C(0xC0FFF1), UINT32_C(0xC0FFF2)
 };
@@ -3065,10 +3065,10 @@ typedef struct Stage82Sample {
     double build_ms;
     double merge_ms;
     double total_ms;
-    HpsAllocStats after_batch;
-    HpsAllocStats after_merge;
-    HpsAllocStats result_only;
-    HpsAllocStats final;
+    LksAllocStats after_batch;
+    LksAllocStats after_merge;
+    LksAllocStats result_only;
+    LksAllocStats final;
     BenchmarkPathStats local_paths;
     BenchmarkPathStats final_paths;
 } Stage82Sample;
@@ -3087,22 +3087,22 @@ typedef struct Stage82Aggregate {
 static int stage82_alignment_one(size_t bytes, size_t alignment,
     const char *type_name)
 {
-    void *payload = hps_alloc(bytes);
+    void *payload = lks_alloc(bytes);
     int passed = payload != NULL && alignment != 0 &&
         ((uintptr_t)payload % (uintptr_t)alignment) == 0;
     if (!passed) {
         printf("Alignment regression failed for %s: address=%p alignment=%lu\n",
             type_name, payload, (unsigned long)alignment);
     }
-    hps_free(payload);
+    lks_free(payload);
     return passed;
 }
 
 static int stage82_alignment_regression(void)
 {
-    HpsAllocStats stats;
+    LksAllocStats stats;
     int passed = 1;
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         printf("Alignment regression failed: allocator was not empty before reset\n");
         return 0;
     }
@@ -3120,7 +3120,7 @@ static int stage82_alignment_regression(void)
     STAGE82_CHECK_ALIGNMENT(Stage82AlignmentTypes);
     STAGE82_CHECK_ALIGNMENT(Stage82AlignmentUnion);
 #undef STAGE82_CHECK_ALIGNMENT
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats)) {
         printf("Alignment regression failed: final live bytes=%lu blocks=%lu\n",
             (unsigned long)stats.live_bytes, (unsigned long)stats.live_blocks);
@@ -3130,13 +3130,13 @@ static int stage82_alignment_regression(void)
     return passed;
 }
 
-static int stage83_tag_accounting_valid(const HpsAllocStats *stats,
+static int stage83_tag_accounting_valid(const LksAllocStats *stats,
     const char *snapshot_name)
 {
     size_t tag;
     size_t live_bytes = 0, live_blocks = 0;
     size_t peak_bytes = 0, peak_blocks = 0;
-    for (tag = 0; tag < HPS_ALLOC_TAG_COUNT; ++tag) {
+    for (tag = 0; tag < LKS_ALLOC_TAG_COUNT; ++tag) {
         if (!benchmark_add_size(&live_bytes, stats->tags[tag].live_bytes) ||
             !benchmark_add_size(&live_blocks, stats->tags[tag].live_blocks) ||
             !benchmark_add_size(&peak_bytes, stats->bytes_at_global_peak[tag]) ||
@@ -3161,18 +3161,18 @@ static int stage83_tag_accounting_valid(const HpsAllocStats *stats,
     return 1;
 }
 
-static int stage83_other_is_empty(const HpsAllocStats *stats,
+static int stage83_other_is_empty(const LksAllocStats *stats,
     const char *snapshot_name)
 {
-    const HpsAllocTagStats *other = &stats->tags[HPS_ALLOC_TAG_OTHER];
+    const LksAllocTagStats *other = &stats->tags[LKS_ALLOC_TAG_OTHER];
     if (other->live_bytes != 0 || other->live_blocks != 0 ||
-        stats->bytes_at_global_peak[HPS_ALLOC_TAG_OTHER] != 0 ||
-        stats->blocks_at_global_peak[HPS_ALLOC_TAG_OTHER] != 0) {
+        stats->bytes_at_global_peak[LKS_ALLOC_TAG_OTHER] != 0 ||
+        stats->blocks_at_global_peak[LKS_ALLOC_TAG_OTHER] != 0) {
         printf("Stage 8.3 unclassified production allocation at %s: OTHER live bytes=%lu blocks=%lu peak bytes=%lu blocks=%lu\n",
             snapshot_name, (unsigned long)other->live_bytes,
             (unsigned long)other->live_blocks,
-            (unsigned long)stats->bytes_at_global_peak[HPS_ALLOC_TAG_OTHER],
-            (unsigned long)stats->blocks_at_global_peak[HPS_ALLOC_TAG_OTHER]);
+            (unsigned long)stats->bytes_at_global_peak[LKS_ALLOC_TAG_OTHER],
+            (unsigned long)stats->blocks_at_global_peak[LKS_ALLOC_TAG_OTHER]);
         return 0;
     }
     return 1;
@@ -3182,18 +3182,18 @@ static int stage82_run_sample(int *values, void **items, size_t count,
     size_t group_size, size_t target_groups, Stage82Sample *sample,
     uint32_t seed, int verbose_failure)
 {
-    HpsComparator comparator;
+    LksComparator comparator;
     BenchmarkCompareContext compare_context;
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *result = NULL;
-    HpsStatus status;
-    HpsAllocStats before_merge;
+    LksGroupBatch *batch = NULL;
+    LksGroup *result = NULL;
+    LksStatus status;
+    LksAllocStats before_merge;
     size_t i;
     clock_t build_start, build_end, merge_start, merge_end;
     int success = 0;
 
     memset(sample, 0, sizeof(*sample));
-    if (hps_alloc_stats_reset() != 0) {
+    if (lks_alloc_stats_reset() != 0) {
         if (verbose_failure) printf("Stage 8.2 sample reset failed: seed=%08lX Groups=%lu GroupSize=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups, (unsigned long)group_size);
         return 0;
@@ -3204,30 +3204,30 @@ static int stage82_run_sample(int *values, void **items, size_t count,
     comparator.compare = benchmark_compare_int;
     comparator.context = &compare_context;
     build_start = clock();
-    status = hps_group_batch_build(items, count, group_size, &comparator, &batch);
+    status = lks_group_batch_build(items, count, group_size, &comparator, &batch);
     build_end = clock();
-    if (status != HPS_STATUS_OK || batch == NULL) goto cleanup;
+    if (status != LKS_STATUS_OK || batch == NULL) goto cleanup;
     sample->build_comparisons = compare_context.comparison_count;
     sample->build_ms = build_end >= build_start ?
         1000.0 * (double)(build_end - build_start) / CLOCKS_PER_SEC : 0.0;
-    sample->after_batch = hps_alloc_stats_get();
+    sample->after_batch = lks_alloc_stats_get();
     if (!stage83_tag_accounting_valid(&sample->after_batch, "AfterBatchBuild") ||
         !stage83_other_is_empty(&sample->after_batch, "AfterBatchBuild")) goto cleanup;
-    sample->groups = hps_group_batch_group_count(batch);
+    sample->groups = lks_group_batch_group_count(batch);
     sample->group_size = group_size;
     if (sample->groups != target_groups ||
         !benchmark_collect_batch_paths(batch, &sample->local_paths)) goto cleanup;
     for (i = 0; i < sample->groups; ++i) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, i);
+        const LksGroup *group = lks_group_batch_group_at(batch, i);
         size_t j;
         if (group == NULL) goto cleanup;
-        for (j = 0; j < hps_group_size(group); ++j) {
-            const HpsPath *path = hps_group_path_at(group, j);
+        for (j = 0; j < lks_group_size(group); ++j) {
+            const LksPath *path = lks_group_path_at(group, j);
             size_t depth, capacity, storage;
             if (path == NULL) goto cleanup;
-            depth = hps_path_depth(path);
-            capacity = hps_path_internal_capacity(path);
-            storage = hps_path_internal_storage_bytes(path);
+            depth = lks_path_depth(path);
+            capacity = lks_path_internal_capacity(path);
+            storage = lks_path_internal_storage_bytes(path);
             if (storage == (size_t)-1 || capacity < depth ||
                 !benchmark_add_size(&sample->batch_total_depth, depth) ||
                 !benchmark_add_size(&sample->batch_total_capacity, capacity) ||
@@ -3236,56 +3236,56 @@ static int stage82_run_sample(int *values, void **items, size_t count,
             ++sample->batch_path_count;
         }
     }
-    if (sample->batch_storage_bytes != sample->after_batch.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes ||
-        sample->batch_path_count * hps_path_internal_sizeof_path() !=
-            sample->after_batch.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes ||
-        sample->after_batch.tags[HPS_ALLOC_TAG_PATH_STEPS].live_blocks !=
+    if (sample->batch_storage_bytes != sample->after_batch.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes ||
+        sample->batch_path_count * lks_path_internal_sizeof_path() !=
+            sample->after_batch.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes ||
+        sample->after_batch.tags[LKS_ALLOC_TAG_PATH_STEPS].live_blocks !=
             sample->batch_path_count - sample->batch_zero_depth_count) goto cleanup;
     merge_start = clock();
-    status = hps_group_batch_merge_all(batch, &comparator, &result);
+    status = lks_group_batch_merge_all(batch, &comparator, &result);
     merge_end = clock();
-    if (status != HPS_STATUS_OK || result == NULL) goto cleanup;
+    if (status != LKS_STATUS_OK || result == NULL) goto cleanup;
     sample->total_comparisons = compare_context.comparison_count;
     sample->merge_comparisons = sample->total_comparisons - sample->build_comparisons;
     sample->merge_ms = merge_end >= merge_start ?
         1000.0 * (double)(merge_end - merge_start) / CLOCKS_PER_SEC : 0.0;
     sample->total_ms = sample->build_ms + sample->merge_ms;
-    sample->after_merge = hps_alloc_stats_get();
+    sample->after_merge = lks_alloc_stats_get();
     if (!stage83_tag_accounting_valid(&sample->after_merge, "PostMerge") ||
         !stage83_other_is_empty(&sample->after_merge, "PostMerge") ||
-        sample->after_merge.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes != 0 ||
-        sample->after_merge.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_blocks != 0) goto cleanup;
+        sample->after_merge.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes != 0 ||
+        sample->after_merge.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_blocks != 0) goto cleanup;
     memset(&sample->final_paths, 0, sizeof(sample->final_paths));
     if (!benchmark_validate_final(result, count, &sample->final_paths)) goto cleanup;
-    sample->result_path_count = hps_group_size(result);
+    sample->result_path_count = lks_group_size(result);
     for (i = 0; i < sample->result_path_count; ++i) {
-        const HpsPath *path = hps_group_path_at(result, i);
+        const LksPath *path = lks_group_path_at(result, i);
         size_t depth, capacity, storage;
         if (path == NULL) goto cleanup;
-        depth = hps_path_depth(path);
-        capacity = hps_path_internal_capacity(path);
-        storage = hps_path_internal_storage_bytes(path);
+        depth = lks_path_depth(path);
+        capacity = lks_path_internal_capacity(path);
+        storage = lks_path_internal_storage_bytes(path);
         if (storage == (size_t)-1 || capacity < depth ||
             !benchmark_add_size(&sample->result_total_depth, depth) ||
             !benchmark_add_size(&sample->result_total_capacity, capacity) ||
             !benchmark_add_size(&sample->result_storage_bytes, storage)) goto cleanup;
         if (depth == 0) ++sample->result_zero_depth_count;
     }
-    hps_group_batch_destroy(batch);
+    lks_group_batch_destroy(batch);
     batch = NULL;
-    sample->result_only = hps_alloc_stats_get();
+    sample->result_only = lks_alloc_stats_get();
     if (!stage83_tag_accounting_valid(&sample->result_only, "ResultOnly") ||
         !stage83_other_is_empty(&sample->result_only, "ResultOnly") ||
-        sample->result_only.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes != 0 ||
-        sample->result_only.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_blocks != 0 ||
-        sample->result_only.tags[HPS_ALLOC_TAG_BATCH_OBJECT].live_bytes != 0 ||
-        sample->result_only.tags[HPS_ALLOC_TAG_BATCH_OBJECT].live_blocks != 0 ||
-        sample->result_only.tags[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes != 0 ||
-        sample->result_only.tags[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_blocks != 0) goto cleanup;
-    if (sample->result_storage_bytes != sample->result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes ||
-        sample->result_path_count * hps_path_internal_sizeof_path() !=
-            sample->result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes ||
-        sample->result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_blocks !=
+        sample->result_only.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes != 0 ||
+        sample->result_only.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_blocks != 0 ||
+        sample->result_only.tags[LKS_ALLOC_TAG_BATCH_OBJECT].live_bytes != 0 ||
+        sample->result_only.tags[LKS_ALLOC_TAG_BATCH_OBJECT].live_blocks != 0 ||
+        sample->result_only.tags[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes != 0 ||
+        sample->result_only.tags[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_blocks != 0) goto cleanup;
+    if (sample->result_storage_bytes != sample->result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes ||
+        sample->result_path_count * lks_path_internal_sizeof_path() !=
+            sample->result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes ||
+        sample->result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_blocks !=
             sample->result_path_count - sample->result_zero_depth_count) goto cleanup;
     memset(&sample->final_paths, 0, sizeof(sample->final_paths));
     if (!benchmark_validate_final(result, count, &sample->final_paths)) goto cleanup;
@@ -3306,9 +3306,9 @@ static int stage82_run_sample(int *values, void **items, size_t count,
             (unsigned long)sample->after_merge.failed_calls);
         goto cleanup;
     }
-    hps_group_destroy(result);
+    lks_group_destroy(result);
     result = NULL;
-    sample->final = hps_alloc_stats_get();
+    sample->final = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&sample->final) || sample->final.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&sample->final, "Final") ||
         !stage83_other_is_empty(&sample->final, "Final")) {
@@ -3321,13 +3321,13 @@ static int stage82_run_sample(int *values, void **items, size_t count,
     success = 1;
 
 cleanup:
-    hps_group_destroy(result);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(result);
+    lks_group_batch_destroy(batch);
     if (!success && verbose_failure) {
-        before_merge = hps_alloc_stats_get();
+        before_merge = lks_alloc_stats_get();
         printf("Stage 8.2 sample failed: seed=%08lX Groups=%lu GroupSize=%lu status=%s current bytes=%lu blocks=%lu failed=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups, (unsigned long)group_size,
-            hps_status_string(status), (unsigned long)before_merge.live_bytes,
+            lks_status_string(status), (unsigned long)before_merge.live_bytes,
             (unsigned long)before_merge.live_blocks, (unsigned long)before_merge.failed_calls);
     }
     return success;
@@ -3389,62 +3389,62 @@ static void stage82_add_aggregate(Stage82Aggregate *a,
     if (s->final_paths.max_level > a->final_max_level) a->final_max_level = s->final_paths.max_level;
 }
 
-static int stage82_print_main_outputs(Stage82Sample samples[HPS_STAGE82_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+static int stage82_print_main_outputs(Stage82Sample samples[LKS_STAGE82_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
     size_t g, seed;
     printf("\nStage 8.2 Main Requested Memory CSV (bytes are allocator requested payload)\n");
     printf("Groups,GroupSize,BatchLiveBytesMean,ResultLiveBytesMean,PostMergeLiveBytesMean,OverallPeakBytesMean,OverallPeakBytesMin,OverallPeakBytesMax,OverallPeakBytesStdDev,TransientExtraPeakBytesMean,PeakOverBatchBytesMean,BatchLiveBytesPerItem,ResultLiveBytesPerItem,OverallPeakBytesPerItem,TransientExtraPeakBytesPerItem,PeakVsResultRatio,PeakVsBatchRatio\n");
-    for (g = 0; g < HPS_STAGE82_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE82_GROUP_COUNT; ++g) {
         Stage82Aggregate a = { 0 };
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) stage82_add_aggregate(&a, &samples[g][seed], HPS_STAGE82_MAIN_N, seed);
-        a.batch_mean /= HPS_STAGE82_MAIN_SEEDS; a.result_mean /= HPS_STAGE82_MAIN_SEEDS;
-        a.post_mean /= HPS_STAGE82_MAIN_SEEDS; a.transient_mean /= HPS_STAGE82_MAIN_SEEDS;
-        a.peak_over_batch_mean /= HPS_STAGE82_MAIN_SEEDS;
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) stage82_add_aggregate(&a, &samples[g][seed], LKS_STAGE82_MAIN_N, seed);
+        a.batch_mean /= LKS_STAGE82_MAIN_SEEDS; a.result_mean /= LKS_STAGE82_MAIN_SEEDS;
+        a.post_mean /= LKS_STAGE82_MAIN_SEEDS; a.transient_mean /= LKS_STAGE82_MAIN_SEEDS;
+        a.peak_over_batch_mean /= LKS_STAGE82_MAIN_SEEDS;
         printf("%lu,%lu,%.2f,%.2f,%.2f,%.2f,%lu,%lu,%.2f,%.2f,%.2f,%.4f,%.4f,%.4f,%.4f,%.6f,%.6f\n",
             (unsigned long)stage82_groups[g], (unsigned long)samples[g][0].group_size,
             a.batch_mean, a.result_mean, a.post_mean, a.peak_mean,
             (unsigned long)a.peak_min, (unsigned long)a.peak_max,
-            sqrt(a.peak_m2 / HPS_STAGE82_MAIN_SEEDS), a.transient_mean,
-            a.peak_over_batch_mean, a.batch_mean / HPS_STAGE82_MAIN_N,
-            a.result_mean / HPS_STAGE82_MAIN_N, a.peak_mean / HPS_STAGE82_MAIN_N,
-            a.transient_mean / HPS_STAGE82_MAIN_N,
+            sqrt(a.peak_m2 / LKS_STAGE82_MAIN_SEEDS), a.transient_mean,
+            a.peak_over_batch_mean, a.batch_mean / LKS_STAGE82_MAIN_N,
+            a.result_mean / LKS_STAGE82_MAIN_N, a.peak_mean / LKS_STAGE82_MAIN_N,
+            a.transient_mean / LKS_STAGE82_MAIN_N,
             a.result_mean == 0.0 ? 0.0 : a.peak_mean / a.result_mean,
             a.batch_mean == 0.0 ? 0.0 : a.peak_mean / a.batch_mean);
     }
     printf("\nStage 8.2 Blocks and Allocation CSV\nGroups,GroupSize,BatchLiveBlocksMean,ResultLiveBlocksMean,OverallPeakBlocksMean,AllocCallsMean,ReallocCallsMean,FreeCallsMean,TotalSuccessfulRequestedBytesMean\n");
-    for (g = 0; g < HPS_STAGE82_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE82_GROUP_COUNT; ++g) {
         Stage82Aggregate a = { 0 };
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) stage82_add_aggregate(&a, &samples[g][seed], HPS_STAGE82_MAIN_N, seed);
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) stage82_add_aggregate(&a, &samples[g][seed], LKS_STAGE82_MAIN_N, seed);
         printf("%lu,%lu,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
             (unsigned long)stage82_groups[g], (unsigned long)samples[g][0].group_size,
-            a.batch_blocks_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.result_blocks_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.peak_blocks_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.alloc_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.realloc_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.free_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.requested_mean / HPS_STAGE82_MAIN_SEEDS);
+            a.batch_blocks_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.result_blocks_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.peak_blocks_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.alloc_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.realloc_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.free_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.requested_mean / LKS_STAGE82_MAIN_SEEDS);
     }
     printf("\nStage 8.2 Path and Memory CSV\nGroups,GroupSize,LocalAvgDepthMean,FinalAvgDepthMean,FinalMaxDepthWorst,FinalMaxLevelWorst,BatchLiveBytesPerItem,ResultLiveBytesPerItem,OverallPeakBytesPerItem\n");
-    for (g = 0; g < HPS_STAGE82_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE82_GROUP_COUNT; ++g) {
         Stage82Aggregate a = { 0 };
         double batch_per_item, result_per_item, peak_per_item, transient_per_item;
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) stage82_add_aggregate(&a, &samples[g][seed], HPS_STAGE82_MAIN_N, seed);
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) stage82_add_aggregate(&a, &samples[g][seed], LKS_STAGE82_MAIN_N, seed);
         batch_per_item = a.batch_mean /
-            (HPS_STAGE82_MAIN_SEEDS * (double)HPS_STAGE82_MAIN_N);
+            (LKS_STAGE82_MAIN_SEEDS * (double)LKS_STAGE82_MAIN_N);
         result_per_item = a.result_mean /
-            (HPS_STAGE82_MAIN_SEEDS * (double)HPS_STAGE82_MAIN_N);
-        peak_per_item = a.peak_mean / HPS_STAGE82_MAIN_N;
+            (LKS_STAGE82_MAIN_SEEDS * (double)LKS_STAGE82_MAIN_N);
+        peak_per_item = a.peak_mean / LKS_STAGE82_MAIN_N;
         transient_per_item = a.transient_mean /
-            (HPS_STAGE82_MAIN_SEEDS * (double)HPS_STAGE82_MAIN_N);
+            (LKS_STAGE82_MAIN_SEEDS * (double)LKS_STAGE82_MAIN_N);
         if (!stage82_values_close(batch_per_item,
-                (a.batch_mean / HPS_STAGE82_MAIN_SEEDS) / HPS_STAGE82_MAIN_N) ||
+                (a.batch_mean / LKS_STAGE82_MAIN_SEEDS) / LKS_STAGE82_MAIN_N) ||
             !stage82_values_close(result_per_item,
-                (a.result_mean / HPS_STAGE82_MAIN_SEEDS) / HPS_STAGE82_MAIN_N) ||
+                (a.result_mean / LKS_STAGE82_MAIN_SEEDS) / LKS_STAGE82_MAIN_N) ||
             !stage82_values_close(peak_per_item,
-                a.peak_mean / HPS_STAGE82_MAIN_N) ||
+                a.peak_mean / LKS_STAGE82_MAIN_N) ||
             !stage82_values_close(transient_per_item,
-                (a.transient_mean / HPS_STAGE82_MAIN_SEEDS) / HPS_STAGE82_MAIN_N)) {
+                (a.transient_mean / LKS_STAGE82_MAIN_SEEDS) / LKS_STAGE82_MAIN_N)) {
             printf("Stage 8.2 PerItem aggregation consistency FAILED: Groups=%lu Batch=%.12g Result=%.12g Peak=%.12g Transient=%.12g\n",
                 (unsigned long)stage82_groups[g], batch_per_item, result_per_item,
                 peak_per_item, transient_per_item);
@@ -3452,17 +3452,17 @@ static int stage82_print_main_outputs(Stage82Sample samples[HPS_STAGE82_GROUP_CO
         }
         printf("%lu,%lu,%.4f,%.4f,%lu,%lu,%.4f,%.4f,%.4f\n",
             (unsigned long)stage82_groups[g], (unsigned long)samples[g][0].group_size,
-            a.local_depth_mean / HPS_STAGE82_MAIN_SEEDS,
-            a.final_depth_mean / HPS_STAGE82_MAIN_SEEDS,
+            a.local_depth_mean / LKS_STAGE82_MAIN_SEEDS,
+            a.final_depth_mean / LKS_STAGE82_MAIN_SEEDS,
             (unsigned long)a.final_max_depth, (unsigned long)a.final_max_level,
             batch_per_item, result_per_item, peak_per_item);
     }
-    printf("\nOverallPeakBytes matrix\nSeed"); for (g=0;g<HPS_STAGE82_GROUP_COUNT;++g) printf(",G%lu",(unsigned long)stage82_groups[g]); printf("\n");
-    for (seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) { printf("%08lX",(unsigned long)stage82_seeds[seed]); for(g=0;g<HPS_STAGE82_GROUP_COUNT;++g) printf(",%lu",(unsigned long)samples[g][seed].after_merge.peak_live_bytes); printf("\n"); }
-    printf("\nResultLiveBytes matrix\nSeed"); for (g=0;g<HPS_STAGE82_GROUP_COUNT;++g) printf(",G%lu",(unsigned long)stage82_groups[g]); printf("\n");
-    for (seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) { printf("%08lX",(unsigned long)stage82_seeds[seed]); for(g=0;g<HPS_STAGE82_GROUP_COUNT;++g) printf(",%lu",(unsigned long)samples[g][seed].result_only.live_bytes); printf("\n"); }
-    printf("\nTransientExtraPeakBytes matrix\nSeed"); for (g=0;g<HPS_STAGE82_GROUP_COUNT;++g) printf(",G%lu",(unsigned long)stage82_groups[g]); printf("\n");
-    for (seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) { printf("%08lX",(unsigned long)stage82_seeds[seed]); for(g=0;g<HPS_STAGE82_GROUP_COUNT;++g) printf(",%lu",(unsigned long)(samples[g][seed].after_merge.peak_live_bytes-samples[g][seed].after_merge.live_bytes)); printf("\n"); }
+    printf("\nOverallPeakBytes matrix\nSeed"); for (g=0;g<LKS_STAGE82_GROUP_COUNT;++g) printf(",G%lu",(unsigned long)stage82_groups[g]); printf("\n");
+    for (seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) { printf("%08lX",(unsigned long)stage82_seeds[seed]); for(g=0;g<LKS_STAGE82_GROUP_COUNT;++g) printf(",%lu",(unsigned long)samples[g][seed].after_merge.peak_live_bytes); printf("\n"); }
+    printf("\nResultLiveBytes matrix\nSeed"); for (g=0;g<LKS_STAGE82_GROUP_COUNT;++g) printf(",G%lu",(unsigned long)stage82_groups[g]); printf("\n");
+    for (seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) { printf("%08lX",(unsigned long)stage82_seeds[seed]); for(g=0;g<LKS_STAGE82_GROUP_COUNT;++g) printf(",%lu",(unsigned long)samples[g][seed].result_only.live_bytes); printf("\n"); }
+    printf("\nTransientExtraPeakBytes matrix\nSeed"); for (g=0;g<LKS_STAGE82_GROUP_COUNT;++g) printf(",G%lu",(unsigned long)stage82_groups[g]); printf("\n");
+    for (seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) { printf("%08lX",(unsigned long)stage82_seeds[seed]); for(g=0;g<LKS_STAGE82_GROUP_COUNT;++g) printf(",%lu",(unsigned long)(samples[g][seed].after_merge.peak_live_bytes-samples[g][seed].after_merge.live_bytes)); printf("\n"); }
     printf("Stage 8.2 PerItem consistency: Batch/Result/OverallPeak/Transient passed for 18/18 GroupCounts; all three matrices print 5 rows with 18 values each.\n");
     return 1;
 }
@@ -3483,26 +3483,26 @@ static int stage82_run_baseline(void)
     return 1;
 }
 
-int hps_run_stage8_2_benchmark(void)
+int lks_run_stage8_2_benchmark(void)
 {
-    Stage82Sample main_samples[HPS_STAGE82_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS];
-    static const size_t scale_ns[HPS_STAGE82_SCALE_N_COUNT] = {1000,2000,5000,10000};
-    static const size_t scale_groups[HPS_STAGE82_SCALE_GROUPS] = {1,8,32};
-    Stage82Sample scale_samples[HPS_STAGE82_SCALE_N_COUNT][HPS_STAGE82_SCALE_GROUPS][HPS_STAGE82_SCALE_SEEDS];
-    int values[HPS_STAGE82_MAIN_N];
-    void *items[HPS_STAGE82_MAIN_N];
+    Stage82Sample main_samples[LKS_STAGE82_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS];
+    static const size_t scale_ns[LKS_STAGE82_SCALE_N_COUNT] = {1000,2000,5000,10000};
+    static const size_t scale_groups[LKS_STAGE82_SCALE_GROUPS] = {1,8,32};
+    Stage82Sample scale_samples[LKS_STAGE82_SCALE_N_COUNT][LKS_STAGE82_SCALE_GROUPS][LKS_STAGE82_SCALE_SEEDS];
+    int values[LKS_STAGE82_MAIN_N];
+    void *items[LKS_STAGE82_MAIN_N];
     size_t i, seed, g, n_index;
 
-    printf("HPSort Stage 8.2 Requested Heap / Peak Memory Benchmark\n");
+    printf("LayerKeySort Stage 8.2 Requested Heap / Peak Memory Benchmark\n");
     if (!stage82_alignment_regression()) return 1;
-    for (seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) {
-        for(i=0;i<HPS_STAGE82_MAIN_N;++i) values[i]=(int)i;
-        benchmark_shuffle(values,HPS_STAGE82_MAIN_N,stage82_seeds[seed]);
-        for(g=0;g<HPS_STAGE82_GROUP_COUNT;++g) {
-            size_t q=HPS_STAGE82_MAIN_N/stage82_groups[g];
-            size_t r=HPS_STAGE82_MAIN_N%stage82_groups[g];
+    for (seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) {
+        for(i=0;i<LKS_STAGE82_MAIN_N;++i) values[i]=(int)i;
+        benchmark_shuffle(values,LKS_STAGE82_MAIN_N,stage82_seeds[seed]);
+        for(g=0;g<LKS_STAGE82_GROUP_COUNT;++g) {
+            size_t q=LKS_STAGE82_MAIN_N/stage82_groups[g];
+            size_t r=LKS_STAGE82_MAIN_N%stage82_groups[g];
             size_t gs=q+(r!=0);
-            if (!stage82_run_sample(values,items,HPS_STAGE82_MAIN_N,gs,stage82_groups[g],
+            if (!stage82_run_sample(values,items,LKS_STAGE82_MAIN_N,gs,stage82_groups[g],
                     &main_samples[g][seed],stage82_seeds[seed],1)) return 1;
         }
     }
@@ -3510,11 +3510,11 @@ int hps_run_stage8_2_benchmark(void)
     if (!stage82_print_main_outputs(main_samples)) return 1;
     if (!stage82_run_baseline()) return 1;
 
-    for(n_index=0;n_index<HPS_STAGE82_SCALE_N_COUNT;++n_index) {
-        for(seed=0;seed<HPS_STAGE82_SCALE_SEEDS;++seed) {
+    for(n_index=0;n_index<LKS_STAGE82_SCALE_N_COUNT;++n_index) {
+        for(seed=0;seed<LKS_STAGE82_SCALE_SEEDS;++seed) {
             for(i=0;i<scale_ns[n_index];++i) values[i]=(int)i;
             benchmark_shuffle(values,scale_ns[n_index],stage82_seeds[seed]);
-            for(g=0;g<HPS_STAGE82_SCALE_GROUPS;++g) {
+            for(g=0;g<LKS_STAGE82_SCALE_GROUPS;++g) {
                 size_t gs=stage82_find_group_size(scale_ns[n_index],scale_groups[g]);
                 if (gs==0 || !stage82_run_sample(values,items,scale_ns[n_index],gs,
                         scale_groups[g],&scale_samples[n_index][g][seed],stage82_seeds[seed],1)) return 1;
@@ -3523,9 +3523,9 @@ int hps_run_stage8_2_benchmark(void)
     }
     printf("\nScaling panel completed: 36/36 sample lifecycles ended at 0 live bytes / 0 live blocks; all targets verified\n");
     printf("Scaling CSV (means over 3 seeds)\nN,Groups,GroupSize,BatchLiveBytesPerItem,ResultLiveBytesPerItem,OverallPeakBytesPerItem,TransientExtraPeakBytesPerItem,LocalAvgDepthMean,FinalAvgDepthMean\n");
-    for(n_index=0;n_index<HPS_STAGE82_SCALE_N_COUNT;++n_index) for(g=0;g<HPS_STAGE82_SCALE_GROUPS;++g) {
+    for(n_index=0;n_index<LKS_STAGE82_SCALE_N_COUNT;++n_index) for(g=0;g<LKS_STAGE82_SCALE_GROUPS;++g) {
         double batch=0,result=0,peak=0,transient=0,local=0,final=0;
-        for(seed=0;seed<HPS_STAGE82_SCALE_SEEDS;++seed) {
+        for(seed=0;seed<LKS_STAGE82_SCALE_SEEDS;++seed) {
             Stage82Sample *s=&scale_samples[n_index][g][seed];
             batch+=stage82_per_item(s->after_batch.live_bytes,scale_ns[n_index]);
             result+=stage82_per_item(s->result_only.live_bytes,scale_ns[n_index]);
@@ -3537,12 +3537,12 @@ int hps_run_stage8_2_benchmark(void)
         printf("%lu,%lu,%lu,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f\n",
             (unsigned long)scale_ns[n_index],(unsigned long)scale_groups[g],
             (unsigned long)scale_samples[n_index][g][0].group_size,
-            batch/HPS_STAGE82_SCALE_SEEDS,result/HPS_STAGE82_SCALE_SEEDS,
-            peak/HPS_STAGE82_SCALE_SEEDS,transient/HPS_STAGE82_SCALE_SEEDS,
-            local/HPS_STAGE82_SCALE_SEEDS,final/HPS_STAGE82_SCALE_SEEDS);
+            batch/LKS_STAGE82_SCALE_SEEDS,result/LKS_STAGE82_SCALE_SEEDS,
+            peak/LKS_STAGE82_SCALE_SEEDS,transient/LKS_STAGE82_SCALE_SEEDS,
+            local/LKS_STAGE82_SCALE_SEEDS,final/LKS_STAGE82_SCALE_SEEDS);
     }
     {
-        HpsAllocStats final_stats=hps_alloc_stats_get();
+        LksAllocStats final_stats=lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&final_stats)) {
             printf("Stage 8.2 final allocator leak: bytes=%lu blocks=%lu\n",
                 (unsigned long)final_stats.live_bytes,(unsigned long)final_stats.live_blocks);
@@ -3553,8 +3553,8 @@ int hps_run_stage8_2_benchmark(void)
     return 0;
 }
 
-enum { HPS_STAGE83_GROUP_COUNT = 11 };
-static const size_t stage83_groups[HPS_STAGE83_GROUP_COUNT] = {
+enum { LKS_STAGE83_GROUP_COUNT = 11 };
+static const size_t stage83_groups[LKS_STAGE83_GROUP_COUNT] = {
     1, 4, 5, 8, 10, 16, 20, 32, 40, 64, 80
 };
 
@@ -3578,36 +3578,36 @@ static int stage83_add(size_t *sum, size_t value)
     return benchmark_add_size(sum, value);
 }
 
-static int stage83_tag_totals(const HpsAllocStats *stats, size_t *path,
+static int stage83_tag_totals(const LksAllocStats *stats, size_t *path,
     size_t *tree, size_t *group, size_t *scratch)
 {
     *path = 0; *tree = 0; *group = 0; *scratch = 0;
-    return stage83_add(path, stats->tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes) &&
-        stage83_add(path, stats->tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes) &&
-        stage83_add(tree, stats->tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes) &&
-        stage83_add(tree, stats->tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes) &&
-        stage83_add(tree, stats->tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes) &&
-        stage83_add(group, stats->tags[HPS_ALLOC_TAG_GROUP_OBJECT].live_bytes) &&
-        stage83_add(group, stats->tags[HPS_ALLOC_TAG_GROUP_ORDERED].live_bytes) &&
-        stage83_add(group, stats->tags[HPS_ALLOC_TAG_BATCH_OBJECT].live_bytes) &&
-        stage83_add(group, stats->tags[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes) &&
-        stage83_add(scratch, stats->tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes);
+    return stage83_add(path, stats->tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes) &&
+        stage83_add(path, stats->tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes) &&
+        stage83_add(tree, stats->tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes) &&
+        stage83_add(tree, stats->tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes) &&
+        stage83_add(tree, stats->tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes) &&
+        stage83_add(group, stats->tags[LKS_ALLOC_TAG_GROUP_OBJECT].live_bytes) &&
+        stage83_add(group, stats->tags[LKS_ALLOC_TAG_GROUP_ORDERED].live_bytes) &&
+        stage83_add(group, stats->tags[LKS_ALLOC_TAG_BATCH_OBJECT].live_bytes) &&
+        stage83_add(group, stats->tags[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes) &&
+        stage83_add(scratch, stats->tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes);
 }
 
-static int stage83_peak_category_totals(const HpsAllocStats *stats,
+static int stage83_peak_category_totals(const LksAllocStats *stats,
     size_t *path, size_t *tree, size_t *group, size_t *scratch)
 {
     *path = 0; *tree = 0; *group = 0; *scratch = 0;
-    return stage83_add(path, stats->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT]) &&
-        stage83_add(path, stats->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS]) &&
-        stage83_add(tree, stats->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT]) &&
-        stage83_add(tree, stats->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE]) &&
-        stage83_add(tree, stats->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN]) &&
-        stage83_add(group, stats->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT]) &&
-        stage83_add(group, stats->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED]) &&
-        stage83_add(group, stats->bytes_at_global_peak[HPS_ALLOC_TAG_BATCH_OBJECT]) &&
-        stage83_add(group, stats->bytes_at_global_peak[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY]) &&
-        stage83_add(scratch, stats->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH]);
+    return stage83_add(path, stats->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT]) &&
+        stage83_add(path, stats->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS]) &&
+        stage83_add(tree, stats->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT]) &&
+        stage83_add(tree, stats->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE]) &&
+        stage83_add(tree, stats->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN]) &&
+        stage83_add(group, stats->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT]) &&
+        stage83_add(group, stats->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED]) &&
+        stage83_add(group, stats->bytes_at_global_peak[LKS_ALLOC_TAG_BATCH_OBJECT]) &&
+        stage83_add(group, stats->bytes_at_global_peak[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY]) &&
+        stage83_add(scratch, stats->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH]);
 }
 
 static const char *stage83_category_largest(size_t path, size_t tree,
@@ -3673,46 +3673,46 @@ static Stage83ModelResult stage83_model_lifecycle(size_t count,
 static int stage83_tag_direct_test(void)
 {
     void *path_object = NULL, *tree_node = NULL, *resized;
-    HpsAllocStats stats;
+    LksAllocStats stats;
     size_t peak_bytes = 0, peak_blocks = 0, i;
     int valid = 0;
-    if (hps_alloc_stats_reset() != 0) return 0;
-    path_object = hps_alloc_tagged(16, HPS_ALLOC_TAG_PATH_OBJECT);
-    tree_node = hps_alloc_tagged(32, HPS_ALLOC_TAG_TREE_NODE);
-    stats = hps_alloc_stats_get();
-    for (i = 0; i < HPS_ALLOC_TAG_COUNT; ++i) {
+    if (lks_alloc_stats_reset() != 0) return 0;
+    path_object = lks_alloc_tagged(16, LKS_ALLOC_TAG_PATH_OBJECT);
+    tree_node = lks_alloc_tagged(32, LKS_ALLOC_TAG_TREE_NODE);
+    stats = lks_alloc_stats_get();
+    for (i = 0; i < LKS_ALLOC_TAG_COUNT; ++i) {
         peak_bytes += stats.bytes_at_global_peak[i];
         peak_blocks += stats.blocks_at_global_peak[i];
     }
     valid = path_object != NULL && tree_node != NULL &&
         stats.live_bytes == 48 && stats.live_blocks == 2 &&
-        stats.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes == 16 &&
-        stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes == 32 &&
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes == 0 &&
+        stats.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes == 16 &&
+        stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes == 32 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes == 0 &&
         peak_bytes == 48 && peak_blocks == 2 &&
         stage83_tag_accounting_valid(&stats, "tag direct regression");
     if (valid) {
-        resized = hps_realloc(path_object, 24);
+        resized = lks_realloc(path_object, 24);
         if (resized == NULL) valid = 0;
         else path_object = resized;
-        stats = hps_alloc_stats_get();
+        stats = lks_alloc_stats_get();
         valid = valid && stats.live_bytes == 56 &&
-            stats.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes == 24 &&
-            stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes == 32 &&
-            stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes == 0 &&
+            stats.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes == 24 &&
+            stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes == 32 &&
+            stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes == 0 &&
             stage83_tag_accounting_valid(&stats, "tagged realloc grow");
     }
     if (valid) {
-        resized = hps_realloc(tree_node, (size_t)-1);
-        stats = hps_alloc_stats_get();
+        resized = lks_realloc(tree_node, (size_t)-1);
+        stats = lks_alloc_stats_get();
         valid = resized == NULL && stats.live_bytes == 56 &&
-            stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes == 32 &&
+            stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes == 32 &&
             stats.failed_calls == 1 &&
             stage83_tag_accounting_valid(&stats, "tagged realloc failure");
     }
-    hps_free(path_object);
-    hps_free(tree_node);
-    stats = hps_alloc_stats_get();
+    lks_free(path_object);
+    lks_free(tree_node);
+    stats = lks_alloc_stats_get();
     valid = valid && benchmark_alloc_stats_empty(&stats);
     printf("Stage 8.3 tag direct regression: %s; live bytes/blocks final=0/0\n",
         valid ? "passed (48-byte snapshot; realloc inherited PATH_OBJECT; failed tagged realloc preserved TREE_NODE; OTHER 0)" : "FAILED");
@@ -3747,22 +3747,22 @@ static int stage83_run_baseline(void)
 }
 
 static void stage83_print_peak_composition(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
     size_t g, seed;
     printf("\nPeak composition CSV\nGroups,GroupSize,PeakTotalBytesMean,PeakPathBytesMean,PeakTreeBytesMean,PeakGroupBytesMean,PeakMergeScratchBytesMean,PeakPathPercent,PeakTreePercent,PeakGroupPercent,PeakMergeScratchPercent\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double total = 0, category[4] = { 0, 0, 0, 0 };
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) {
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) {
             size_t path, tree, group, scratch;
-            HpsAllocStats *s = &samples[g][seed].after_merge;
+            LksAllocStats *s = &samples[g][seed].after_merge;
             stage83_peak_category_totals(s, &path, &tree, &group, &scratch);
             total += (double)s->peak_live_bytes;
             category[0] += (double)path; category[1] += (double)tree;
             category[2] += (double)group; category[3] += (double)scratch;
         }
-        total /= HPS_STAGE82_MAIN_SEEDS;
-        for (seed = 0; seed < 4; ++seed) category[seed] /= HPS_STAGE82_MAIN_SEEDS;
+        total /= LKS_STAGE82_MAIN_SEEDS;
+        for (seed = 0; seed < 4; ++seed) category[seed] /= LKS_STAGE82_MAIN_SEEDS;
         printf("%lu,%lu,%.2f,%.2f,%.2f,%.2f,%.2f,%.4f,%.4f,%.4f,%.4f\n",
             (unsigned long)stage83_groups[g], (unsigned long)samples[g][0].group_size,
             total, category[0], category[1], category[2], category[3],
@@ -3774,43 +3774,43 @@ static void stage83_print_peak_composition(
 }
 
 static void stage83_print_fine_peak(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
-    static const char *names[HPS_ALLOC_TAG_COUNT] = {
+    static const char *names[LKS_ALLOC_TAG_COUNT] = {
         "OTHER", "PATH_OBJECT", "PATH_STEPS", "TREE_OBJECT", "TREE_NODE",
         "TREE_CHILDREN", "GROUP_OBJECT", "GROUP_ORDERED", "BATCH_OBJECT",
         "BATCH_GROUP_ARRAY", "MERGE_SCRATCH"
     };
     size_t g, seed, tag;
     printf("\nFine tag Peak CSV (requested bytes at the global byte peak, averaged over seeds)\nGroups,PATH_OBJECT,PATH_STEPS,TREE_OBJECT,TREE_NODE,TREE_CHILDREN,GROUP_OBJECT,GROUP_ORDERED,BATCH_OBJECT,BATCH_GROUP_ARRAY,MERGE_SCRATCH\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
-        double means[HPS_ALLOC_TAG_COUNT] = { 0 };
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
+        double means[LKS_ALLOC_TAG_COUNT] = { 0 };
         (void)names;
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed)
-            for (tag = 0; tag < HPS_ALLOC_TAG_COUNT; ++tag)
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed)
+            for (tag = 0; tag < LKS_ALLOC_TAG_COUNT; ++tag)
                 means[tag] += (double)samples[g][seed].after_merge.bytes_at_global_peak[tag];
         printf("%lu", (unsigned long)stage83_groups[g]);
-        for (tag = HPS_ALLOC_TAG_PATH_OBJECT; tag < HPS_ALLOC_TAG_COUNT; ++tag)
-            printf(",%.2f", means[tag] / HPS_STAGE82_MAIN_SEEDS);
+        for (tag = LKS_ALLOC_TAG_PATH_OBJECT; tag < LKS_ALLOC_TAG_COUNT; ++tag)
+            printf(",%.2f", means[tag] / LKS_STAGE82_MAIN_SEEDS);
         printf("\n");
     }
 }
 
 static void stage83_print_result_batch(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
     size_t g, seed;
     printf("\nResultOnly composition CSV\nGroups,ResultTotalBytesMean,ResultPathBytesMean,ResultTreeBytesMean,ResultGroupBytesMean,ResultPathPercent,ResultTreePercent,ResultGroupPercent\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double total = 0, path = 0, tree = 0, group = 0;
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) {
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) {
             size_t p, t, gr, scratch;
             stage83_tag_totals(&samples[g][seed].result_only, &p, &t, &gr, &scratch);
             total += (double)samples[g][seed].result_only.live_bytes;
             path += p; tree += t; group += gr;
         }
-        total /= HPS_STAGE82_MAIN_SEEDS; path /= HPS_STAGE82_MAIN_SEEDS;
-        tree /= HPS_STAGE82_MAIN_SEEDS; group /= HPS_STAGE82_MAIN_SEEDS;
+        total /= LKS_STAGE82_MAIN_SEEDS; path /= LKS_STAGE82_MAIN_SEEDS;
+        tree /= LKS_STAGE82_MAIN_SEEDS; group /= LKS_STAGE82_MAIN_SEEDS;
         printf("%lu,%.2f,%.2f,%.2f,%.2f,%.4f,%.4f,%.4f\n",
             (unsigned long)stage83_groups[g], total, path, tree, group,
             total == 0 ? 0 : 100.0 * path / total,
@@ -3818,66 +3818,66 @@ static void stage83_print_result_batch(
             total == 0 ? 0 : 100.0 * group / total);
     }
     printf("\nBatch composition CSV\nGroups,BatchTotalBytesMean,BatchPathBytesMean,BatchTreeBytesMean,BatchGroupBytesMean\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double total = 0, path = 0, tree = 0, group = 0;
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) {
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) {
             size_t p, t, gr, scratch;
             stage83_tag_totals(&samples[g][seed].after_batch, &p, &t, &gr, &scratch);
             total += (double)samples[g][seed].after_batch.live_bytes;
             path += p; tree += t; group += gr;
         }
         printf("%lu,%.2f,%.2f,%.2f,%.2f\n",
-            (unsigned long)stage83_groups[g], total / HPS_STAGE82_MAIN_SEEDS,
-            path / HPS_STAGE82_MAIN_SEEDS, tree / HPS_STAGE82_MAIN_SEEDS,
-            group / HPS_STAGE82_MAIN_SEEDS);
+            (unsigned long)stage83_groups[g], total / LKS_STAGE82_MAIN_SEEDS,
+            path / LKS_STAGE82_MAIN_SEEDS, tree / LKS_STAGE82_MAIN_SEEDS,
+            group / LKS_STAGE82_MAIN_SEEDS);
     }
 }
 
 static Stage83ModelResult stage83_model_for_group(size_t group_index,
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
     return stage83_model_lifecycle(10000, samples[group_index][0].group_size,
         stage83_groups[group_index]);
 }
 
 static double stage83_transient_per_item_mean(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS],
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS],
     size_t group_index)
 {
     double sum = 0;
     size_t seed;
-    for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed) {
+    for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed) {
         Stage82Sample *s = &samples[group_index][seed];
         sum += (double)(s->after_merge.peak_live_bytes - s->after_merge.live_bytes) / 10000.0;
     }
-    return sum / HPS_STAGE82_MAIN_SEEDS;
+    return sum / LKS_STAGE82_MAIN_SEEDS;
 }
 
 static void stage83_print_models(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
-    Stage83ModelResult models[HPS_STAGE83_GROUP_COUNT];
+    Stage83ModelResult models[LKS_STAGE83_GROUP_COUNT];
     double x_mean = 0, y_mean = 0, numerator = 0, x_square = 0, y_square = 0;
     size_t g;
     printf("\nMerge lifecycle model CSV\nGroups,GroupSize,MergeRounds,MaxTemporaryElementUnits,TempElementAmplification,TransientExtraPeakBytesMean,TransientExtraPeakBytesPerItemMean\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double transient_sum = 0;
         size_t seed;
         models[g] = stage83_model_for_group(g, samples);
-        for (seed = 0; seed < HPS_STAGE82_MAIN_SEEDS; ++seed)
+        for (seed = 0; seed < LKS_STAGE82_MAIN_SEEDS; ++seed)
             transient_sum += (double)(samples[g][seed].after_merge.peak_live_bytes -
                 samples[g][seed].after_merge.live_bytes);
         printf("%lu,%lu,%lu,%lu,%.4f,%.2f,%.4f\n",
             (unsigned long)stage83_groups[g], (unsigned long)samples[g][0].group_size,
             (unsigned long)models[g].rounds, (unsigned long)models[g].max_temp_units,
             models[g].max_temp_units / 10000.0,
-            transient_sum / HPS_STAGE82_MAIN_SEEDS,
-            transient_sum / (HPS_STAGE82_MAIN_SEEDS * 10000.0));
+            transient_sum / LKS_STAGE82_MAIN_SEEDS,
+            transient_sum / (LKS_STAGE82_MAIN_SEEDS * 10000.0));
         x_mean += models[g].max_temp_units / 10000.0;
         y_mean += stage83_transient_per_item_mean(samples, g);
     }
-    x_mean /= HPS_STAGE83_GROUP_COUNT; y_mean /= HPS_STAGE83_GROUP_COUNT;
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    x_mean /= LKS_STAGE83_GROUP_COUNT; y_mean /= LKS_STAGE83_GROUP_COUNT;
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double x = models[g].max_temp_units / 10000.0 - x_mean;
         double y = stage83_transient_per_item_mean(samples, g) - y_mean;
         numerator += x * y; x_square += x * x; y_square += y * y;
@@ -3905,9 +3905,9 @@ static void stage83_print_models(
 }
 
 static void stage83_print_rankings_and_facts(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS])
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS])
 {
-    static const char *tag_names[HPS_ALLOC_TAG_COUNT] = {
+    static const char *tag_names[LKS_ALLOC_TAG_COUNT] = {
         "OTHER", "PATH_OBJECT", "PATH_STEPS", "TREE_OBJECT", "TREE_NODE",
         "TREE_CHILDREN", "GROUP_OBJECT", "GROUP_ORDERED", "BATCH_OBJECT",
         "BATCH_GROUP_ARRAY", "MERGE_SCRATCH"
@@ -3921,23 +3921,23 @@ static void stage83_print_rankings_and_facts(
     for (c=0;c<2;++c)
         while(stage83_groups[chosen_index[c]]!=chosen_groups[c]) ++chosen_index[c];
     for (c=0;c<2;++c) {
-        size_t tag, seed, count=HPS_ALLOC_TAG_COUNT-1;
-        Stage83CategoryRow rows[HPS_ALLOC_TAG_COUNT-1] = { 0 };
+        size_t tag, seed, count=LKS_ALLOC_TAG_COUNT-1;
+        Stage83CategoryRow rows[LKS_ALLOC_TAG_COUNT-1] = { 0 };
         double peak_total=0, categories[4]={0,0,0,0};
         for (tag=0;tag<count;++tag)
-            rows[tag].name=tag_names[tag+HPS_ALLOC_TAG_PATH_OBJECT];
-        for(seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) {
-            HpsAllocStats *s=&samples[chosen_index[c]][seed].after_merge;
+            rows[tag].name=tag_names[tag+LKS_ALLOC_TAG_PATH_OBJECT];
+        for(seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) {
+            LksAllocStats *s=&samples[chosen_index[c]][seed].after_merge;
             size_t path,tree,group,scratch;
             peak_total += (double)s->peak_live_bytes;
             stage83_peak_category_totals(s,&path,&tree,&group,&scratch);
             categories[0]+=path; categories[1]+=tree;
             categories[2]+=group; categories[3]+=scratch;
             for(tag=0;tag<count;++tag)
-                rows[tag].bytes += (double)s->bytes_at_global_peak[tag+HPS_ALLOC_TAG_PATH_OBJECT];
+                rows[tag].bytes += (double)s->bytes_at_global_peak[tag+LKS_ALLOC_TAG_PATH_OBJECT];
         }
-        peak_total/=HPS_STAGE82_MAIN_SEEDS;
-        for(g=0;g<4;++g) categories[g]/=HPS_STAGE82_MAIN_SEEDS;
+        peak_total/=LKS_STAGE82_MAIN_SEEDS;
+        for(g=0;g<4;++g) categories[g]/=LKS_STAGE82_MAIN_SEEDS;
         for(g=0;g<count;++g) for(tag=g+1;tag<count;++tag)
             if(rows[tag].bytes>rows[g].bytes) {
                 Stage83CategoryRow temp=rows[g]; rows[g]=rows[tag]; rows[tag]=temp;
@@ -3946,8 +3946,8 @@ static void stage83_print_rankings_and_facts(
             (unsigned long)chosen_groups[c]);
         for(g=0;g<count;++g)
             printf("%lu,%s,%.2f,%.4f\n",(unsigned long)(g+1),rows[g].name,
-                rows[g].bytes/HPS_STAGE82_MAIN_SEEDS,
-                peak_total==0?0:100.0*rows[g].bytes/(HPS_STAGE82_MAIN_SEEDS*peak_total));
+                rows[g].bytes/LKS_STAGE82_MAIN_SEEDS,
+                peak_total==0?0:100.0*rows[g].bytes/(LKS_STAGE82_MAIN_SEEDS*peak_total));
         {
             size_t largest=0;
             for(g=1;g<4;++g) if(categories[g]>categories[largest]) largest=g;
@@ -3964,10 +3964,10 @@ static void stage83_print_rankings_and_facts(
         size_t largest_peak=0,largest_result=0;
         Stage83ModelResult model=stage83_model_for_group(index,samples);
         double transient=stage83_transient_per_item_mean(samples,index);
-        for(seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) {
+        for(seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) {
             size_t path,tree,group,scratch;
-            HpsAllocStats *p=&samples[index][seed].after_merge;
-            HpsAllocStats *r=&samples[index][seed].result_only;
+            LksAllocStats *p=&samples[index][seed].after_merge;
+            LksAllocStats *r=&samples[index][seed].result_only;
             peak_total+=(double)p->peak_live_bytes;
             result_total+=(double)r->live_bytes;
             stage83_peak_category_totals(p,&path,&tree,&group,&scratch);
@@ -3977,10 +3977,10 @@ static void stage83_print_rankings_and_facts(
             stage83_tag_totals(r,&path,&tree,&group,&scratch);
             result_categories[0]+=path;result_categories[1]+=tree;result_categories[2]+=group;
         }
-        peak_total/=HPS_STAGE82_MAIN_SEEDS;result_total/=HPS_STAGE82_MAIN_SEEDS;
-        scratch_peak/=HPS_STAGE82_MAIN_SEEDS;
-        for(g=0;g<4;++g) peak_categories[g]/=HPS_STAGE82_MAIN_SEEDS;
-        for(g=0;g<3;++g) result_categories[g]/=HPS_STAGE82_MAIN_SEEDS;
+        peak_total/=LKS_STAGE82_MAIN_SEEDS;result_total/=LKS_STAGE82_MAIN_SEEDS;
+        scratch_peak/=LKS_STAGE82_MAIN_SEEDS;
+        for(g=0;g<4;++g) peak_categories[g]/=LKS_STAGE82_MAIN_SEEDS;
+        for(g=0;g<3;++g) result_categories[g]/=LKS_STAGE82_MAIN_SEEDS;
         for(g=1;g<4;++g) if(peak_categories[g]>peak_categories[largest_peak]) largest_peak=g;
         for(g=1;g<3;++g) if(result_categories[g]>result_categories[largest_result]) largest_result=g;
         printf("LargestPeakCategory_G%lu,%s\nLargestPeakCategoryPercent_G%lu,%.4f\n",
@@ -3996,24 +3996,24 @@ static void stage83_print_rankings_and_facts(
     }
 }
 
-int hps_run_stage8_3_benchmark(void)
+int lks_run_stage8_3_benchmark(void)
 {
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][HPS_STAGE82_MAIN_SEEDS];
-    int values[HPS_STAGE82_MAIN_N];
-    void *items[HPS_STAGE82_MAIN_N];
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][LKS_STAGE82_MAIN_SEEDS];
+    int values[LKS_STAGE82_MAIN_N];
+    void *items[LKS_STAGE82_MAIN_N];
     size_t seed, index, item;
-    printf("HPSort Stage 8.3 Private Memory Tagging and Hotspot Measurement\n");
-    if (hps_run_stage8_1_tests() != 0 || !stage82_alignment_regression() ||
+    printf("LayerKeySort Stage 8.3 Private Memory Tagging and Hotspot Measurement\n");
+    if (lks_run_stage8_1_tests() != 0 || !stage82_alignment_regression() ||
         !stage83_tag_direct_test()) return 1;
     if (!stage83_run_baseline()) return 1;
-    for (seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) {
-        for (item=0;item<HPS_STAGE82_MAIN_N;++item) values[item]=(int)item;
-        benchmark_shuffle(values,HPS_STAGE82_MAIN_N,stage82_seeds[seed]);
-        for(index=0;index<HPS_STAGE83_GROUP_COUNT;++index) {
+    for (seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) {
+        for (item=0;item<LKS_STAGE82_MAIN_N;++item) values[item]=(int)item;
+        benchmark_shuffle(values,LKS_STAGE82_MAIN_N,stage82_seeds[seed]);
+        for(index=0;index<LKS_STAGE83_GROUP_COUNT;++index) {
             size_t groups=stage83_groups[index];
-            size_t group_size=HPS_STAGE82_MAIN_N/groups+
-                (HPS_STAGE82_MAIN_N%groups!=0);
-            if (!stage82_run_sample(values,items,HPS_STAGE82_MAIN_N,group_size,
+            size_t group_size=LKS_STAGE82_MAIN_N/groups+
+                (LKS_STAGE82_MAIN_N%groups!=0);
+            if (!stage82_run_sample(values,items,LKS_STAGE82_MAIN_N,group_size,
                     groups,&samples[index][seed],stage82_seeds[seed],1)) return 1;
         }
     }
@@ -4023,14 +4023,14 @@ int hps_run_stage8_3_benchmark(void)
     stage83_print_result_batch(samples);
     {
         printf("\nMergeScratch Peak CSV\nGroups,PeakMergeScratchBytesMean,PeakMergeScratchPercent\n");
-        for(index=0;index<HPS_STAGE83_GROUP_COUNT;++index) {
+        for(index=0;index<LKS_STAGE83_GROUP_COUNT;++index) {
             double scratch=0,total=0;
-            for(seed=0;seed<HPS_STAGE82_MAIN_SEEDS;++seed) {
-                HpsAllocStats *s=&samples[index][seed].after_merge;
-                scratch+=s->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH];
+            for(seed=0;seed<LKS_STAGE82_MAIN_SEEDS;++seed) {
+                LksAllocStats *s=&samples[index][seed].after_merge;
+                scratch+=s->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH];
                 total+=s->peak_live_bytes;
             }
-            scratch/=HPS_STAGE82_MAIN_SEEDS;total/=HPS_STAGE82_MAIN_SEEDS;
+            scratch/=LKS_STAGE82_MAIN_SEEDS;total/=LKS_STAGE82_MAIN_SEEDS;
             printf("%lu,%.2f,%.4f\n",(unsigned long)stage83_groups[index],scratch,
                 total==0?0:100.0*scratch/total);
         }
@@ -4038,7 +4038,7 @@ int hps_run_stage8_3_benchmark(void)
     stage83_print_models(samples);
     stage83_print_rankings_and_facts(samples);
     {
-        HpsAllocStats stats=hps_alloc_stats_get();
+        LksAllocStats stats=lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
             !stage83_tag_accounting_valid(&stats,"Stage 8.3 final")) return 1;
     }
@@ -4046,15 +4046,15 @@ int hps_run_stage8_3_benchmark(void)
     return 0;
 }
 
-#include "../src/hps_path_internal.h"
+#include "../src/lks_path_internal.h"
 
 enum { LEGACY_PATH_STEP_SIZE = 16 }; /* Stage 9.1 measured baseline. */
 
 enum {
-    HPS_STAGE91_PATH_COUNT = 10000,
-    HPS_STAGE91_CONFIG_COUNT = 3,
-    HPS_STAGE91_DEPTH_HIST_COUNT = 15,
-    HPS_STAGE91_DEPTH_CAP_COUNT = 14
+    LKS_STAGE91_PATH_COUNT = 10000,
+    LKS_STAGE91_CONFIG_COUNT = 3,
+    LKS_STAGE91_DEPTH_HIST_COUNT = 15,
+    LKS_STAGE91_DEPTH_CAP_COUNT = 14
 };
 
 typedef struct Stage91JointBucket {
@@ -4071,22 +4071,22 @@ typedef struct Stage91Profile {
     size_t total_capacity;
     size_t unused_slots;
     size_t storage_bytes;
-    size_t depth_hist[HPS_STAGE91_DEPTH_HIST_COUNT];
-    size_t capacities[HPS_STAGE91_PATH_COUNT];
-    Stage91JointBucket joint[HPS_STAGE91_DEPTH_CAP_COUNT];
+    size_t depth_hist[LKS_STAGE91_DEPTH_HIST_COUNT];
+    size_t capacities[LKS_STAGE91_PATH_COUNT];
+    Stage91JointBucket joint[LKS_STAGE91_DEPTH_CAP_COUNT];
 } Stage91Profile;
 
 typedef struct Stage91Sample {
     size_t group_size;
-    HpsAllocStats after_batch;
-    HpsAllocStats after_merge;
-    HpsAllocStats result_only;
-    HpsAllocStats final;
+    LksAllocStats after_batch;
+    LksAllocStats after_merge;
+    LksAllocStats result_only;
+    LksAllocStats final;
 } Stage91Sample;
 
-static Stage91Profile stage91_profiles[HPS_STAGE91_CONFIG_COUNT][2];
-static Stage91Sample stage91_samples[HPS_STAGE91_CONFIG_COUNT];
-static const size_t stage91_groups[HPS_STAGE91_CONFIG_COUNT] = {1,32,40};
+static Stage91Profile stage91_profiles[LKS_STAGE91_CONFIG_COUNT][2];
+static Stage91Sample stage91_samples[LKS_STAGE91_CONFIG_COUNT];
+static const size_t stage91_groups[LKS_STAGE91_CONFIG_COUNT] = {1,32,40};
 
 static int stage91_mul_size(size_t a, size_t b, size_t *result)
 {
@@ -4112,14 +4112,14 @@ static size_t stage91_joint_bucket(size_t depth)
     return 13;
 }
 
-static int stage91_profile_path(Stage91Profile *profile, const HpsPath *path)
+static int stage91_profile_path(Stage91Profile *profile, const LksPath *path)
 {
     size_t depth, capacity, bucket, bytes;
     Stage91JointBucket *joint;
-    if (path == NULL || profile->path_count >= HPS_STAGE91_PATH_COUNT) return 0;
-    depth = hps_path_depth(path);
-    capacity = hps_path_internal_capacity(path);
-    bytes = hps_path_internal_storage_bytes(path);
+    if (path == NULL || profile->path_count >= LKS_STAGE91_PATH_COUNT) return 0;
+    depth = lks_path_depth(path);
+    capacity = lks_path_internal_capacity(path);
+    bytes = lks_path_internal_storage_bytes(path);
     if (capacity < depth ||
         bytes == (size_t)-1 ||
         !benchmark_add_size(&profile->storage_bytes, bytes) ||
@@ -4140,24 +4140,24 @@ static int stage91_profile_path(Stage91Profile *profile, const HpsPath *path)
 }
 
 static int stage91_profile_batch(Stage91Profile *profile,
-    const HpsGroupBatch *batch)
+    const LksGroupBatch *batch)
 {
     size_t group_index;
-    for (group_index=0; group_index<hps_group_batch_group_count(batch); ++group_index) {
-        const HpsGroup *group=hps_group_batch_group_at(batch,group_index);
+    for (group_index=0; group_index<lks_group_batch_group_count(batch); ++group_index) {
+        const LksGroup *group=lks_group_batch_group_at(batch,group_index);
         size_t item;
         if (group==NULL) return 0;
-        for(item=0;item<hps_group_size(group);++item)
-            if(!stage91_profile_path(profile,hps_group_path_at(group,item))) return 0;
+        for(item=0;item<lks_group_size(group);++item)
+            if(!stage91_profile_path(profile,lks_group_path_at(group,item))) return 0;
     }
     return 1;
 }
 
-static int stage91_profile_result(Stage91Profile *profile,const HpsGroup *result)
+static int stage91_profile_result(Stage91Profile *profile,const LksGroup *result)
 {
     size_t item;
-    for(item=0;item<hps_group_size(result);++item)
-        if(!stage91_profile_path(profile,hps_group_path_at(result,item))) return 0;
+    for(item=0;item<lks_group_size(result);++item)
+        if(!stage91_profile_path(profile,lks_group_path_at(result,item))) return 0;
     return 1;
 }
 
@@ -4165,26 +4165,26 @@ static int stage91_path_bytes(const Stage91Profile *profile, size_t *object_byte
     size_t *capacity_bytes, size_t *unused_bytes)
 {
     return stage91_mul_size(profile->path_count,
-            hps_path_internal_sizeof_path(), object_bytes) &&
+            lks_path_internal_sizeof_path(), object_bytes) &&
         ((*capacity_bytes = profile->storage_bytes), 1) &&
         ((*unused_bytes = 0), 1);
 }
 
 static int stage91_validate_profile(const Stage91Profile *profile,
-    const HpsAllocStats *stats, const char *name)
+    const LksAllocStats *stats, const char *name)
 {
     size_t object_bytes, capacity_bytes, unused_bytes;
     if (!stage91_path_bytes(profile,&object_bytes,&capacity_bytes,&unused_bytes) ||
-        object_bytes != stats->tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes ||
-        capacity_bytes != stats->tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes ||
+        object_bytes != stats->tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes ||
+        capacity_bytes != stats->tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes ||
         object_bytes + capacity_bytes !=
-            stats->tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes +
-            stats->tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes) {
+            stats->tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes +
+            stats->tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes) {
         printf("Stage 9.1 Path profile mismatch at %s: count=%lu object=%lu/%lu capacityBytes=%lu/%lu unusedBytes=%lu\n",
             name,(unsigned long)profile->path_count,(unsigned long)object_bytes,
-            (unsigned long)stats->tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes,
+            (unsigned long)stats->tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes,
             (unsigned long)capacity_bytes,
-            (unsigned long)stats->tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes,
+            (unsigned long)stats->tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes,
             (unsigned long)unused_bytes);
         return 0;
     }
@@ -4193,14 +4193,14 @@ static int stage91_validate_profile(const Stage91Profile *profile,
 
 static int stage91_run_sample(int config, int *values, void **items)
 {
-    HpsComparator comparator;
+    LksComparator comparator;
     BenchmarkCompareContext compare_context = {0,0};
-    HpsGroupBatch *batch=NULL;
-    HpsGroup *result=NULL;
-    HpsStatus status=HPS_STATUS_OK;
+    LksGroupBatch *batch=NULL;
+    LksGroup *result=NULL;
+    LksStatus status=LKS_STATUS_OK;
     size_t i,groups=stage91_groups[config];
-    size_t group_size=HPS_STAGE91_PATH_COUNT/groups+
-        (HPS_STAGE91_PATH_COUNT%groups!=0);
+    size_t group_size=LKS_STAGE91_PATH_COUNT/groups+
+        (LKS_STAGE91_PATH_COUNT%groups!=0);
     Stage91Sample *sample=&stage91_samples[config];
     Stage91Profile *batch_profile=&stage91_profiles[config][0];
     Stage91Profile *result_profile=&stage91_profiles[config][1];
@@ -4210,51 +4210,51 @@ static int stage91_run_sample(int config, int *values, void **items)
     memset(sample,0,sizeof(*sample));
     memset(batch_profile,0,sizeof(*batch_profile));
     memset(result_profile,0,sizeof(*result_profile));
-    if(hps_alloc_stats_reset()!=0) return 0;
-    for(i=0;i<HPS_STAGE91_PATH_COUNT;++i) items[i]=&values[i];
+    if(lks_alloc_stats_reset()!=0) return 0;
+    for(i=0;i<LKS_STAGE91_PATH_COUNT;++i) items[i]=&values[i];
     comparator.compare=benchmark_compare_int;
     comparator.context=&compare_context;
-    status=hps_group_batch_build(items,HPS_STAGE91_PATH_COUNT,group_size,
+    status=lks_group_batch_build(items,LKS_STAGE91_PATH_COUNT,group_size,
         &comparator,&batch);
-    if(status!=HPS_STATUS_OK||batch==NULL||hps_group_batch_group_count(batch)!=groups) goto cleanup;
+    if(status!=LKS_STATUS_OK||batch==NULL||lks_group_batch_group_count(batch)!=groups) goto cleanup;
     sample->group_size=group_size;
-    sample->after_batch=hps_alloc_stats_get();
+    sample->after_batch=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&sample->after_batch,"9.1 AfterBatchBuild")||
         !stage83_other_is_empty(&sample->after_batch,"9.1 AfterBatchBuild")||
         !stage91_profile_batch(batch_profile,batch)||
         !stage91_validate_profile(batch_profile,&sample->after_batch,"Batch")) goto cleanup;
-    status=hps_group_batch_merge_all(batch,&comparator,&result);
-    if(status!=HPS_STATUS_OK||result==NULL) goto cleanup;
-    sample->after_merge=hps_alloc_stats_get();
+    status=lks_group_batch_merge_all(batch,&comparator,&result);
+    if(status!=LKS_STATUS_OK||result==NULL) goto cleanup;
+    sample->after_merge=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&sample->after_merge,"9.1 PostMerge")||
         !stage83_other_is_empty(&sample->after_merge,"9.1 PostMerge")) goto cleanup;
     memset(&final_paths,0,sizeof(final_paths));
-    if(!benchmark_validate_final(result,HPS_STAGE91_PATH_COUNT,&final_paths)) goto cleanup;
-    hps_group_batch_destroy(batch); batch=NULL;
-    sample->result_only=hps_alloc_stats_get();
+    if(!benchmark_validate_final(result,LKS_STAGE91_PATH_COUNT,&final_paths)) goto cleanup;
+    lks_group_batch_destroy(batch); batch=NULL;
+    sample->result_only=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&sample->result_only,"9.1 ResultOnly")||
         !stage83_other_is_empty(&sample->result_only,"9.1 ResultOnly")||
         !stage91_profile_result(result_profile,result)||
         !stage91_validate_profile(result_profile,&sample->result_only,"ResultOnly")||
-        sample->result_only.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes!=0) goto cleanup;
-    if(!benchmark_validate_final(result,HPS_STAGE91_PATH_COUNT,&final_paths) ||
+        sample->result_only.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes!=0) goto cleanup;
+    if(!benchmark_validate_final(result,LKS_STAGE91_PATH_COUNT,&final_paths) ||
         sample->after_merge.live_bytes != sample->after_batch.live_bytes+
             sample->result_only.live_bytes ||
         sample->after_merge.live_blocks != sample->after_batch.live_blocks+
             sample->result_only.live_blocks) goto cleanup;
-    hps_group_destroy(result); result=NULL;
-    sample->final=hps_alloc_stats_get();
+    lks_group_destroy(result); result=NULL;
+    sample->final=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&sample->final)||sample->final.failed_calls!=0||
         !stage83_tag_accounting_valid(&sample->final,"9.1 Final")||
         !stage83_other_is_empty(&sample->final,"9.1 Final")) goto cleanup;
     success=1;
 cleanup:
-    hps_group_batch_destroy(batch);
-    hps_group_destroy(result);
+    lks_group_batch_destroy(batch);
+    lks_group_destroy(result);
     if(!success) {
-        HpsAllocStats now=hps_alloc_stats_get();
+        LksAllocStats now=lks_alloc_stats_get();
         printf("Stage 9.1 sample failed: Groups=%lu GroupSize=%lu status=%s live=%lu/%lu failed=%lu\n",
-            (unsigned long)groups,(unsigned long)group_size,hps_status_string(status),
+            (unsigned long)groups,(unsigned long)group_size,lks_status_string(status),
             (unsigned long)now.live_bytes,(unsigned long)now.live_blocks,
             (unsigned long)now.failed_calls);
     }
@@ -4269,7 +4269,7 @@ static int stage91_capacity_compare(const void *left,const void *right)
 
 static const char *stage91_depth_label(size_t bucket)
 {
-    static const char *labels[HPS_STAGE91_DEPTH_HIST_COUNT]={
+    static const char *labels[LKS_STAGE91_DEPTH_HIST_COUNT]={
         "0","1","2","3","4","5","6","7","8","9","10",
         "11-15","16-20","21-30","31+"
     };
@@ -4301,7 +4301,7 @@ static void stage91_print_profile(const char *phase,size_t groups,
         (unsigned long)capacity_bytes,(unsigned long)unused_bytes,
         (unsigned long)object_bytes,(unsigned long)(object_bytes+capacity_bytes));
     printf("Depth histogram\nDepth,PathCount,Percent\n");
-    for(i=0;i<HPS_STAGE91_DEPTH_HIST_COUNT;++i)
+    for(i=0;i<LKS_STAGE91_DEPTH_HIST_COUNT;++i)
         printf("%s,%lu,%.4f\n",stage91_depth_label(i),
             (unsigned long)profile->depth_hist[i],
             profile->path_count==0?0:100.0*profile->depth_hist[i]/profile->path_count);
@@ -4321,7 +4321,7 @@ static void stage91_print_profile(const char *phase,size_t groups,
         i=j;
     }
     printf("Depth-to-capacity table\nDepth,MeanCapacity,MinCapacity,MaxCapacity,PathCount\n");
-    for(i=0;i<HPS_STAGE91_DEPTH_CAP_COUNT;++i) {
+    for(i=0;i<LKS_STAGE91_DEPTH_CAP_COUNT;++i) {
         Stage91JointBucket *joint=&profile->joint[i];
         printf("%s,%.4f,%lu,%lu,%lu\n",stage91_joint_label(i),
             joint->count==0?0:(double)joint->capacity_sum/joint->count,
@@ -4334,12 +4334,12 @@ static void stage91_print_profile(const char *phase,size_t groups,
 static void stage91_print_result_decomposition(void)
 {
     size_t c;
-    size_t path_size=hps_path_internal_sizeof_path();
+    size_t path_size=lks_path_internal_sizeof_path();
     size_t step_size=LEGACY_PATH_STEP_SIZE;
     size_t field_size=sizeof(unsigned short)+sizeof(size_t);
     size_t padding=step_size-field_size;
     printf("\nResult Path decomposition CSV\nGroups,PathCount,PathObjectBytes,TotalDepth,TotalCapacity,UnusedCapacitySlots,DepthUtilization,LogicalFieldBytes,StructPaddingBytes,CapacitySlackBytes,TotalPathBytes\n");
-    for(c=0;c<HPS_STAGE91_CONFIG_COUNT;++c) {
+    for(c=0;c<LKS_STAGE91_CONFIG_COUNT;++c) {
         Stage91Profile *p=&stage91_profiles[c][1];
         size_t obj,cap,slack,logical,used_padding;
         (void)stage91_path_bytes(p,&obj,&cap,&slack);
@@ -4354,7 +4354,7 @@ static void stage91_print_result_decomposition(void)
             (unsigned long)slack,(unsigned long)(obj+cap));
     }
     printf("\nResult Path percentage CSV\nGroups,ObjectPercentOfPath,UsedStepStructPercentOfPath,SlackPercentOfPath,StructPaddingPercentOfPath\n");
-    for(c=0;c<HPS_STAGE91_CONFIG_COUNT;++c) {
+    for(c=0;c<LKS_STAGE91_CONFIG_COUNT;++c) {
         Stage91Profile *p=&stage91_profiles[c][1];
         size_t obj,cap,slack;
         double total;
@@ -4367,7 +4367,7 @@ static void stage91_print_result_decomposition(void)
                 (sizeof(unsigned short)+sizeof(size_t)))/total);
     }
     printf("\nTheoretical saving ceiling CSV\nGroups,CapacitySlackBytes,CapacitySlackPercentOfPath,StructPaddingOnUsedBytes,StructPaddingOnUsedPercentOfPath\n");
-    for(c=0;c<HPS_STAGE91_CONFIG_COUNT;++c) {
+    for(c=0;c<LKS_STAGE91_CONFIG_COUNT;++c) {
         Stage91Profile *p=&stage91_profiles[c][1];
         size_t obj,cap,slack;
         double total;
@@ -4382,22 +4382,22 @@ static void stage91_print_result_decomposition(void)
 static size_t stage91_find_config(size_t groups)
 {
     size_t index=0;
-    while(index<HPS_STAGE91_CONFIG_COUNT&&stage91_groups[index]!=groups) ++index;
+    while(index<LKS_STAGE91_CONFIG_COUNT&&stage91_groups[index]!=groups) ++index;
     return index;
 }
 
 static int stage91_print_peak_and_comparison(void)
 {
     size_t c;
-    size_t path_size=hps_path_internal_sizeof_path();
+    size_t path_size=lks_path_internal_sizeof_path();
     size_t step_size=LEGACY_PATH_STEP_SIZE;
     size_t g32=stage91_find_config(32),g40=stage91_find_config(40);
     size_t peak_path_obj[3],peak_steps[3],peak_path_count[3],peak_step_units[3];
     printf("\nGlobal peak Path counts (allocator snapshot only)\nGroups,PeakPathObjectBytes,PeakPathObjectCount,PeakPathStepsBytes,PeakStepCapacityUnits,PeakPathObjectCountPerN,PeakStepCapacityUnitsPerN\n");
-    for(c=0;c<HPS_STAGE91_CONFIG_COUNT;++c) {
-        HpsAllocStats *s=&stage91_samples[c].after_merge;
-        size_t object_bytes=s->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT];
-        size_t step_bytes=s->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
+    for(c=0;c<LKS_STAGE91_CONFIG_COUNT;++c) {
+        LksAllocStats *s=&stage91_samples[c].after_merge;
+        size_t object_bytes=s->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT];
+        size_t step_bytes=s->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
         if(object_bytes%path_size!=0||step_bytes%step_size!=0) {
             printf("Global peak Path byte divisibility FAILED for Groups=%lu\n",
                 (unsigned long)stage91_groups[c]); return 0;
@@ -4412,8 +4412,8 @@ static int stage91_print_peak_and_comparison(void)
     }
     printf("\nG32 versus G40 Path peak difference CSV\nMetric,G32,G40,Delta(G32-G40)\n");
     {
-        HpsAllocStats *a=&stage91_samples[g32].after_merge;
-        HpsAllocStats *b=&stage91_samples[g40].after_merge;
+        LksAllocStats *a=&stage91_samples[g32].after_merge;
+        LksAllocStats *b=&stage91_samples[g40].after_merge;
         Stage91Profile *r32=&stage91_profiles[g32][1],*r40=&stage91_profiles[g40][1];
         size_t vals32[10],vals40[10],i,obj,cap,slack;
         vals32[0]=a->peak_live_bytes; vals40[0]=b->peak_live_bytes;
@@ -4421,10 +4421,10 @@ static int stage91_print_peak_and_comparison(void)
         vals32[2]=peak_steps[g32]; vals40[2]=peak_steps[g40];
         vals32[3]=peak_path_count[g32]; vals40[3]=peak_path_count[g40];
         vals32[4]=peak_step_units[g32]; vals40[4]=peak_step_units[g40];
-        vals32[5]=stage91_samples[g32].result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
-        vals40[5]=stage91_samples[g40].result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
-        vals32[6]=stage91_samples[g32].result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes;
-        vals40[6]=stage91_samples[g40].result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes;
+        vals32[5]=stage91_samples[g32].result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+        vals40[5]=stage91_samples[g40].result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+        vals32[6]=stage91_samples[g32].result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes;
+        vals40[6]=stage91_samples[g40].result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes;
         vals32[7]=r32->total_depth; vals40[7]=r40->total_depth;
         vals32[8]=r32->total_capacity; vals40[8]=r40->total_capacity;
         vals32[9]=r32->unused_slots; vals40[9]=r40->unused_slots;
@@ -4457,30 +4457,30 @@ static int stage91_print_peak_and_comparison(void)
     return 1;
 }
 
-int hps_run_stage9_1_analysis(void)
+int lks_run_stage9_1_analysis(void)
 {
-    int values[HPS_STAGE91_PATH_COUNT];
-    void *items[HPS_STAGE91_PATH_COUNT];
+    int values[LKS_STAGE91_PATH_COUNT];
+    void *items[LKS_STAGE91_PATH_COUNT];
     size_t index,i;
-    size_t path_size=hps_path_internal_sizeof_path();
+    size_t path_size=lks_path_internal_sizeof_path();
     size_t step_size=LEGACY_PATH_STEP_SIZE;
     size_t field_bytes=sizeof(unsigned short)+sizeof(size_t);
-    printf("HPSort Stage 9.1 Path Storage Waste Analysis (measurement only)\n");
-    printf("sizeof(HpsPath)=%lu _Alignof(HpsPath)=%lu sizeof(HpsPathStep)=%lu _Alignof(HpsPathStep)=%lu sizeof(size_t)=%lu sizeof(unsigned short)=%lu\n",
-        (unsigned long)path_size,(unsigned long)hps_path_internal_alignof_path(),
+    printf("LayerKeySort Stage 9.1 Path Storage Waste Analysis (measurement only)\n");
+    printf("sizeof(LksPath)=%lu _Alignof(LksPath)=%lu sizeof(LksPathStep)=%lu _Alignof(LksPathStep)=%lu sizeof(size_t)=%lu sizeof(unsigned short)=%lu\n",
+        (unsigned long)path_size,(unsigned long)lks_path_internal_alignof_path(),
         (unsigned long)step_size,(unsigned long)_Alignof(size_t),
         (unsigned long)sizeof(size_t),(unsigned long)sizeof(unsigned short));
     printf("LogicalFieldBytesPerStep=%lu StructOverheadBytesPerStep=%lu\n",
         (unsigned long)field_bytes,(unsigned long)(step_size-field_bytes));
-    if(hps_run_stage8_1_tests()!=0||!stage82_alignment_regression()||
+    if(lks_run_stage8_1_tests()!=0||!stage82_alignment_regression()||
         !stage83_tag_direct_test()) return 1;
-    for(i=0;i<HPS_STAGE91_PATH_COUNT;++i) values[i]=(int)i;
-    benchmark_shuffle(values,HPS_STAGE91_PATH_COUNT,UINT32_C(0xC0FFEE));
-    for(index=0;index<HPS_STAGE91_CONFIG_COUNT;++index)
+    for(i=0;i<LKS_STAGE91_PATH_COUNT;++i) values[i]=(int)i;
+    benchmark_shuffle(values,LKS_STAGE91_PATH_COUNT,UINT32_C(0xC0FFEE));
+    for(index=0;index<LKS_STAGE91_CONFIG_COUNT;++index)
         if(!stage91_run_sample((int)index,values,items)) return 1;
     if(!stage83_run_baseline()) return 1;
     printf("Stage 9.1 steady-state samples: G=1/32/40 Batch and ResultOnly complete; every calculated Path object/step byte count matched allocator tags.\n");
-    for(index=0;index<HPS_STAGE91_CONFIG_COUNT;++index) {
+    for(index=0;index<LKS_STAGE91_CONFIG_COUNT;++index) {
         stage91_print_profile("Batch",stage91_groups[index],&stage91_profiles[index][0]);
         stage91_print_profile("ResultOnly",stage91_groups[index],&stage91_profiles[index][1]);
     }
@@ -4489,7 +4489,7 @@ int hps_run_stage9_1_analysis(void)
     stage91_print_result_decomposition();
     if(!stage91_print_peak_and_comparison()) return 1;
     {
-        HpsAllocStats final_stats=hps_alloc_stats_get();
+        LksAllocStats final_stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls!=0||
             !stage83_tag_accounting_valid(&final_stats,"9.1 final")||
             !stage83_other_is_empty(&final_stats,"9.1 final")) return 1;
@@ -4501,40 +4501,40 @@ int hps_run_stage9_1_analysis(void)
 
 static int stage92_path_storage_regression(void)
 {
-    HpsPath *complex = NULL, *deep = NULL, *clone = NULL;
-    HpsAllocStats stats;
+    LksPath *complex = NULL, *deep = NULL, *clone = NULL;
+    LksAllocStats stats;
     char text[128];
     size_t i, old_capacity = 0, old_offset = 0, changes = 0, realloc_before_deep;
     int comparison = 99, success = 0;
     unsigned int slot;
     size_t level;
-    if (hps_alloc_stats_reset() != 0) return 0;
-    complex = hps_path_create(HPS_DIRECTION_POSITIVE, 3);
+    if (lks_alloc_stats_reset() != 0) return 0;
+    complex = lks_path_create(LKS_DIRECTION_POSITIVE, 3);
     if (complex == NULL ||
-        hps_path_append_at_level(complex, 259, 1) != HPS_STATUS_OK ||
-        hps_path_append_at_level(complex, 0, 2) != HPS_STATUS_OK ||
-        hps_path_append_at_level(complex, 0, 3) != HPS_STATUS_OK ||
-        hps_path_format(complex, text, sizeof(text)) != HPS_STATUS_OK ||
+        lks_path_append_at_level(complex, 259, 1) != LKS_STATUS_OK ||
+        lks_path_append_at_level(complex, 0, 2) != LKS_STATUS_OK ||
+        lks_path_append_at_level(complex, 0, 3) != LKS_STATUS_OK ||
+        lks_path_format(complex, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3/Z9//A0///A0") != 0) goto cleanup;
     {
         static const unsigned int expected_slots[4] = {3,259,0,0};
         for (i = 0; i < 4; ++i) {
-            if (hps_path_get_slot(complex, i, &slot) != HPS_STATUS_OK ||
-                hps_path_get_level(complex, i, &level) != HPS_STATUS_OK ||
+            if (lks_path_get_slot(complex, i, &slot) != LKS_STATUS_OK ||
+                lks_path_get_level(complex, i, &level) != LKS_STATUS_OK ||
                 slot != expected_slots[i] || level != i) goto cleanup;
         }
     }
-    realloc_before_deep = hps_alloc_stats_get().realloc_calls;
-    deep = hps_path_create(HPS_DIRECTION_POSITIVE, 0);
+    realloc_before_deep = lks_alloc_stats_get().realloc_calls;
+    deep = lks_path_create(LKS_DIRECTION_POSITIVE, 0);
     if (deep == NULL) goto cleanup;
-    old_capacity = hps_path_internal_capacity(deep);
-    old_offset = hps_path_internal_levels_offset_for_capacity(old_capacity);
+    old_capacity = lks_path_internal_capacity(deep);
+    old_offset = lks_path_internal_levels_offset_for_capacity(old_capacity);
     for (i = 1; i < 100; ++i) {
-        if (hps_path_append_at_level(deep, (unsigned int)(i % 260), i) != HPS_STATUS_OK)
+        if (lks_path_append_at_level(deep, (unsigned int)(i % 260), i) != LKS_STATUS_OK)
             goto cleanup;
-        if (hps_path_internal_capacity(deep) != old_capacity) {
-            size_t next_capacity = hps_path_internal_capacity(deep);
-            size_t next_offset = hps_path_internal_levels_offset_for_capacity(next_capacity);
+        if (lks_path_internal_capacity(deep) != old_capacity) {
+            size_t next_capacity = lks_path_internal_capacity(deep);
+            size_t next_offset = lks_path_internal_levels_offset_for_capacity(next_capacity);
             if (next_offset != old_offset) {
                 if (changes == 0)
                     printf("Stage 9.2 offset move: OldCapacity=%lu NewCapacity=%lu OldLevelsOffset=%lu NewLevelsOffset=%lu\n",
@@ -4547,25 +4547,25 @@ static int stage92_path_storage_regression(void)
         }
     }
     for (i = 0; i < 100; ++i) {
-        if (hps_path_get_slot(deep, i, &slot) != HPS_STATUS_OK ||
-            hps_path_get_level(deep, i, &level) != HPS_STATUS_OK ||
+        if (lks_path_get_slot(deep, i, &slot) != LKS_STATUS_OK ||
+            lks_path_get_level(deep, i, &level) != LKS_STATUS_OK ||
             slot != (unsigned int)(i == 0 ? 0 : i % 260) || level != i) goto cleanup;
     }
-    clone = hps_path_clone(deep);
-    if (clone == NULL || hps_path_compare(deep, clone, &comparison) != HPS_STATUS_OK ||
-        comparison != 0 || hps_path_append(clone, 77) != HPS_STATUS_OK ||
-        hps_path_depth(deep) != 100 || hps_path_depth(clone) != 101 ||
-        hps_path_get_level(deep, 99, &level) != HPS_STATUS_OK || level != 99) goto cleanup;
-    stats = hps_alloc_stats_get();
+    clone = lks_path_clone(deep);
+    if (clone == NULL || lks_path_compare(deep, clone, &comparison) != LKS_STATUS_OK ||
+        comparison != 0 || lks_path_append(clone, 77) != LKS_STATUS_OK ||
+        lks_path_depth(deep) != 100 || lks_path_depth(clone) != 101 ||
+        lks_path_get_level(deep, 99, &level) != LKS_STATUS_OK || level != 99) goto cleanup;
+    stats = lks_alloc_stats_get();
     printf("Stage 9.2 100-step realloc_calls=%lu; levels_offset_changed=%lu; clone independent=YES\n",
         (unsigned long)(stats.realloc_calls - realloc_before_deep - 1), (unsigned long)changes);
     if (stats.realloc_calls - realloc_before_deep - 1 != 7 || changes == 0) goto cleanup;
     success = 1;
 cleanup:
-    hps_path_destroy(clone);
-    hps_path_destroy(deep);
-    hps_path_destroy(complex);
-    stats = hps_alloc_stats_get();
+    lks_path_destroy(clone);
+    lks_path_destroy(deep);
+    lks_path_destroy(complex);
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&stats, "9.2 path regression") ||
         !stage83_other_is_empty(&stats, "9.2 path regression")) success = 0;
@@ -4575,35 +4575,35 @@ cleanup:
     return success;
 }
 
-int hps_run_stage9_2_optimization_tests(void)
+int lks_run_stage9_2_optimization_tests(void)
 {
-    int values[HPS_STAGE91_PATH_COUNT];
-    void *items[HPS_STAGE91_PATH_COUNT];
+    int values[LKS_STAGE91_PATH_COUNT];
+    void *items[LKS_STAGE91_PATH_COUNT];
     int baseline_values[1000];
     void *baseline_items[1000];
     Stage82Sample baseline_sample;
     size_t i, config;
-    printf("HPSort Stage 9.2: single-allocation SoA Path storage\n");
-    if (hps_run_stage8_1_tests() != 0 || !stage82_alignment_regression() ||
+    printf("LayerKeySort Stage 9.2: single-allocation SoA Path storage\n");
+    if (lks_run_stage8_1_tests() != 0 || !stage82_alignment_regression() ||
         !stage83_tag_direct_test() || !stage92_path_storage_regression()) return 1;
     printf("Path sizeof before/after: 32/%lu; legacy step baseline=16 bytes; current capacity formula=align_up(C*sizeof(unsigned short), _Alignof(size_t))+C*sizeof(size_t)\n",
-        (unsigned long)hps_path_internal_sizeof_path());
-    for (i = 0; i < HPS_STAGE91_PATH_COUNT; ++i) values[i] = (int)i;
-    benchmark_shuffle(values, HPS_STAGE91_PATH_COUNT, UINT32_C(0xC0FFEE));
-    for (config = 0; config < HPS_STAGE91_CONFIG_COUNT; ++config)
+        (unsigned long)lks_path_internal_sizeof_path());
+    for (i = 0; i < LKS_STAGE91_PATH_COUNT; ++i) values[i] = (int)i;
+    benchmark_shuffle(values, LKS_STAGE91_PATH_COUNT, UINT32_C(0xC0FFEE));
+    for (config = 0; config < LKS_STAGE91_CONFIG_COUNT; ++config)
         if (!stage91_run_sample((int)config, values, items)) return 1;
     printf("ResultOnly Path storage CSV\nGroups,GroupSize,PathCount,TotalDepth,TotalCapacity,PathObjectBytes,LegacyStepBytes,NewStepBytes,StepBytesSaved,StepSavingsPercent,LegacyPathBytes,CurrentPathBytes,TotalPathBytesSaved,PathSavingsPercent,PATH_STEPSBlocks\n");
-    for (config = 0; config < HPS_STAGE91_CONFIG_COUNT; ++config) {
+    for (config = 0; config < LKS_STAGE91_CONFIG_COUNT; ++config) {
         Stage91Profile *p = &stage91_profiles[config][1];
         Stage91Sample *s = &stage91_samples[config];
         size_t object_bytes, legacy_step, current_path, legacy_path;
-        object_bytes = s->result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+        object_bytes = s->result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
         legacy_step = p->total_capacity * LEGACY_PATH_STEP_SIZE;
         current_path = object_bytes + p->storage_bytes;
         legacy_path = object_bytes + legacy_step;
-        if (p->storage_bytes != s->result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes ||
-            object_bytes != p->path_count * hps_path_internal_sizeof_path() ||
-            s->result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_blocks != p->path_count-p->zero_depth_count)
+        if (p->storage_bytes != s->result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes ||
+            object_bytes != p->path_count * lks_path_internal_sizeof_path() ||
+            s->result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_blocks != p->path_count-p->zero_depth_count)
             return 1;
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%.4f,%lu,%lu,%lu,%.4f,%lu\n",
             (unsigned long)stage91_groups[config], (unsigned long)s->group_size,
@@ -4615,17 +4615,17 @@ int hps_run_stage9_2_optimization_tests(void)
             (unsigned long)legacy_path, (unsigned long)current_path,
             (unsigned long)(legacy_path-current_path),
             legacy_path == 0 ? 0.0 : 100.0*(legacy_path-current_path)/legacy_path,
-            (unsigned long)s->result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_blocks);
+            (unsigned long)s->result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_blocks);
     }
     printf("Peak comparison CSV\nGroups,OldPeakTotalBytes,NewPeakTotalBytes,PeakBytesSaved,PeakSavingsPercent,OldPeakPathStepsBytes,NewPeakPathStepsBytes,PathStepsSaved,OldPeakPathObjectBytes,NewPeakPathObjectBytes\n");
-    for (config = 1; config < HPS_STAGE91_CONFIG_COUNT; ++config) {
+    for (config = 1; config < LKS_STAGE91_CONFIG_COUNT; ++config) {
         Stage91Sample *s = &stage91_samples[config];
         size_t old_peak = stage91_groups[config] == 32 ? 6716376u : 6023992u;
         size_t old_steps = stage91_groups[config] == 32 ? 3577600u : 3005472u;
         size_t new_peak = s->after_merge.peak_live_bytes;
-        size_t new_steps = s->after_merge.bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
+        size_t new_steps = s->after_merge.bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
         size_t old_objects = stage91_groups[config] == 32 ? 1119744u : 1024000u;
-        size_t new_objects = s->after_merge.bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT];
+        size_t new_objects = s->after_merge.bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT];
         printf("%lu,%lu,%lu,%lu,%.4f,%lu,%lu,%lu,%lu,%lu\n",
             (unsigned long)stage91_groups[config], (unsigned long)old_peak,
             (unsigned long)new_peak, (unsigned long)(old_peak-new_peak),
@@ -4655,7 +4655,7 @@ int hps_run_stage9_2_optimization_tests(void)
                 100.0*(double)(before[i]-after[i])/before[i]);
     }
     {
-        HpsAllocStats final_stats = hps_alloc_stats_get();
+        LksAllocStats final_stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls != 0 ||
             !stage83_tag_accounting_valid(&final_stats, "9.2 final") ||
             !stage83_other_is_empty(&final_stats, "9.2 final")) return 1;
@@ -4671,7 +4671,7 @@ typedef struct Stage93Baseline {
     double peak;
 } Stage93Baseline;
 
-static const Stage93Baseline stage93_main_before[HPS_STAGE83_GROUP_COUNT] = {
+static const Stage93Baseline stage93_main_before[LKS_STAGE83_GROUP_COUNT] = {
     {1,1979846.40,1979806.40,3959652.80},
     {4,1779300.80,2006675.20,6720294.40},
     {5,1765188.80,2011228.80,5789672.00},
@@ -4685,7 +4685,7 @@ static const Stage93Baseline stage93_main_before[HPS_STAGE83_GROUP_COUNT] = {
     {80,1473244.80,2097454.40,6043971.20}
 };
 
-static const size_t stage93_groups[HPS_STAGE83_GROUP_COUNT] = {
+static const size_t stage93_groups[LKS_STAGE83_GROUP_COUNT] = {
     1,4,5,8,10,16,20,32,40,64,80
 };
 static const uint32_t stage93_main_seeds[5] = {
@@ -4706,7 +4706,7 @@ static double stage93_percent_saved(double old_value, double new_value)
     return old_value == 0.0 ? 0.0 : 100.0 * (old_value - new_value) / old_value;
 }
 
-static double stage93_main_mean(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5],
+static double stage93_main_mean(Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][5],
     size_t group_index, size_t field)
 {
     size_t seed;
@@ -4716,18 +4716,18 @@ static double stage93_main_mean(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5
         if (field == 0) sum += (double)s->after_batch.live_bytes;
         else if (field == 1) sum += (double)s->result_only.live_bytes;
         else if (field == 2) sum += (double)s->after_merge.peak_live_bytes;
-        else if (field == 3) sum += (double)s->after_batch.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes;
-        else if (field == 4) sum += (double)s->result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes;
-        else if (field == 5) sum += (double)s->after_merge.bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
-        else if (field == 6) sum += (double)s->after_batch.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
-        else if (field == 7) sum += (double)s->result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
-        else if (field == 8) sum += (double)s->after_merge.bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT];
+        else if (field == 3) sum += (double)s->after_batch.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes;
+        else if (field == 4) sum += (double)s->result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes;
+        else if (field == 5) sum += (double)s->after_merge.bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
+        else if (field == 6) sum += (double)s->after_batch.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+        else if (field == 7) sum += (double)s->result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+        else if (field == 8) sum += (double)s->after_merge.bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT];
     }
     return sum / 5.0;
 }
 
 static double stage93_result_step_savings_percent(
-    Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5], size_t group_index)
+    Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][5], size_t group_index)
 {
     size_t seed;
     double legacy = 0.0, current = 0.0;
@@ -4741,20 +4741,20 @@ static double stage93_result_step_savings_percent(
     return stage93_percent_saved(legacy, current);
 }
 
-static int stage93_run_samples(Stage82Sample main_samples[HPS_STAGE83_GROUP_COUNT][5],
+static int stage93_run_samples(Stage82Sample main_samples[LKS_STAGE83_GROUP_COUNT][5],
     Stage82Sample scale_samples[4][3][3])
 {
-    int values[HPS_STAGE82_MAIN_N];
-    void *items[HPS_STAGE82_MAIN_N];
+    int values[LKS_STAGE82_MAIN_N];
+    void *items[LKS_STAGE82_MAIN_N];
     size_t seed, g, i, n;
     for (seed = 0; seed < 5; ++seed) {
-        for (i = 0; i < HPS_STAGE82_MAIN_N; ++i) values[i] = (int)i;
-        benchmark_shuffle(values, HPS_STAGE82_MAIN_N, stage93_main_seeds[seed]);
-        for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+        for (i = 0; i < LKS_STAGE82_MAIN_N; ++i) values[i] = (int)i;
+        benchmark_shuffle(values, LKS_STAGE82_MAIN_N, stage93_main_seeds[seed]);
+        for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
             size_t groups = stage93_groups[g];
-            size_t group_size = HPS_STAGE82_MAIN_N / groups +
-                (HPS_STAGE82_MAIN_N % groups != 0);
-            if (!stage82_run_sample(values, items, HPS_STAGE82_MAIN_N, group_size,
+            size_t group_size = LKS_STAGE82_MAIN_N / groups +
+                (LKS_STAGE82_MAIN_N % groups != 0);
+            if (!stage82_run_sample(values, items, LKS_STAGE82_MAIN_N, group_size,
                     groups, &main_samples[g][seed], stage93_main_seeds[seed], 1)) return 0;
             if (main_samples[g][seed].build_comparisons +
                     main_samples[g][seed].merge_comparisons !=
@@ -4781,12 +4781,12 @@ static int stage93_run_samples(Stage82Sample main_samples[HPS_STAGE83_GROUP_COUN
     return 1;
 }
 
-static void stage93_print_main(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5])
+static void stage93_print_main(Stage82Sample samples[LKS_STAGE83_GROUP_COUNT][5])
 {
     size_t g, seed;
     printf("\nStage 8.3 frozen pre-SoA baseline; requested payload bytes, not RSS\n");
     printf("Main Before/After CSV\nGroups,GroupSize,OldBatchBytes,NewBatchBytes,BatchSaved,BatchSavingsPercent,OldResultBytes,NewResultBytes,ResultSaved,ResultSavingsPercent,OldPeakBytes,NewPeakBytes,PeakSaved,PeakSavingsPercent\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         const Stage93Baseline *b = &stage93_main_before[g];
         double new_batch = stage93_main_mean(samples, g, 0);
         double new_result = stage93_main_mean(samples, g, 1);
@@ -4796,21 +4796,21 @@ static void stage93_print_main(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5]
         double peak_saved = b->peak - new_peak;
         printf("%lu,%lu,%.2f,%.2f,%.2f,%.4f,%.2f,%.2f,%.2f,%.4f,%.2f,%.2f,%.2f,%.4f\n",
             (unsigned long)b->groups,
-            (unsigned long)(HPS_STAGE82_MAIN_N / b->groups +
-                (HPS_STAGE82_MAIN_N % b->groups != 0)),
+            (unsigned long)(LKS_STAGE82_MAIN_N / b->groups +
+                (LKS_STAGE82_MAIN_N % b->groups != 0)),
             b->batch, new_batch, batch_saved, stage93_percent_saved(b->batch,new_batch),
             b->result, new_result, result_saved, stage93_percent_saved(b->result,new_result),
             b->peak, new_peak, peak_saved, stage93_percent_saved(b->peak,new_peak));
     }
     printf("\nCurrent Path tag bytes CSV\nGroups,BatchPathStepsBytesMean,ResultPathStepsBytesMean,PeakPathStepsBytesMean,BatchPathObjectBytesMean,ResultPathObjectBytesMean,PeakPathObjectBytesMean\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g)
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g)
         printf("%lu,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",
             (unsigned long)stage93_groups[g],stage93_main_mean(samples,g,3),
             stage93_main_mean(samples,g,4),stage93_main_mean(samples,g,5),
             stage93_main_mean(samples,g,6),stage93_main_mean(samples,g,7),
             stage93_main_mean(samples,g,8));
     printf("\nBatch Path storage CSV\nGroups,BatchPathCount,BatchTotalDepth,BatchTotalCapacity,LegacyAoSStepBytes,CurrentSoAStepBytes,StepBytesSaved,StepSavingsPercent\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double paths=0,depth=0,capacity=0,storage=0;
         for (seed=0;seed<5;++seed) {
             paths+=(double)samples[g][seed].batch_path_count;
@@ -4826,13 +4826,13 @@ static void stage93_print_main(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5]
             stage93_percent_saved(capacity*LEGACY_PATH_STEP_SIZE,storage));
     }
     printf("\nResult Path storage CSV\nGroups,ResultPathCount,ResultTotalDepth,ResultTotalCapacity,LegacyAoSStepBytes,CurrentSoAStepBytes,StepBytesSaved,StepSavingsPercent,PathObjectBytes,LegacyTotalPathBytes,CurrentTotalPathBytes,TotalPathSavingsPercent\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double paths=0,depth=0,capacity=0,storage=0,objects=0;
         for (seed = 0; seed < 5; ++seed) {
             Stage82Sample *s=&samples[g][seed];
             paths+=(double)s->result_path_count; depth+=(double)s->result_total_depth;
             capacity+=(double)s->result_total_capacity; storage+=(double)s->result_storage_bytes;
-            objects+=(double)s->result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+            objects+=(double)s->result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
         }
         paths/=5.0; depth/=5.0; capacity/=5.0; storage/=5.0; objects/=5.0;
         printf("%lu,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.4f,%.2f,%.2f,%.2f,%.4f\n",
@@ -4844,7 +4844,7 @@ static void stage93_print_main(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5]
             stage93_percent_saved(objects+capacity*LEGACY_PATH_STEP_SIZE,objects+storage));
     }
     printf("\nOperation counts and allocation calls CSV\nGroups,BuildCmpMean,MergeCmpMean,TotalCmpMean,AllocCallsMean,ReallocCallsMean,FreeCallsMean,PeakLiveBlocksMean\n");
-    for (g = 0; g < HPS_STAGE83_GROUP_COUNT; ++g) {
+    for (g = 0; g < LKS_STAGE83_GROUP_COUNT; ++g) {
         double bc=0,mc=0,tc=0,ac=0,rc=0,fc=0,blocks=0;
         for (seed=0;seed<5;++seed) {
             Stage82Sample *s=&samples[g][seed];
@@ -4856,7 +4856,7 @@ static void stage93_print_main(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5]
             (unsigned long)stage93_groups[g],bc/5,mc/5,tc/5,ac/5,rc/5,fc/5,blocks/5);
     }
     printf("\nCurrent SoA Debug Timing Baseline (clock(); not comparable to historical instrumentation)\nGroups,CurrentSoABuildMsMean,CurrentSoAMergeMsMean,CurrentSoATotalMsMean\n");
-    for (g=0;g<HPS_STAGE83_GROUP_COUNT;++g) {
+    for (g=0;g<LKS_STAGE83_GROUP_COUNT;++g) {
         double build=0,merge=0,total=0;
         for(seed=0;seed<5;++seed) {
             build+=samples[g][seed].build_ms; merge+=samples[g][seed].merge_ms;
@@ -4866,23 +4866,23 @@ static void stage93_print_main(Stage82Sample samples[HPS_STAGE83_GROUP_COUNT][5]
             build/5,merge/5,total/5);
     }
     printf("\nSeed C0FFEE path depth checks\nGroups,ResultTotalDepth,Expected9_1,Match,FinalAvgDepth,FinalMaxDepth,FinalMaxLevel\n");
-    for(g=0;g<HPS_STAGE83_GROUP_COUNT;++g) if(stage93_groups[g]==1||stage93_groups[g]==32||stage93_groups[g]==40) {
+    for(g=0;g<LKS_STAGE83_GROUP_COUNT;++g) if(stage93_groups[g]==1||stage93_groups[g]==32||stage93_groups[g]==40) {
         size_t expected=stage93_groups[g]==1?63009u:stage93_groups[g]==32?69211u:68341u;
         Stage82Sample *s=&samples[g][0];
         printf("%lu,%lu,%lu,%s,%.4f,%lu,%lu\n",(unsigned long)stage93_groups[g],
             (unsigned long)s->result_total_depth,(unsigned long)expected,
             s->result_total_depth==expected?"yes":"NO",
-            (double)s->final_paths.total_depth/HPS_STAGE82_MAIN_N,
+            (double)s->final_paths.total_depth/LKS_STAGE82_MAIN_N,
             (unsigned long)s->final_paths.max_depth,(unsigned long)s->final_paths.max_level);
     }
     printf("\nSeed C0FFEE Peak Before/After CSV\nGroups,OldPeakTotal,NewPeakTotal,TotalSaved,OldPeakPATH_OBJECT,NewPeakPATH_OBJECT,OldPeakPATH_STEPS,NewPeakPATH_STEPS,StepSaved\n");
-    for(g=0;g<HPS_STAGE83_GROUP_COUNT;++g) if(stage93_groups[g]==32||stage93_groups[g]==40) {
+    for(g=0;g<LKS_STAGE83_GROUP_COUNT;++g) if(stage93_groups[g]==32||stage93_groups[g]==40) {
         Stage82Sample *s=&samples[g][0];
         size_t old_total=stage93_groups[g]==32?6716376u:6023992u;
         size_t old_obj=stage93_groups[g]==32?1119744u:1024000u;
         size_t old_steps=stage93_groups[g]==32?3577600u:3005472u;
-        size_t new_obj=s->after_merge.bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT];
-        size_t new_steps=s->after_merge.bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
+        size_t new_obj=s->after_merge.bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT];
+        size_t new_steps=s->after_merge.bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",
             (unsigned long)stage93_groups[g],(unsigned long)old_total,
             (unsigned long)s->after_merge.peak_live_bytes,
@@ -4925,9 +4925,9 @@ static int stage93_print_scaling(Stage82Sample samples[4][3][3])
     return min_peak<=max_peak;
 }
 
-int hps_run_stage9_3_final_validation(void)
+int lks_run_stage9_3_final_validation(void)
 {
-    Stage82Sample main_samples[HPS_STAGE83_GROUP_COUNT][5];
+    Stage82Sample main_samples[LKS_STAGE83_GROUP_COUNT][5];
     Stage82Sample scale_samples[4][3][3];
     static const double gs100_expected[4]={127192.0,270768.0,143576.0,432272.0};
     int values[1000];
@@ -4935,12 +4935,12 @@ int hps_run_stage9_3_final_validation(void)
     Stage82Sample gs100;
     size_t i;
     double min_result=1000.0,max_result=-1000.0,min_peak=1000.0,max_peak=-1000.0;
-    printf("HPSort Stage 9.3 Final SoA Validation; Stage 9 concludes here. No new optimization.\n");
-    if(hps_run_stage8_1_tests()!=0 || !stage82_alignment_regression() ||
+    printf("LayerKeySort Stage 9.3 Final SoA Validation; Stage 9 concludes here. No new optimization.\n");
+    if(lks_run_stage8_1_tests()!=0 || !stage82_alignment_regression() ||
         !stage83_tag_direct_test() || !stage92_path_storage_regression()) return 1;
-    printf("sizeof(HpsPath)=%lu; slot=unsigned short; level=size_t; PATH_STEPS one allocation per non-zero Path.\n",
-        (unsigned long)hps_path_internal_sizeof_path());
-    if(hps_path_internal_sizeof_path()!=32) return 1;
+    printf("sizeof(LksPath)=%lu; slot=unsigned short; level=size_t; PATH_STEPS one allocation per non-zero Path.\n",
+        (unsigned long)lks_path_internal_sizeof_path());
+    if(lks_path_internal_sizeof_path()!=32) return 1;
     memset(main_samples,0,sizeof(main_samples)); memset(scale_samples,0,sizeof(scale_samples));
     if(!stage93_run_samples(main_samples,scale_samples)) return 1;
     stage93_print_main(main_samples);
@@ -4961,7 +4961,7 @@ int hps_run_stage9_3_final_validation(void)
                 stage93_percent_saved((double)before[i],(double)after[i]));
         }
     }
-    for(i=0;i<HPS_STAGE83_GROUP_COUNT;++i) {
+    for(i=0;i<LKS_STAGE83_GROUP_COUNT;++i) {
         double r=stage93_percent_saved(stage93_main_before[i].result,
             stage93_main_mean(main_samples,i,1));
         double p=stage93_percent_saved(stage93_main_before[i].peak,
@@ -4998,7 +4998,7 @@ int hps_run_stage9_3_final_validation(void)
     }
     printf("Current SoA operation counts show BuildCmp+MergeCmp=TotalCmp for all 91 samples; no old timing speedup calculated.\n");
     {
-        HpsAllocStats s=hps_alloc_stats_get();
+        LksAllocStats s=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||
             !stage83_tag_accounting_valid(&s,"9.3 final")||!stage83_other_is_empty(&s,"9.3 final")) return 1;
     }
@@ -5016,17 +5016,17 @@ typedef struct Stage101Pair {
     size_t incoming_count;
 } Stage101Pair;
 
-static int stage101_groups_equivalent(const HpsGroup *left,
-    const HpsGroup *right)
+static int stage101_groups_equivalent(const LksGroup *left,
+    const LksGroup *right)
 {
     size_t i;
-    if (hps_group_size(left) != hps_group_size(right)) return 0;
-    for (i = 0; i < hps_group_size(left); ++i) {
+    if (lks_group_size(left) != lks_group_size(right)) return 0;
+    for (i = 0; i < lks_group_size(left); ++i) {
         int path_order;
-        if (*(const int *)hps_group_item_at(left, i) !=
-                *(const int *)hps_group_item_at(right, i) ||
-            hps_path_compare(hps_group_path_at(left, i),
-                hps_group_path_at(right, i), &path_order) != HPS_STATUS_OK ||
+        if (*(const int *)lks_group_item_at(left, i) !=
+                *(const int *)lks_group_item_at(right, i) ||
+            lks_path_compare(lks_group_path_at(left, i),
+                lks_group_path_at(right, i), &path_order) != LKS_STATUS_OK ||
             path_order != 0) return 0;
     }
     return 1;
@@ -5051,11 +5051,11 @@ static int stage101_build_pair(const int *base_values, size_t base_count,
 }
 
 static int stage101_group_build_from_pair(const Stage101Pair *pair,
-    int incoming, const HpsComparator *comparator, HpsGroup **out)
+    int incoming, const LksComparator *comparator, LksGroup **out)
 {
     void *const *items = incoming ? pair->incoming_items : pair->base_items;
     size_t count = incoming ? pair->incoming_count : pair->base_count;
-    return hps_group_build(items, count, comparator, out) == HPS_STATUS_OK;
+    return lks_group_build(items, count, comparator, out) == LKS_STATUS_OK;
 }
 
 static int stage101_run_case(const char *name, const int *base_values,
@@ -5065,15 +5065,15 @@ static int stage101_run_case(const char *name, const int *base_values,
 {
     Stage101Pair public_pair, private_pair;
     BenchmarkCompareContext public_counter = { 0, 0 }, private_counter = { 0, 0 };
-    HpsComparator public_comparator = { benchmark_compare_int, &public_counter };
-    HpsComparator private_comparator = { benchmark_compare_int, &private_counter };
-    HpsGroup *public_base = NULL, *public_incoming = NULL, *reference = NULL;
-    HpsGroup *owned_base = NULL, *private_incoming = NULL;
-    HpsGroup *original_base;
-    const HpsPath *base_paths_before[10], *incoming_paths_before[10];
+    LksComparator public_comparator = { benchmark_compare_int, &public_counter };
+    LksComparator private_comparator = { benchmark_compare_int, &private_counter };
+    LksGroup *public_base = NULL, *public_incoming = NULL, *reference = NULL;
+    LksGroup *owned_base = NULL, *private_incoming = NULL;
+    LksGroup *original_base;
+    const LksPath *base_paths_before[10], *incoming_paths_before[10];
     void *base_items_before[10];
     void *public_base_items_before[10], *public_incoming_items_before[10];
-    HpsStatus status;
+    LksStatus status;
     size_t i;
     int valid = 0;
     if (!stage101_build_pair(base_values, base_count, incoming_values,
@@ -5087,53 +5087,53 @@ static int stage101_run_case(const char *name, const int *base_values,
         goto cleanup;
     original_base = owned_base;
     for (i = 0; i < base_count; ++i) {
-        base_paths_before[i] = hps_group_path_at(owned_base, i);
-        base_items_before[i] = hps_group_item_at(owned_base, i);
-        public_base_items_before[i] = hps_group_item_at(public_base, i);
+        base_paths_before[i] = lks_group_path_at(owned_base, i);
+        base_items_before[i] = lks_group_item_at(owned_base, i);
+        public_base_items_before[i] = lks_group_item_at(public_base, i);
     }
     for (i = 0; i < incoming_count; ++i) {
-        incoming_paths_before[i] = hps_group_path_at(private_incoming, i);
-        public_incoming_items_before[i] = hps_group_item_at(public_incoming, i);
+        incoming_paths_before[i] = lks_group_path_at(private_incoming, i);
+        public_incoming_items_before[i] = lks_group_item_at(public_incoming, i);
     }
     public_counter.comparison_count = private_counter.comparison_count = 0;
-    status = hps_group_merge(public_base, public_incoming,
+    status = lks_group_merge(public_base, public_incoming,
         &public_comparator, &reference);
-    if (status != HPS_STATUS_OK) goto cleanup;
-    status = hps_group_merge_into_owned_base(&owned_base, private_incoming,
+    if (status != LKS_STATUS_OK) goto cleanup;
+    status = lks_group_merge_into_owned_base(&owned_base, private_incoming,
         &private_comparator);
-    if (status != HPS_STATUS_OK || owned_base != original_base ||
+    if (status != LKS_STATUS_OK || owned_base != original_base ||
         !stage101_groups_equivalent(reference, owned_base)) goto cleanup;
     for (i = 0; i < base_count; ++i) {
         size_t j;
         int path_order;
-        for (j = 0; j < hps_group_size(owned_base); ++j)
-            if (hps_group_item_at(owned_base, j) == base_items_before[i]) break;
-        if (hps_group_item_at(public_base, i) != public_base_items_before[i] ||
-            j == hps_group_size(owned_base) ||
-            hps_path_compare(base_paths_before[i],
-                hps_group_path_at(owned_base, j), &path_order) != HPS_STATUS_OK ||
+        for (j = 0; j < lks_group_size(owned_base); ++j)
+            if (lks_group_item_at(owned_base, j) == base_items_before[i]) break;
+        if (lks_group_item_at(public_base, i) != public_base_items_before[i] ||
+            j == lks_group_size(owned_base) ||
+            lks_path_compare(base_paths_before[i],
+                lks_group_path_at(owned_base, j), &path_order) != LKS_STATUS_OK ||
             path_order != 0) goto cleanup;
     }
     for (i = 0; i < incoming_count; ++i) {
         int path_order;
-        if (hps_group_item_at(public_incoming, i) != public_incoming_items_before[i] ||
-            hps_path_compare(incoming_paths_before[i],
-                hps_group_path_at(private_incoming, i), &path_order) != HPS_STATUS_OK ||
+        if (lks_group_item_at(public_incoming, i) != public_incoming_items_before[i] ||
+            lks_path_compare(incoming_paths_before[i],
+                lks_group_path_at(private_incoming, i), &path_order) != LKS_STATUS_OK ||
             path_order != 0) goto cleanup;
     }
     if (expected_count != (size_t)-1) {
-        if (hps_group_size(owned_base) != expected_count) goto cleanup;
+        if (lks_group_size(owned_base) != expected_count) goto cleanup;
         for (i = 0; i < expected_count; ++i) {
             char text[128];
-            if (hps_path_format(hps_group_path_at(owned_base, i), text,
-                    sizeof(text)) != HPS_STATUS_OK ||
+            if (lks_path_format(lks_group_path_at(owned_base, i), text,
+                    sizeof(text)) != LKS_STATUS_OK ||
                 strcmp(text, expected_paths[i]) != 0) goto cleanup;
         }
     }
     if (verify_base_equal_first) {
         int saw_incoming_equal = 0;
-        for (i = 0; i < hps_group_size(owned_base); ++i) {
-            void *item = hps_group_item_at(owned_base, i);
+        for (i = 0; i < lks_group_size(owned_base); ++i) {
+            void *item = lks_group_item_at(owned_base, i);
             if (item == private_pair.incoming_items[0] ||
                 item == private_pair.incoming_items[1]) {
                 saw_incoming_equal = 1;
@@ -5146,35 +5146,35 @@ static int stage101_run_case(const char *name, const int *base_values,
     if (base_count == 10) {
         for (i = 0; i < base_count; ++i) {
             size_t j;
-            for (j = 0; j < hps_group_size(owned_base); ++j)
-                if (hps_group_item_at(owned_base, j) == private_pair.base_items[i]) break;
-            if (j == hps_group_size(owned_base)) goto cleanup;
+            for (j = 0; j < lks_group_size(owned_base); ++j)
+                if (lks_group_item_at(owned_base, j) == private_pair.base_items[i]) break;
+            if (j == lks_group_size(owned_base)) goto cleanup;
             {
                 size_t k;
-                for (k = 0; k < hps_group_size(public_base); ++k)
-                    if (hps_group_item_at(public_base, k) == public_pair.base_items[i]) break;
-                if (k == hps_group_size(public_base)) goto cleanup;
+                for (k = 0; k < lks_group_size(public_base); ++k)
+                    if (lks_group_item_at(public_base, k) == public_pair.base_items[i]) break;
+                if (k == lks_group_size(public_base)) goto cleanup;
                 {
                     int path_order;
-                    if (hps_path_compare(hps_group_path_at(public_base, k),
-                            hps_group_path_at(owned_base, j), &path_order) != HPS_STATUS_OK ||
+                    if (lks_path_compare(lks_group_path_at(public_base, k),
+                            lks_group_path_at(owned_base, j), &path_order) != LKS_STATUS_OK ||
                         path_order != 0) goto cleanup;
                 }
             }
         }
     }
     if (out_comparisons != NULL) *out_comparisons = private_counter.comparison_count;
-    hps_group_destroy(owned_base); owned_base = NULL;
-    if (hps_group_size(private_incoming) != incoming_count) goto cleanup;
+    lks_group_destroy(owned_base); owned_base = NULL;
+    if (lks_group_size(private_incoming) != incoming_count) goto cleanup;
     for (i = 0; i < incoming_count; ++i)
-        if (hps_group_item_at(private_incoming, i) != private_pair.incoming_items[i]) goto cleanup;
+        if (lks_group_item_at(private_incoming, i) != private_pair.incoming_items[i]) goto cleanup;
     valid = 1;
 cleanup:
-    hps_group_destroy(owned_base);
-    hps_group_destroy(private_incoming);
-    hps_group_destroy(reference);
-    hps_group_destroy(public_incoming);
-    hps_group_destroy(public_base);
+    lks_group_destroy(owned_base);
+    lks_group_destroy(private_incoming);
+    lks_group_destroy(reference);
+    lks_group_destroy(public_incoming);
+    lks_group_destroy(public_base);
     printf("Stage 10.1 %s: %s\n", name, valid ? "PASS" : "FAIL");
     return valid;
 }
@@ -5182,7 +5182,7 @@ cleanup:
 typedef struct Stage101MemoryResult {
     size_t pre_bytes, pre_blocks, post_bytes, post_blocks;
     size_t peak_bytes, peak_blocks, comparisons;
-    HpsAllocStats peak_stats;
+    LksAllocStats peak_stats;
     int valid;
 } Stage101MemoryResult;
 
@@ -5192,9 +5192,9 @@ static int stage101_memory_one(int in_place, Stage101MemoryResult *result)
     static int base_values[HALF], incoming_values[HALF];
     static void *base_items[HALF], *incoming_items[HALF];
     BenchmarkCompareContext counter = { 0, 0 };
-    HpsComparator comparator = { benchmark_compare_int, &counter };
-    HpsGroup *base = NULL, *incoming = NULL, *merged = NULL;
-    HpsAllocStats stats;
+    LksComparator comparator = { benchmark_compare_int, &counter };
+    LksGroup *base = NULL, *incoming = NULL, *merged = NULL;
+    LksAllocStats stats;
     size_t i;
     int ok = 0;
     for (i = 0; i < HALF; ++i) {
@@ -5205,23 +5205,23 @@ static int stage101_memory_one(int in_place, Stage101MemoryResult *result)
         base_items[i] = &base_values[i];
         incoming_items[i] = &incoming_values[i];
     }
-    if (hps_alloc_stats_reset() != 0 ||
-        hps_group_build(base_items, HALF, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(incoming_items, HALF, &comparator, &incoming) != HPS_STATUS_OK)
+    if (lks_alloc_stats_reset() != 0 ||
+        lks_group_build(base_items, HALF, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(incoming_items, HALF, &comparator, &incoming) != LKS_STATUS_OK)
         goto cleanup;
-    result->pre_bytes = hps_alloc_stats_get().live_bytes;
-    result->pre_blocks = hps_alloc_stats_get().live_blocks;
+    result->pre_bytes = lks_alloc_stats_get().live_bytes;
+    result->pre_blocks = lks_alloc_stats_get().live_blocks;
     counter.comparison_count = 0;
     if (in_place) {
-        if (hps_group_merge_into_owned_base(&base, incoming, &comparator) != HPS_STATUS_OK)
+        if (lks_group_merge_into_owned_base(&base, incoming, &comparator) != LKS_STATUS_OK)
             goto cleanup;
         merged = base;
     } else {
-        if (hps_group_merge(base, incoming, &comparator, &merged) != HPS_STATUS_OK)
+        if (lks_group_merge(base, incoming, &comparator, &merged) != LKS_STATUS_OK)
             goto cleanup;
     }
     result->comparisons = counter.comparison_count;
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     result->peak_bytes = stats.peak_live_bytes;
     result->peak_blocks = stats.peak_live_blocks;
     result->peak_stats = stats;
@@ -5233,10 +5233,10 @@ static int stage101_memory_one(int in_place, Stage101MemoryResult *result)
         !stage83_other_is_empty(&stats, "10.1 memory peak")) goto cleanup;
     ok = 1;
 cleanup:
-    hps_group_destroy(merged);
-    if (!in_place || merged != base) hps_group_destroy(base);
-    hps_group_destroy(incoming);
-    stats = hps_alloc_stats_get();
+    lks_group_destroy(merged);
+    if (!in_place || merged != base) lks_group_destroy(base);
+    lks_group_destroy(incoming);
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&stats, "10.1 memory final") ||
         !stage83_other_is_empty(&stats, "10.1 memory final")) ok = 0;
@@ -5244,16 +5244,16 @@ cleanup:
     return ok;
 }
 
-static int stage101_peak_categories(const HpsAllocStats *s, size_t out[4])
+static int stage101_peak_categories(const LksAllocStats *s, size_t out[4])
 {
-    out[0] = s->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT] +
-        s->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
-    out[1] = s->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT] +
-        s->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE] +
-        s->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN];
-    out[2] = s->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT] +
-        s->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED];
-    out[3] = s->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH];
+    out[0] = s->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT] +
+        s->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
+    out[1] = s->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT] +
+        s->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE] +
+        s->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN];
+    out[2] = s->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT] +
+        s->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED];
+    out[3] = s->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH];
     return out[0] + out[1] + out[2] + out[3] == s->peak_live_bytes;
 }
 
@@ -5262,43 +5262,43 @@ static int stage101_invalid_arguments_test(void)
     int base_value = 2, incoming_value = 3;
     void *base_item = &base_value, *incoming_item = &incoming_value;
     BenchmarkCompareContext counter = { 0, 0 };
-    HpsComparator comparator = { benchmark_compare_int, &counter };
-    HpsComparator invalid_comparator = { NULL, NULL };
-    HpsGroup *base = NULL, *incoming = NULL, *original;
-    HpsGroup *null_base = NULL;
-    HpsStatus s1, s2, s3, s4;
+    LksComparator comparator = { benchmark_compare_int, &counter };
+    LksComparator invalid_comparator = { NULL, NULL };
+    LksGroup *base = NULL, *incoming = NULL, *original;
+    LksGroup *null_base = NULL;
+    LksStatus s1, s2, s3, s4;
     int path_order;
-    if (hps_group_build(&base_item, 1, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(&incoming_item, 1, &comparator, &incoming) != HPS_STATUS_OK)
+    if (lks_group_build(&base_item, 1, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(&incoming_item, 1, &comparator, &incoming) != LKS_STATUS_OK)
         goto fail;
     original = base;
     {
-        const HpsPath *base_path = hps_group_path_at(base, 0);
-        s1 = hps_group_merge_into_owned_base(NULL, incoming, &comparator);
-        s2 = hps_group_merge_into_owned_base(&base, NULL, &comparator);
-        s3 = hps_group_merge_into_owned_base(&base, incoming, NULL);
-        s4 = hps_group_merge_into_owned_base(&base, incoming, &invalid_comparator);
-        if (hps_group_merge_into_owned_base(&null_base, incoming,
-                &comparator) != HPS_STATUS_INVALID_ARGUMENT) goto fail;
-        if (s1 != HPS_STATUS_INVALID_ARGUMENT || s2 != HPS_STATUS_INVALID_ARGUMENT ||
-            s3 != HPS_STATUS_INVALID_ARGUMENT || s4 != HPS_STATUS_INVALID_ARGUMENT ||
-            base != original || hps_group_size(base) != 1 ||
-            hps_group_item_at(base, 0) != &base_value ||
-            hps_path_compare(base_path, hps_group_path_at(base, 0), &path_order) != HPS_STATUS_OK ||
+        const LksPath *base_path = lks_group_path_at(base, 0);
+        s1 = lks_group_merge_into_owned_base(NULL, incoming, &comparator);
+        s2 = lks_group_merge_into_owned_base(&base, NULL, &comparator);
+        s3 = lks_group_merge_into_owned_base(&base, incoming, NULL);
+        s4 = lks_group_merge_into_owned_base(&base, incoming, &invalid_comparator);
+        if (lks_group_merge_into_owned_base(&null_base, incoming,
+                &comparator) != LKS_STATUS_INVALID_ARGUMENT) goto fail;
+        if (s1 != LKS_STATUS_INVALID_ARGUMENT || s2 != LKS_STATUS_INVALID_ARGUMENT ||
+            s3 != LKS_STATUS_INVALID_ARGUMENT || s4 != LKS_STATUS_INVALID_ARGUMENT ||
+            base != original || lks_group_size(base) != 1 ||
+            lks_group_item_at(base, 0) != &base_value ||
+            lks_path_compare(base_path, lks_group_path_at(base, 0), &path_order) != LKS_STATUS_OK ||
             path_order != 0) goto fail;
     }
-    hps_group_destroy(incoming);
-    hps_group_destroy(base);
+    lks_group_destroy(incoming);
+    lks_group_destroy(base);
     printf("Stage 10.1 invalid arguments: rejected without consuming valid Base\n");
     return 1;
 fail:
-    hps_group_destroy(incoming);
-    hps_group_destroy(base);
+    lks_group_destroy(incoming);
+    lks_group_destroy(base);
     printf("Stage 10.1 invalid arguments: FAIL\n");
     return 0;
 }
 
-int hps_run_stage10_1_tests(void)
+int lks_run_stage10_1_tests(void)
 {
     static const int a_base[] = { 200, 100, 300 }, a_in[] = { 50, 150, 250, 350 };
     static const char *a_paths[] = { "1A1", "1A0", "1A0/A0", "000", "000/A0", "0A0", "0A0/A0" };
@@ -5314,8 +5314,8 @@ int hps_run_stage10_1_tests(void)
     Stage101MemoryResult public_memory = { 0 }, inplace_memory = { 0 };
     size_t public_count = 0, private_count = 0, i;
     int result = 0;
-    printf("HPSort Stage 10.1: private owned-Base in-place merge; Batch integration unchanged\n");
-    if (hps_run_stage8_1_tests() != 0 || !stage82_alignment_regression() ||
+    printf("LayerKeySort Stage 10.1: private owned-Base in-place merge; Batch integration unchanged\n");
+    if (lks_run_stage8_1_tests() != 0 || !stage82_alignment_regression() ||
         !stage83_tag_direct_test() || !stage92_path_storage_regression()) return 1;
     if (!stage101_invalid_arguments_test()) return 1;
     if (!stage101_run_case("A classic 6.1", a_base, 3, a_in, 4, a_paths, 7, 0, NULL) ||
@@ -5330,27 +5330,27 @@ int hps_run_stage10_1_tests(void)
     }
     {
         BenchmarkCompareContext counter = { 0, 0 };
-        HpsComparator comparator = { benchmark_compare_int, &counter };
-        HpsGroup *base = NULL, *incoming = NULL, *reference = NULL;
-        HpsGroup *private_base = NULL, *private_incoming = NULL;
-        if (hps_group_build(base_items, 500, &comparator, &base) != HPS_STATUS_OK ||
-            hps_group_build(incoming_items, 500, &comparator, &incoming) != HPS_STATUS_OK ||
-            hps_group_build(base_items, 500, &comparator, &private_base) != HPS_STATUS_OK ||
-            hps_group_build(incoming_items, 500, &comparator, &private_incoming) != HPS_STATUS_OK) return 1;
+        LksComparator comparator = { benchmark_compare_int, &counter };
+        LksGroup *base = NULL, *incoming = NULL, *reference = NULL;
+        LksGroup *private_base = NULL, *private_incoming = NULL;
+        if (lks_group_build(base_items, 500, &comparator, &base) != LKS_STATUS_OK ||
+            lks_group_build(incoming_items, 500, &comparator, &incoming) != LKS_STATUS_OK ||
+            lks_group_build(base_items, 500, &comparator, &private_base) != LKS_STATUS_OK ||
+            lks_group_build(incoming_items, 500, &comparator, &private_incoming) != LKS_STATUS_OK) return 1;
         counter.comparison_count = 0;
-        if (hps_group_merge(base, incoming, &comparator, &reference) != HPS_STATUS_OK) return 1;
+        if (lks_group_merge(base, incoming, &comparator, &reference) != LKS_STATUS_OK) return 1;
         public_count = counter.comparison_count; counter.comparison_count = 0;
-        if (hps_group_merge_into_owned_base(&private_base, private_incoming, &comparator) != HPS_STATUS_OK) return 1;
+        if (lks_group_merge_into_owned_base(&private_base, private_incoming, &comparator) != LKS_STATUS_OK) return 1;
         private_count = counter.comparison_count;
         if (private_base == NULL || !stage101_groups_equivalent(reference, private_base)) return 1;
         for (i = 0; i < 1000; ++i)
-            if (*(int *)hps_group_item_at(private_base, i) != (int)i) return 1;
-        hps_group_destroy(private_base); private_base = NULL;
-        if (hps_group_size(private_incoming) != 500) return 1;
+            if (*(int *)lks_group_item_at(private_base, i) != (int)i) return 1;
+        lks_group_destroy(private_base); private_base = NULL;
+        if (lks_group_size(private_incoming) != 500) return 1;
         for (i = 0; i < 500; ++i)
-            if (hps_group_item_at(private_incoming, i) != incoming_items[i]) return 1;
-        hps_group_destroy(private_incoming); hps_group_destroy(reference);
-        hps_group_destroy(incoming); hps_group_destroy(base);
+            if (lks_group_item_at(private_incoming, i) != incoming_items[i]) return 1;
+        lks_group_destroy(private_incoming); lks_group_destroy(reference);
+        lks_group_destroy(incoming); lks_group_destroy(base);
     }
     printf("Stage 10.1 G 500+500: public=%lu private=%lu; Path equivalence=1000/1000; output=0..999\n",
         (unsigned long)public_count, (unsigned long)private_count);
@@ -5390,13 +5390,13 @@ int hps_run_stage10_1_tests(void)
         for (i=0;i<4;++i) printf("%s,%lu,%lu\n",names[i],(unsigned long)pub[i],(unsigned long)owned[i]);
     }
     {
-        HpsAllocStats s = hps_alloc_stats_get();
+        LksAllocStats s = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&s) || s.failed_calls != 0 ||
             !stage83_tag_accounting_valid(&s,"10.1 final") ||
             !stage83_other_is_empty(&s,"10.1 final")) result = 1;
         printf("Stage 10.1 allocator final: live=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
             (unsigned long)s.live_bytes,(unsigned long)s.live_blocks,
-            (unsigned long)s.tags[HPS_ALLOC_TAG_OTHER].live_blocks,
+            (unsigned long)s.tags[LKS_ALLOC_TAG_OTHER].live_blocks,
             (unsigned long)s.failed_calls);
     }
     if (result) return 1;
@@ -5405,7 +5405,7 @@ int hps_run_stage10_1_tests(void)
 }
 
 typedef struct Stage102Entry {
-    HpsGroup *group;
+    LksGroup *group;
     int owned;
 } Stage102Entry;
 
@@ -5424,58 +5424,58 @@ typedef struct Stage102MemorySample {
     size_t peak_bytes, peak_blocks;
     size_t result_only_bytes, result_only_blocks;
     size_t clone_count;
-    HpsAllocStats peak_stats;
+    LksAllocStats peak_stats;
 } Stage102MemorySample;
 
-static HpsStatus stage102_reference_merge_all(const HpsGroupBatch *batch,
-    const HpsComparator *comparator, HpsGroup **out_group)
+static LksStatus stage102_reference_merge_all(const LksGroupBatch *batch,
+    const LksComparator *comparator, LksGroup **out_group)
 {
     Stage102Entry *current = NULL, *next = NULL;
     size_t current_count, next_count = 0, i;
-    HpsStatus status = HPS_STATUS_OK;
-    HpsGroup *empty = NULL;
-    if (out_group == NULL) return HPS_STATUS_INVALID_ARGUMENT;
+    LksStatus status = LKS_STATUS_OK;
+    LksGroup *empty = NULL;
+    if (out_group == NULL) return LKS_STATUS_INVALID_ARGUMENT;
     *out_group = NULL;
     if (batch == NULL || comparator == NULL || comparator->compare == NULL)
-        return HPS_STATUS_INVALID_ARGUMENT;
-    current_count = hps_group_batch_group_count(batch);
-    if (current_count == 0) return hps_group_build(NULL, 0, comparator, out_group);
+        return LKS_STATUS_INVALID_ARGUMENT;
+    current_count = lks_group_batch_group_count(batch);
+    if (current_count == 0) return lks_group_build(NULL, 0, comparator, out_group);
     if (current_count == 1) {
-        status = hps_group_build(NULL, 0, comparator, &empty);
-        if (status == HPS_STATUS_OK)
-            status = hps_group_merge(hps_group_batch_group_at(batch, 0),
+        status = lks_group_build(NULL, 0, comparator, &empty);
+        if (status == LKS_STATUS_OK)
+            status = lks_group_merge(lks_group_batch_group_at(batch, 0),
                 empty, comparator, out_group);
-        hps_group_destroy(empty);
+        lks_group_destroy(empty);
         return status;
     }
-    if (current_count > (size_t)-1 / sizeof(*current)) return HPS_STATUS_OUT_OF_MEMORY;
-    current = (Stage102Entry *)hps_alloc_tagged(current_count * sizeof(*current),
-        HPS_ALLOC_TAG_MERGE_SCRATCH);
-    if (current == NULL) return HPS_STATUS_OUT_OF_MEMORY;
+    if (current_count > (size_t)-1 / sizeof(*current)) return LKS_STATUS_OUT_OF_MEMORY;
+    current = (Stage102Entry *)lks_alloc_tagged(current_count * sizeof(*current),
+        LKS_ALLOC_TAG_MERGE_SCRATCH);
+    if (current == NULL) return LKS_STATUS_OUT_OF_MEMORY;
     for (i = 0; i < current_count; ++i) {
-        current[i].group = (HpsGroup *)hps_group_batch_group_at(batch, i);
+        current[i].group = (LksGroup *)lks_group_batch_group_at(batch, i);
         current[i].owned = 0;
     }
     while (current_count > 1) {
         size_t ci = 0, ni = 0;
         next_count = current_count / 2 + current_count % 2;
         if (next_count > (size_t)-1 / sizeof(*next)) {
-            status = HPS_STATUS_OUT_OF_MEMORY;
+            status = LKS_STATUS_OUT_OF_MEMORY;
             goto cleanup;
         }
-        next = (Stage102Entry *)hps_alloc_tagged(next_count * sizeof(*next),
-            HPS_ALLOC_TAG_MERGE_SCRATCH);
-        if (next == NULL) { status = HPS_STATUS_OUT_OF_MEMORY; goto cleanup; }
+        next = (Stage102Entry *)lks_alloc_tagged(next_count * sizeof(*next),
+            LKS_ALLOC_TAG_MERGE_SCRATCH);
+        if (next == NULL) { status = LKS_STATUS_OUT_OF_MEMORY; goto cleanup; }
         for (i = 0; i < next_count; ++i) { next[i].group = NULL; next[i].owned = 0; }
         while (ci < current_count) {
             if (ci + 1 < current_count) {
-                HpsGroup *merged = NULL;
-                status = hps_group_merge(current[ci].group, current[ci + 1].group,
+                LksGroup *merged = NULL;
+                status = lks_group_merge(current[ci].group, current[ci + 1].group,
                     comparator, &merged);
-                if (status != HPS_STATUS_OK) goto cleanup;
+                if (status != LKS_STATUS_OK) goto cleanup;
                 next[ni].group = merged; next[ni].owned = 1; ++ni;
-                if (current[ci].owned) hps_group_destroy(current[ci].group);
-                if (current[ci + 1].owned) hps_group_destroy(current[ci + 1].group);
+                if (current[ci].owned) lks_group_destroy(current[ci].group);
+                if (current[ci + 1].owned) lks_group_destroy(current[ci + 1].group);
                 current[ci].group = NULL; current[ci].owned = 0;
                 current[ci + 1].group = NULL; current[ci + 1].owned = 0;
                 ci += 2;
@@ -5485,71 +5485,71 @@ static HpsStatus stage102_reference_merge_all(const HpsGroupBatch *batch,
                 ++ci;
             }
         }
-        hps_free(current); current = next; next = NULL; current_count = next_count;
+        lks_free(current); current = next; next = NULL; current_count = next_count;
     }
     if (current[0].owned) {
         *out_group = current[0].group;
         current[0].group = NULL; current[0].owned = 0;
     } else {
-        status = hps_group_build(NULL, 0, comparator, &empty);
-        if (status == HPS_STATUS_OK)
-            status = hps_group_merge(current[0].group, empty, comparator, out_group);
-        hps_group_destroy(empty);
+        status = lks_group_build(NULL, 0, comparator, &empty);
+        if (status == LKS_STATUS_OK)
+            status = lks_group_merge(current[0].group, empty, comparator, out_group);
+        lks_group_destroy(empty);
     }
 cleanup:
     if (next != NULL) {
-        for (i = 0; i < next_count; ++i) if (next[i].owned) hps_group_destroy(next[i].group);
-        hps_free(next);
+        for (i = 0; i < next_count; ++i) if (next[i].owned) lks_group_destroy(next[i].group);
+        lks_free(next);
     }
     if (current != NULL) {
-        for (i = 0; i < current_count; ++i) if (current[i].owned) hps_group_destroy(current[i].group);
-        hps_free(current);
+        for (i = 0; i < current_count; ++i) if (current[i].owned) lks_group_destroy(current[i].group);
+        lks_free(current);
     }
     return status;
 }
 
-static int stage102_snapshot_batch(const HpsGroupBatch *batch,
+static int stage102_snapshot_batch(const LksGroupBatch *batch,
     Stage102Snapshot *snapshot)
 {
     size_t g, cursor = 0;
-    snapshot->count = hps_group_batch_total_size(batch);
+    snapshot->count = lks_group_batch_total_size(batch);
     snapshot->items = (void **)malloc(snapshot->count * sizeof(*snapshot->items));
     snapshot->paths = (char **)calloc(snapshot->count, sizeof(*snapshot->paths));
     if (snapshot->count != 0 && (snapshot->items == NULL || snapshot->paths == NULL))
         return 0;
-    for (g = 0; g < hps_group_batch_group_count(batch); ++g) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, g);
+    for (g = 0; g < lks_group_batch_group_count(batch); ++g) {
+        const LksGroup *group = lks_group_batch_group_at(batch, g);
         size_t i;
-        for (i = 0; i < hps_group_size(group); ++i, ++cursor) {
-            const HpsPath *path = hps_group_path_at(group, i);
-            size_t text_length = hps_path_text_length(path);
-            snapshot->items[cursor] = hps_group_item_at(group, i);
+        for (i = 0; i < lks_group_size(group); ++i, ++cursor) {
+            const LksPath *path = lks_group_path_at(group, i);
+            size_t text_length = lks_path_text_length(path);
+            snapshot->items[cursor] = lks_group_item_at(group, i);
             if (text_length == (size_t)-1 || text_length == (size_t)-2) return 0;
             snapshot->paths[cursor] = (char *)malloc(text_length + 1);
-            if (snapshot->paths[cursor] == NULL || hps_path_format(path,
-                    snapshot->paths[cursor], text_length + 1) != HPS_STATUS_OK) return 0;
+            if (snapshot->paths[cursor] == NULL || lks_path_format(path,
+                    snapshot->paths[cursor], text_length + 1) != LKS_STATUS_OK) return 0;
         }
     }
     return cursor == snapshot->count;
 }
 
-static int stage102_batch_matches_snapshot(const HpsGroupBatch *batch,
+static int stage102_batch_matches_snapshot(const LksGroupBatch *batch,
     const Stage102Snapshot *snapshot)
 {
     size_t g, cursor = 0;
-    if (snapshot->count != hps_group_batch_total_size(batch)) return 0;
-    for (g = 0; g < hps_group_batch_group_count(batch); ++g) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, g);
+    if (snapshot->count != lks_group_batch_total_size(batch)) return 0;
+    for (g = 0; g < lks_group_batch_group_count(batch); ++g) {
+        const LksGroup *group = lks_group_batch_group_at(batch, g);
         size_t i;
-        for (i = 0; i < hps_group_size(group); ++i, ++cursor) {
-            const HpsPath *source_path = hps_group_path_at(group, i);
-            size_t text_length = hps_path_text_length(source_path);
+        for (i = 0; i < lks_group_size(group); ++i, ++cursor) {
+            const LksPath *source_path = lks_group_path_at(group, i);
+            size_t text_length = lks_path_text_length(source_path);
             char *path;
             int matches;
-            if (hps_group_item_at(group, i) != snapshot->items[cursor]) return 0;
+            if (lks_group_item_at(group, i) != snapshot->items[cursor]) return 0;
             path = (char *)malloc(text_length + 1);
             if (path == NULL) return 0;
-            matches = hps_path_format(source_path, path, text_length + 1) == HPS_STATUS_OK &&
+            matches = lks_path_format(source_path, path, text_length + 1) == LKS_STATUS_OK &&
                 strcmp(path, snapshot->paths[cursor]) == 0;
             free(path);
             if (!matches) return 0;
@@ -5558,40 +5558,40 @@ static int stage102_batch_matches_snapshot(const HpsGroupBatch *batch,
     return cursor == snapshot->count;
 }
 
-static int stage102_snapshot_group(const HpsGroup *group, Stage102Snapshot *snapshot)
+static int stage102_snapshot_group(const LksGroup *group, Stage102Snapshot *snapshot)
 {
     size_t i;
-    snapshot->count = hps_group_size(group);
+    snapshot->count = lks_group_size(group);
     snapshot->items = (void **)malloc(snapshot->count * sizeof(*snapshot->items));
     snapshot->paths = (char **)calloc(snapshot->count, sizeof(*snapshot->paths));
     if (snapshot->count != 0 && (snapshot->items == NULL || snapshot->paths == NULL)) return 0;
     for (i = 0; i < snapshot->count; ++i) {
-        const HpsPath *path = hps_group_path_at(group, i);
-        size_t text_length = hps_path_text_length(path);
-        snapshot->items[i] = hps_group_item_at(group, i);
+        const LksPath *path = lks_group_path_at(group, i);
+        size_t text_length = lks_path_text_length(path);
+        snapshot->items[i] = lks_group_item_at(group, i);
         if (text_length == (size_t)-1 || text_length == (size_t)-2) return 0;
         snapshot->paths[i] = (char *)malloc(text_length + 1);
-        if (snapshot->paths[i] == NULL || hps_path_format(path,
-                snapshot->paths[i], text_length + 1) != HPS_STATUS_OK) return 0;
+        if (snapshot->paths[i] == NULL || lks_path_format(path,
+                snapshot->paths[i], text_length + 1) != LKS_STATUS_OK) return 0;
     }
     return 1;
 }
 
-static int stage102_groups_match_snapshots(const HpsGroup *group,
+static int stage102_groups_match_snapshots(const LksGroup *group,
     const Stage102Snapshot *snapshot)
 {
     size_t i;
-    if (hps_group_size(group) != snapshot->count) return 0;
+    if (lks_group_size(group) != snapshot->count) return 0;
     for (i = 0; i < snapshot->count; ++i) {
-        size_t text_length = hps_path_text_length(hps_group_path_at(group, i));
+        size_t text_length = lks_path_text_length(lks_group_path_at(group, i));
         char *path;
         int matches;
-        if (hps_group_item_at(group, i) != snapshot->items[i] ||
+        if (lks_group_item_at(group, i) != snapshot->items[i] ||
             text_length == (size_t)-1 || text_length == (size_t)-2) return 0;
         path = (char *)malloc(text_length + 1);
         if (path == NULL) return 0;
-        matches = hps_path_format(hps_group_path_at(group, i), path,
-            text_length + 1) == HPS_STATUS_OK && strcmp(path, snapshot->paths[i]) == 0;
+        matches = lks_path_format(lks_group_path_at(group, i), path,
+            text_length + 1) == LKS_STATUS_OK && strcmp(path, snapshot->paths[i]) == 0;
         free(path);
         if (!matches) return 0;
     }
@@ -5623,34 +5623,34 @@ static int stage102_compare_batch_case(size_t n, size_t group_size,
     int values[103];
     void *items[103];
     BenchmarkCompareContext counter = { 0, 0 };
-    HpsComparator comparator = { benchmark_compare_int, &counter };
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *optimized = NULL, *reference = NULL;
+    LksComparator comparator = { benchmark_compare_int, &counter };
+    LksGroupBatch *batch = NULL;
+    LksGroup *optimized = NULL, *reference = NULL;
     Stage102Snapshot before = { 0 }, opt = { 0 }, ref = { 0 };
-    HpsAllocStats stats;
+    LksAllocStats stats;
     size_t i;
     int passed = 0;
     for (i = 0; i < n; ++i) values[i] = (int)i;
     benchmark_shuffle(values, n, seed);
     for (i = 0; i < n; ++i) items[i] = &values[i];
-    if (hps_alloc_stats_reset() != 0 ||
-        hps_group_batch_build(items, n, group_size, &comparator, &batch) != HPS_STATUS_OK ||
-        hps_group_batch_group_count(batch) != expected_groups ||
+    if (lks_alloc_stats_reset() != 0 ||
+        lks_group_batch_build(items, n, group_size, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_group_batch_group_count(batch) != expected_groups ||
         !stage102_snapshot_batch(batch, &before)) goto cleanup;
-    if (hps_group_batch_merge_all(batch, &comparator, &optimized) != HPS_STATUS_OK ||
+    if (lks_group_batch_merge_all(batch, &comparator, &optimized) != LKS_STATUS_OK ||
         !stage102_snapshot_group(optimized, &opt) ||
         !stage102_batch_matches_snapshot(batch, &before)) goto cleanup;
-    if (stage102_reference_merge_all(batch, &comparator, &reference) != HPS_STATUS_OK ||
+    if (stage102_reference_merge_all(batch, &comparator, &reference) != LKS_STATUS_OK ||
         !stage102_snapshot_group(reference, &ref) ||
         !stage102_batch_matches_snapshot(batch, &before) ||
         !stage102_snapshots_equal(&opt, &ref)) goto cleanup;
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (!stage83_tag_accounting_valid(&stats, "10.2 small comparison") ||
         !stage83_other_is_empty(&stats, "10.2 small comparison")) goto cleanup;
     passed = 1;
 cleanup:
-    hps_group_destroy(reference); hps_group_destroy(optimized); hps_group_batch_destroy(batch);
-    stats = hps_alloc_stats_get();
+    lks_group_destroy(reference); lks_group_destroy(optimized); lks_group_batch_destroy(batch);
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&stats, "10.2 small final") ||
         !stage83_other_is_empty(&stats, "10.2 small final")) passed = 0;
@@ -5668,42 +5668,42 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
     static int values[N];
     static void *items[N];
     BenchmarkCompareContext counter = { 0, 0 };
-    HpsComparator comparator = { benchmark_compare_int, &counter };
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *result = NULL;
-    HpsAllocStats after_batch, after_merge, result_only, final_stats;
+    LksComparator comparator = { benchmark_compare_int, &counter };
+    LksGroupBatch *batch = NULL;
+    LksGroup *result = NULL;
+    LksAllocStats after_batch, after_merge, result_only, final_stats;
     size_t i;
     int valid = 0;
     const char *failure_phase = "begin";
-    HpsStatus merge_status = HPS_STATUS_OK;
+    LksStatus merge_status = LKS_STATUS_OK;
     int final_valid = 0, snapshot_valid = 0;
     for (i = 0; i < N; ++i) values[i] = (int)i;
     benchmark_shuffle(values, N, UINT32_C(0xC0FFEE));
     for (i = 0; i < N; ++i) items[i] = &values[i];
     failure_phase = "Batch build/reset";
-    if (hps_alloc_stats_reset() != 0 ||
-        hps_group_batch_build(items, N, group_size, &comparator, &batch) != HPS_STATUS_OK ||
-        hps_group_batch_group_count(batch) != expected_groups) goto cleanup;
-    sample->groups = hps_group_batch_group_count(batch);
+    if (lks_alloc_stats_reset() != 0 ||
+        lks_group_batch_build(items, N, group_size, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_group_batch_group_count(batch) != expected_groups) goto cleanup;
+    sample->groups = lks_group_batch_group_count(batch);
     sample->group_size = group_size;
-    after_batch = hps_alloc_stats_get();
+    after_batch = lks_alloc_stats_get();
     failure_phase = "AfterBatchBuild accounting";
     if (!stage83_tag_accounting_valid(&after_batch, "10.2 AfterBatchBuild") ||
         !stage83_other_is_empty(&after_batch, "10.2 AfterBatchBuild")) goto cleanup;
     sample->batch_bytes = after_batch.live_bytes;
     sample->batch_blocks = after_batch.live_blocks;
-    sample->clone_count = after_batch.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
+    sample->clone_count = after_batch.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
     counter.comparison_count = 0;
     failure_phase = reference_mode ? "legacy reference merge/validation/snapshot" :
         "optimized merge/validation/snapshot";
     merge_status = reference_mode ? stage102_reference_merge_all(batch, &comparator, &result) :
-        hps_group_batch_merge_all(batch, &comparator, &result);
-    if (merge_status != HPS_STATUS_OK) goto cleanup;
+        lks_group_batch_merge_all(batch, &comparator, &result);
+    if (merge_status != LKS_STATUS_OK) goto cleanup;
     final_valid = benchmark_validate_final(result, N, &(BenchmarkPathStats){ 0 });
     if (!final_valid) goto cleanup;
     snapshot_valid = stage102_snapshot_group(result, result_snapshot);
     if (!snapshot_valid) goto cleanup;
-    after_merge = hps_alloc_stats_get();
+    after_merge = lks_alloc_stats_get();
     failure_phase = "PostMerge accounting";
     if (!stage83_tag_accounting_valid(&after_merge, "10.2 PostMerge") ||
         !stage83_other_is_empty(&after_merge, "10.2 PostMerge")) goto cleanup;
@@ -5713,11 +5713,11 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
     sample->peak_blocks = after_merge.peak_live_blocks;
     sample->peak_stats = after_merge;
     if (!reference_mode) {
-        size_t total_group_allocs = after_merge.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
+        size_t total_group_allocs = after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
         sample->clone_count = total_group_allocs - sample->clone_count;
     } else sample->clone_count = 0;
-    hps_group_batch_destroy(batch); batch = NULL;
-    result_only = hps_alloc_stats_get();
+    lks_group_batch_destroy(batch); batch = NULL;
+    result_only = lks_alloc_stats_get();
     failure_phase = "ResultOnly accounting";
     sample->result_only_bytes = result_only.live_bytes;
     sample->result_only_blocks = result_only.live_blocks;
@@ -5729,8 +5729,8 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
         !stage83_other_is_empty(&result_only, "10.2 ResultOnly")) goto cleanup;
     valid = 1;
 cleanup:
-    hps_group_destroy(result); hps_group_batch_destroy(batch);
-    final_stats = hps_alloc_stats_get();
+    lks_group_destroy(result); lks_group_batch_destroy(batch);
+    final_stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&final_stats, "10.2 memory final") ||
         !stage83_other_is_empty(&final_stats, "10.2 memory final")) valid = 0;
@@ -5738,8 +5738,8 @@ cleanup:
         (unsigned long)expected_groups,reference_mode?"Reference":"Optimized",failure_phase,
         (unsigned long)final_stats.live_bytes,(unsigned long)final_stats.live_blocks,
         (unsigned long)final_stats.failed_calls);
-    if (!valid && merge_status != HPS_STATUS_OK) printf("  merge status=%s\n",hps_status_string(merge_status));
-    if (!valid && merge_status == HPS_STATUS_OK) printf("  output validate=%d snapshot=%d\n",
+    if (!valid && merge_status != LKS_STATUS_OK) printf("  merge status=%s\n",lks_status_string(merge_status));
+    if (!valid && merge_status == LKS_STATUS_OK) printf("  output validate=%d snapshot=%d\n",
         final_valid,snapshot_valid);
     return valid;
 }
@@ -5802,12 +5802,12 @@ static int stage102_memory_panel(void)
         const char *names[2] = { "Reference", "Optimized" };
         size_t m;
         for (m=0;m<2;++m) {
-            const HpsAllocStats *s=&samples[m]->peak_stats;
-            size_t path=s->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT]+s->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
-            size_t tree=s->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT]+s->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE]+s->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN];
-            size_t group=s->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT]+s->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED];
-            size_t scratch=s->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH];
-            size_t batch=s->bytes_at_global_peak[HPS_ALLOC_TAG_BATCH_OBJECT]+s->bytes_at_global_peak[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY];
+            const LksAllocStats *s=&samples[m]->peak_stats;
+            size_t path=s->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT]+s->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
+            size_t tree=s->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT]+s->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE]+s->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN];
+            size_t group=s->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT]+s->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED];
+            size_t scratch=s->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH];
+            size_t batch=s->bytes_at_global_peak[LKS_ALLOC_TAG_BATCH_OBJECT]+s->bytes_at_global_peak[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY];
             printf("%lu,%s,%lu,%lu,%lu,%lu,%lu,%lu\n",(unsigned long)groups[i],names[m],
                 (unsigned long)path,(unsigned long)tree,(unsigned long)group,
                 (unsigned long)scratch,(unsigned long)batch,(unsigned long)s->peak_live_bytes);
@@ -5827,49 +5827,49 @@ static int stage102_equal_and_lifecycle_tests(void)
     int equal_values[10];
     void *items[10];
     BenchmarkCompareContext counter = { 0, 0 };
-    HpsComparator comparator = { benchmark_compare_int, &counter };
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *result = NULL, *reference = NULL;
+    LksComparator comparator = { benchmark_compare_int, &counter };
+    LksGroupBatch *batch = NULL;
+    LksGroup *result = NULL, *reference = NULL;
     Stage102Snapshot opt = { 0 }, ref = { 0 }, before = { 0 };
-    HpsAllocStats after_batch, after_merge, final_stats;
+    LksAllocStats after_batch, after_merge, final_stats;
     size_t i, clone_count;
     int passed = 0;
     for (i=0;i<10;++i) { equal_values[i]=7; items[i]=&equal_values[i]; }
-    if (hps_alloc_stats_reset()!=0 ||
-        hps_group_batch_build(items,10,2,&comparator,&batch)!=HPS_STATUS_OK ||
-        hps_group_batch_group_count(batch)!=5 || !stage102_snapshot_batch(batch,&before)) goto cleanup;
-    after_batch=hps_alloc_stats_get();
-    if (hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK ||
+    if (lks_alloc_stats_reset()!=0 ||
+        lks_group_batch_build(items,10,2,&comparator,&batch)!=LKS_STATUS_OK ||
+        lks_group_batch_group_count(batch)!=5 || !stage102_snapshot_batch(batch,&before)) goto cleanup;
+    after_batch=lks_alloc_stats_get();
+    if (lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK ||
         !stage102_snapshot_group(result,&opt) || !stage102_batch_matches_snapshot(batch,&before)) goto cleanup;
-    after_merge=hps_alloc_stats_get();
-    clone_count=after_merge.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
-        after_batch.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
-    if (clone_count!=2 || stage102_reference_merge_all(batch,&comparator,&reference)!=HPS_STATUS_OK ||
+    after_merge=lks_alloc_stats_get();
+    clone_count=after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
+        after_batch.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
+    if (clone_count!=2 || stage102_reference_merge_all(batch,&comparator,&reference)!=LKS_STATUS_OK ||
         !stage102_snapshot_group(reference,&ref) || !stage102_snapshots_equal(&opt,&ref)) goto cleanup;
     for (i=0;i<10;++i)
-        if (hps_group_item_at(result,i)!=items[i]) goto cleanup;
+        if (lks_group_item_at(result,i)!=items[i]) goto cleanup;
     printf("Stage 10.2 five equal Groups: pointer stability=PASS; G4 borrowed-right clone count=0; total owned-base clones=%lu\n",(unsigned long)clone_count);
-    hps_group_destroy(reference); reference=NULL;
-    hps_group_destroy(result); result=NULL;
-    hps_group_batch_destroy(batch); batch=NULL;
-    final_stats=hps_alloc_stats_get();
+    lks_group_destroy(reference); reference=NULL;
+    lks_group_destroy(result); result=NULL;
+    lks_group_batch_destroy(batch); batch=NULL;
+    final_stats=lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls!=0) goto cleanup;
 
     {
         int six_values[12]; void *six_items[12];
         for (i=0;i<12;++i) { six_values[i]=(int)i; six_items[i]=&six_values[i]; }
-        if (hps_alloc_stats_reset()!=0 || hps_group_batch_build(six_items,12,2,
-                &comparator,&batch)!=HPS_STATUS_OK || hps_group_batch_group_count(batch)!=6) goto cleanup;
-        after_batch=hps_alloc_stats_get();
-        if (hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK ||
-            hps_group_size(result)!=12) goto cleanup;
-        after_merge=hps_alloc_stats_get();
-        clone_count=after_merge.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
-            after_batch.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
+        if (lks_alloc_stats_reset()!=0 || lks_group_batch_build(six_items,12,2,
+                &comparator,&batch)!=LKS_STATUS_OK || lks_group_batch_group_count(batch)!=6) goto cleanup;
+        after_batch=lks_alloc_stats_get();
+        if (lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK ||
+            lks_group_size(result)!=12) goto cleanup;
+        after_merge=lks_alloc_stats_get();
+        clone_count=after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
+            after_batch.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
         if (clone_count!=3) goto cleanup;
-        hps_group_destroy(batch == NULL ? NULL : result); result=NULL;
-        hps_group_batch_destroy(batch); batch=NULL;
-        final_stats=hps_alloc_stats_get();
+        lks_group_destroy(batch == NULL ? NULL : result); result=NULL;
+        lks_group_batch_destroy(batch); batch=NULL;
+        final_stats=lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls!=0 ||
             !stage83_tag_accounting_valid(&final_stats,"10.2 six-group final") ||
             !stage83_other_is_empty(&final_stats,"10.2 six-group final")) goto cleanup;
@@ -5877,9 +5877,9 @@ static int stage102_equal_and_lifecycle_tests(void)
     }
     passed=1;
 cleanup:
-    hps_group_destroy(reference); hps_group_destroy(result); hps_group_batch_destroy(batch);
+    lks_group_destroy(reference); lks_group_destroy(result); lks_group_batch_destroy(batch);
     stage102_snapshot_free(&before); stage102_snapshot_free(&opt); stage102_snapshot_free(&ref);
-    final_stats=hps_alloc_stats_get();
+    final_stats=lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls!=0) passed=0;
     if (!passed) printf("Stage 10.2 equal/lifecycle tests: FAIL\n");
     return passed;
@@ -5890,37 +5890,37 @@ static int stage102_g0_path_test(void)
     int values[10]={90,10,70,30,80,20,60,40,100,50};
     void *items[10];
     const char *expected[4]={"1A0","1A0//A0","1A0/A0","000"};
-    HpsGroupBatch *batch=NULL; HpsGroup *result=NULL;
+    LksGroupBatch *batch=NULL; LksGroup *result=NULL;
     BenchmarkCompareContext counter={0,0};
-    HpsComparator comparator={benchmark_compare_int,&counter};
+    LksComparator comparator={benchmark_compare_int,&counter};
     size_t i,j; int passed=0;
-    const HpsGroup *g0;
-    const HpsPath *paths[4]; void *g0_items[4];
+    const LksGroup *g0;
+    const LksPath *paths[4]; void *g0_items[4];
     for(i=0;i<10;++i) items[i]=&values[i];
-    if(hps_alloc_stats_reset()!=0||hps_group_batch_build(items,10,4,&comparator,&batch)!=HPS_STATUS_OK) goto cleanup;
-    g0=hps_group_batch_group_at(batch,0);
-    for(i=0;i<4;++i){g0_items[i]=hps_group_item_at(g0,i);paths[i]=hps_group_path_at(g0,i);}
-    if(hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK) goto cleanup;
+    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(items,10,4,&comparator,&batch)!=LKS_STATUS_OK) goto cleanup;
+    g0=lks_group_batch_group_at(batch,0);
+    for(i=0;i<4;++i){g0_items[i]=lks_group_item_at(g0,i);paths[i]=lks_group_path_at(g0,i);}
+    if(lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK) goto cleanup;
     for(i=0;i<4;++i){
         char text[128]; int order;
-        for(j=0;j<hps_group_size(result);++j) if(hps_group_item_at(result,j)==g0_items[i]) break;
-        if(j==hps_group_size(result)||hps_path_compare(paths[i],hps_group_path_at(result,j),&order)!=HPS_STATUS_OK||order!=0||
-            hps_path_format(hps_group_path_at(result,j),text,sizeof(text))!=HPS_STATUS_OK||strcmp(text,expected[i])!=0) goto cleanup;
+        for(j=0;j<lks_group_size(result);++j) if(lks_group_item_at(result,j)==g0_items[i]) break;
+        if(j==lks_group_size(result)||lks_path_compare(paths[i],lks_group_path_at(result,j),&order)!=LKS_STATUS_OK||order!=0||
+            lks_path_format(lks_group_path_at(result,j),text,sizeof(text))!=LKS_STATUS_OK||strcmp(text,expected[i])!=0) goto cleanup;
     }
     passed=1;
     printf("Stage 10.2 G0 lineage Paths retained: 10=1A0, 30=1A0//A0, 70=1A0/A0, 90=000\n");
 cleanup:
-    hps_group_destroy(result);hps_group_batch_destroy(batch);
-    {HpsAllocStats s=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||!stage83_tag_accounting_valid(&s,"10.2 G0 final"))passed=0;}
+    lks_group_destroy(result);lks_group_batch_destroy(batch);
+    {LksAllocStats s=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||!stage83_tag_accounting_valid(&s,"10.2 G0 final"))passed=0;}
     return passed;
 }
 
-int hps_run_stage10_2_tests(void)
+int lks_run_stage10_2_tests(void)
 {
     static const size_t groups[8]={2,3,4,5,6,7,8,10};
     size_t i;
-    printf("HPSort Stage 10.2: Batch balanced merge lifecycle integration\n");
-    if(hps_run_stage8_1_tests()!=0||!stage82_alignment_regression()||
+    printf("LayerKeySort Stage 10.2: Batch balanced merge lifecycle integration\n");
+    if(lks_run_stage8_1_tests()!=0||!stage82_alignment_regression()||
         !stage83_tag_direct_test()||!stage92_path_storage_regression()) return 1;
     for(i=0;i<8;++i){
         size_t gs=103/groups[i]+(103%groups[i]!=0);
@@ -5930,25 +5930,25 @@ int hps_run_stage10_2_tests(void)
     if(!stage102_equal_and_lifecycle_tests()||!stage102_g0_path_test()) return 1;
     {
         int values[1024];void *items[1024];BenchmarkCompareContext counter={0,0};
-        HpsComparator comparator={benchmark_compare_int,&counter};HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;size_t k;int ok=1;
+        LksComparator comparator={benchmark_compare_int,&counter};LksGroupBatch *batch=NULL;LksGroup *result=NULL;size_t k;int ok=1;
         for(k=0;k<1024;++k){values[k]=(int)k;items[k]=&values[k];}
-        if(hps_alloc_stats_reset()!=0||hps_group_batch_build(items,1024,1,&comparator,&batch)!=HPS_STATUS_OK)return 1;
+        if(lks_alloc_stats_reset()!=0||lks_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK)return 1;
         counter.comparison_count=0;
-        if(hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK||hps_group_size(result)!=1024)ok=0;
-        for(k=0;ok&&k<1024;++k){int po;if(hps_group_item_at(result,k)!=&values[k]||(k>0&&(hps_path_compare(hps_group_path_at(result,k-1),hps_group_path_at(result,k),&po)!=HPS_STATUS_OK||po!=-1)))ok=0;}
+        if(lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||lks_group_size(result)!=1024)ok=0;
+        for(k=0;ok&&k<1024;++k){int po;if(lks_group_item_at(result,k)!=&values[k]||(k>0&&(lks_path_compare(lks_group_path_at(result,k-1),lks_group_path_at(result,k),&po)!=LKS_STATUS_OK||po!=-1)))ok=0;}
         printf("Stage 10.2 1024 singleton Groups: comparisons=%lu order/path=%s\n",(unsigned long)counter.comparison_count,ok?"PASS":"FAIL");
         if(counter.comparison_count!=14337)ok=0;
-        hps_group_destroy(result);hps_group_batch_destroy(batch);
-        {HpsAllocStats s=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||!stage83_tag_accounting_valid(&s,"10.2 1024 final")||!stage83_other_is_empty(&s,"10.2 1024 final"))ok=0;}
+        lks_group_destroy(result);lks_group_batch_destroy(batch);
+        {LksAllocStats s=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||!stage83_tag_accounting_valid(&s,"10.2 1024 final")||!stage83_other_is_empty(&s,"10.2 1024 final"))ok=0;}
         if(!ok)return 1;
     }
     if(!stage102_memory_panel())return 1;
     {
-        HpsAllocStats s=hps_alloc_stats_get();
+        LksAllocStats s=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||
             !stage83_tag_accounting_valid(&s,"10.2 final")||!stage83_other_is_empty(&s,"10.2 final"))return 1;
         printf("Stage 10.2 allocator final: OTHER=%lu FailedCalls=%lu live=%lu/%lu\n",
-            (unsigned long)s.tags[HPS_ALLOC_TAG_OTHER].live_blocks,(unsigned long)s.failed_calls,
+            (unsigned long)s.tags[LKS_ALLOC_TAG_OTHER].live_blocks,(unsigned long)s.failed_calls,
             (unsigned long)s.live_bytes,(unsigned long)s.live_blocks);
     }
     printf("Stage 10.2 complete. No Stage 10.3 work started.\n");
@@ -5963,7 +5963,7 @@ typedef struct Stage103Snapshot {
     size_t *path_offsets;
     size_t *path_lengths;
     char *path_text;
-    HpsDirection *path_directions;
+    LksDirection *path_directions;
     size_t *step_offsets;
     unsigned int *step_slots;
     size_t *step_levels;
@@ -5982,16 +5982,16 @@ typedef struct Stage103Sample {
     size_t observed_owned_inplace;
     double build_ms;
     double merge_ms;
-    HpsAllocStats peak_stats;
-    HpsAllocStats batch_stats;
-    HpsAllocStats result_stats;
+    LksAllocStats peak_stats;
+    LksAllocStats batch_stats;
+    LksAllocStats result_stats;
     double final_avg_depth;
     size_t final_max_depth;
     size_t final_max_level;
 } Stage103Sample;
 
 typedef struct Stage112TreeCapture {
-    HpsTreeInternalProfile profile;
+    LksTreeInternalProfile profile;
     size_t *capacity_counts;
     size_t capacity_count;
 } Stage112TreeCapture;
@@ -6000,13 +6000,13 @@ typedef struct Stage112TreeCapture {
 typedef struct Stage12ModelChildBlock {
     size_t count;
     size_t capacity;
-    HpsTreeNode *children[];
+    LksTreeNode *children[];
 } Stage12ModelChildBlock;
 
 typedef struct Stage12ModelNode {
-    HpsPath *path;
+    LksPath *path;
     void *item;
-    HpsTreeNode *parent;
+    LksTreeNode *parent;
     Stage12ModelChildBlock *child_block;
 } Stage12ModelNode;
 
@@ -6050,7 +6050,7 @@ static int stage103_snapshot_alloc(Stage103Snapshot *snapshot, size_t count,
     snapshot->items=(void **)malloc((count==0?1:count)*sizeof(*snapshot->items));
     snapshot->path_offsets=(size_t *)malloc((count==0?1:count)*sizeof(*snapshot->path_offsets));
     snapshot->path_lengths=(size_t *)malloc((count==0?1:count)*sizeof(*snapshot->path_lengths));
-    snapshot->path_directions=(HpsDirection *)malloc((count==0?1:count)*sizeof(*snapshot->path_directions));
+    snapshot->path_directions=(LksDirection *)malloc((count==0?1:count)*sizeof(*snapshot->path_directions));
     snapshot->step_offsets=(size_t *)malloc((count+1)*sizeof(*snapshot->step_offsets));
     snapshot->group_sizes=(size_t *)malloc((group_count==0?1:group_count)*sizeof(*snapshot->group_sizes));
     snapshot->path_text=NULL;
@@ -6066,29 +6066,29 @@ static int stage103_snapshot_alloc_steps(Stage103Snapshot *snapshot,size_t step_
     return snapshot->step_slots!=NULL&&snapshot->step_levels!=NULL;
 }
 
-static int stage103_snapshot_store_path(const HpsPath *path,Stage103Snapshot *snapshot,
+static int stage103_snapshot_store_path(const LksPath *path,Stage103Snapshot *snapshot,
     size_t path_index,size_t *step_cursor)
 {
-    size_t depth=hps_path_depth(path),j;
-    snapshot->path_directions[path_index]=hps_path_direction(path);
+    size_t depth=lks_path_depth(path),j;
+    snapshot->path_directions[path_index]=lks_path_direction(path);
     snapshot->step_offsets[path_index]=*step_cursor;
     for(j=0;j<depth;++j){
-        if(hps_path_get_slot(path,j,&snapshot->step_slots[*step_cursor])!=HPS_STATUS_OK||
-            hps_path_get_level(path,j,&snapshot->step_levels[*step_cursor])!=HPS_STATUS_OK)return 0;
+        if(lks_path_get_slot(path,j,&snapshot->step_slots[*step_cursor])!=LKS_STATUS_OK||
+            lks_path_get_level(path,j,&snapshot->step_levels[*step_cursor])!=LKS_STATUS_OK)return 0;
         ++*step_cursor;
     }
     snapshot->step_offsets[path_index+1]=*step_cursor;
     return 1;
 }
 
-static int stage103_snapshot_capture_group(const HpsGroup *group, Stage103Snapshot *snapshot)
+static int stage103_snapshot_capture_group(const LksGroup *group, Stage103Snapshot *snapshot)
 {
     size_t i,total=0,total_steps=0,step_cursor=0;
-    if(!stage103_snapshot_alloc(snapshot,hps_group_size(group),0))return 0;
+    if(!stage103_snapshot_alloc(snapshot,lks_group_size(group),0))return 0;
     for(i=0;i<snapshot->count;++i){
-        size_t len=hps_path_text_length(hps_group_path_at(group,i));
+        size_t len=lks_path_text_length(lks_group_path_at(group,i));
         if(len==(size_t)-1||!benchmark_add_size(&total,len+1))return 0;
-        if(!benchmark_add_size(&total_steps,hps_path_depth(hps_group_path_at(group,i))))return 0;
+        if(!benchmark_add_size(&total_steps,lks_path_depth(lks_group_path_at(group,i))))return 0;
         snapshot->path_lengths[i]=len;
     }
     if(!stage103_snapshot_alloc_steps(snapshot,total_steps))return 0;
@@ -6096,29 +6096,29 @@ static int stage103_snapshot_capture_group(const HpsGroup *group, Stage103Snapsh
     if(snapshot->path_text==NULL)return 0;
     total=0;
     for(i=0;i<snapshot->count;++i){
-        snapshot->items[i]=hps_group_item_at(group,i);
-        if(!stage103_snapshot_store_path(hps_group_path_at(group,i),snapshot,i,&step_cursor))return 0;
+        snapshot->items[i]=lks_group_item_at(group,i);
+        if(!stage103_snapshot_store_path(lks_group_path_at(group,i),snapshot,i,&step_cursor))return 0;
         snapshot->path_offsets[i]=total;
-        if(hps_path_format(hps_group_path_at(group,i),snapshot->path_text+total,
-                snapshot->path_lengths[i]+1)!=HPS_STATUS_OK)return 0;
+        if(lks_path_format(lks_group_path_at(group,i),snapshot->path_text+total,
+                snapshot->path_lengths[i]+1)!=LKS_STATUS_OK)return 0;
         total+=snapshot->path_lengths[i]+1;
     }
     return 1;
 }
 
-static int stage103_snapshot_capture_batch(const HpsGroupBatch *batch,
+static int stage103_snapshot_capture_batch(const LksGroupBatch *batch,
     Stage103Snapshot *snapshot)
 {
     size_t g,i,cursor=0,total=0,total_steps=0,step_cursor=0;
-    if(!stage103_snapshot_alloc(snapshot,hps_group_batch_total_size(batch),
-            hps_group_batch_group_count(batch)))return 0;
+    if(!stage103_snapshot_alloc(snapshot,lks_group_batch_total_size(batch),
+            lks_group_batch_group_count(batch)))return 0;
     for(g=0;g<snapshot->group_count;++g){
-        const HpsGroup *group=hps_group_batch_group_at(batch,g);
-        snapshot->group_sizes[g]=hps_group_size(group);
-        for(i=0;i<hps_group_size(group);++i,++cursor){
-            size_t len=hps_path_text_length(hps_group_path_at(group,i));
+        const LksGroup *group=lks_group_batch_group_at(batch,g);
+        snapshot->group_sizes[g]=lks_group_size(group);
+        for(i=0;i<lks_group_size(group);++i,++cursor){
+            size_t len=lks_path_text_length(lks_group_path_at(group,i));
             if(len==(size_t)-1||!benchmark_add_size(&total,len+1))return 0;
-            if(!benchmark_add_size(&total_steps,hps_path_depth(hps_group_path_at(group,i))))return 0;
+            if(!benchmark_add_size(&total_steps,lks_path_depth(lks_group_path_at(group,i))))return 0;
             snapshot->path_lengths[cursor]=len;
         }
     }
@@ -6128,13 +6128,13 @@ static int stage103_snapshot_capture_batch(const HpsGroupBatch *batch,
     if(snapshot->path_text==NULL)return 0;
     cursor=0;total=0;
     for(g=0;g<snapshot->group_count;++g){
-        const HpsGroup *group=hps_group_batch_group_at(batch,g);
-        for(i=0;i<hps_group_size(group);++i,++cursor){
-            snapshot->items[cursor]=hps_group_item_at(group,i);
-            if(!stage103_snapshot_store_path(hps_group_path_at(group,i),snapshot,cursor,&step_cursor))return 0;
+        const LksGroup *group=lks_group_batch_group_at(batch,g);
+        for(i=0;i<lks_group_size(group);++i,++cursor){
+            snapshot->items[cursor]=lks_group_item_at(group,i);
+            if(!stage103_snapshot_store_path(lks_group_path_at(group,i),snapshot,cursor,&step_cursor))return 0;
             snapshot->path_offsets[cursor]=total;
-            if(hps_path_format(hps_group_path_at(group,i),snapshot->path_text+total,
-                    snapshot->path_lengths[cursor]+1)!=HPS_STATUS_OK)return 0;
+            if(lks_path_format(lks_group_path_at(group,i),snapshot->path_text+total,
+                    snapshot->path_lengths[cursor]+1)!=LKS_STATUS_OK)return 0;
             total+=snapshot->path_lengths[cursor]+1;
         }
     }
@@ -6149,19 +6149,19 @@ static void stage103_snapshot_destroy(Stage103Snapshot *snapshot)
     memset(snapshot,0,sizeof(*snapshot));
 }
 
-static HpsPath *stage103_snapshot_make_path(const Stage103Snapshot *snapshot,size_t index)
+static LksPath *stage103_snapshot_make_path(const Stage103Snapshot *snapshot,size_t index)
 {
     size_t begin=snapshot->step_offsets[index],end=snapshot->step_offsets[index+1],step;
-    HpsPath *path;
-    if(snapshot->path_directions[index]==HPS_DIRECTION_ZERO)
-        return begin==end?hps_path_create_zero():NULL;
+    LksPath *path;
+    if(snapshot->path_directions[index]==LKS_DIRECTION_ZERO)
+        return begin==end?lks_path_create_zero():NULL;
     if(begin==end)return NULL;
-    path=hps_path_create_at_level(snapshot->path_directions[index],snapshot->step_slots[begin],
+    path=lks_path_create_at_level(snapshot->path_directions[index],snapshot->step_slots[begin],
         snapshot->step_levels[begin]);
     if(path==NULL)return NULL;
     for(step=begin+1;step<end;++step){
-        if(hps_path_append_at_level(path,snapshot->step_slots[step],snapshot->step_levels[step])!=HPS_STATUS_OK){
-            hps_path_destroy(path);return NULL;
+        if(lks_path_append_at_level(path,snapshot->step_slots[step],snapshot->step_levels[step])!=LKS_STATUS_OK){
+            lks_path_destroy(path);return NULL;
         }
     }
     return path;
@@ -6178,70 +6178,70 @@ static int stage103_snapshot_equal(const Stage103Snapshot *a,
             ++*item_mismatches;equal=0;
         }
         {
-            HpsPath *pa=stage103_snapshot_make_path(a,i),*pb=stage103_snapshot_make_path(b,i);
-            int order=1;HpsStatus compare_status;
+            LksPath *pa=stage103_snapshot_make_path(a,i),*pb=stage103_snapshot_make_path(b,i);
+            int order=1;LksStatus compare_status;
             if(pa==NULL||pb==NULL){++*path_mismatches;equal=0;}
             else{
-                compare_status=hps_path_compare(pa,pb,&order);
-                if(compare_status!=HPS_STATUS_OK||order!=0||a->path_lengths[i]!=b->path_lengths[i]||strcmp(ap,bp)!=0){
+                compare_status=lks_path_compare(pa,pb,&order);
+                if(compare_status!=LKS_STATUS_OK||order!=0||a->path_lengths[i]!=b->path_lengths[i]||strcmp(ap,bp)!=0){
                     ++*path_mismatches;equal=0;
                 }
             }
-            hps_path_destroy(pa);hps_path_destroy(pb);
+            lks_path_destroy(pa);lks_path_destroy(pb);
         }
     }
     return equal;
 }
 
-static int stage103_batch_matches_snapshot(const HpsGroupBatch *batch,
+static int stage103_batch_matches_snapshot(const LksGroupBatch *batch,
     const Stage103Snapshot *snapshot)
 {
     size_t g,i,cursor=0,maxlen=0;char *buffer;
-    if(hps_group_batch_group_count(batch)!=snapshot->group_count||
-        hps_group_batch_total_size(batch)!=snapshot->count)return 0;
+    if(lks_group_batch_group_count(batch)!=snapshot->group_count||
+        lks_group_batch_total_size(batch)!=snapshot->count)return 0;
     for(g=0;g<snapshot->group_count;++g)
-        if(hps_group_size(hps_group_batch_group_at(batch,g))!=snapshot->group_sizes[g])return 0;
+        if(lks_group_size(lks_group_batch_group_at(batch,g))!=snapshot->group_sizes[g])return 0;
     for(i=0;i<snapshot->count;++i)if(snapshot->path_lengths[i]>maxlen)maxlen=snapshot->path_lengths[i];
     buffer=(char *)malloc(maxlen+1);if(buffer==NULL)return 0;
     for(g=0;g<snapshot->group_count;++g){
-        const HpsGroup *group=hps_group_batch_group_at(batch,g);
-        for(i=0;i<hps_group_size(group);++i,++cursor){
-            const HpsPath *path=hps_group_path_at(group,i);size_t step;
-            if(hps_group_item_at(group,i)!=snapshot->items[cursor]||
-                hps_path_direction(path)!=snapshot->path_directions[cursor]||
-                hps_path_depth(path)!=snapshot->step_offsets[cursor+1]-snapshot->step_offsets[cursor]||
-                hps_path_text_length(hps_group_path_at(group,i))!=snapshot->path_lengths[cursor]||
-                hps_path_format(hps_group_path_at(group,i),buffer,maxlen+1)!=HPS_STATUS_OK||
+        const LksGroup *group=lks_group_batch_group_at(batch,g);
+        for(i=0;i<lks_group_size(group);++i,++cursor){
+            const LksPath *path=lks_group_path_at(group,i);size_t step;
+            if(lks_group_item_at(group,i)!=snapshot->items[cursor]||
+                lks_path_direction(path)!=snapshot->path_directions[cursor]||
+                lks_path_depth(path)!=snapshot->step_offsets[cursor+1]-snapshot->step_offsets[cursor]||
+                lks_path_text_length(lks_group_path_at(group,i))!=snapshot->path_lengths[cursor]||
+                lks_path_format(lks_group_path_at(group,i),buffer,maxlen+1)!=LKS_STATUS_OK||
                 strcmp(buffer,snapshot->path_text+snapshot->path_offsets[cursor])!=0){free(buffer);return 0;}
-            for(step=0;step<hps_path_depth(path);++step){unsigned int slot=0;size_t level=0;
+            for(step=0;step<lks_path_depth(path);++step){unsigned int slot=0;size_t level=0;
                 size_t saved=snapshot->step_offsets[cursor]+step;
-                if(hps_path_get_slot(path,step,&slot)!=HPS_STATUS_OK||
-                    hps_path_get_level(path,step,&level)!=HPS_STATUS_OK||
+                if(lks_path_get_slot(path,step,&slot)!=LKS_STATUS_OK||
+                    lks_path_get_level(path,step,&level)!=LKS_STATUS_OK||
                     slot!=snapshot->step_slots[saved]||level!=snapshot->step_levels[saved]){free(buffer);return 0;}}
         }
     }
     free(buffer);return cursor==snapshot->count;
 }
 
-static int stage103_group_matches_snapshot(const HpsGroup *group,
+static int stage103_group_matches_snapshot(const LksGroup *group,
     const Stage103Snapshot *snapshot)
 {
     size_t i,maxlen=0;char *buffer;
-    if(hps_group_size(group)!=snapshot->count)return 0;
+    if(lks_group_size(group)!=snapshot->count)return 0;
     for(i=0;i<snapshot->count;++i)if(snapshot->path_lengths[i]>maxlen)maxlen=snapshot->path_lengths[i];
     buffer=(char *)malloc(maxlen+1);if(buffer==NULL)return 0;
     for(i=0;i<snapshot->count;++i){
-        const HpsPath *path=hps_group_path_at(group,i);size_t step;
-        if(hps_group_item_at(group,i)!=snapshot->items[i]||
-            hps_path_direction(path)!=snapshot->path_directions[i]||
-            hps_path_depth(path)!=snapshot->step_offsets[i+1]-snapshot->step_offsets[i]||
-            hps_path_text_length(hps_group_path_at(group,i))!=snapshot->path_lengths[i]||
-            hps_path_format(hps_group_path_at(group,i),buffer,maxlen+1)!=HPS_STATUS_OK||
+        const LksPath *path=lks_group_path_at(group,i);size_t step;
+        if(lks_group_item_at(group,i)!=snapshot->items[i]||
+            lks_path_direction(path)!=snapshot->path_directions[i]||
+            lks_path_depth(path)!=snapshot->step_offsets[i+1]-snapshot->step_offsets[i]||
+            lks_path_text_length(lks_group_path_at(group,i))!=snapshot->path_lengths[i]||
+            lks_path_format(lks_group_path_at(group,i),buffer,maxlen+1)!=LKS_STATUS_OK||
             strcmp(buffer,snapshot->path_text+snapshot->path_offsets[i])!=0){free(buffer);return 0;}
-        for(step=0;step<hps_path_depth(path);++step){unsigned int slot=0;size_t level=0;
+        for(step=0;step<lks_path_depth(path);++step){unsigned int slot=0;size_t level=0;
             size_t saved=snapshot->step_offsets[i]+step;
-            if(hps_path_get_slot(path,step,&slot)!=HPS_STATUS_OK||
-                hps_path_get_level(path,step,&level)!=HPS_STATUS_OK||
+            if(lks_path_get_slot(path,step,&slot)!=LKS_STATUS_OK||
+                lks_path_get_level(path,step,&level)!=LKS_STATUS_OK||
                 slot!=snapshot->step_slots[saved]||level!=snapshot->step_levels[saved]){free(buffer);return 0;}}
     }
     free(buffer);return 1;
@@ -6254,18 +6254,18 @@ static void stage112_tree_capture_destroy(Stage112TreeCapture *capture)
     memset(capture,0,sizeof(*capture));
 }
 
-static int stage112_capture_result_tree(const HpsGroup *group,
-    const HpsAllocStats *result_stats,size_t item_count,
+static int stage112_capture_result_tree(const LksGroup *group,
+    const LksAllocStats *result_stats,size_t item_count,
     Stage112TreeCapture *capture)
 {
-    const HpsTree *tree=hps_group_internal_tree(group);
+    const LksTree *tree=lks_group_internal_tree(group);
     size_t node_size,tree_size,ptr_size,header_size,node_bytes,children_bytes,tree_total;
-    size_t required=0,index,node_sum=0;HpsStatus status;
+    size_t required=0,index,node_sum=0;LksStatus status;
     if(tree==NULL||capture==NULL)return 0;
     memset(capture,0,sizeof(*capture));
-    if(hps_tree_internal_profile(tree,&capture->profile)!=HPS_STATUS_OK)return 0;
-    node_size=hps_tree_internal_sizeof_node();tree_size=hps_tree_internal_sizeof_tree();
-    ptr_size=sizeof(void *);header_size=hps_tree_internal_child_block_header_size();
+    if(lks_tree_internal_profile(tree,&capture->profile)!=LKS_STATUS_OK)return 0;
+    node_size=lks_tree_internal_sizeof_node();tree_size=lks_tree_internal_sizeof_tree();
+    ptr_size=sizeof(void *);header_size=lks_tree_internal_child_block_header_size();
     if(capture->profile.real_node_count!=item_count||
         capture->profile.total_child_count!=item_count||
         (node_size!=0&&item_count>(size_t)-1/node_size)||
@@ -6274,86 +6274,86 @@ static int stage112_capture_result_tree(const HpsGroup *group,
     node_bytes=item_count*node_size;
     children_bytes=capture->profile.total_child_capacity*ptr_size+
         capture->profile.allocated_child_array_count*header_size;
-    if(node_bytes!=result_stats->tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes||
-        children_bytes!=result_stats->tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes||
-        tree_size!=result_stats->tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes||
+    if(node_bytes!=result_stats->tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes||
+        children_bytes!=result_stats->tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes||
+        tree_size!=result_stats->tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes||
         node_bytes>(size_t)-1-children_bytes||tree_size>(size_t)-1-node_bytes-children_bytes)return 0;
     tree_total=tree_size+node_bytes+children_bytes;
-    if(tree_total!=result_stats->tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes+
-        result_stats->tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes+
-        result_stats->tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes)return 0;
-    status=hps_tree_internal_capacity_histogram(tree,NULL,0,&required);
-    if(status!=HPS_STATUS_OK||required==0||required>(size_t)-1/sizeof(*capture->capacity_counts))return 0;
+    if(tree_total!=result_stats->tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes+
+        result_stats->tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes+
+        result_stats->tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes)return 0;
+    status=lks_tree_internal_capacity_histogram(tree,NULL,0,&required);
+    if(status!=LKS_STATUS_OK||required==0||required>(size_t)-1/sizeof(*capture->capacity_counts))return 0;
     capture->capacity_counts=(size_t *)calloc(required,sizeof(*capture->capacity_counts));
     if(capture->capacity_counts==NULL)return 0;
     capture->capacity_count=required;
-    status=hps_tree_internal_capacity_histogram(tree,capture->capacity_counts,required,&required);
-    if(status!=HPS_STATUS_OK)return 0;
+    status=lks_tree_internal_capacity_histogram(tree,capture->capacity_counts,required,&required);
+    if(status!=LKS_STATUS_OK)return 0;
     for(index=0;index<capture->capacity_count;++index)
         if(!benchmark_add_size(&node_sum,capture->capacity_counts[index]))return 0;
     return node_sum==item_count;
 }
 
-static HpsPath *stage122_make_path1(unsigned int slot)
-{ return hps_path_create_at_level(HPS_DIRECTION_POSITIVE,slot,0); }
+static LksPath *stage122_make_path1(unsigned int slot)
+{ return lks_path_create_at_level(LKS_DIRECTION_POSITIVE,slot,0); }
 
-static HpsPath *stage122_make_path2(unsigned int first,unsigned int second)
+static LksPath *stage122_make_path2(unsigned int first,unsigned int second)
 {
-    HpsPath *path=stage122_make_path1(first);
-    if(path!=NULL&&hps_path_append_at_level(path,second,1)!=HPS_STATUS_OK){
-        hps_path_destroy(path);path=NULL;
+    LksPath *path=stage122_make_path1(first);
+    if(path!=NULL&&lks_path_append_at_level(path,second,1)!=LKS_STATUS_OK){
+        lks_path_destroy(path);path=NULL;
     }
     return path;
 }
 
-static int stage122_collect_preorder(const HpsTreeNode *node,void **items,
+static int stage122_collect_preorder(const LksTreeNode *node,void **items,
     size_t capacity,size_t *count)
 {
     size_t i;
     if(node==NULL||*count>=capacity)return 0;
-    items[(*count)++]=hps_tree_node_item(node);
-    for(i=0;i<hps_tree_node_child_count(node);++i)
-        if(!stage122_collect_preorder(hps_tree_node_child_at(node,i),items,capacity,count))return 0;
+    items[(*count)++]=lks_tree_node_item(node);
+    for(i=0;i<lks_tree_node_child_count(node);++i)
+        if(!stage122_collect_preorder(lks_tree_node_child_at(node,i),items,capacity,count))return 0;
     return 1;
 }
 
 static int stage122_direct_regressions(void)
 {
-    HpsAllocStats stats;
+    LksAllocStats stats;
     int valid=1;
-    if(hps_alloc_stats_reset()!=0)return 0;
+    if(lks_alloc_stats_reset()!=0)return 0;
     {
-        HpsTree *tree=hps_tree_create();HpsTreeInternalProfile p;
-        if(tree==NULL||hps_tree_size(tree)!=0||hps_tree_root_child_count(tree)!=0||
-            hps_tree_internal_profile(tree,&p)!=HPS_STATUS_OK||p.root_child_count!=0||
+        LksTree *tree=lks_tree_create();LksTreeInternalProfile p;
+        if(tree==NULL||lks_tree_size(tree)!=0||lks_tree_root_child_count(tree)!=0||
+            lks_tree_internal_profile(tree,&p)!=LKS_STATUS_OK||p.root_child_count!=0||
             p.root_child_capacity!=0||p.allocated_child_array_count!=0||
-            hps_alloc_stats_get().tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=0)valid=0;
-        hps_tree_destroy(tree);
-        stats=hps_alloc_stats_get();
+            lks_alloc_stats_get().tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=0)valid=0;
+        lks_tree_destroy(tree);
+        stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
             !stage83_other_is_empty(&stats,"12.2 empty tree"))valid=0;
     }
     printf("Stage12.2EmptyTreeRegression=%s\n",valid?"PASS":"FAIL");
     if(!valid)return 0;
     {
-        HpsTree *tree=NULL;HpsPath *parent_path=NULL,*child_path=NULL;
-        const HpsTreeNode *parent=NULL,*same_parent=NULL,*child=NULL;
-        HpsTreeInternalProfile p;
-        if(hps_alloc_stats_reset()!=0||(tree=hps_tree_create())==NULL||
+        LksTree *tree=NULL;LksPath *parent_path=NULL,*child_path=NULL;
+        const LksTreeNode *parent=NULL,*same_parent=NULL,*child=NULL;
+        LksTreeInternalProfile p;
+        if(lks_alloc_stats_reset()!=0||(tree=lks_tree_create())==NULL||
             (parent_path=stage122_make_path1(7))==NULL||
-            hps_tree_insert(tree,parent_path,NULL,&parent)!=HPS_STATUS_OK||parent==NULL||
-            hps_tree_root_child_count(tree)!=1||hps_tree_root_child_at(tree,0)!=parent||
-            hps_tree_node_child_count(parent)!=0||hps_tree_node_child_at(parent,0)!=NULL||
-            hps_tree_internal_profile(tree,&p)!=HPS_STATUS_OK||p.root_child_capacity!=1||
+            lks_tree_insert(tree,parent_path,NULL,&parent)!=LKS_STATUS_OK||parent==NULL||
+            lks_tree_root_child_count(tree)!=1||lks_tree_root_child_at(tree,0)!=parent||
+            lks_tree_node_child_count(parent)!=0||lks_tree_node_child_at(parent,0)!=NULL||
+            lks_tree_internal_profile(tree,&p)!=LKS_STATUS_OK||p.root_child_capacity!=1||
             p.allocated_child_array_count!=1||
-            hps_alloc_stats_get().tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=1)valid=0;
+            lks_alloc_stats_get().tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=1)valid=0;
         child_path=stage122_make_path2(7,3);
-        if(valid&&(child_path==NULL||hps_tree_insert(tree,child_path,NULL,&child)!=HPS_STATUS_OK||
-            child==NULL||hps_tree_find_path(tree,parent_path,&same_parent)!=HPS_STATUS_OK||
-            same_parent!=parent||hps_tree_node_parent(child)!=parent||
-            hps_tree_node_child_count(parent)!=1||hps_tree_node_child_at(parent,0)!=child))valid=0;
-        hps_path_destroy(child_path);hps_path_destroy(parent_path);hps_tree_destroy(tree);
-        stats=hps_alloc_stats_get();
+        if(valid&&(child_path==NULL||lks_tree_insert(tree,child_path,NULL,&child)!=LKS_STATUS_OK||
+            child==NULL||lks_tree_find_path(tree,parent_path,&same_parent)!=LKS_STATUS_OK||
+            same_parent!=parent||lks_tree_node_parent(child)!=parent||
+            lks_tree_node_child_count(parent)!=1||lks_tree_node_child_at(parent,0)!=child))valid=0;
+        lks_path_destroy(child_path);lks_path_destroy(parent_path);lks_tree_destroy(tree);
+        stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
             !stage83_tag_accounting_valid(&stats,"12.2 leaf promote")||
             !stage83_other_is_empty(&stats,"12.2 leaf promote"))valid=0;
@@ -6362,31 +6362,31 @@ static int stage122_direct_regressions(void)
     if(!valid)return 0;
     {
         enum { CHILDREN=70 };
-        HpsTree *tree=NULL;HpsPath *parent_path=NULL;const HpsTreeNode *parent=NULL;
-        const HpsTreeNode *children[CHILDREN];size_t i;int grow_ok=1;
-        if(hps_alloc_stats_reset()!=0||(tree=hps_tree_create())==NULL||
+        LksTree *tree=NULL;LksPath *parent_path=NULL;const LksTreeNode *parent=NULL;
+        const LksTreeNode *children[CHILDREN];size_t i;int grow_ok=1;
+        if(lks_alloc_stats_reset()!=0||(tree=lks_tree_create())==NULL||
             (parent_path=stage122_make_path1(9))==NULL||
-            hps_tree_insert(tree,parent_path,NULL,&parent)!=HPS_STATUS_OK||parent==NULL)grow_ok=0;
+            lks_tree_insert(tree,parent_path,NULL,&parent)!=LKS_STATUS_OK||parent==NULL)grow_ok=0;
         for(i=0;grow_ok&&i<CHILDREN;++i){
-            HpsPath *path=stage122_make_path2(9,(unsigned int)i);
-            const HpsTreeNode *inserted=NULL;
-            if(path==NULL||hps_tree_insert(tree,path,(void *)&children[i],&inserted)!=HPS_STATUS_OK||
-                inserted==NULL||hps_tree_node_parent(inserted)!=parent)grow_ok=0;
-            children[i]=inserted;hps_path_destroy(path);
-            if(grow_ok&&(hps_tree_node_child_count(parent)!=i+1||
-                hps_tree_root_child_at(tree,0)!=parent))grow_ok=0;
+            LksPath *path=stage122_make_path2(9,(unsigned int)i);
+            const LksTreeNode *inserted=NULL;
+            if(path==NULL||lks_tree_insert(tree,path,(void *)&children[i],&inserted)!=LKS_STATUS_OK||
+                inserted==NULL||lks_tree_node_parent(inserted)!=parent)grow_ok=0;
+            children[i]=inserted;lks_path_destroy(path);
+            if(grow_ok&&(lks_tree_node_child_count(parent)!=i+1||
+                lks_tree_root_child_at(tree,0)!=parent))grow_ok=0;
             if(grow_ok){size_t j;for(j=0;j<=i;++j)
-                if(hps_tree_node_child_at(parent,j)!=children[j]||
-                    hps_tree_node_parent(children[j])!=parent)grow_ok=0;}
+                if(lks_tree_node_child_at(parent,j)!=children[j]||
+                    lks_tree_node_parent(children[j])!=parent)grow_ok=0;}
         }
         if(grow_ok){
             for(i=0;i<CHILDREN;++i)
-                if(hps_tree_node_child_at(parent,i)!=children[i]||
-                    hps_tree_node_parent(children[i])!=parent)grow_ok=0;
+                if(lks_tree_node_child_at(parent,i)!=children[i]||
+                    lks_tree_node_parent(children[i])!=parent)grow_ok=0;
         }
-        if(grow_ok&&hps_tree_size(tree)!=CHILDREN+1)grow_ok=0;
-        hps_path_destroy(parent_path);hps_tree_destroy(tree);
-        stats=hps_alloc_stats_get();
+        if(grow_ok&&lks_tree_size(tree)!=CHILDREN+1)grow_ok=0;
+        lks_path_destroy(parent_path);lks_tree_destroy(tree);
+        stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
             !stage83_tag_accounting_valid(&stats,"12.2 multigrow")||
             !stage83_other_is_empty(&stats,"12.2 multigrow"))grow_ok=0;
@@ -6395,19 +6395,19 @@ static int stage122_direct_regressions(void)
         valid=valid&&grow_ok;
     }
     {
-        HpsTree *tree=NULL;int values[4]={10,30,20,20};void *ordered[4];size_t count=0,i;
-        BenchmarkCompareContext cc={0,0};HpsComparator comparator={benchmark_compare_int,&cc};
+        LksTree *tree=NULL;int values[4]={10,30,20,20};void *ordered[4];size_t count=0,i;
+        BenchmarkCompareContext cc={0,0};LksComparator comparator={benchmark_compare_int,&cc};
         int semantic_ok=1;
-        if(hps_alloc_stats_reset()!=0||(tree=hps_tree_create())==NULL)semantic_ok=0;
+        if(lks_alloc_stats_reset()!=0||(tree=lks_tree_create())==NULL)semantic_ok=0;
         for(i=0;semantic_ok&&i<4;++i)
-            if(hps_tree_insert_item(tree,&values[i],&comparator,NULL)!=HPS_STATUS_OK)semantic_ok=0;
+            if(lks_tree_insert_item(tree,&values[i],&comparator,NULL)!=LKS_STATUS_OK)semantic_ok=0;
         if(semantic_ok){
-            for(i=0;i<hps_tree_root_child_count(tree);++i)
-                if(!stage122_collect_preorder(hps_tree_root_child_at(tree,i),ordered,4,&count))semantic_ok=0;
+            for(i=0;i<lks_tree_root_child_count(tree);++i)
+                if(!stage122_collect_preorder(lks_tree_root_child_at(tree,i),ordered,4,&count))semantic_ok=0;
             if(count!=4||ordered[0]!=&values[0]||ordered[1]!=&values[2]||
                 ordered[2]!=&values[3]||ordered[3]!=&values[1])semantic_ok=0;
         }
-        hps_tree_destroy(tree);stats=hps_alloc_stats_get();
+        lks_tree_destroy(tree);stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
             !stage83_tag_accounting_valid(&stats,"12.2 nav successor")||
             !stage83_other_is_empty(&stats,"12.2 nav successor"))semantic_ok=0;
@@ -6423,37 +6423,37 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
     Stage112TreeCapture *out_tree_profile)
 {
     static int values[STAGE103_N];static void *items[STAGE103_N];
-    BenchmarkCompareContext counter={0,0};HpsComparator comparator={benchmark_compare_int,&counter};
-    HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;Stage103Snapshot batch_snapshot={0};
-    HpsAllocStats after_batch,after_merge,result_only,final_stats;
+    BenchmarkCompareContext counter={0,0};LksComparator comparator={benchmark_compare_int,&counter};
+    LksGroupBatch *batch=NULL;LksGroup *result=NULL;Stage103Snapshot batch_snapshot={0};
+    LksAllocStats after_batch,after_merge,result_only,final_stats;
     size_t i,group_size=n/groups+(n%groups!=0);clock_t begin,end;double ms;
-    HpsStatus status=HPS_STATUS_OK;int valid=0,batch_unchanged=1;
-    if(hps_alloc_stats_reset()!=0)return 0;
+    LksStatus status=LKS_STATUS_OK;int valid=0,batch_unchanged=1;
+    if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<n;++i)values[i]=(int)i;
     benchmark_shuffle(values,n,seed);for(i=0;i<n;++i)items[i]=&values[i];
     begin=clock();
-    status=hps_group_batch_build(items,n,group_size,&comparator,&batch);
+    status=lks_group_batch_build(items,n,group_size,&comparator,&batch);
     end=clock();
-    if(status!=HPS_STATUS_OK||!benchmark_elapsed_ms(begin,end,&ms)||
-        hps_group_batch_group_count(batch)!=groups||
+    if(status!=LKS_STATUS_OK||!benchmark_elapsed_ms(begin,end,&ms)||
+        lks_group_batch_group_count(batch)!=groups||
         !stage103_snapshot_capture_batch(batch,&batch_snapshot))goto cleanup;
     sample->build_ms=ms;
     sample->group_size=group_size;sample->build_comparisons=counter.comparison_count;
-    after_batch=hps_alloc_stats_get();
+    after_batch=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&after_batch,"10.3 AfterBatchBuild")||
         !stage83_other_is_empty(&after_batch,"10.3 AfterBatchBuild"))goto cleanup;
     sample->batch_bytes=after_batch.live_bytes;sample->batch_blocks=after_batch.live_blocks;
     sample->batch_stats=after_batch;
     begin=clock();
     status=reference_mode?stage102_reference_merge_all(batch,&comparator,&result):
-        hps_group_batch_merge_all(batch,&comparator,&result);
+        lks_group_batch_merge_all(batch,&comparator,&result);
     end=clock();
-    if(status!=HPS_STATUS_OK||!benchmark_elapsed_ms(begin,end,&ms))goto cleanup;
+    if(status!=LKS_STATUS_OK||!benchmark_elapsed_ms(begin,end,&ms))goto cleanup;
     sample->merge_ms=ms;sample->total_comparisons=counter.comparison_count;
     sample->merge_comparisons=counter.comparison_count-sample->build_comparisons;
     if(counter.overflowed||!benchmark_validate_final(result,n,&(BenchmarkPathStats){0})||
         !stage103_snapshot_capture_group(result,out_snapshot))goto cleanup;
-    after_merge=hps_alloc_stats_get();
+    after_merge=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&after_merge,"10.3 PostMerge")||
         !stage83_other_is_empty(&after_merge,"10.3 PostMerge"))goto cleanup;
     if(!stage103_batch_matches_snapshot(batch,&batch_snapshot)){++stage103_input_batch_mutations;batch_unchanged=0;}
@@ -6463,12 +6463,12 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
     {
         size_t path_index,depth_sum=0,max_depth=0,max_level=0;
         for(path_index=0;path_index<n;++path_index){
-            const HpsPath *path=hps_group_path_at(result,path_index);
-            size_t depth=hps_path_depth(path),step;
+            const LksPath *path=lks_group_path_at(result,path_index);
+            size_t depth=lks_path_depth(path),step;
             if(depth>max_depth)max_depth=depth;
             depth_sum+=depth;
             for(step=0;step<depth;++step){size_t level=0;
-                if(hps_path_get_level(path,step,&level)!=HPS_STATUS_OK)goto cleanup;
+                if(lks_path_get_level(path,step,&level)!=LKS_STATUS_OK)goto cleanup;
                 if(level>max_level)max_level=level;
             }
         }
@@ -6481,15 +6481,15 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
     sample->merge_realloc_calls=after_merge.realloc_calls-after_batch.realloc_calls;
     sample->merge_free_calls=after_merge.free_calls-after_batch.free_calls;
     if(!reference_mode&&groups>1){
-        size_t group_objects=after_merge.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
-            after_batch.tags[HPS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
+        size_t group_objects=after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
+            after_batch.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
         sample->observed_public_bootstrap=group_objects;
         if(group_objects<=groups-1)
             sample->observed_owned_inplace=(groups-1)-group_objects;
         else goto cleanup;
     }
-    hps_group_batch_destroy(batch);batch=NULL;
-    result_only=hps_alloc_stats_get();sample->result_bytes=result_only.live_bytes;
+    lks_group_batch_destroy(batch);batch=NULL;
+    result_only=lks_alloc_stats_get();sample->result_bytes=result_only.live_bytes;
     sample->result_blocks=result_only.live_blocks;
     sample->result_stats=result_only;
     if(!stage103_group_matches_snapshot(result,out_snapshot)||
@@ -6502,9 +6502,9 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
         sample->post_blocks!=sample->batch_blocks+result_only.live_blocks)goto cleanup;
     valid=batch_unchanged;
 cleanup:
-    hps_group_destroy(result);hps_group_batch_destroy(batch);
+    lks_group_destroy(result);lks_group_batch_destroy(batch);
     stage103_snapshot_destroy(&batch_snapshot);
-    final_stats=hps_alloc_stats_get();
+    final_stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls!=0||
         !stage83_tag_accounting_valid(&final_stats,"10.3 RunFinal")||
         !stage83_other_is_empty(&final_stats,"10.3 RunFinal"))valid=0;
@@ -6588,30 +6588,30 @@ static int stage103_compare_pair_samples(const Stage103Sample *reference,
 
 static int stage103_empty_single_test(void)
 {
-    BenchmarkCompareContext counter={0,0};HpsComparator comparator={benchmark_compare_int,&counter};
-    HpsGroupBatch *empty_batch=NULL,*single_batch=NULL;HpsGroup *empty_ref=NULL,*empty_opt=NULL,*single_ref=NULL,*single_opt=NULL;
+    BenchmarkCompareContext counter={0,0};LksComparator comparator={benchmark_compare_int,&counter};
+    LksGroupBatch *empty_batch=NULL,*single_batch=NULL;LksGroup *empty_ref=NULL,*empty_opt=NULL,*single_ref=NULL,*single_opt=NULL;
     int values[3]={3,1,2};void *items[3]={&values[0],&values[1],&values[2]};
-    int passed=0;HpsAllocStats stats;
-    if(hps_alloc_stats_reset()!=0||hps_group_batch_build(NULL,0,4,&comparator,&empty_batch)!=HPS_STATUS_OK||
-        stage102_reference_merge_all(empty_batch,&comparator,&empty_ref)!=HPS_STATUS_OK||
-        hps_group_batch_merge_all(empty_batch,&comparator,&empty_opt)!=HPS_STATUS_OK||
-        empty_ref==NULL||empty_opt==NULL||empty_ref==empty_opt||hps_group_size(empty_ref)!=0||hps_group_size(empty_opt)!=0)goto cleanup;
-    hps_group_destroy(empty_ref);empty_ref=NULL;hps_group_destroy(empty_opt);empty_opt=NULL;
-    hps_group_batch_destroy(empty_batch);empty_batch=NULL;
-    if(hps_group_batch_build(items,3,3,&comparator,&single_batch)!=HPS_STATUS_OK||
-        stage102_reference_merge_all(single_batch,&comparator,&single_ref)!=HPS_STATUS_OK||
-        hps_group_batch_merge_all(single_batch,&comparator,&single_opt)!=HPS_STATUS_OK||
+    int passed=0;LksAllocStats stats;
+    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(NULL,0,4,&comparator,&empty_batch)!=LKS_STATUS_OK||
+        stage102_reference_merge_all(empty_batch,&comparator,&empty_ref)!=LKS_STATUS_OK||
+        lks_group_batch_merge_all(empty_batch,&comparator,&empty_opt)!=LKS_STATUS_OK||
+        empty_ref==NULL||empty_opt==NULL||empty_ref==empty_opt||lks_group_size(empty_ref)!=0||lks_group_size(empty_opt)!=0)goto cleanup;
+    lks_group_destroy(empty_ref);empty_ref=NULL;lks_group_destroy(empty_opt);empty_opt=NULL;
+    lks_group_batch_destroy(empty_batch);empty_batch=NULL;
+    if(lks_group_batch_build(items,3,3,&comparator,&single_batch)!=LKS_STATUS_OK||
+        stage102_reference_merge_all(single_batch,&comparator,&single_ref)!=LKS_STATUS_OK||
+        lks_group_batch_merge_all(single_batch,&comparator,&single_opt)!=LKS_STATUS_OK||
         single_ref==NULL||single_opt==NULL||single_ref==single_opt||
-        single_ref==hps_group_batch_group_at(single_batch,0)||single_opt==hps_group_batch_group_at(single_batch,0)||
+        single_ref==lks_group_batch_group_at(single_batch,0)||single_opt==lks_group_batch_group_at(single_batch,0)||
         !stage101_groups_equivalent(single_ref,single_opt))goto cleanup;
-    hps_group_batch_destroy(single_batch);single_batch=NULL;
-    if(hps_group_item_at(single_ref,0)!=&values[1]||hps_group_item_at(single_opt,0)!=&values[1])goto cleanup;
+    lks_group_batch_destroy(single_batch);single_batch=NULL;
+    if(lks_group_item_at(single_ref,0)!=&values[1]||lks_group_item_at(single_opt,0)!=&values[1])goto cleanup;
     passed=1;
     printf("Stage 10.3 empty/single Batch: independent empty Results and Path-preserving single clones PASS\n");
 cleanup:
-    hps_group_destroy(single_ref);hps_group_destroy(single_opt);hps_group_batch_destroy(single_batch);
-    hps_group_destroy(empty_ref);hps_group_destroy(empty_opt);hps_group_batch_destroy(empty_batch);
-    stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
+    lks_group_destroy(single_ref);lks_group_destroy(single_opt);lks_group_batch_destroy(single_batch);
+    lks_group_destroy(empty_ref);lks_group_destroy(empty_opt);lks_group_batch_destroy(empty_batch);
+    stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
         !stage83_tag_accounting_valid(&stats,"10.3 empty/single final")||!stage83_other_is_empty(&stats,"10.3 empty/single final"))passed=0;
     return passed;
 }
@@ -6658,12 +6658,12 @@ static int stage103_main_panel(void)
         static const size_t tag_groups[8]={4,5,8,10,32,40,64,80};
         for(i=0;i<8;++i){size_t gi;for(gi=0;gi<STAGE103_GROUPS;++gi)if(stage103_groups[gi]==tag_groups[i])break;
             {size_t mode;for(mode=0;mode<2;++mode){double path=0,tree=0,group=0,scratch=0,batch=0,total=0;
-                for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *a=mode?&opt[gi][s].peak_stats:&ref[gi][s].peak_stats;
-                    path+=a->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
-                    tree+=a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE]+a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN];
-                    group+=a->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED];
-                    scratch+=a->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH];
-                    batch+=a->bytes_at_global_peak[HPS_ALLOC_TAG_BATCH_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY];
+                for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *a=mode?&opt[gi][s].peak_stats:&ref[gi][s].peak_stats;
+                    path+=a->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
+                    tree+=a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE]+a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN];
+                    group+=a->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED];
+                    scratch+=a->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH];
+                    batch+=a->bytes_at_global_peak[LKS_ALLOC_TAG_BATCH_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY];
                     total+=a->peak_live_bytes;
                 }
                 printf("%lu,%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n",(unsigned long)tag_groups[i],mode?"Optimized":"Reference",path/STAGE103_SEEDS,tree/STAGE103_SEEDS,group/STAGE103_SEEDS,scratch/STAGE103_SEEDS,batch/STAGE103_SEEDS,total/STAGE103_SEEDS);
@@ -6674,11 +6674,11 @@ static int stage103_main_panel(void)
     {
         static const size_t tag_groups[8]={4,5,8,10,32,40,64,80};
         for(i=0;i<8;++i){size_t gi;double p=0,t=0,gr=0,sc=0;for(gi=0;gi<STAGE103_GROUPS;++gi)if(stage103_groups[gi]==tag_groups[i])break;
-            for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *r=&ref[gi][s].peak_stats,*o=&opt[gi][s].peak_stats;
-                p+=(double)(r->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT]+r->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS])-(double)(o->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT]+o->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS]);
-                t+=(double)(r->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT]+r->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE]+r->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN])-(double)(o->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT]+o->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE]+o->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN]);
-                gr+=(double)(r->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT]+r->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED])-(double)(o->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT]+o->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED]);
-                sc+=(double)r->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH]-(double)o->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH];
+            for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *r=&ref[gi][s].peak_stats,*o=&opt[gi][s].peak_stats;
+                p+=(double)(r->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT]+r->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS])-(double)(o->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT]+o->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS]);
+                t+=(double)(r->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT]+r->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE]+r->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN])-(double)(o->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT]+o->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE]+o->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN]);
+                gr+=(double)(r->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT]+r->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED])-(double)(o->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT]+o->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED]);
+                sc+=(double)r->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH]-(double)o->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH];
             }
             printf("%lu,%.2f,%.2f,%.2f,%.2f\n",(unsigned long)tag_groups[i],p/STAGE103_SEEDS,t/STAGE103_SEEDS,gr/STAGE103_SEEDS,sc/STAGE103_SEEDS);
         }
@@ -6807,7 +6807,7 @@ static int stage103_directed_g2_g4_checks(void)
     }
     stage103_snapshot_destroy(&reference_result);stage103_snapshot_destroy(&optimized_result);
     {
-        HpsAllocStats stats=hps_alloc_stats_get();
+        LksAllocStats stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
             !stage83_tag_accounting_valid(&stats,"10.3 directed checks final")||
             !stage83_other_is_empty(&stats,"10.3 directed checks final"))valid=0;
@@ -6815,32 +6815,32 @@ static int stage103_directed_g2_g4_checks(void)
     return valid;
 }
 
-int hps_run_stage10_3_validation(void)
+int lks_run_stage10_3_validation(void)
 {
     int valid=1;
-    BenchmarkCompareContext counter={0,0};HpsComparator comparator={benchmark_compare_int,&counter};
-    HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;Stage103Snapshot before={0};
-    HpsAllocStats stats;size_t i;
+    BenchmarkCompareContext counter={0,0};LksComparator comparator={benchmark_compare_int,&counter};
+    LksGroupBatch *batch=NULL;LksGroup *result=NULL;Stage103Snapshot before={0};
+    LksAllocStats stats;size_t i;
     int values[1024];void *items[1024];
-    printf("HPSort Stage 10.3: final Reference vs Optimized validation\n");
+    printf("LayerKeySort Stage 10.3: final Reference vs Optimized validation\n");
     stage103_comparator_mismatches=stage103_result_path_mismatches=0;
     stage103_result_item_mismatches=stage103_postmerge_mismatches=stage103_input_batch_mutations=0;
     stage103_negative_peak_savings_samples=stage103_negative_transient_savings_samples=0;
     stage103_public_strategy_mismatches=stage103_inplace_strategy_mismatches=0;
-    if(hps_run_stage8_1_tests()!=0||!stage82_alignment_regression()||!stage83_tag_direct_test()||
+    if(lks_run_stage8_1_tests()!=0||!stage82_alignment_regression()||!stage83_tag_direct_test()||
         !stage92_path_storage_regression()||!stage102_equal_and_lifecycle_tests()||
         !stage102_g0_path_test()||!stage103_empty_single_test())return 1;
     if(!stage103_directed_g2_g4_checks())return 1;
     if(!stage103_main_panel())valid=0;
     if(!stage103_scaling_panel())valid=0;
-    if(hps_alloc_stats_reset()!=0)valid=0;
+    if(lks_alloc_stats_reset()!=0)valid=0;
     for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-    if(hps_group_batch_build(items,1024,1,&comparator,&batch)!=HPS_STATUS_OK||
+    if(lks_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK||
         !stage103_snapshot_capture_batch(batch,&before)||
-        hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK||result==NULL||hps_group_size(result)!=1024){
+        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||result==NULL||lks_group_size(result)!=1024){
         valid=0;
     }else{
-        stats=hps_alloc_stats_get();
+        stats=lks_alloc_stats_get();
         printf("\nStage 10.3 Optimized 1024-singleton final check: ComparisonCount=%lu OverallPeakBytes=%lu BatchUnchanged=%s\n",
             (unsigned long)counter.comparison_count,(unsigned long)stats.peak_live_bytes,
             stage103_batch_matches_snapshot(batch,&before)?"YES":"NO");
@@ -6849,8 +6849,8 @@ int hps_run_stage10_3_validation(void)
             !stage83_tag_accounting_valid(&stats,"10.3 optimized 1024 peak")||
             !stage83_other_is_empty(&stats,"10.3 optimized 1024 peak"))valid=0;
     }
-    hps_group_destroy(result);hps_group_batch_destroy(batch);result=NULL;batch=NULL;stage103_snapshot_destroy(&before);
-    stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0)valid=0;
+    lks_group_destroy(result);lks_group_batch_destroy(batch);result=NULL;batch=NULL;stage103_snapshot_destroy(&before);
+    stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0)valid=0;
     printf("\nStage10SummaryFacts\nScalingConfigurations=12\nScalingPeakSavingsPercentMinMax=%.4f,%.4f\n",
         stage103_scaling_peak_min,stage103_scaling_peak_max);
     printf("ScalingTransientSavingsPercentMinMax=%.4f,%.4f\nPeakBlocksSavingsPercentMinMax=%.4f,%.4f\n",
@@ -6873,28 +6873,28 @@ int hps_run_stage10_3_validation(void)
         (unsigned long)stage103_input_batch_mutations);
     printf("MainPeakSavingsPercentMean_G3Plus=%.4f\nMainTransientSavingsPercentMean_G3Plus=%.4f\n",
         stage103_main_peak_mean,stage103_main_trans_mean);
-    printf("PathSize=%lu PathSlotSize=%lu PathLevelSize=%lu\n",(unsigned long)hps_path_internal_sizeof_path(),
+    printf("PathSize=%lu PathSlotSize=%lu PathLevelSize=%lu\n",(unsigned long)lks_path_internal_sizeof_path(),
         (unsigned long)sizeof(unsigned short),(unsigned long)sizeof(size_t));
     printf("AllocatorFinalEmpty=%s OTHER=%lu FailedCalls=%lu LiveBytes=%lu LiveBlocks=%lu\n",
         benchmark_alloc_stats_empty(&stats)?"YES":"NO",
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)stats.failed_calls,
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)stats.failed_calls,
         (unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks);
     if(stage103_comparator_mismatches||stage103_result_path_mismatches||stage103_result_item_mismatches||
         stage103_postmerge_mismatches||stage103_input_batch_mutations||stage103_negative_peak_savings_samples||
         stage103_negative_transient_savings_samples||stage103_public_strategy_mismatches||
-        stage103_inplace_strategy_mismatches||stats.failed_calls||stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes)valid=0;
+        stage103_inplace_strategy_mismatches||stats.failed_calls||stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes)valid=0;
     return valid?0:1;
 }
 
 /* Stage 11.1 is a production-only remeasurement.  It deliberately uses the
  * Stage 10.3 single-sample validator, but never calls its legacy reference. */
 enum { STAGE111_TAGS = 10, STAGE111_FOCUSED = 8 };
-static const HpsAllocTag stage111_tags[STAGE111_TAGS] = {
-    HPS_ALLOC_TAG_PATH_OBJECT,HPS_ALLOC_TAG_PATH_STEPS,
-    HPS_ALLOC_TAG_TREE_OBJECT,HPS_ALLOC_TAG_TREE_NODE,HPS_ALLOC_TAG_TREE_CHILDREN,
-    HPS_ALLOC_TAG_GROUP_OBJECT,HPS_ALLOC_TAG_GROUP_ORDERED,
-    HPS_ALLOC_TAG_BATCH_OBJECT,HPS_ALLOC_TAG_BATCH_GROUP_ARRAY,
-    HPS_ALLOC_TAG_MERGE_SCRATCH
+static const LksAllocTag stage111_tags[STAGE111_TAGS] = {
+    LKS_ALLOC_TAG_PATH_OBJECT,LKS_ALLOC_TAG_PATH_STEPS,
+    LKS_ALLOC_TAG_TREE_OBJECT,LKS_ALLOC_TAG_TREE_NODE,LKS_ALLOC_TAG_TREE_CHILDREN,
+    LKS_ALLOC_TAG_GROUP_OBJECT,LKS_ALLOC_TAG_GROUP_ORDERED,
+    LKS_ALLOC_TAG_BATCH_OBJECT,LKS_ALLOC_TAG_BATCH_GROUP_ARRAY,
+    LKS_ALLOC_TAG_MERGE_SCRATCH
 };
 static const char *stage111_tag_names[STAGE111_TAGS] = {
     "PATH_OBJECT","PATH_STEPS","TREE_OBJECT","TREE_NODE","TREE_CHILDREN",
@@ -6902,19 +6902,19 @@ static const char *stage111_tag_names[STAGE111_TAGS] = {
 };
 static const size_t stage111_focused_groups[STAGE111_FOCUSED] = {1,4,8,16,32,40,64,80};
 
-static size_t stage111_category(const HpsAllocStats *s,size_t category,int peak)
+static size_t stage111_category(const LksAllocStats *s,size_t category,int peak)
 {
     const size_t *b=peak?s->bytes_at_global_peak:NULL;
-    size_t po=peak?b[HPS_ALLOC_TAG_PATH_OBJECT]:s->tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes;
-    size_t ps=peak?b[HPS_ALLOC_TAG_PATH_STEPS]:s->tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes;
-    size_t to=peak?b[HPS_ALLOC_TAG_TREE_OBJECT]:s->tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes;
-    size_t tn=peak?b[HPS_ALLOC_TAG_TREE_NODE]:s->tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes;
-    size_t tc=peak?b[HPS_ALLOC_TAG_TREE_CHILDREN]:s->tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
-    size_t go=peak?b[HPS_ALLOC_TAG_GROUP_OBJECT]:s->tags[HPS_ALLOC_TAG_GROUP_OBJECT].live_bytes;
-    size_t gr=peak?b[HPS_ALLOC_TAG_GROUP_ORDERED]:s->tags[HPS_ALLOC_TAG_GROUP_ORDERED].live_bytes;
-    size_t bo=peak?b[HPS_ALLOC_TAG_BATCH_OBJECT]:s->tags[HPS_ALLOC_TAG_BATCH_OBJECT].live_bytes;
-    size_t ba=peak?b[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY]:s->tags[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes;
-    size_t ms=peak?b[HPS_ALLOC_TAG_MERGE_SCRATCH]:s->tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes;
+    size_t po=peak?b[LKS_ALLOC_TAG_PATH_OBJECT]:s->tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes;
+    size_t ps=peak?b[LKS_ALLOC_TAG_PATH_STEPS]:s->tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes;
+    size_t to=peak?b[LKS_ALLOC_TAG_TREE_OBJECT]:s->tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes;
+    size_t tn=peak?b[LKS_ALLOC_TAG_TREE_NODE]:s->tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes;
+    size_t tc=peak?b[LKS_ALLOC_TAG_TREE_CHILDREN]:s->tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+    size_t go=peak?b[LKS_ALLOC_TAG_GROUP_OBJECT]:s->tags[LKS_ALLOC_TAG_GROUP_OBJECT].live_bytes;
+    size_t gr=peak?b[LKS_ALLOC_TAG_GROUP_ORDERED]:s->tags[LKS_ALLOC_TAG_GROUP_ORDERED].live_bytes;
+    size_t bo=peak?b[LKS_ALLOC_TAG_BATCH_OBJECT]:s->tags[LKS_ALLOC_TAG_BATCH_OBJECT].live_bytes;
+    size_t ba=peak?b[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY]:s->tags[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes;
+    size_t ms=peak?b[LKS_ALLOC_TAG_MERGE_SCRATCH]:s->tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes;
     switch(category){case 0:return po+ps;case 1:return to+tn+tc;case 2:return go+gr+bo+ba;case 3:return ms;default:return 0;}
 }
 
@@ -6922,7 +6922,7 @@ static double stage111_mean_tag(Stage103Sample samples[][STAGE103_SEEDS],size_t 
     size_t tag,int snapshot)
 {
     size_t s;double sum=0.0;
-    for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *a=snapshot==0?&samples[gi][s].peak_stats:
+    for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *a=snapshot==0?&samples[gi][s].peak_stats:
         snapshot==1?&samples[gi][s].result_stats:&samples[gi][s].batch_stats;
         sum+=(double)(snapshot==0?a->bytes_at_global_peak[stage111_tags[tag]]:
             a->tags[stage111_tags[tag]].live_bytes);}
@@ -6946,30 +6946,30 @@ static void stage111_print_rank(Stage103Sample samples[][STAGE103_SEEDS],size_t 
 static int stage111_legacy_production_regressions(void)
 {
     int values[10];void *items[10];BenchmarkCompareContext counter={0,0};
-    HpsComparator comparator={benchmark_compare_int,&counter};HpsGroupBatch *batch=NULL;
-    HpsGroup *result=NULL;Stage103Snapshot before={0};HpsAllocStats stats;
+    LksComparator comparator={benchmark_compare_int,&counter};LksGroupBatch *batch=NULL;
+    LksGroup *result=NULL;Stage103Snapshot before={0};LksAllocStats stats;
     size_t i;int ok=1;
     if(!stage102_g0_path_test())return 0;
     for(i=0;i<10;++i){values[i]=7;items[i]=&values[i];}
-    if(hps_alloc_stats_reset()!=0||hps_group_batch_build(items,10,2,&comparator,&batch)!=HPS_STATUS_OK||
+    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(items,10,2,&comparator,&batch)!=LKS_STATUS_OK||
         !stage103_snapshot_capture_batch(batch,&before)||
-        hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK)ok=0;
-    if(ok){for(i=0;i<10;++i)if(hps_group_item_at(result,i)!=items[i])ok=0;
+        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK)ok=0;
+    if(ok){for(i=0;i<10;++i)if(lks_group_item_at(result,i)!=items[i])ok=0;
         if(!stage103_batch_matches_snapshot(batch,&before))ok=0;}
-    hps_group_destroy(result);hps_group_batch_destroy(batch);stage103_snapshot_destroy(&before);
-    stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 equal stability"))ok=0;
+    lks_group_destroy(result);lks_group_batch_destroy(batch);stage103_snapshot_destroy(&before);
+    stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 equal stability"))ok=0;
     printf("Stage11 equal-value stability production regression: %s\n",ok?"PASS":"FAIL");
     if(!ok)return 0;
-    if(hps_alloc_stats_reset()!=0||hps_group_batch_build(NULL,0,4,&comparator,&batch)!=HPS_STATUS_OK||
-        hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK||hps_group_size(result)!=0)ok=0;
-    hps_group_destroy(result);result=NULL;hps_group_batch_destroy(batch);batch=NULL;
-    stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls)ok=0;
+    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(NULL,0,4,&comparator,&batch)!=LKS_STATUS_OK||
+        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||lks_group_size(result)!=0)ok=0;
+    lks_group_destroy(result);result=NULL;lks_group_batch_destroy(batch);batch=NULL;
+    stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls)ok=0;
     if(ok){int one=42;void *one_item=&one;
-        if(hps_alloc_stats_reset()!=0||hps_group_batch_build(&one_item,1,8,&comparator,&batch)!=HPS_STATUS_OK||
-            hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK||
-            hps_group_size(result)!=1||hps_group_item_at(result,0)!=&one)ok=0;}
-    hps_group_destroy(result);hps_group_batch_destroy(batch);
-    stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_tag_accounting_valid(&stats,"11.1 empty/single"))ok=0;
+        if(lks_alloc_stats_reset()!=0||lks_group_batch_build(&one_item,1,8,&comparator,&batch)!=LKS_STATUS_OK||
+            lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||
+            lks_group_size(result)!=1||lks_group_item_at(result,0)!=&one)ok=0;}
+    lks_group_destroy(result);lks_group_batch_destroy(batch);
+    stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_tag_accounting_valid(&stats,"11.1 empty/single"))ok=0;
     printf("Stage11 empty/single Batch production regression: %s; final live=%lu/%lu\n",ok?"PASS":"FAIL",(unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks);
     return ok;
 }
@@ -6985,7 +6985,7 @@ static int stage111_print_tables(Stage103Sample samples[][STAGE103_SEEDS])
     }
     printf("\nStage11PeakCategoryCSV\nGroups,PeakTotalBytesMean,PeakPathBytesMean,PeakTreeBytesMean,PeakGroupBytesMean,PeakMergeScratchBytesMean,PeakPathPercent,PeakTreePercent,PeakGroupPercent,PeakMergeScratchPercent\n");
     for(g=0;g<STAGE103_GROUPS;++g){double c[4]={0,0,0,0},total=0;
-        for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *a=&samples[g][s].peak_stats;total+=a->peak_live_bytes;
+        for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *a=&samples[g][s].peak_stats;total+=a->peak_live_bytes;
             for(t=0;t<4;++t)c[t]+=(double)stage111_category(a,t,1);}
         total/=STAGE103_SEEDS;for(t=0;t<4;++t)c[t]/=STAGE103_SEEDS;
         if(fabs(c[0]+c[1]+c[2]+c[3]-total)>1.0)valid=0;
@@ -6995,17 +6995,17 @@ static int stage111_print_tables(Stage103Sample samples[][STAGE103_SEEDS])
     for(g=0;g<STAGE103_GROUPS;++g){printf("%lu",(unsigned long)stage103_groups[g]);for(t=0;t<STAGE111_TAGS;++t)printf(",%.2f",stage111_mean_tag(samples,g,t,0));printf("\n");}
     printf("\nStage11ResultCategoryCSV\nGroups,ResultTotalBytesMean,ResultPathBytesMean,ResultTreeBytesMean,ResultGroupBytesMean,ResultPathPercent,ResultTreePercent,ResultGroupPercent\n");
     for(g=0;g<STAGE103_GROUPS;++g){double c[3]={0,0,0},total=0;
-        for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *a=&samples[g][s].result_stats;total+=a->live_bytes;for(t=0;t<3;++t)c[t]+=(double)stage111_category(a,t,0);}
+        for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *a=&samples[g][s].result_stats;total+=a->live_bytes;for(t=0;t<3;++t)c[t]+=(double)stage111_category(a,t,0);}
         total/=STAGE103_SEEDS;for(t=0;t<3;++t)c[t]/=STAGE103_SEEDS;
         if(fabs(c[0]+c[1]+c[2]-total)>1.0)valid=0;
-        for(s=0;s<STAGE103_SEEDS;++s)if(samples[g][s].result_stats.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes||samples[g][s].result_stats.tags[HPS_ALLOC_TAG_BATCH_OBJECT].live_bytes||samples[g][s].result_stats.tags[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes)valid=0;
+        for(s=0;s<STAGE103_SEEDS;++s)if(samples[g][s].result_stats.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes||samples[g][s].result_stats.tags[LKS_ALLOC_TAG_BATCH_OBJECT].live_bytes||samples[g][s].result_stats.tags[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes)valid=0;
         printf("%lu,%.2f,%.2f,%.2f,%.2f,%.4f,%.4f,%.4f\n",(unsigned long)stage103_groups[g],total,c[0],c[1],c[2],total?100*c[0]/total:0,total?100*c[1]/total:0,total?100*c[2]/total:0);
     }
     printf("\nStage11ResultFineTagCSV\nGroups,PATH_OBJECT,PATH_STEPS,TREE_OBJECT,TREE_NODE,TREE_CHILDREN,GROUP_OBJECT,GROUP_ORDERED\n");
     for(g=0;g<STAGE103_GROUPS;++g){printf("%lu",(unsigned long)stage103_groups[g]);for(t=0;t<7;++t)printf(",%.2f",stage111_mean_tag(samples,g,t,1));printf("\n");}
     printf("\nStage11BatchCategoryCSV\nGroups,BatchTotalBytesMean,BatchPathBytesMean,BatchTreeBytesMean,BatchGroupBytesMean,BatchPathPercent,BatchTreePercent,BatchGroupPercent\n");
     for(g=0;g<STAGE103_GROUPS;++g){double c[3]={0,0,0},total=0;
-        for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *a=&samples[g][s].batch_stats;total+=a->live_bytes;for(t=0;t<3;++t)c[t]+=(double)stage111_category(a,t,0);}
+        for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *a=&samples[g][s].batch_stats;total+=a->live_bytes;for(t=0;t<3;++t)c[t]+=(double)stage111_category(a,t,0);}
         total/=STAGE103_SEEDS;for(t=0;t<3;++t)c[t]/=STAGE103_SEEDS;
         if(fabs(c[0]+c[1]+c[2]-total)>1.0)valid=0;
         printf("%lu,%.2f,%.2f,%.2f,%.2f,%.4f,%.4f,%.4f\n",(unsigned long)stage103_groups[g],total,c[0],c[1],c[2],total?100*c[0]/total:0,total?100*c[1]/total:0,total?100*c[2]/total:0);
@@ -7021,15 +7021,15 @@ static int stage111_print_tables(Stage103Sample samples[][STAGE103_SEEDS])
     return valid;
 }
 
-int hps_run_stage11_1_baseline(void)
+int lks_run_stage11_1_baseline(void)
 {
     Stage103Sample current[STAGE103_GROUPS][STAGE103_SEEDS];
     Stage103Sample scaling[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS];
-    size_t g,s,ni,gi,t;int valid=1;HpsAllocStats stats;
+    size_t g,s,ni,gi,t;int valid=1;LksAllocStats stats;
     static const size_t historical_g[2]={32,40};
     static const double stage8_peak[2]={6713960.00,6066334.40},stage8_result[2]={2075712.00,2080899.20};
     static const double stage9_peak[2]={5466921.60,5014424.00},stage9_result[2]={1694112.00,1696857.60};
-    printf("\nHPSort Stage 11.1: Current production baseline only (hps_group_batch_merge_all)\n");
+    printf("\nLayerKeySort Stage 11.1: Current production baseline only (lks_group_batch_merge_all)\n");
     if(!stage111_legacy_production_regressions())return 1;
     memset(current,0,sizeof(current));memset(scaling,0,sizeof(scaling));
     for(g=0;g<STAGE103_GROUPS;++g)for(s=0;s<STAGE103_SEEDS;++s){Stage103Snapshot result={0};
@@ -7052,62 +7052,62 @@ int hps_run_stage11_1_baseline(void)
         printf("%lu,%lu,%.2f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n",(unsigned long)n,(unsigned long)stage111_scale_groups[gi],gs/STAGE103_SCALE_SEEDS,(r/STAGE103_SCALE_SEEDS)/n,(p/STAGE103_SCALE_SEEDS)/n,(rpath/STAGE103_SCALE_SEEDS)/n,(rtree/STAGE103_SCALE_SEEDS)/n,(ppath/STAGE103_SCALE_SEEDS)/n,(ptree/STAGE103_SCALE_SEEDS)/n,d/STAGE103_SCALE_SEEDS);}
     /* Optimized singleton baseline, with both instantaneous tag snapshots. */
     {
-        static int values[1024];static void *items[1024];BenchmarkCompareContext cc={0,0};HpsComparator cmp={benchmark_compare_int,&cc};HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;Stage103Snapshot snap={0};HpsAllocStats peak,result_only;size_t i;
-        hps_alloc_stats_reset();for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-        if(hps_group_batch_build(items,1024,1,&cmp,&batch)!=HPS_STATUS_OK||!stage103_snapshot_capture_batch(batch,&snap)||hps_group_batch_merge_all(batch,&cmp,&result)!=HPS_STATUS_OK)valid=0;
-        peak=hps_alloc_stats_get();if(result==NULL||cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0})||!stage103_batch_matches_snapshot(batch,&snap)||!stage83_tag_accounting_valid(&peak,"11.1 singleton peak"))valid=0;
+        static int values[1024];static void *items[1024];BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};LksGroupBatch *batch=NULL;LksGroup *result=NULL;Stage103Snapshot snap={0};LksAllocStats peak,result_only;size_t i;
+        lks_alloc_stats_reset();for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
+        if(lks_group_batch_build(items,1024,1,&cmp,&batch)!=LKS_STATUS_OK||!stage103_snapshot_capture_batch(batch,&snap)||lks_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK)valid=0;
+        peak=lks_alloc_stats_get();if(result==NULL||cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0})||!stage103_batch_matches_snapshot(batch,&snap)||!stage83_tag_accounting_valid(&peak,"11.1 singleton peak"))valid=0;
         printf("\nStage11Singleton1024\nComparisonCount=%lu\nPeakBytes=%lu\n",(unsigned long)cc.comparison_count,(unsigned long)peak.peak_live_bytes);
         printf("PeakTagComposition\nTag,Bytes\n");for(i=0;i<STAGE111_TAGS;++i)printf("%s,%lu\n",stage111_tag_names[i],(unsigned long)peak.bytes_at_global_peak[stage111_tags[i]]);
-        hps_group_batch_destroy(batch);batch=NULL;result_only=hps_alloc_stats_get();printf("ResultOnlyBytes=%lu\nResultTagComposition\nTag,Bytes\n",(unsigned long)result_only.live_bytes);
+        lks_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();printf("ResultOnlyBytes=%lu\nResultTagComposition\nTag,Bytes\n",(unsigned long)result_only.live_bytes);
         for(i=0;i<7;++i)printf("%s,%lu\n",stage111_tag_names[i],(unsigned long)result_only.tags[stage111_tags[i]].live_bytes);
-        hps_group_destroy(result);result=NULL;stage103_snapshot_destroy(&snap);stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 singleton final"))valid=0;
+        lks_group_destroy(result);result=NULL;stage103_snapshot_destroy(&snap);stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 singleton final"))valid=0;
     }
     /* Use the frozen Stage 9 fixture for the dedicated GS100 baseline. */
-    if(hps_run_stage11_1_gs100_fixture_check()!=0)valid=0;
+    if(lks_run_stage11_1_gs100_fixture_check()!=0)valid=0;
     printf("\nStage11CurrentBaselineFacts\n");
     for(g=0;g<2;++g){size_t ix=stage111_group_index(historical_g[g]),peak_tag=0,result_tag=0;double peak[STAGE111_TAGS],res[STAGE111_TAGS],p=0,r=0;for(t=0;t<STAGE111_TAGS;++t){peak[t]=stage111_mean_tag(current,ix,t,0);res[t]=stage111_mean_tag(current,ix,t,1);if(peak[t]>peak[peak_tag])peak_tag=t;if(res[t]>res[result_tag])result_tag=t;}for(s=0;s<STAGE103_SEEDS;++s){p+=current[ix][s].peak_bytes;r+=current[ix][s].result_bytes;}p/=STAGE103_SEEDS;r/=STAGE103_SEEDS;
         printf("LargestPeakFineTag_G%lu=%s\nLargestPeakFineTagPercent_G%lu=%.4f\nLargestResultFineTag_G%lu=%s\nLargestResultFineTagPercent_G%lu=%.4f\n",(unsigned long)historical_g[g],stage111_tag_names[peak_tag],(unsigned long)historical_g[g],100*peak[peak_tag]/p,(unsigned long)historical_g[g],stage111_tag_names[result_tag],(unsigned long)historical_g[g],100*res[result_tag]/r);
         printf("G%lu_CurrentPeakBytesMean=%.2f\nG%lu_CurrentResultBytesMean=%.2f\nG%lu_Stage8ToCurrentPeakSavingsPercent=%.4f\nG%lu_Stage8ToCurrentResultSavingsPercent=%.4f\n",(unsigned long)historical_g[g],p,(unsigned long)historical_g[g],r,(unsigned long)historical_g[g],100*(stage8_peak[g]-p)/stage8_peak[g],(unsigned long)historical_g[g],100*(stage8_result[g]-r)/stage8_result[g]);}
     printf("Stage11MainCorrectness=%s\nStage11ScalingCorrectness=%s\n",valid?"PASS":"FAIL",valid?"PASS":"FAIL");
-    stats=hps_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes)valid=0;
-    printf("Stage11FinalAllocator: live=%lu/%lu OTHER=%lu FailedCalls=%lu\nStage11Status=%s\n",(unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,(unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)stats.failed_calls,valid?"PASS":"FAIL");
+    stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes)valid=0;
+    printf("Stage11FinalAllocator: live=%lu/%lu OTHER=%lu FailedCalls=%lu\nStage11Status=%s\n",(unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,(unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)stats.failed_calls,valid?"PASS":"FAIL");
     return valid?0:1;
 }
 
-int hps_run_stage11_1_gs100_fixture_check(void)
+int lks_run_stage11_1_gs100_fixture_check(void)
 {
     static int values[1000];static void *items[1000];
     unsigned char seen[1000]={0};BenchmarkCompareContext counter={0,0};
-    HpsComparator comparator={benchmark_compare_int,&counter};
-    HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;
+    LksComparator comparator={benchmark_compare_int,&counter};
+    LksGroupBatch *batch=NULL;LksGroup *result=NULL;
     Stage103Snapshot batch_snapshot={0},result_snapshot={0};
-    HpsAllocStats after_batch,post_merge,result_only,final_stats;
+    LksAllocStats after_batch,post_merge,result_only,final_stats;
     size_t i,peak_tag_sum=0;int valid=1;
-    if(hps_alloc_stats_reset()!=0)return 1;
+    if(lks_alloc_stats_reset()!=0)return 1;
     for(i=0;i<1000;++i){values[i]=(int)((i*613u)%1000u);items[i]=&values[i];
         if(values[i]<0||values[i]>=1000||seen[values[i]])valid=0;else seen[values[i]]=1;}
-    if(!valid||hps_group_batch_build(items,1000,100,&comparator,&batch)!=HPS_STATUS_OK||
-        batch==NULL||hps_group_batch_group_count(batch)!=10||
+    if(!valid||lks_group_batch_build(items,1000,100,&comparator,&batch)!=LKS_STATUS_OK||
+        batch==NULL||lks_group_batch_group_count(batch)!=10||
         !stage103_snapshot_capture_batch(batch,&batch_snapshot))valid=0;
-    if(valid){after_batch=hps_alloc_stats_get();
+    if(valid){after_batch=lks_alloc_stats_get();
         if(!stage83_tag_accounting_valid(&after_batch,"11.1 GS100 fixed AfterBatch")||
             !stage83_other_is_empty(&after_batch,"11.1 GS100 fixed AfterBatch"))valid=0;}
-    if(valid&&hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK)valid=0;
+    if(valid&&lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK)valid=0;
     if(valid&&(!benchmark_validate_final(result,1000,&(BenchmarkPathStats){0})||
         !stage103_snapshot_capture_group(result,&result_snapshot)||
         !stage103_batch_matches_snapshot(batch,&batch_snapshot)))valid=0;
-    if(valid){post_merge=hps_alloc_stats_get();
+    if(valid){post_merge=lks_alloc_stats_get();
         if(!stage83_tag_accounting_valid(&post_merge,"11.1 GS100 fixed PostMerge")||
             !stage83_other_is_empty(&post_merge,"11.1 GS100 fixed PostMerge"))valid=0;
-        for(i=0;i<HPS_ALLOC_TAG_COUNT;++i)peak_tag_sum+=post_merge.bytes_at_global_peak[i];
+        for(i=0;i<LKS_ALLOC_TAG_COUNT;++i)peak_tag_sum+=post_merge.bytes_at_global_peak[i];
         if(peak_tag_sum!=post_merge.peak_live_bytes)valid=0;}
-    if(valid){hps_group_batch_destroy(batch);batch=NULL;result_only=hps_alloc_stats_get();
+    if(valid){lks_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();
         if(!stage103_group_matches_snapshot(result,&result_snapshot)||
             !stage83_tag_accounting_valid(&result_only,"11.1 GS100 fixed ResultOnly")||
             !stage83_other_is_empty(&result_only,"11.1 GS100 fixed ResultOnly")||
-            result_only.tags[HPS_ALLOC_TAG_BATCH_OBJECT].live_bytes||
-            result_only.tags[HPS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes||
-            result_only.tags[HPS_ALLOC_TAG_MERGE_SCRATCH].live_bytes||
+            result_only.tags[LKS_ALLOC_TAG_BATCH_OBJECT].live_bytes||
+            result_only.tags[LKS_ALLOC_TAG_BATCH_GROUP_ARRAY].live_bytes||
+            result_only.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_bytes||
             post_merge.live_bytes!=after_batch.live_bytes+result_only.live_bytes||
             post_merge.live_blocks!=after_batch.live_blocks+result_only.live_blocks)valid=0;
     }
@@ -7117,16 +7117,16 @@ int hps_run_stage11_1_gs100_fixture_check(void)
     if(valid)printf("GS100ItemPathOrderAndBatchSnapshot=PASS PostMergeBytesInvariant=%s PostMergeBlocksInvariant=%s\n",
         post_merge.live_bytes==after_batch.live_bytes+result_only.live_bytes?"PASS":"FAIL",
         post_merge.live_blocks==after_batch.live_blocks+result_only.live_blocks?"PASS":"FAIL");
-    hps_group_destroy(result);hps_group_batch_destroy(batch);
+    lks_group_destroy(result);lks_group_batch_destroy(batch);
     stage103_snapshot_destroy(&batch_snapshot);stage103_snapshot_destroy(&result_snapshot);
-    final_stats=hps_alloc_stats_get();
+    final_stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
         !stage83_tag_accounting_valid(&final_stats,"11.1 GS100 fixed Final")||
         !stage83_other_is_empty(&final_stats,"11.1 GS100 fixed Final"))valid=0;
     printf("GS100FixtureCheckStatus=%s FinalLive=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
         valid?"PASS":"FAIL",(unsigned long)final_stats.live_bytes,
         (unsigned long)final_stats.live_blocks,
-        (unsigned long)final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
+        (unsigned long)final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
         (unsigned long)final_stats.failed_calls);
     if(valid){Stage103Sample shuffled={0};Stage103Snapshot shuffled_result={0};
         if(!stage103_run_one(1000,10,UINT32_C(0xC0FFEE),0,&shuffled,&shuffled_result))valid=0;
@@ -7134,25 +7134,25 @@ int hps_run_stage11_1_gs100_fixture_check(void)
             printf("GS100 shuffled-input control (prior Stage 11.1 fixture)\nBeforeBatch=129808 BeforePostMerge=274144 BeforeResultOnly=144336 BeforeOverallPeak=377144\nCurrentBatch=%lu\nCurrentPostMerge=%lu\nCurrentResultOnly=%lu\nCurrentOverallPeak=%lu\nTag,FixedBatch,ShuffledBatch,Delta,FixedResult,ShuffledResult,Delta\n",
                 (unsigned long)shuffled.batch_bytes,(unsigned long)shuffled.post_bytes,
                 (unsigned long)shuffled.result_bytes,(unsigned long)shuffled.peak_bytes);
-            for(i=1;i<HPS_ALLOC_TAG_COUNT;++i){size_t fb=after_batch.tags[i].live_bytes,sb=shuffled.batch_stats.tags[i].live_bytes;
+            for(i=1;i<LKS_ALLOC_TAG_COUNT;++i){size_t fb=after_batch.tags[i].live_bytes,sb=shuffled.batch_stats.tags[i].live_bytes;
                 size_t fr=result_only.tags[i].live_bytes,sr=shuffled.result_stats.tags[i].live_bytes;
-                printf("%s,%lu,%lu,%ld,%lu,%lu,%ld\n",i==HPS_ALLOC_TAG_PATH_OBJECT?"PATH_OBJECT":
-                    i==HPS_ALLOC_TAG_PATH_STEPS?"PATH_STEPS":i==HPS_ALLOC_TAG_TREE_OBJECT?"TREE_OBJECT":
-                    i==HPS_ALLOC_TAG_TREE_NODE?"TREE_NODE":i==HPS_ALLOC_TAG_TREE_CHILDREN?"TREE_CHILDREN":
-                    i==HPS_ALLOC_TAG_GROUP_OBJECT?"GROUP_OBJECT":i==HPS_ALLOC_TAG_GROUP_ORDERED?"GROUP_ORDERED":
-                    i==HPS_ALLOC_TAG_BATCH_OBJECT?"BATCH_OBJECT":i==HPS_ALLOC_TAG_BATCH_GROUP_ARRAY?"BATCH_GROUP_ARRAY":"MERGE_SCRATCH",
+                printf("%s,%lu,%lu,%ld,%lu,%lu,%ld\n",i==LKS_ALLOC_TAG_PATH_OBJECT?"PATH_OBJECT":
+                    i==LKS_ALLOC_TAG_PATH_STEPS?"PATH_STEPS":i==LKS_ALLOC_TAG_TREE_OBJECT?"TREE_OBJECT":
+                    i==LKS_ALLOC_TAG_TREE_NODE?"TREE_NODE":i==LKS_ALLOC_TAG_TREE_CHILDREN?"TREE_CHILDREN":
+                    i==LKS_ALLOC_TAG_GROUP_OBJECT?"GROUP_OBJECT":i==LKS_ALLOC_TAG_GROUP_ORDERED?"GROUP_ORDERED":
+                    i==LKS_ALLOC_TAG_BATCH_OBJECT?"BATCH_OBJECT":i==LKS_ALLOC_TAG_BATCH_GROUP_ARRAY?"BATCH_GROUP_ARRAY":"MERGE_SCRATCH",
                     (unsigned long)fb,(unsigned long)sb,(long)sb-(long)fb,
                     (unsigned long)fr,(unsigned long)sr,(long)sr-(long)fr);}
             if(shuffled.post_bytes!=shuffled.batch_bytes+shuffled.result_bytes||
                 shuffled.post_blocks!=shuffled.batch_blocks+shuffled.result_blocks)valid=0;
         }
         stage103_snapshot_destroy(&shuffled_result);
-        final_stats=hps_alloc_stats_get();
+        final_stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
             !stage83_other_is_empty(&final_stats,"11.1 GS100 shuffled control final"))valid=0;
         printf("GS100ShuffledControlStatus=%s FinalLive=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
             valid?"PASS":"FAIL",(unsigned long)final_stats.live_bytes,
-            (unsigned long)final_stats.live_blocks,(unsigned long)final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
+            (unsigned long)final_stats.live_blocks,(unsigned long)final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
             (unsigned long)final_stats.failed_calls);
     }
     return valid?0:1;
@@ -7170,25 +7170,25 @@ static const char *stage112_joint_label(size_t bucket)
     return bucket<8?labels[bucket]:"?";
 }
 
-static size_t stage112_children_bytes(const HpsTreeInternalProfile *p)
-{return p->allocated_child_array_count*hps_tree_internal_child_block_header_size()+
+static size_t stage112_children_bytes(const LksTreeInternalProfile *p)
+{return p->allocated_child_array_count*lks_tree_internal_child_block_header_size()+
     p->total_child_capacity*sizeof(void *);}
 
-static size_t stage112_slack_bytes(const HpsTreeInternalProfile *p)
+static size_t stage112_slack_bytes(const LksTreeInternalProfile *p)
 {return (p->total_child_capacity-p->total_child_count)*sizeof(void *);}
 
 static size_t stage112_tree_bytes(const Stage103Sample *sample)
 {
-    return sample->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes+
-        sample->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes+
-        sample->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+    return sample->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes+
+        sample->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes+
+        sample->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
 }
 
 /* Stage 11.3 derives candidate facts from the same 90 samples and tree
  * profiles already collected by Stage 11.2; it does not run another panel. */
 static int stage113_print_summary(
     Stage103Sample samples[][STAGE103_SEEDS],
-    HpsTreeInternalProfile profiles[][STAGE103_SEEDS],
+    LksTreeInternalProfile profiles[][STAGE103_SEEDS],
     size_t ptr_size,
     size_t size_size
 )
@@ -7206,7 +7206,7 @@ static int stage113_print_summary(
     size_t g, s, i;
     int valid = 1;
 
-    printf("\nHPSort Stage 11.3: Summary and theoretical ceilings only; no optimization implemented\n");
+    printf("\nLayerKeySort Stage 11.3: Summary and theoretical ceilings only; no optimization implemented\n");
     printf("Stage11.3_ResultCompositionCSV\nGroups,ResultTotalBytes,ResultPathBytes,ResultTreeBytes,ResultGroupBytes,PathPercentOfResult,TreePercentOfResult,GroupPercentOfResult,PathToTreeRatio\n");
     for (g = 0; g < STAGE103_GROUPS; ++g) {
         double total = 0.0, path = 0.0, tree = 0.0, group = 0.0;
@@ -7233,13 +7233,13 @@ static int stage113_print_summary(
         double result = 0.0, parent_bytes = 0.0;
         for (s = 0; s < STAGE103_SEEDS; ++s) {
             Stage103Sample *x = &samples[g][s];
-            HpsTreeInternalProfile *p = &profiles[g][s];
+            LksTreeInternalProfile *p = &profiles[g][s];
             total += (double)x->result_bytes;
             path += (double)stage111_category(&x->result_stats, 0, 0);
             tree += (double)stage111_category(&x->result_stats, 1, 0);
             group += (double)stage111_category(&x->result_stats, 2, 0);
-            node += (double)x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes;
-            children += (double)x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+            node += (double)x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes;
+            children += (double)x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
             slack += (double)stage112_slack_bytes(p);
             leaves += (double)p->leaf_count;
             parent_bytes += (double)p->real_node_count * (double)ptr_size;
@@ -7316,22 +7316,22 @@ static int stage113_print_summary(
     }
     for (i=0;i<3;++i) {
         size_t ix=stage111_group_index(exact_groups[i]);
-        HpsTreeInternalProfile *p=&profiles[ix][0];
+        LksTreeInternalProfile *p=&profiles[ix][0];
         Stage103Sample *x=&samples[ix][0];
         size_t tree=stage112_tree_bytes(x),result=x->result_bytes;
         size_t leaves=p->leaf_count,nonleaf=p->real_node_count-leaves;
         size_t slack=stage112_slack_bytes(p),leafmgmt=leaves*(ptr_size+2*size_size);
-        size_t parent=p->real_node_count*ptr_size,children=x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+        size_t parent=p->real_node_count*ptr_size,children=x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
         printf("\nStage11.3_LeafNodeSplitCSV\nGroups,LeafCount,LeafPercent,NonLeafCount,LeafNodeBytes,NonLeafNodeBytes,LeafChildManagementFieldBytes,NonLeafChildManagementFieldBytes\n");
         printf("%lu,%lu,%.6f,%lu,%lu,%lu,%lu,%lu\n",(unsigned long)exact_groups[i],
             (unsigned long)leaves,100.0*leaves/p->real_node_count,(unsigned long)nonleaf,
-            (unsigned long)(leaves*hps_tree_internal_sizeof_node()),
-            (unsigned long)(nonleaf*hps_tree_internal_sizeof_node()),(unsigned long)leafmgmt,
+            (unsigned long)(leaves*lks_tree_internal_sizeof_node()),
+            (unsigned long)(nonleaf*lks_tree_internal_sizeof_node()),(unsigned long)leafmgmt,
             (unsigned long)(nonleaf*(ptr_size+2*size_size)));
         printf("Stage11.3_CurrentTreeLayoutCSV\nGroups,CoreFieldBytes,ChildManagementFieldBytes,DynamicChildrenBytes,TreeObjectBytes,TreeTotalBytes\n");
         printf("%lu,%lu,%lu,%lu,%lu,%lu\n",(unsigned long)exact_groups[i],
             (unsigned long)(p->real_node_count*3*ptr_size),(unsigned long)(p->real_node_count*(ptr_size+2*size_size)),
-            (unsigned long)children,(unsigned long)x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes,
+            (unsigned long)children,(unsigned long)x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes,
             (unsigned long)tree);
         printf("Stage11.3_WholeResultImpactCSV\nGroups,Metric,Bytes,PercentOfTree,PercentOfWholeResult\n");
         printf("%lu,ExactChildCapacitySlack,%lu,%.6f,%.6f\n",(unsigned long)exact_groups[i],
@@ -7344,15 +7344,15 @@ static int stage113_print_summary(
             (unsigned long)children,tree?100.0*children/tree:0.0,result?100.0*children/result:0.0);
     }
     printf("\nStage11.3_TreeNodeFieldUsageAuditCSV\nField,ReadBy,WrittenBy,PrimaryPurpose\n"
-        "path,child_lower_bound tree_node_successor hps_tree_node_path hps_tree_node_parent destroy_node,tree_node_create,Ordered path key used for lookup traversal and parent virtual-root check; node-owned lifecycle\n"
-        "item,locate_in_children hps_tree_get_item,tree_node_create,Borrowed payload compared by the item comparator and returned by getter\n"
-        "parent,tree_node_successor hps_tree_get_parent,tree_node_create,Ancestor traversal and public parent navigation\n"
-        "children,find_prefix_node reserve_child destroy_node hps_tree_insert locate_in_children tree_node_successor hps_tree_get_child,reserve_child hps_tree_insert,Ordered child pointer array for navigation and traversal\n"
-        "child_count,child_lower_bound reserve_child destroy_node locate_in_children tree_node_successor hps_tree_node_child_count hps_tree_node_child_at,tree_node_create hps_tree_insert,Bounds binary search iteration and number of initialized children\n"
-        "child_capacity,reserve_child,hps_tree_create tree_node_create reserve_child,Allocated pointer-array capacity and growth bounds\n");
-    printf("Stage11.3_ParentAudit\nParentReadBy=tree_node_successor,hps_tree_get_parent\nParentWrittenBy=tree_node_create\nParentUse=successor traversal plus public parent getter; it is not traversal-only and is part of public observable navigation semantics\n");
-    printf("Stage11.3_ChildCountAudit\nBinarySearch=child_lower_bound,locate_in_children\nIteration=destroy_node,tree_node_successor\nInsert=reserve_child,hps_tree_insert\nPublicGetter=hps_tree_node_child_count,hps_tree_node_child_at\nValidation=read-only profile child_count<=child_capacity\n");
-    printf("Stage11.3_ChildCapacityAudit\nGrowth=reserve_child\nReallocation=reserve_child via hps_alloc_tagged or hps_realloc\nOtherUse=read-only profile validation and capacity histograms; no production search bound uses capacity\n");
+        "path,child_lower_bound tree_node_successor lks_tree_node_path lks_tree_node_parent destroy_node,tree_node_create,Ordered path key used for lookup traversal and parent virtual-root check; node-owned lifecycle\n"
+        "item,locate_in_children lks_tree_get_item,tree_node_create,Borrowed payload compared by the item comparator and returned by getter\n"
+        "parent,tree_node_successor lks_tree_get_parent,tree_node_create,Ancestor traversal and public parent navigation\n"
+        "children,find_prefix_node reserve_child destroy_node lks_tree_insert locate_in_children tree_node_successor lks_tree_get_child,reserve_child lks_tree_insert,Ordered child pointer array for navigation and traversal\n"
+        "child_count,child_lower_bound reserve_child destroy_node locate_in_children tree_node_successor lks_tree_node_child_count lks_tree_node_child_at,tree_node_create lks_tree_insert,Bounds binary search iteration and number of initialized children\n"
+        "child_capacity,reserve_child,lks_tree_create tree_node_create reserve_child,Allocated pointer-array capacity and growth bounds\n");
+    printf("Stage11.3_ParentAudit\nParentReadBy=tree_node_successor,lks_tree_get_parent\nParentWrittenBy=tree_node_create\nParentUse=successor traversal plus public parent getter; it is not traversal-only and is part of public observable navigation semantics\n");
+    printf("Stage11.3_ChildCountAudit\nBinarySearch=child_lower_bound,locate_in_children\nIteration=destroy_node,tree_node_successor\nInsert=reserve_child,lks_tree_insert\nPublicGetter=lks_tree_node_child_count,lks_tree_node_child_at\nValidation=read-only profile child_count<=child_capacity\n");
+    printf("Stage11.3_ChildCapacityAudit\nGrowth=reserve_child\nReallocation=reserve_child via lks_alloc_tagged or lks_realloc\nOtherUse=read-only profile validation and capacity histograms; no production search bound uses capacity\n");
     printf("\nStage11.3CandidateFacts\nMain18_PathToTreeRatio_Min=%.8f\nMain18_PathToTreeRatio_Max=%.8f\nMain18_ChildSlackPercentOfWholeResult_Min=%.6f\nMain18_ChildSlackPercentOfWholeResult_Max=%.6f\nMain18_LeafChildMgmtPercentOfWholeResult_Min=%.6f\nMain18_LeafChildMgmtPercentOfWholeResult_Max=%.6f\nMain18_ParentPtrPercentOfWholeResult_Min=%.6f\nMain18_ParentPtrPercentOfWholeResult_Max=%.6f\nMain18_TREE_NODEPercentOfTree_Min=%.6f\nMain18_TREE_NODEPercentOfTree_Max=%.6f\nMain18_LeafPercent_Min=%.6f\nMain18_LeafPercent_Max=%.6f\n",
         min_path_tree,max_path_tree,min_slack_result,max_slack_result,min_leafmeta_result,max_leafmeta_result,
         min_parent_result,max_parent_result,min_node_tree,max_node_tree,min_leaf_pct,max_leaf_pct);
@@ -7373,10 +7373,10 @@ static int stage113_print_summary(
     }
     printf("\nStage11.3SummaryFacts\nLargestResultFineTag_G32=PATH_STEPS\nLargestResultFineTagPercent_G32=42.2820\nSecondLargestResultFineTag_G32=TREE_NODE\nSecondLargestResultFineTagPercent_G32=28.3334\nLargestResultFineTag_G40=PATH_STEPS\nLargestResultFineTagPercent_G40=42.4080\nSecondLargestResultFineTag_G40=TREE_NODE\nSecondLargestResultFineTagPercent_G40=28.2876\n");
     for (i=0;i<2;++i) {
-        size_t ix=stage111_group_index(focus_groups[i]);HpsTreeInternalProfile *p=&profiles[ix][0];
+        size_t ix=stage111_group_index(focus_groups[i]);LksTreeInternalProfile *p=&profiles[ix][0];
         Stage103Sample *x=&samples[ix][0];size_t tree=stage112_tree_bytes(x);
         size_t slack=stage112_slack_bytes(p),leafmgmt=p->leaf_count*(ptr_size+2*size_size);
-        double node_pct=tree?100.0*x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes/tree:0.0;
+        double node_pct=tree?100.0*x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes/tree:0.0;
         double slack_pct=tree?100.0*slack/tree:0.0,leaf_pct=100.0*p->leaf_count/p->real_node_count;
         double leafmeta_pct=tree?100.0*leafmgmt/tree:0.0;
         printf("TreeNodePercentOfTree_G%lu=%.6f\nChildSlackPercentOfTree_G%lu=%.6f\nLeafPercent_G%lu=%.6f\nLeafChildMgmtPercentOfTree_G%lu=%.6f\nLeafToSlackMagnitudeRatio_G%lu=%.8f\n",
@@ -7390,9 +7390,9 @@ static int stage113_print_summary(
 
 static int stage121_print_models(
     Stage103Sample samples[][STAGE103_SEEDS],
-    HpsTreeInternalProfile profiles[][STAGE103_SEEDS],
+    LksTreeInternalProfile profiles[][STAGE103_SEEDS],
     Stage103Sample scale_samples[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS],
-    HpsTreeInternalProfile scale_profiles[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS],
+    LksTreeInternalProfile scale_profiles[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS],
     size_t pointer_size,
     size_t size_size,
     size_t current_tree_size,
@@ -7415,14 +7415,14 @@ static int stage121_print_models(
     double min_exact_result_pct = DBL_MAX, max_exact_result_pct = 0.0;
     double min_ideal_result_pct = DBL_MAX, max_ideal_result_pct = 0.0;
 
-    printf("\nHPSort Stage 12.1: TreeNode representation models only; production representation unchanged\n");
+    printf("\nLayerKeySort Stage 12.1: TreeNode representation models only; production representation unchanged\n");
     printf("Stage12.1ModelLayout\nsizeof_ModelNode=%lu\n_Alignof_ModelNode=%lu\nsizeof_ModelChildBlock=%lu\n_Alignof_ModelChildBlock=%lu\noffsetof_ModelChildBlock_children=%lu\nModelChildBlockHeaderBytes=%lu\nsizeof_ModelTreeObject=%lu\n",
         (unsigned long)model_node_size,(unsigned long)model_node_align,
         (unsigned long)block_size,(unsigned long)block_align,
         (unsigned long)block_header,(unsigned long)block_header,
         (unsigned long)model_tree_bytes);
     printf("Stage12.1_FlexibleArrayCompileCheck=C17 compile passed; FAM accepted in benchmark-only model\n");
-    printf("Stage12.1_ChildBlockAllocationFormula=offsetof(Stage12ModelChildBlock,children)+capacity*sizeof(HpsTreeNode*)\n");
+    printf("Stage12.1_ChildBlockAllocationFormula=offsetof(Stage12ModelChildBlock,children)+capacity*sizeof(LksTreeNode*)\n");
     printf("Stage12.1_LayoutFormulaCheck=%s\n",
         model_node_size == 4 * pointer_size && block_header == 2 * size_size &&
         model_node_align >= pointer_size && block_align >= pointer_size ? "PASS" : "FAIL");
@@ -7431,7 +7431,7 @@ static int stage121_print_models(
 
     for (i = 0; i < 3; ++i) {
         size_t gi = stage111_group_index(exact_groups[i]);
-        const HpsTreeInternalProfile *p = &profiles[gi][0];
+        const LksTreeInternalProfile *p = &profiles[gi][0];
         const Stage103Sample *x = &samples[gi][0];
         double current = (double)stage112_tree_bytes(x);
         double slack = (double)stage112_slack_bytes(p);
@@ -7450,7 +7450,7 @@ static int stage121_print_models(
         double child_saved = current - childblock;
         double separate_saved = current - separate;
         double ideal_saved = current - ideal;
-        size_t current_child_blocks = x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks;
+        size_t current_child_blocks = x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks;
         if (p->allocated_child_array_count != current_child_blocks ||
             p->allocated_child_array_count != p->real_node_count - p->leaf_count + 1 ||
             current != (double)current_tree_size + (double)current_node_size * nodes +
@@ -7484,7 +7484,7 @@ static int stage121_print_models(
         double leaf_pct=0.0,current_item=0.0,exact_item=0.0,child_item=0.0,separate_item=0.0,ideal_item=0.0;
         double child_tree_pct=0.0,child_result_pct=0.0;
         for (s = 0; s < STAGE103_SEEDS; ++s) {
-            const HpsTreeInternalProfile *p=&profiles[g][s];
+            const LksTreeInternalProfile *p=&profiles[g][s];
             const Stage103Sample *x=&samples[g][s];
             double current=(double)stage112_tree_bytes(x),result=(double)x->result_bytes;
             double leaves=(double)p->leaf_count,arrays=(double)p->allocated_child_array_count;
@@ -7500,7 +7500,7 @@ static int stage121_print_models(
             ideal_item+=24.0*leaves/STAGE103_N;
             child_tree_pct+=current?100.0*child_saved/current:0.0;
             child_result_pct+=result?100.0*child_saved/result:0.0;
-            if (p->allocated_child_array_count != x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks ||
+            if (p->allocated_child_array_count != x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks ||
                 child_saved != 16.0*leaves) valid=0;
         }
         leaf_pct/=STAGE103_SEEDS;current_item/=STAGE103_SEEDS;exact_item/=STAGE103_SEEDS;
@@ -7533,7 +7533,7 @@ static int stage121_print_models(
     }
     printf("\nStage12.1_G32ScalingModelCSV\nN,LeafPercent,CurrentTreeBytesPerItem,ChildBlockSavedBytesPerItem,ChildBlockSavedPercentTree\n");
     for(i=0;i<STAGE103_SCALE_NS;++i){double leaf=0.0,current=0.0,saved=0.0,pct=0.0;size_t n=stage103_scale_ns[i];
-        for(s=0;s<STAGE103_SCALE_SEEDS;++s){const HpsTreeInternalProfile *p=&scale_profiles[i][2][s];
+        for(s=0;s<STAGE103_SCALE_SEEDS;++s){const LksTreeInternalProfile *p=&scale_profiles[i][2][s];
             const Stage103Sample *x=&scale_samples[i][2][s];double tb=(double)stage112_tree_bytes(x);
             double cb=(double)model_tree_bytes+(double)model_node_size*p->real_node_count+
                 (double)block_header*p->allocated_child_array_count+(double)pointer_size*p->total_child_capacity;
@@ -7542,7 +7542,7 @@ static int stage121_print_models(
             if(sv!=16.0*p->leaf_count)valid=0;}
         printf("%lu,%.6f,%.6f,%.6f,%.6f\n",(unsigned long)n,leaf/3,current/3,saved/3,pct/3);
     }
-    printf("\nStage12.1_ChildBlockFeasibility\nNodeAddressStable=YES\nParentPointerRetained=YES\nPublicParentGetterSemanticsUnchanged=YES\nChildCountLookup=O(1) after nullable block-pointer check\nChildCapacityLookup=O(1) after nullable block-pointer check\nChildAtLookup=O(1) after block-pointer dereference\nChildBinarySearch=preserved; child pointer sequence and child_count ordering remain available\nReserveChildModel=old block -> realloc larger block -> update node->child_block\nNodePointerStabilityConflict=NO; realloc moves only child block pointer storage, not HpsTreeNode objects\nChildNodePointersMove=NO\nChildAllocationBlocks=unchanged at A\nLeafFastPath=child_block==NULL denotes zero children\nChildMetadataIndirection=additional child_block dereference for count/capacity/child-at and array access\nOverflowFeasibility=implementation must check header_bytes + capacity*sizeof(HpsTreeNode*) for multiplication and addition overflow\nPeakPrediction=not modeled; transient per-Tree leaf counts are unavailable and require post-implementation measurement\n");
+    printf("\nStage12.1_ChildBlockFeasibility\nNodeAddressStable=YES\nParentPointerRetained=YES\nPublicParentGetterSemanticsUnchanged=YES\nChildCountLookup=O(1) after nullable block-pointer check\nChildCapacityLookup=O(1) after nullable block-pointer check\nChildAtLookup=O(1) after block-pointer dereference\nChildBinarySearch=preserved; child pointer sequence and child_count ordering remain available\nReserveChildModel=old block -> realloc larger block -> update node->child_block\nNodePointerStabilityConflict=NO; realloc moves only child block pointer storage, not LksTreeNode objects\nChildNodePointersMove=NO\nChildAllocationBlocks=unchanged at A\nLeafFastPath=child_block==NULL denotes zero children\nChildMetadataIndirection=additional child_block dereference for count/capacity/child-at and array access\nOverflowFeasibility=implementation must check header_bytes + capacity*sizeof(LksTreeNode*) for multiplication and addition overflow\nPeakPrediction=not modeled; transient per-Tree leaf counts are unavailable and require post-implementation measurement\n");
     printf("\nStage12.1_OperationAccessModelCSV\nOperation,Current,ChildBlockCandidate\n"
         "get child_count,node field direct,nullable child_block then count field\n"
         "get child_capacity,node field direct,nullable child_block then capacity field\n"
@@ -7555,7 +7555,7 @@ static int stage121_print_models(
     printf("\nStage12.1_NodePointerStabilityRiskCSV\nObjectOrReference,StoresNodePointer,WouldNodeRelocationBreakIt,Reason\n"
         "parent pointer,YES,YES,points to parent node address\n"
         "parent children array,YES,YES,array entries identify child node addresses\n"
-        "Group ordered_nodes,YES,YES,flattened Group index stores const HpsTreeNode pointers\n"
+        "Group ordered_nodes,YES,YES,flattened Group index stores const LksTreeNode pointers\n"
         "Tree insertion output,YES,YES,public out_node returns node address\n"
         "locate outputs,YES,YES,public left equal and right outputs return node addresses\n"
         "public parent/child navigation,YES,YES,public getters expose node addresses\n");
@@ -7579,53 +7579,53 @@ static int stage121_print_models(
 static int stage122_run_1024_singletons(void)
 {
     static int values[1024];static void *items[1024];
-    BenchmarkCompareContext cc={0,0};HpsComparator comparator={benchmark_compare_int,&cc};
-    HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;HpsAllocStats peak,result_only,final_stats;
+    BenchmarkCompareContext cc={0,0};LksComparator comparator={benchmark_compare_int,&cc};
+    LksGroupBatch *batch=NULL;LksGroup *result=NULL;LksAllocStats peak,result_only,final_stats;
     size_t i;int valid=1;
-    if(hps_alloc_stats_reset()!=0)return 0;
+    if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-    if(hps_group_batch_build(items,1024,1,&comparator,&batch)!=HPS_STATUS_OK||batch==NULL||
-        hps_group_batch_group_count(batch)!=1024||
-        hps_group_batch_merge_all(batch,&comparator,&result)!=HPS_STATUS_OK||
-        result==NULL||hps_group_size(result)!=1024)valid=0;
-    peak=hps_alloc_stats_get();
+    if(lks_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK||batch==NULL||
+        lks_group_batch_group_count(batch)!=1024||
+        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||
+        result==NULL||lks_group_size(result)!=1024)valid=0;
+    peak=lks_alloc_stats_get();
     if(valid&&(cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0})||
         !stage83_tag_accounting_valid(&peak,"12.2 1024 singleton peak")||
         !stage83_other_is_empty(&peak,"12.2 1024 singleton peak")))valid=0;
-    hps_group_batch_destroy(batch);batch=NULL;result_only=hps_alloc_stats_get();
+    lks_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();
     if(valid&&(!stage83_tag_accounting_valid(&result_only,"12.2 1024 singleton result")||
         !stage83_other_is_empty(&result_only,"12.2 1024 singleton result")||
-        result_only.live_bytes!=result_only.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes+
-            result_only.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes+
-            result_only.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes+
-            result_only.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes+
-            result_only.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes+
-            result_only.tags[HPS_ALLOC_TAG_GROUP_OBJECT].live_bytes+
-            result_only.tags[HPS_ALLOC_TAG_GROUP_ORDERED].live_bytes))valid=0;
+        result_only.live_bytes!=result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes+
+            result_only.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes+
+            result_only.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes+
+            result_only.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes+
+            result_only.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes+
+            result_only.tags[LKS_ALLOC_TAG_GROUP_OBJECT].live_bytes+
+            result_only.tags[LKS_ALLOC_TAG_GROUP_ORDERED].live_bytes))valid=0;
     printf("Stage12.2Singleton1024\nComparisonCount=%lu\nPeakBytes=%lu\nResultOnlyBytes=%lu\nPeakTreeObject=%lu PeakTreeNode=%lu PeakTreeChildren=%lu\nResultTreeObject=%lu ResultTreeNode=%lu ResultTreeChildren=%lu\n",
         (unsigned long)cc.comparison_count,(unsigned long)peak.peak_live_bytes,
         (unsigned long)result_only.live_bytes,
-        (unsigned long)peak.bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT],
-        (unsigned long)peak.bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE],
-        (unsigned long)peak.bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN],
-        (unsigned long)result_only.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes,
-        (unsigned long)result_only.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes,
-        (unsigned long)result_only.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes);
-    hps_group_destroy(result);result=NULL;
-    final_stats=hps_alloc_stats_get();
+        (unsigned long)peak.bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT],
+        (unsigned long)peak.bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE],
+        (unsigned long)peak.bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN],
+        (unsigned long)result_only.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes,
+        (unsigned long)result_only.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes,
+        (unsigned long)result_only.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes);
+    lks_group_destroy(result);result=NULL;
+    final_stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
         !stage83_tag_accounting_valid(&final_stats,"12.2 1024 singleton final")||
         !stage83_other_is_empty(&final_stats,"12.2 1024 singleton final"))valid=0;
     printf("Stage12.2Singleton1024Status=%s FinalLive=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
         valid?"PASS":"FAIL",(unsigned long)final_stats.live_bytes,
         (unsigned long)final_stats.live_blocks,
-        (unsigned long)final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
+        (unsigned long)final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
         (unsigned long)final_stats.failed_calls);
     return valid;
 }
 
 static int stage122_print_results(Stage103Sample samples[][STAGE103_SEEDS],
-    HpsTreeInternalProfile profiles[][STAGE103_SEEDS],size_t ptr_size,
+    LksTreeInternalProfile profiles[][STAGE103_SEEDS],size_t ptr_size,
     size_t size_size,size_t tree_size,size_t node_size)
 {
     static const size_t groups[3]={1,32,40};
@@ -7637,17 +7637,17 @@ static int stage122_print_results(Stage103Sample samples[][STAGE103_SEEDS],
     static const size_t old_branching[3]={1661,1340,1541};
     static const size_t old_root_count[3]={50,59,54};
     static const size_t old_root_capacity[3]={64,64,64};
-    size_t i,header=hps_tree_internal_child_block_header_size();int valid=1;
-    printf("\nHPSort Stage 12.2: Single ChildBlock production representation\n");
-    printf("Stage12.2_TreeLayout\nsizeof_HpsTreeNode=%lu alignof_HpsTreeNode=%lu\nsizeof_HpsTree=%lu alignof_HpsTree=%lu\nsizeof_HpsTreeChildBlockHeader=%lu alignof_HpsTreeChildBlock=%lu offsetof_children=%lu sizeof_pointer=%lu sizeof_size_t=%lu\n",
-        (unsigned long)node_size,(unsigned long)hps_tree_internal_alignof_node(),
-        (unsigned long)tree_size,(unsigned long)hps_tree_internal_alignof_tree(),
-        (unsigned long)header,(unsigned long)hps_tree_internal_alignof_child_block(),
+    size_t i,header=lks_tree_internal_child_block_header_size();int valid=1;
+    printf("\nLayerKeySort Stage 12.2: Single ChildBlock production representation\n");
+    printf("Stage12.2_TreeLayout\nsizeof_LksTreeNode=%lu alignof_LksTreeNode=%lu\nsizeof_LksTree=%lu alignof_LksTree=%lu\nsizeof_LksTreeChildBlockHeader=%lu alignof_LksTreeChildBlock=%lu offsetof_children=%lu sizeof_pointer=%lu sizeof_size_t=%lu\n",
+        (unsigned long)node_size,(unsigned long)lks_tree_internal_alignof_node(),
+        (unsigned long)tree_size,(unsigned long)lks_tree_internal_alignof_tree(),
+        (unsigned long)header,(unsigned long)lks_tree_internal_alignof_child_block(),
         (unsigned long)header,(unsigned long)ptr_size,(unsigned long)size_size);
     printf("Stage12.2_MemoryCSV\nGroups,OldTreeBytes,NewTreeBytes,TreeBytesSaved,TreeSavingsPercent,OldResultBytes,NewResultBytes,ResultBytesSaved,ResultSavingsPercent,LeafCount,ExpectedSaving16xLeaf,ActualTreeSaving,ModelErrorBytes\n");
     for(i=0;i<3;++i){
         size_t gi=stage111_group_index(groups[i]);Stage103Sample *x=&samples[gi][0];
-        HpsTreeInternalProfile *p=&profiles[gi][0];
+        LksTreeInternalProfile *p=&profiles[gi][0];
         size_t new_tree=stage112_tree_bytes(x),new_result=x->result_bytes;
         size_t saved=old_tree[i]-new_tree,expected=16*p->leaf_count;
         size_t old_result=new_result+saved,error=(new_tree>(i==0?472160u:i==1?480576u:480128u))?
@@ -7659,11 +7659,11 @@ static int stage122_print_results(Stage103Sample samples[][STAGE103_SEEDS],
             p->root_child_count!=old_root_count[i]||p->root_child_capacity!=old_root_capacity[i]||
             p->allocated_child_array_count!=old_blocks[i]||new_tree!=(i==0?472160u:i==1?480576u:480128u)||
             saved!=expected||error!=0||
-            x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=old_blocks[i]||
-            x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks!=10000||
-            x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
-            x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes!=10000*node_size||
-            x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes!=tree_size)valid=0;
+            x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=old_blocks[i]||
+            x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks!=10000||
+            x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
+            x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes!=10000*node_size||
+            x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes!=tree_size)valid=0;
         printf("%lu,%lu,%lu,%lu,%.6f,%lu,%lu,%lu,%.6f,%lu,%lu,%lu,%lu\n",
             (unsigned long)groups[i],(unsigned long)old_tree[i],(unsigned long)new_tree,
             (unsigned long)saved,100.0*(double)saved/(double)old_tree[i],
@@ -7672,44 +7672,44 @@ static int stage122_print_results(Stage103Sample samples[][STAGE103_SEEDS],
             (unsigned long)p->leaf_count,(unsigned long)expected,(unsigned long)saved,(unsigned long)error);
     }
     printf("Stage12.2_TreeDecompositionCSV\nGroups,TreeObjectBytes,TreeNodeBytes,ChildBlockHeaderBytes,ChildCapacityPointerBytes,ChildUsedPointerBytes,ChildCapacitySlackBytes,TreeChildrenTagBytes,TreeTotalBytes,AllocatedChildBlocks\n");
-    for(i=0;i<3;++i){size_t gi=stage111_group_index(groups[i]);HpsTreeInternalProfile *p=&profiles[gi][0];
-        Stage103Sample *x=&samples[gi][0];size_t obj=x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes;
-        size_t nodes=x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes;
+    for(i=0;i<3;++i){size_t gi=stage111_group_index(groups[i]);LksTreeInternalProfile *p=&profiles[gi][0];
+        Stage103Sample *x=&samples[gi][0];size_t obj=x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes;
+        size_t nodes=x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes;
         size_t block_headers=p->allocated_child_array_count*header;
         size_t capacity_ptrs=p->total_child_capacity*ptr_size;
         size_t used_ptrs=p->total_child_count*ptr_size;
         size_t slack=(p->total_child_capacity-p->total_child_count)*ptr_size;
-        size_t child_tag=x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+        size_t child_tag=x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
         size_t total=obj+nodes+child_tag;
         if(block_headers+capacity_ptrs!=child_tag||used_ptrs+slack!=capacity_ptrs||
-            x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=p->allocated_child_array_count)valid=0;
+            x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=p->allocated_child_array_count)valid=0;
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",(unsigned long)groups[i],
             (unsigned long)obj,(unsigned long)nodes,(unsigned long)block_headers,
             (unsigned long)capacity_ptrs,(unsigned long)used_ptrs,(unsigned long)slack,
             (unsigned long)child_tag,(unsigned long)total,
-            (unsigned long)x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks);
+            (unsigned long)x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks);
     }
     printf("Stage12.2_StructureAndAccounting=%s\n",valid?"PASS":"FAIL");
     printf("Stage12.2_PeakTreeCSV\nGroups,OverallPeakBytes,PeakTreeObject,PeakTreeNode,PeakTreeChildren,PeakTreeTotal,PeakPathTotal,PeakGroupTotal,PeakMergeScratch\n");
-    for(i=1;i<3;++i){size_t gi=stage111_group_index(groups[i]);HpsAllocStats *a=&samples[gi][0].peak_stats;
-        size_t path=a->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_PATH_STEPS];
-        size_t tree=a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE]+a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN];
-        size_t group=a->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_OBJECT]+a->bytes_at_global_peak[HPS_ALLOC_TAG_GROUP_ORDERED];
+    for(i=1;i<3;++i){size_t gi=stage111_group_index(groups[i]);LksAllocStats *a=&samples[gi][0].peak_stats;
+        size_t path=a->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_PATH_STEPS];
+        size_t tree=a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE]+a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN];
+        size_t group=a->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_OBJECT]+a->bytes_at_global_peak[LKS_ALLOC_TAG_GROUP_ORDERED];
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",(unsigned long)groups[i],
             (unsigned long)a->peak_live_bytes,
-            (unsigned long)a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT],
-            (unsigned long)a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE],
-            (unsigned long)a->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN],
+            (unsigned long)a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT],
+            (unsigned long)a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE],
+            (unsigned long)a->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN],
             (unsigned long)tree,(unsigned long)path,(unsigned long)group,
-            (unsigned long)a->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH]);
+            (unsigned long)a->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH]);
     }
     for(i=0;i<3;++i){size_t gi=stage111_group_index(groups[i]);
         Stage103Sample *x=&samples[gi][0];
         printf("Stage12.2_G%lu_NonTreeResultTags: PATH_OBJECT=%lu PATH_STEPS=%lu GROUP_OBJECT=%lu GROUP_ORDERED=%lu; old-result comparison models these tags unchanged\n",
-            (unsigned long)groups[i],(unsigned long)x->result_stats.tags[HPS_ALLOC_TAG_PATH_OBJECT].live_bytes,
-            (unsigned long)x->result_stats.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes,
-            (unsigned long)x->result_stats.tags[HPS_ALLOC_TAG_GROUP_OBJECT].live_bytes,
-            (unsigned long)x->result_stats.tags[HPS_ALLOC_TAG_GROUP_ORDERED].live_bytes);
+            (unsigned long)groups[i],(unsigned long)x->result_stats.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes,
+            (unsigned long)x->result_stats.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes,
+            (unsigned long)x->result_stats.tags[LKS_ALLOC_TAG_GROUP_OBJECT].live_bytes,
+            (unsigned long)x->result_stats.tags[LKS_ALLOC_TAG_GROUP_ORDERED].live_bytes);
     }
     if(!stage122_direct_regressions())valid=0;
     if(!stage122_run_1024_singletons())valid=0;
@@ -7717,33 +7717,33 @@ static int stage122_print_results(Stage103Sample samples[][STAGE103_SEEDS],
     return valid;
 }
 
-int hps_run_stage11_2_tree_profile(void)
+int lks_run_stage11_2_tree_profile(void)
 {
     static const size_t exact_groups[3]={1,32,40};
     static const size_t scaling_n[4]={1000,2000,5000,10000};
     static const uint32_t scaling_seeds[3]={UINT32_C(0xC0FFEE),UINT32_C(0xC0FFEF),UINT32_C(0xC0FFF0)};
     Stage103Sample main_samples[STAGE103_GROUPS][STAGE103_SEEDS];
-    HpsTreeInternalProfile profiles[STAGE103_GROUPS][STAGE103_SEEDS];
+    LksTreeInternalProfile profiles[STAGE103_GROUPS][STAGE103_SEEDS];
     Stage112TreeCapture exact[3]={{0}};
     Stage103Sample scale_samples[4][3][3];
-    HpsTreeInternalProfile scale_profiles[4][3][3];
+    LksTreeInternalProfile scale_profiles[4][3][3];
     double min_slack_pct=DBL_MAX,max_slack_pct=0.0,min_leaf_pct=DBL_MAX,max_leaf_pct=0.0;
     double min_node_pct=DBL_MAX,max_node_pct=0.0,min_children_pct=DBL_MAX,max_children_pct=0.0;
     double min_leafmeta_pct=DBL_MAX,max_leafmeta_pct=0.0;
     size_t g,s,i,e,valid_samples=0,valid_scale=0;
-    size_t ptr_size=sizeof(void *),size_size=sizeof(size_t),node_size=hps_tree_internal_sizeof_node();
-    size_t tree_size=hps_tree_internal_sizeof_tree();
+    size_t ptr_size=sizeof(void *),size_size=sizeof(size_t),node_size=lks_tree_internal_sizeof_node();
+    size_t tree_size=lks_tree_internal_sizeof_tree();
     size_t logical_node_bytes=4*sizeof(void *);
     size_t node_padding=node_size-logical_node_bytes;
     int valid=1;
-    printf("\nHPSort Stage 11.2: Tree structural profile on current production layout\n");
-    if(!stage111_legacy_production_regressions()||hps_run_stage11_1_gs100_fixture_check()!=0)return 1;
-    printf("TreeLayout\nsizeof_HpsTree=%lu\n_Alignof_HpsTree=%lu\nsizeof_HpsTreeNode=%lu\n_Alignof_HpsTreeNode=%lu\nsizeof_void_ptr=%lu\nsizeof_size_t=%lu\nLogicalTreeNodeFieldBytes=%lu\nTreeNodeStructOverheadBytes=%lu\nChildBlockHeaderOffset=%lu\n",
-        (unsigned long)tree_size,(unsigned long)hps_tree_internal_alignof_tree(),
-        (unsigned long)node_size,(unsigned long)hps_tree_internal_alignof_node(),
+    printf("\nLayerKeySort Stage 11.2: Tree structural profile on current production layout\n");
+    if(!stage111_legacy_production_regressions()||lks_run_stage11_1_gs100_fixture_check()!=0)return 1;
+    printf("TreeLayout\nsizeof_LksTree=%lu\n_Alignof_LksTree=%lu\nsizeof_LksTreeNode=%lu\n_Alignof_LksTreeNode=%lu\nsizeof_void_ptr=%lu\nsizeof_size_t=%lu\nLogicalTreeNodeFieldBytes=%lu\nTreeNodeStructOverheadBytes=%lu\nChildBlockHeaderOffset=%lu\n",
+        (unsigned long)tree_size,(unsigned long)lks_tree_internal_alignof_tree(),
+        (unsigned long)node_size,(unsigned long)lks_tree_internal_alignof_node(),
         (unsigned long)ptr_size,(unsigned long)size_size,
         (unsigned long)logical_node_bytes,(unsigned long)node_padding,
-        (unsigned long)hps_tree_internal_child_block_header_size());
+        (unsigned long)lks_tree_internal_child_block_header_size());
     memset(main_samples,0,sizeof(main_samples));memset(profiles,0,sizeof(profiles));
     memset(scale_samples,0,sizeof(scale_samples));memset(scale_profiles,0,sizeof(scale_profiles));
     for(g=0;g<STAGE103_GROUPS;++g)for(s=0;s<STAGE103_SEEDS;++s){
@@ -7764,10 +7764,10 @@ int hps_run_stage11_2_tree_profile(void)
         (unsigned long)valid_samples,valid_samples==90?"PASS":"FAIL",valid_samples==90?"PASS":"FAIL");
     printf("\nStage11.2_ResultTreeDecompositionCSV\nGroups,RealNodeCount,TreeObjectBytes,NodeBytes,ChildrenBytes,UsedChildPointerBytes,ChildSlackBytes,ChildCapacityUtilization,TreeTotalBytes,NodePercentOfTree,ChildrenPercentOfTree,SlackPercentOfTree,LeafCount,LeafPercent,UnaryCount,UnaryPercent,BranchingCount,BranchingPercent,RootChildCount,RootChildCapacity\n");
     for(e=0;e<3;++e){g=stage111_group_index(exact_groups[e]);s=0;
-        HpsTreeInternalProfile *p=&exact[e].profile;Stage103Sample *x=&main_samples[g][s];
-        size_t obj=x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes;
-        size_t nodes=x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes;
-        size_t children=x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+        LksTreeInternalProfile *p=&exact[e].profile;Stage103Sample *x=&main_samples[g][s];
+        size_t obj=x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes;
+        size_t nodes=x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes;
+        size_t children=x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
         size_t used=p->total_child_count*ptr_size,slack=stage112_slack_bytes(p),total=obj+nodes+children;
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%lu,%.8f,%lu,%.6f,%.6f,%.6f,%lu,%.6f,%lu,%.6f,%lu,%.6f,%lu,%lu\n",
             (unsigned long)exact_groups[e],(unsigned long)p->real_node_count,(unsigned long)obj,
@@ -7789,20 +7789,20 @@ int hps_run_stage11_2_tree_profile(void)
         (unsigned long)(10000*ptr_size),(unsigned long)node_padding);
     printf("\nStage11.2_LeafMetadataCSV\nGroups,LeafCount,LeafPercent,ChildBlockPointerFieldBytesPerNode,LeafChildBlockPointerFieldBytes,LeafChildBlockPointerPercentOfTree,ExactChildCapacitySlackBytes,ExactChildCapacitySlackPercentOfTree\n");
     for(e=0;e<3;++e){g=stage111_group_index(exact_groups[e]);s=0;{
-        HpsTreeInternalProfile *p=&exact[e].profile;size_t total=stage112_tree_bytes(&main_samples[g][s]);
+        LksTreeInternalProfile *p=&exact[e].profile;size_t total=stage112_tree_bytes(&main_samples[g][s]);
         size_t fixed=ptr_size,leafbytes=p->leaf_count*fixed,slack=stage112_slack_bytes(p);
         printf("%lu,%lu,%.6f,%lu,%lu,%.6f,%lu,%.6f\n",(unsigned long)exact_groups[e],
             (unsigned long)p->leaf_count,100.0*p->leaf_count/p->real_node_count,(unsigned long)fixed,
             (unsigned long)leafbytes,total?100.0*leafbytes/total:0.0,(unsigned long)slack,
             total?100.0*slack/total:0.0);}}
     printf("\nStage11.2_ChildArrayFactsCSV\nGroups,AllocatedChildArrayCount,RealNodesWithChildArrayCount,TotalChildCount,TotalChildCapacity,AverageCapacityPerAllocatedChildArray,AverageUsedChildrenPerAllocatedChildArray,AverageSlackSlotsPerAllocatedChildArray\n");
-    for(e=0;e<3;++e){HpsTreeInternalProfile *p=&exact[e].profile;double arrays=(double)p->allocated_child_array_count;
+    for(e=0;e<3;++e){LksTreeInternalProfile *p=&exact[e].profile;double arrays=(double)p->allocated_child_array_count;
         printf("%lu,%lu,%lu,%lu,%lu,%.6f,%.6f,%.6f\n",(unsigned long)exact_groups[e],
             (unsigned long)p->allocated_child_array_count,(unsigned long)p->real_nodes_with_child_array_count,
             (unsigned long)p->total_child_count,(unsigned long)p->total_child_capacity,
             arrays?p->total_child_capacity/arrays:0.0,arrays?p->total_child_count/arrays:0.0,
             arrays?(p->total_child_capacity-p->total_child_count)/arrays:0.0);}
-    for(e=0;e<3;++e){HpsTreeInternalProfile *p=&exact[e].profile;size_t total_nodes=0;
+    for(e=0;e<3;++e){LksTreeInternalProfile *p=&exact[e].profile;size_t total_nodes=0;
         printf("\nStage11.2_G%lu_DegreeHistogram\nDegreeBucket,NodeCount,Percent\n",(unsigned long)exact_groups[e]);
         for(i=0;i<11;++i){total_nodes+=p->degree_bucket_counts[i];printf("%s,%lu,%.6f\n",stage112_degree_label(i),(unsigned long)p->degree_bucket_counts[i],100.0*p->degree_bucket_counts[i]/p->real_node_count);}
         if(total_nodes!=p->real_node_count)valid=0;
@@ -7810,17 +7810,17 @@ int hps_run_stage11_2_tree_profile(void)
         for(i=0;i<exact[e].capacity_count;++i)if(exact[e].capacity_counts[i])printf("%lu,%lu,%.6f\n",(unsigned long)i,(unsigned long)exact[e].capacity_counts[i],100.0*exact[e].capacity_counts[i]/p->real_node_count);
         printf("RootChildCount=%lu\nRootChildCapacity=%lu\n",(unsigned long)p->root_child_count,(unsigned long)p->root_child_capacity);
         printf("\nStage11.2_G%lu_DegreeCapacityJoint\nDegreeBucket,NodeCount,MeanCapacity,MinCapacity,MaxCapacity,UnusedSlotsTotal\n",(unsigned long)exact_groups[e]);
-        for(i=0;i<8;++i){HpsTreeInternalDegreeCapacity *j=&p->degree_capacity[i];
+        for(i=0;i<8;++i){LksTreeInternalDegreeCapacity *j=&p->degree_capacity[i];
             printf("%s,%lu,%.6f,%lu,%lu,%lu\n",stage112_joint_label(i),(unsigned long)j->node_count,
                 j->node_count?(double)j->capacity_sum/j->node_count:0.0,
                 (unsigned long)(j->node_count?j->minimum_capacity:0),(unsigned long)j->maximum_capacity,
                 (unsigned long)j->unused_slots_total);}}
     printf("\nStage11.2_Main18TreeStructureCSV\nGroups,GroupSize,TreeBytesPerItem,NodeBytesPerItem,ChildrenBytesPerItem,ChildSlackBytesPerItem,ChildCapacityUtilizationMean,LeafPercentMean,UnaryPercentMean,BranchingPercentMean,LeafChildManagementBytesPerItem\n");
     for(g=0;g<STAGE103_GROUPS;++g){double tree=0,nodes=0,children=0,slack=0,util=0,leaf=0,unary=0,branch=0,leaf_fields=0,gs=0;
-        for(s=0;s<STAGE103_SEEDS;++s){HpsTreeInternalProfile *p=&profiles[g][s];Stage103Sample *x=&main_samples[g][s];
+        for(s=0;s<STAGE103_SEEDS;++s){LksTreeInternalProfile *p=&profiles[g][s];Stage103Sample *x=&main_samples[g][s];
             size_t tb=stage112_tree_bytes(x);tree+=(double)tb/STAGE103_N;
-            nodes+=(double)x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes/STAGE103_N;
-            children+=(double)x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes/STAGE103_N;
+            nodes+=(double)x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes/STAGE103_N;
+            children+=(double)x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes/STAGE103_N;
             slack+=(double)stage112_slack_bytes(p)/STAGE103_N;
             util+=p->total_child_capacity?(double)p->total_child_count/p->total_child_capacity:0.0;
             leaf+=100.0*p->leaf_count/p->real_node_count;unary+=100.0*p->unary_count/p->real_node_count;
@@ -7844,11 +7844,11 @@ int hps_run_stage11_2_tree_profile(void)
     for(i=0;i<4;++i){double tree=0,nodes=0,children=0,slack=0,util=0,leaf=0,unary=0,branch=0,leaf_fields=0;size_t n=scaling_n[i];
         for(s=0;s<3;++s){Stage103Snapshot result_snapshot={0};Stage112TreeCapture capture={0};Stage103Sample x={0};
             if(!stage103_run_one_internal(n,32,scaling_seeds[s],0,&x,&result_snapshot,&capture)){valid=0;}
-            else{HpsTreeInternalProfile *p=&capture.profile;++valid_scale;
+            else{LksTreeInternalProfile *p=&capture.profile;++valid_scale;
                 scale_samples[i][2][s]=x;scale_profiles[i][2][s]=*p;
                 tree+=(double)stage112_tree_bytes(&x)/n;
-                nodes+=(double)x.result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes/n;
-                children+=(double)x.result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes/n;
+                nodes+=(double)x.result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes/n;
+                children+=(double)x.result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes/n;
                 slack+=(double)stage112_slack_bytes(p)/n;
                 util+=p->total_child_capacity?(double)p->total_child_count/p->total_child_capacity:0.0;
                 leaf+=100.0*p->leaf_count/p->real_node_count;unary+=100.0*p->unary_count/p->real_node_count;
@@ -7860,20 +7860,20 @@ int hps_run_stage11_2_tree_profile(void)
     printf("Stage11.2ScalingTreeProfiles=%lu/12\n",(unsigned long)valid_scale);
     printf("\nStage11.2PeakTreeUnitsCSV\nGroups,PeakTreeNodeBytes,PeakAllocatedRealNodeUnits,PeakTreeChildrenBytes,PeakChildBlockCount,PeakTreeObjectBytes,PeakTreeTotalBytes\n");
     for(e=0;e<2;++e){g=stage111_group_index(e==0?32:40);Stage103Sample *x=&main_samples[g][0];
-        size_t nb=x->peak_stats.bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE];
-        size_t cb=x->peak_stats.bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN];
-        size_t ob=x->peak_stats.bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT];
+        size_t nb=x->peak_stats.bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE];
+        size_t cb=x->peak_stats.bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN];
+        size_t ob=x->peak_stats.bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT];
         if(node_size==0||nb%node_size)valid=0;
         printf("%lu,%lu,%lu,%lu,%lu,%lu,%lu\n",(unsigned long)(e==0?32:40),(unsigned long)nb,
             (unsigned long)(node_size?nb/node_size:0),(unsigned long)cb,
-            (unsigned long)x->peak_stats.blocks_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN],
+            (unsigned long)x->peak_stats.blocks_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN],
             (unsigned long)ob,(unsigned long)(nb+cb+ob));}
-    printf("\nStage11TreeFacts\nsizeof_HpsTreeNode=%lu\nsizeof_HpsTree=%lu\nTreeNodeStructOverheadBytes=%lu\n",
+    printf("\nStage11TreeFacts\nsizeof_LksTreeNode=%lu\nsizeof_LksTree=%lu\nTreeNodeStructOverheadBytes=%lu\n",
         (unsigned long)node_size,(unsigned long)tree_size,(unsigned long)node_padding);
     for(e=0;e<2;++e){g=stage111_group_index(e==0?32:40);s=0;{
-        HpsTreeInternalProfile *p=&profiles[g][s];size_t total=stage112_tree_bytes(&main_samples[g][s]);
-        double tree_per_item=(double)total/STAGE103_N,node_pct=total?100.0*main_samples[g][s].result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes/total:0.0;
-        double children_pct=total?100.0*main_samples[g][s].result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes/total:0.0;
+        LksTreeInternalProfile *p=&profiles[g][s];size_t total=stage112_tree_bytes(&main_samples[g][s]);
+        double tree_per_item=(double)total/STAGE103_N,node_pct=total?100.0*main_samples[g][s].result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes/total:0.0;
+        double children_pct=total?100.0*main_samples[g][s].result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes/total:0.0;
         double slack_pct=total?100.0*stage112_slack_bytes(p)/total:0.0;
         double leaf_pct=100.0*p->leaf_count/p->real_node_count;
         double leafmeta_pct=total?100.0*p->leaf_count*ptr_size/total:0.0;
@@ -7885,28 +7885,28 @@ int hps_run_stage11_2_tree_profile(void)
         min_leaf_pct,max_leaf_pct,min_leafmeta_pct,max_leafmeta_pct);
     for(e=0;e<3;++e)stage112_tree_capture_destroy(&exact[e]);
     {
-        HpsAllocStats final_stats=hps_alloc_stats_get();
+        LksAllocStats final_stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
             !stage83_tag_accounting_valid(&final_stats,"11.2 final")||
             !stage83_other_is_empty(&final_stats,"11.2 final"))valid=0;
         printf("Stage11.2FinalAllocator: live=%lu/%lu OTHER=%lu FailedCalls=%lu\nStage11.2Status=%s MainProfiles=%lu/90 ScalingProfiles=%lu/12\n",
             (unsigned long)final_stats.live_bytes,(unsigned long)final_stats.live_blocks,
-            (unsigned long)final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)final_stats.failed_calls,
+            (unsigned long)final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)final_stats.failed_calls,
             valid?"PASS":"FAIL",(unsigned long)valid_samples,(unsigned long)valid_scale);
     }
     return valid?0:1;
 }
 
-int hps_run_stage12_2_validation(void)
+int lks_run_stage12_2_validation(void)
 {
     static const size_t groups[3]={1,32,40};
     Stage103Sample samples[STAGE103_GROUPS][STAGE103_SEEDS];
-    HpsTreeInternalProfile profiles[STAGE103_GROUPS][STAGE103_SEEDS];
+    LksTreeInternalProfile profiles[STAGE103_GROUPS][STAGE103_SEEDS];
     size_t i;int valid=1;
     memset(samples,0,sizeof(samples));memset(profiles,0,sizeof(profiles));
-    printf("\nHPSort Stage 12.2 focused validation: only G1/G32/G40 single-seed plus GS100 and core regressions\n");
+    printf("\nLayerKeySort Stage 12.2 focused validation: only G1/G32/G40 single-seed plus GS100 and core regressions\n");
     if(!stage111_legacy_production_regressions()||
-        hps_run_stage11_1_gs100_fixture_check()!=0)return 1;
+        lks_run_stage11_1_gs100_fixture_check()!=0)return 1;
     for(i=0;i<3;++i){
         size_t gi=stage111_group_index(groups[i]);Stage103Snapshot snapshot={0};
         Stage112TreeCapture capture={0};
@@ -7922,15 +7922,15 @@ int hps_run_stage12_2_validation(void)
         stage112_tree_capture_destroy(&capture);stage103_snapshot_destroy(&snapshot);
     }
     if(valid&&!stage122_print_results(samples,profiles,sizeof(void *),sizeof(size_t),
-            hps_tree_internal_sizeof_tree(),hps_tree_internal_sizeof_node()))valid=0;
+            lks_tree_internal_sizeof_tree(),lks_tree_internal_sizeof_node()))valid=0;
     {
-        HpsAllocStats final_stats=hps_alloc_stats_get();
+        LksAllocStats final_stats=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
             !stage83_tag_accounting_valid(&final_stats,"12.2 focused final")||
             !stage83_other_is_empty(&final_stats,"12.2 focused final"))valid=0;
         printf("Stage12.2FinalAllocator: live=%lu/%lu OTHER=%lu FailedCalls=%lu\nStage12.2FocusedStatus=%s\n",
             (unsigned long)final_stats.live_bytes,(unsigned long)final_stats.live_blocks,
-            (unsigned long)final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
+            (unsigned long)final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
             (unsigned long)final_stats.failed_calls,valid?"PASS":"FAIL");
     }
     return valid?0:1;
@@ -7953,15 +7953,15 @@ static double stage123_percent(double saved,double base)
 { return base==0.0?0.0:100.0*saved/base; }
 
 static int stage123_profile_valid(const Stage103Sample *x,
-    const HpsTreeInternalProfile *p,size_t n)
+    const LksTreeInternalProfile *p,size_t n)
 {
     size_t tree=stage112_tree_bytes(x),saved;
     if(p->real_node_count!=n||p->total_child_count!=p->real_node_count||
-        x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks!=n||
-        x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes!=n*hps_tree_internal_sizeof_node()||
-        x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
-        x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes!=hps_tree_internal_sizeof_tree()||
-        x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=p->allocated_child_array_count||
+        x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks!=n||
+        x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes!=n*lks_tree_internal_sizeof_node()||
+        x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
+        x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes!=lks_tree_internal_sizeof_tree()||
+        x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=p->allocated_child_array_count||
         x->total_comparisons!=x->build_comparisons+x->merge_comparisons)return 0;
     saved=16*p->leaf_count;
     return tree+saved>=tree && (tree+saved)-tree==saved;
@@ -7970,19 +7970,19 @@ static int stage123_profile_valid(const Stage103Sample *x,
 static int stage123_gs100(void)
 {
     static int values[1000];static void *items[1000];
-    BenchmarkCompareContext cc={0,0};HpsComparator cmp={benchmark_compare_int,&cc};
-    HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;HpsAllocStats b,p,r,f;
+    BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};
+    LksGroupBatch *batch=NULL;LksGroup *result=NULL;LksAllocStats b,p,r,f;
     size_t i;int ok=1;
     memset(&b,0,sizeof(b));memset(&p,0,sizeof(p));memset(&r,0,sizeof(r));
-    if(hps_alloc_stats_reset()!=0)return 0;
+    if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<1000;++i){values[i]=(int)((i*613u)%1000u);items[i]=&values[i];}
-    if(hps_group_batch_build(items,1000,100,&cmp,&batch)!=HPS_STATUS_OK||
-        batch==NULL||hps_group_batch_group_count(batch)!=10)ok=0;
-    b=hps_alloc_stats_get();
-    if(ok&&(hps_group_batch_merge_all(batch,&cmp,&result)!=HPS_STATUS_OK||
+    if(lks_group_batch_build(items,1000,100,&cmp,&batch)!=LKS_STATUS_OK||
+        batch==NULL||lks_group_batch_group_count(batch)!=10)ok=0;
+    b=lks_alloc_stats_get();
+    if(ok&&(lks_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK||
         !benchmark_validate_final(result,1000,&(BenchmarkPathStats){0})))ok=0;
-    if(ok){p=hps_alloc_stats_get();
-        hps_group_batch_destroy(batch);batch=NULL;r=hps_alloc_stats_get();
+    if(ok){p=lks_alloc_stats_get();
+        lks_group_batch_destroy(batch);batch=NULL;r=lks_alloc_stats_get();
         if(b.live_bytes!=115880||p.live_bytes!=249472||r.live_bytes!=133592||
             p.peak_live_bytes!=341984||p.live_bytes!=b.live_bytes+r.live_bytes||
             p.live_blocks!=b.live_blocks+r.live_blocks||
@@ -8003,36 +8003,36 @@ static int stage123_gs100(void)
     printf("Peak,366912,%lu,%ld,%.6f\n",(unsigned long)p.peak_live_bytes,
         (long)366912-(long)p.peak_live_bytes,stage123_percent((double)366912-p.peak_live_bytes,366912));
     printf("Input=values[i]=(i*613u)%%1000; Shuffle=NO; status=%s\n",ok?"PASS":"FAIL");
-    hps_group_destroy(result);hps_group_batch_destroy(batch);f=hps_alloc_stats_get();
+    lks_group_destroy(result);lks_group_batch_destroy(batch);f=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&f)||f.failed_calls||!stage83_tag_accounting_valid(&f,"12.3 GS100 final")||
         !stage83_other_is_empty(&f,"12.3 GS100 final"))ok=0;
     printf("Stage12.3_GS100_FinalAllocator=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
         (unsigned long)f.live_bytes,(unsigned long)f.live_blocks,
-        (unsigned long)f.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)f.failed_calls);
+        (unsigned long)f.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)f.failed_calls);
     return ok;
 }
 
 static int stage123_singleton_1024(void)
 {
     static int values[1024];static void *items[1024];
-    BenchmarkCompareContext cc={0,0};HpsComparator cmp={benchmark_compare_int,&cc};
-    HpsGroupBatch *batch=NULL;HpsGroup *result=NULL;HpsAllocStats peak,only,final;
-    HpsTreeInternalProfile profile;size_t i,tree=0,saving=0;int ok=1;
+    BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};
+    LksGroupBatch *batch=NULL;LksGroup *result=NULL;LksAllocStats peak,only,final;
+    LksTreeInternalProfile profile;size_t i,tree=0,saving=0;int ok=1;
     memset(&profile,0,sizeof(profile));
-    if(hps_alloc_stats_reset()!=0)return 0;
+    if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-    if(hps_group_batch_build(items,1024,1,&cmp,&batch)!=HPS_STATUS_OK||
-        hps_group_batch_group_count(batch)!=1024||
-        hps_group_batch_merge_all(batch,&cmp,&result)!=HPS_STATUS_OK||
-        hps_tree_internal_profile(hps_group_internal_tree(result),&profile)!=HPS_STATUS_OK||
+    if(lks_group_batch_build(items,1024,1,&cmp,&batch)!=LKS_STATUS_OK||
+        lks_group_batch_group_count(batch)!=1024||
+        lks_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK||
+        lks_tree_internal_profile(lks_group_internal_tree(result),&profile)!=LKS_STATUS_OK||
         cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0}))ok=0;
-    peak=hps_alloc_stats_get();hps_group_batch_destroy(batch);batch=NULL;only=hps_alloc_stats_get();
-    tree=only.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_bytes+only.tags[HPS_ALLOC_TAG_TREE_NODE].live_bytes+
-        only.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
+    peak=lks_alloc_stats_get();lks_group_batch_destroy(batch);batch=NULL;only=lks_alloc_stats_get();
+    tree=only.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes+only.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes+
+        only.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
     saving=16*profile.leaf_count;
     if(profile.leaf_count!=2||only.live_bytes!=5339184||saving!=32||
         tree+saving!=tree+32||peak.peak_live_bytes!=14744752||
-        only.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=profile.allocated_child_array_count||
+        only.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=profile.allocated_child_array_count||
         !stage83_tag_accounting_valid(&only,"12.3 singleton result")||
         !stage83_other_is_empty(&only,"12.3 singleton result"))ok=0;
     printf("Stage12.3Singleton1024\nComparisonCount=%lu\nLeafCount=%lu\nLegacyModeledTreeBytes=%lu\nCurrentTreeBytes=%lu\nTreeSaving=%lu\nExpected16xLeaf=%lu\nResultOnlyBefore=5339216\nResultOnlyAfter=%lu\nPeakBefore=14761200\nPeakAfter=%lu\nPeakSavedBytes=%ld\nPeakSavingsPercent=%.6f\nExplanation=LeafCount=2, so 16*2=32 result bytes saved\n",
@@ -8041,7 +8041,7 @@ static int stage123_singleton_1024(void)
         (unsigned long)(16*profile.leaf_count),(unsigned long)only.live_bytes,
         (unsigned long)peak.peak_live_bytes,(long)14761200-(long)peak.peak_live_bytes,
         stage123_percent((double)14761200-peak.peak_live_bytes,14761200));
-    hps_group_destroy(result);final=hps_alloc_stats_get();
+    lks_group_destroy(result);final=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final)||final.failed_calls||
         !stage83_tag_accounting_valid(&final,"12.3 singleton final")||
         !stage83_other_is_empty(&final,"12.3 singleton final"))ok=0;
@@ -8051,9 +8051,9 @@ static int stage123_singleton_1024(void)
 static int stage123_run_panels(void)
 {
     Stage103Sample main_samples[STAGE103_GROUPS][STAGE103_SEEDS];
-    HpsTreeInternalProfile main_profiles[STAGE103_GROUPS][STAGE103_SEEDS];
+    LksTreeInternalProfile main_profiles[STAGE103_GROUPS][STAGE103_SEEDS];
     Stage103Sample scale_samples[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS];
-    HpsTreeInternalProfile scale_profiles[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS];
+    LksTreeInternalProfile scale_profiles[STAGE103_SCALE_NS][STAGE103_SCALE_GROUPS][STAGE103_SCALE_SEEDS];
     static const size_t peak_focus[8]={1,4,8,16,32,40,64,80};
     size_t g,s,ni,gi,t,main_pass=0,scale_pass=0,model_errors=0,scale_errors=0;
     size_t block_errors=0,comparison_errors=0,profile_errors=0;
@@ -8063,27 +8063,27 @@ static int stage123_run_panels(void)
     int valid=1;
     memset(main_samples,0,sizeof(main_samples));memset(main_profiles,0,sizeof(main_profiles));
     memset(scale_samples,0,sizeof(scale_samples));memset(scale_profiles,0,sizeof(scale_profiles));
-    printf("\nHPSort Stage 12.3 final validation; input benchmark_shuffle with Stage11 seeds\n");
+    printf("\nLayerKeySort Stage 12.3 final validation; input benchmark_shuffle with Stage11 seeds\n");
     printf("Stage12.3PeakBaselineAvailability=NO (stage111-output.txt and frozen Stage11 peak arrays are absent)\n");
     printf("StrictABTimingAvailable=NO (no Git repository or exact Stage12.1 production snapshot found)\n");
-    printf("Stage12.3_Layout\nsizeof_HpsTreeNode=%lu\nalignof_HpsTreeNode=%lu\nsizeof_HpsTree=%lu\nalignof_HpsTree=%lu\nChildBlockHeaderBytes=%lu\nChildBlockHeaderAlignment=%lu\nChildrenPointerAlignment=%lu\n",
-        (unsigned long)hps_tree_internal_sizeof_node(),(unsigned long)hps_tree_internal_alignof_node(),
-        (unsigned long)hps_tree_internal_sizeof_tree(),(unsigned long)hps_tree_internal_alignof_tree(),
-        (unsigned long)hps_tree_internal_child_block_header_size(),
-        (unsigned long)hps_tree_internal_alignof_child_block(),
-        (unsigned long)(hps_tree_internal_child_block_header_size()%sizeof(void *)));
+    printf("Stage12.3_Layout\nsizeof_LksTreeNode=%lu\nalignof_LksTreeNode=%lu\nsizeof_LksTree=%lu\nalignof_LksTree=%lu\nChildBlockHeaderBytes=%lu\nChildBlockHeaderAlignment=%lu\nChildrenPointerAlignment=%lu\n",
+        (unsigned long)lks_tree_internal_sizeof_node(),(unsigned long)lks_tree_internal_alignof_node(),
+        (unsigned long)lks_tree_internal_sizeof_tree(),(unsigned long)lks_tree_internal_alignof_tree(),
+        (unsigned long)lks_tree_internal_child_block_header_size(),
+        (unsigned long)lks_tree_internal_alignof_child_block(),
+        (unsigned long)(lks_tree_internal_child_block_header_size()%sizeof(void *)));
     for(g=0;g<STAGE103_GROUPS;++g)for(s=0;s<STAGE103_SEEDS;++s){
         Stage103Snapshot snap={0};Stage112TreeCapture cap={0};Stage103Sample *x=&main_samples[g][s];
         if(stage103_run_one_internal(STAGE103_N,stage103_groups[g],stage103_seeds[s],0,x,&snap,&cap)){
             main_profiles[g][s]=cap.profile;++main_pass;
             if(!stage123_profile_valid(x,&cap.profile,STAGE103_N))++profile_errors;
             if(x->total_comparisons!=x->build_comparisons+x->merge_comparisons)++comparison_errors;
-            if(x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks!=STAGE103_N||
-                x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
-                x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=cap.profile.allocated_child_array_count)++block_errors;
+            if(x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks!=STAGE103_N||
+                x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
+                x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=cap.profile.allocated_child_array_count)++block_errors;
             if(cap.profile.total_child_count!=cap.profile.real_node_count)++profile_errors;
             if(s==0&&(stage103_groups[g]==1||stage103_groups[g]==32||stage103_groups[g]==40)){
-                HpsTreeInternalProfile *p=&cap.profile;size_t expected_leaf=stage103_groups[g]==1?6708:stage103_groups[g]==32?6011:6018;
+                LksTreeInternalProfile *p=&cap.profile;size_t expected_leaf=stage103_groups[g]==1?6708:stage103_groups[g]==32?6011:6018;
                 size_t expected_unary=stage103_groups[g]==1?1631:stage103_groups[g]==32?2649:2441;
                 size_t expected_branch=stage103_groups[g]==1?1661:stage103_groups[g]==32?1340:1541;
                 size_t expected_capacity=stage103_groups[g]==1?12429:stage103_groups[g]==32?12087:12045;
@@ -8135,12 +8135,12 @@ static int stage123_run_panels(void)
         printf("%lu,%.6f,%.6f,%.6f\n",(unsigned long)stage103_groups[g],b/5,m/5,(b+m)/5);}
     for(g=0;g<STAGE103_GROUPS;++g){
         double leaf=0,save=0,actual=0,result=0,path=0,group=0,oldtree=0;size_t nodeblocks=0,childblocks=0;
-        for(s=0;s<STAGE103_SEEDS;++s){Stage103Sample *x=&main_samples[g][s];HpsTreeInternalProfile *p=&main_profiles[g][s];
+        for(s=0;s<STAGE103_SEEDS;++s){Stage103Sample *x=&main_samples[g][s];LksTreeInternalProfile *p=&main_profiles[g][s];
             double nt=(double)stage112_tree_bytes(x),sv=16.0*p->leaf_count;
             leaf+=p->leaf_count;save+=sv;actual+=nt+sv-nt;result+=x->result_bytes+sv;
             oldtree+=nt+sv;path+=stage111_category(&x->result_stats,0,0);group+=stage111_category(&x->result_stats,2,0);
-            nodeblocks+=x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks;
-            childblocks+=x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks;
+            nodeblocks+=x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks;
+            childblocks+=x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks;
         }
         leaf/=STAGE103_SEEDS;save/=STAGE103_SEEDS;actual/=STAGE103_SEEDS;result/=STAGE103_SEEDS;oldtree/=STAGE103_SEEDS;path/=STAGE103_SEEDS;group/=STAGE103_SEEDS;
         if(fabs(actual-save)>0.01)++model_errors;
@@ -8162,9 +8162,9 @@ static int stage123_run_panels(void)
     printf("NegativePeakSavingSampleCount=NA (frozen baseline unavailable)\n");
     printf("\nStage12.3_CurrentPeakTagCSV\nGroups,PeakTotal,PeakPath,PeakTree,PeakGroup,PeakMergeScratch,TREE_OBJECT,TREE_NODE,TREE_CHILDREN\n");
     for(gi=0;gi<8;++gi){g=stage111_group_index(peak_focus[gi]);double a[9]={0};
-        for(s=0;s<STAGE103_SEEDS;++s){const HpsAllocStats *p=&main_samples[g][s].peak_stats;
-            a[0]+=p->peak_live_bytes;a[1]+=stage111_category(p,0,1);a[2]+=stage111_category(p,1,1);a[3]+=stage111_category(p,2,1);a[4]+=p->bytes_at_global_peak[HPS_ALLOC_TAG_MERGE_SCRATCH];
-            a[5]+=p->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_OBJECT];a[6]+=p->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_NODE];a[7]+=p->bytes_at_global_peak[HPS_ALLOC_TAG_TREE_CHILDREN];}
+        for(s=0;s<STAGE103_SEEDS;++s){const LksAllocStats *p=&main_samples[g][s].peak_stats;
+            a[0]+=p->peak_live_bytes;a[1]+=stage111_category(p,0,1);a[2]+=stage111_category(p,1,1);a[3]+=stage111_category(p,2,1);a[4]+=p->bytes_at_global_peak[LKS_ALLOC_TAG_MERGE_SCRATCH];
+            a[5]+=p->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_OBJECT];a[6]+=p->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_NODE];a[7]+=p->bytes_at_global_peak[LKS_ALLOC_TAG_TREE_CHILDREN];}
         printf("%lu",(unsigned long)peak_focus[gi]);for(t=0;t<8;++t)printf(",%.2f",a[t]/STAGE103_SEEDS);printf("\n");}
     for(ni=0;ni<STAGE103_SCALE_NS;++ni)for(gi=0;gi<STAGE103_SCALE_GROUPS;++gi)for(s=0;s<STAGE103_SCALE_SEEDS;++s){
         Stage103Snapshot snap={0};Stage112TreeCapture cap={0};Stage103Sample *x=&scale_samples[ni][gi][s];
@@ -8172,9 +8172,9 @@ static int stage123_run_panels(void)
             scale_profiles[ni][gi][s]=cap.profile;++scale_pass;
             if(!stage123_profile_valid(x,&cap.profile,stage103_scale_ns[ni]))++scale_errors;
             if(x->total_comparisons!=x->build_comparisons+x->merge_comparisons)++comparison_errors;
-            if(x->result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks!=stage103_scale_ns[ni]||
-                x->result_stats.tags[HPS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
-                x->result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=cap.profile.allocated_child_array_count)++block_errors;
+            if(x->result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks!=stage103_scale_ns[ni]||
+                x->result_stats.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_blocks!=1||
+                x->result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks!=cap.profile.allocated_child_array_count)++block_errors;
         }else{++scale_errors;valid=0;printf("ScaleSampleFailure N=%lu G=%lu Seed=%08lX\n",(unsigned long)stage103_scale_ns[ni],(unsigned long)stage111_scale_groups[gi],(unsigned long)stage103_scale_seeds[s]);}
         stage112_tree_capture_destroy(&cap);stage103_snapshot_destroy(&snap);
     }
@@ -8182,7 +8182,7 @@ static int stage123_run_panels(void)
     printf("\nStage12.3_ScalingPeakCSV\nN,Groups,Stage11PeakPerItem,Stage12PeakPerItem,PeakSavingsPercent\n");
     for(ni=0;ni<STAGE103_SCALE_NS;++ni)for(gi=0;gi<STAGE103_SCALE_GROUPS;++gi){double leaf=0,oldtree=0,newtree=0,saved=0,oldres=0,newres=0,peaks=0,gsmean=0;
         size_t n=stage103_scale_ns[ni],groups=stage111_scale_groups[gi];
-        for(s=0;s<STAGE103_SCALE_SEEDS;++s){Stage103Sample *x=&scale_samples[ni][gi][s];HpsTreeInternalProfile *p=&scale_profiles[ni][gi][s];
+        for(s=0;s<STAGE103_SCALE_SEEDS;++s){Stage103Sample *x=&scale_samples[ni][gi][s];LksTreeInternalProfile *p=&scale_profiles[ni][gi][s];
             double sv=16.0*p->leaf_count,nt=(double)stage112_tree_bytes(x);leaf+=100.0*p->leaf_count/n;newtree+=nt/(double)n;oldtree+=(nt+sv)/(double)n;saved+=sv/(double)n;
             newres+=(double)x->result_bytes/n;oldres+=(double)(x->result_bytes+sv)/n;peaks+=(double)x->peak_bytes/n;gsmean+=x->group_size;
             if(fabs((nt+sv)-nt-sv)>0.01)++scale_errors;}
@@ -8202,9 +8202,9 @@ static int stage123_run_panels(void)
         (unsigned long)stage103_result_path_mismatches,(unsigned long)stage103_input_batch_mutations,
         (unsigned long)block_errors,(unsigned long)(model_errors+scale_errors),(unsigned long)comparison_errors,
         (unsigned long)profile_errors,(unsigned long)block_errors);
-    printf("Stage12RepresentationFacts\nsizeof_HpsTreeNode=%lu\nsizeof_HpsTree=%lu\nChildBlockHeaderBytes=%lu\nChildBlockAlignment=%lu\nMain18_LeafPercent_Min=%.6f\nMain18_LeafPercent_Mean=%.6f\nMain18_LeafPercent_Max=%.6f\nResult_TREE_NODE_Blocks=%lu per sample\nChildBlockExtraAllocationBlocks=0 (TREE_CHILDREN blocks equal allocated ChildBlock count)\n",
-        (unsigned long)hps_tree_internal_sizeof_node(),(unsigned long)hps_tree_internal_sizeof_tree(),
-        (unsigned long)hps_tree_internal_child_block_header_size(),(unsigned long)hps_tree_internal_alignof_child_block(),
+    printf("Stage12RepresentationFacts\nsizeof_LksTreeNode=%lu\nsizeof_LksTree=%lu\nChildBlockHeaderBytes=%lu\nChildBlockAlignment=%lu\nMain18_LeafPercent_Min=%.6f\nMain18_LeafPercent_Mean=%.6f\nMain18_LeafPercent_Max=%.6f\nResult_TREE_NODE_Blocks=%lu per sample\nChildBlockExtraAllocationBlocks=0 (TREE_CHILDREN blocks equal allocated ChildBlock count)\n",
+        (unsigned long)lks_tree_internal_sizeof_node(),(unsigned long)lks_tree_internal_sizeof_tree(),
+        (unsigned long)lks_tree_internal_child_block_header_size(),(unsigned long)lks_tree_internal_alignof_child_block(),
         leaf_min,leaf_sum/STAGE103_GROUPS,leaf_max,(unsigned long)STAGE103_N);
     {int gs_ok=stage123_gs100();int direct_ok=stage122_direct_regressions();
         int singleton_ok=stage123_singleton_1024();int semantic_ok=stage111_legacy_production_regressions();
@@ -8212,84 +8212,84 @@ static int stage123_run_panels(void)
             gs_ok?"PASS":"FAIL",direct_ok?"PASS":"FAIL",singleton_ok?"PASS":"FAIL",semantic_ok?"PASS":"FAIL");
         if(!gs_ok||!direct_ok||!singleton_ok||!semantic_ok)valid=0;}
     {
-        HpsAllocStats final=hps_alloc_stats_get();
+        LksAllocStats final=lks_alloc_stats_get();
         if(!benchmark_alloc_stats_empty(&final)||final.failed_calls||
             !stage83_tag_accounting_valid(&final,"12.3 final")||
             !stage83_other_is_empty(&final,"12.3 final"))valid=0;
         printf("Stage12FinalAllocator live=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
             (unsigned long)final.live_bytes,(unsigned long)final.live_blocks,
-            (unsigned long)final.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)final.failed_calls);
+            (unsigned long)final.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)final.failed_calls);
     }
     if(main_pass!=90||scale_pass!=36||model_errors||scale_errors||block_errors||comparison_errors||profile_errors)valid=0;
     printf("Stage12.3Status=%s\n",valid?"PASS":"FAIL");return valid?0:1;
 }
 
-int hps_run_stage12_3_validation(void)
+int lks_run_stage12_3_validation(void)
 {
-    if(!stage111_legacy_production_regressions()||hps_run_stage11_1_gs100_fixture_check()!=0)return 1;
+    if(!stage111_legacy_production_regressions()||lks_run_stage11_1_gs100_fixture_check()!=0)return 1;
     return stage123_run_panels();
 }
 
-int hps_run_stage12_3_release_smoke(void)
+int lks_run_stage12_3_release_smoke(void)
 {
     Stage103Sample sample={0};Stage103Snapshot snap={0};Stage112TreeCapture cap={0};
-    HpsAllocStats final;int ok=1;
+    LksAllocStats final;int ok=1;
     printf("Stage12.3ReleaseSmoke\n");
-    if(!stage111_legacy_production_regressions()||hps_run_stage11_1_gs100_fixture_check()!=0)ok=0;
+    if(!stage111_legacy_production_regressions()||lks_run_stage11_1_gs100_fixture_check()!=0)ok=0;
     if(!stage103_run_one_internal(10000,32,UINT32_C(0xC0FFEE),0,&sample,&snap,&cap)||
         !stage123_profile_valid(&sample,&cap.profile,10000))ok=0;
     printf("Release G32 C0FFEE=%s\n",ok?"PASS":"FAIL");
     stage112_tree_capture_destroy(&cap);stage103_snapshot_destroy(&snap);
     if(!stage122_direct_regressions()||!stage123_singleton_1024())ok=0;
-    final=hps_alloc_stats_get();
+    final=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final)||final.failed_calls||
         !stage83_tag_accounting_valid(&final,"12.3 Release final")||
         !stage83_other_is_empty(&final,"12.3 Release final"))ok=0;
     printf("Stage12.3ReleaseFinal live=%lu/%lu OTHER=%lu FailedCalls=%lu\nStage12.3ReleaseSmokeStatus=%s\n",
         (unsigned long)final.live_bytes,(unsigned long)final.live_blocks,
-        (unsigned long)final.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)final.failed_calls,
+        (unsigned long)final.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)final.failed_calls,
         ok?"PASS":"FAIL");
     return ok?0:1;
 }
 
 static int stage131_case_start(void)
 {
-    HpsAllocStats stats;
-    hps_alloc_test_disable_failure();
-    stats=hps_alloc_stats_get();
+    LksAllocStats stats;
+    lks_alloc_test_disable_failure();
+    stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&stats))return 0;
-    return hps_alloc_stats_reset()==0;
+    return lks_alloc_stats_reset()==0;
 }
 
 static int stage131_case_finish(const char *name,int passed)
 {
-    HpsAllocStats stats;
-    hps_alloc_test_disable_failure();
-    stats=hps_alloc_stats_get();
-    if(!benchmark_alloc_stats_empty(&stats)||stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes!=0||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks!=0||
+    LksAllocStats stats;
+    lks_alloc_test_disable_failure();
+    stats=lks_alloc_stats_get();
+    if(!benchmark_alloc_stats_empty(&stats)||stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes!=0||
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks!=0||
         !stage83_tag_accounting_valid(&stats,name))passed=0;
     printf("Stage13.1 %s=%s final=%lu/%lu failed_calls=%lu OTHER=%lu\n",name,
         passed?"PASS":"FAIL",(unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,
-        (unsigned long)stats.failed_calls,(unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes);
+        (unsigned long)stats.failed_calls,(unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes);
     return passed;
 }
 
 static int stage131_test_a_disabled(void)
 {
-    unsigned char *p;size_t i;int ok=stage131_case_start();HpsAllocStats stats;
+    unsigned char *p;size_t i;int ok=stage131_case_start();LksAllocStats stats;
     if(!ok)return stage131_case_finish("DisabledAllocReallocFree",0);
-    if(hps_alloc_test_failure_triggered()||hps_alloc_test_get_attempt_count()!=0)ok=0;
-    p=(unsigned char *)hps_alloc(16);
+    if(lks_alloc_test_failure_triggered()||lks_alloc_test_get_attempt_count()!=0)ok=0;
+    p=(unsigned char *)lks_alloc(16);
     if(p==NULL)ok=0;
     if(p!=NULL){for(i=0;i<16;++i)p[i]=(unsigned char)(i*13u+7u);
-        p=(unsigned char *)hps_realloc(p,64);
+        p=(unsigned char *)lks_realloc(p,64);
         if(p==NULL)ok=0;
         if(p!=NULL){for(i=0;i<16;++i)if(p[i]!=(unsigned char)(i*13u+7u))ok=0;
-            p=(unsigned char *)hps_realloc(p,8);
+            p=(unsigned char *)lks_realloc(p,8);
             if(p==NULL)ok=0;
             if(p!=NULL)for(i=0;i<8;++i)if(p[i]!=(unsigned char)(i*13u+7u))ok=0;}}
-    hps_free(p);stats=hps_alloc_stats_get();
+    lks_free(p);stats=lks_alloc_stats_get();
     if(stats.alloc_calls!=1||stats.realloc_calls!=2||stats.free_calls!=1||stats.failed_calls!=0||
         stats.total_successful_requested_bytes!=88||stats.live_bytes!=0||stats.live_blocks!=0)ok=0;
     return stage131_case_finish("DisabledAllocReallocFree",ok);
@@ -8297,145 +8297,145 @@ static int stage131_test_a_disabled(void)
 
 static int stage131_test_b_first_alloc_failure(void)
 {
-    void *p;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("AllocFailurePASS",0);
-    hps_alloc_test_fail_on_attempt(1);p=hps_alloc(32);s=hps_alloc_stats_get();
-    if(p!=NULL||hps_alloc_test_get_attempt_count()!=1||!hps_alloc_test_failure_triggered()||
+    void *p;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("AllocFailurePASS",0);
+    lks_alloc_test_fail_on_attempt(1);p=lks_alloc(32);s=lks_alloc_stats_get();
+    if(p!=NULL||lks_alloc_test_get_attempt_count()!=1||!lks_alloc_test_failure_triggered()||
         s.alloc_calls!=1||s.failed_calls!=1||s.live_bytes!=0||s.live_blocks!=0||
-        s.total_successful_requested_bytes!=0||s.tags[HPS_ALLOC_TAG_OTHER].live_bytes!=0||
-        s.tags[HPS_ALLOC_TAG_OTHER].live_blocks!=0)ok=0;
+        s.total_successful_requested_bytes!=0||s.tags[LKS_ALLOC_TAG_OTHER].live_bytes!=0||
+        s.tags[LKS_ALLOC_TAG_OTHER].live_blocks!=0)ok=0;
     return stage131_case_finish("AllocFailurePASS",ok);
 }
 
 static int stage131_test_c_single_shot(void)
 {
-    void *a=NULL,*b=NULL,*c=NULL;HpsAllocStats s;int ok=stage131_case_start();
+    void *a=NULL,*b=NULL,*c=NULL;LksAllocStats s;int ok=stage131_case_start();
     if(!ok)return stage131_case_finish("SingleShotFailure",0);
-    hps_alloc_test_fail_on_attempt(2);a=hps_alloc(16);b=hps_alloc(32);c=hps_alloc(48);s=hps_alloc_stats_get();
-    if(a==NULL||b!=NULL||c==NULL||hps_alloc_test_get_attempt_count()!=3||
-        !hps_alloc_test_failure_triggered()||s.failed_calls!=1||s.alloc_calls!=3||
+    lks_alloc_test_fail_on_attempt(2);a=lks_alloc(16);b=lks_alloc(32);c=lks_alloc(48);s=lks_alloc_stats_get();
+    if(a==NULL||b!=NULL||c==NULL||lks_alloc_test_get_attempt_count()!=3||
+        !lks_alloc_test_failure_triggered()||s.failed_calls!=1||s.alloc_calls!=3||
         s.live_bytes!=64||s.live_blocks!=2||s.total_successful_requested_bytes!=64)ok=0;
-    hps_free(a);hps_free(b);hps_free(c);
+    lks_free(a);lks_free(b);lks_free(c);
     return stage131_case_finish("SingleShotFailure",ok);
 }
 
 static int stage131_test_d_zero_alloc(void)
 {
-    void *p,*q;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("ZeroAllocFailurePASS",0);
-    hps_alloc_test_fail_on_attempt(1);p=hps_alloc(0);s=hps_alloc_stats_get();
-    if(p!=NULL||hps_alloc_test_get_attempt_count()!=1||!hps_alloc_test_failure_triggered()||
+    void *p,*q;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("ZeroAllocFailurePASS",0);
+    lks_alloc_test_fail_on_attempt(1);p=lks_alloc(0);s=lks_alloc_stats_get();
+    if(p!=NULL||lks_alloc_test_get_attempt_count()!=1||!lks_alloc_test_failure_triggered()||
         s.failed_calls!=1||s.alloc_calls!=1||s.live_blocks!=0)ok=0;
-    hps_alloc_test_disable_failure();q=hps_alloc(0);s=hps_alloc_stats_get();
+    lks_alloc_test_disable_failure();q=lks_alloc(0);s=lks_alloc_stats_get();
     if(q==NULL||s.live_bytes!=0||s.live_blocks!=1)ok=0;
-    hps_free(q);return stage131_case_finish("ZeroAllocFailurePASS",ok);
+    lks_free(q);return stage131_case_finish("ZeroAllocFailurePASS",ok);
 }
 
 static int stage131_test_e_realloc_preserves_old(void)
 {
-    unsigned char *p;size_t i;HpsAllocStats s;int ok=stage131_case_start();
+    unsigned char *p;size_t i;LksAllocStats s;int ok=stage131_case_start();
     if(!ok)return stage131_case_finish("ReallocFailurePreservesOldPASS",0);
-    p=(unsigned char *)hps_alloc_tagged(64,HPS_ALLOC_TAG_PATH_STEPS);
+    p=(unsigned char *)lks_alloc_tagged(64,LKS_ALLOC_TAG_PATH_STEPS);
     if(p==NULL)ok=0;
     if(p!=NULL)for(i=0;i<64;++i)p[i]=(unsigned char)(i*29u+3u);
-    hps_alloc_test_fail_on_attempt(1);
-    if(hps_realloc(p,128)!=NULL)ok=0;
-    s=hps_alloc_stats_get();
-    if(p==NULL||hps_alloc_test_get_attempt_count()!=1||!hps_alloc_test_failure_triggered()||
+    lks_alloc_test_fail_on_attempt(1);
+    if(lks_realloc(p,128)!=NULL)ok=0;
+    s=lks_alloc_stats_get();
+    if(p==NULL||lks_alloc_test_get_attempt_count()!=1||!lks_alloc_test_failure_triggered()||
         s.alloc_calls!=1||s.realloc_calls!=1||s.failed_calls!=1||
         s.total_successful_requested_bytes!=64||s.live_bytes!=64||s.live_blocks!=1||
-        s.tags[HPS_ALLOC_TAG_PATH_STEPS].live_bytes!=64||
-        s.tags[HPS_ALLOC_TAG_PATH_STEPS].live_blocks!=1||
-        s.tags[HPS_ALLOC_TAG_PATH_STEPS].alloc_calls!=1||
-        s.tags[HPS_ALLOC_TAG_PATH_STEPS].realloc_calls!=1||
-        s.tags[HPS_ALLOC_TAG_OTHER].live_bytes!=0)ok=0;
+        s.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes!=64||
+        s.tags[LKS_ALLOC_TAG_PATH_STEPS].live_blocks!=1||
+        s.tags[LKS_ALLOC_TAG_PATH_STEPS].alloc_calls!=1||
+        s.tags[LKS_ALLOC_TAG_PATH_STEPS].realloc_calls!=1||
+        s.tags[LKS_ALLOC_TAG_OTHER].live_bytes!=0)ok=0;
     if(p!=NULL)for(i=0;i<64;++i)if(p[i]!=(unsigned char)(i*29u+3u))ok=0;
-    hps_free(p);return stage131_case_finish("ReallocFailurePreservesOldPASS",ok);
+    lks_free(p);return stage131_case_finish("ReallocFailurePreservesOldPASS",ok);
 }
 
 static int stage131_test_f_realloc_null(void)
 {
-    void *p;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("ReallocNullFailurePASS",0);
-    hps_alloc_test_fail_on_attempt(1);p=hps_realloc(NULL,64);s=hps_alloc_stats_get();
-    if(p!=NULL||hps_alloc_test_get_attempt_count()!=1||!hps_alloc_test_failure_triggered()||
-        s.alloc_calls!=0||s.realloc_calls!=1||s.tags[HPS_ALLOC_TAG_OTHER].alloc_calls!=0||
-        s.tags[HPS_ALLOC_TAG_OTHER].realloc_calls!=1||s.failed_calls!=1||
+    void *p;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("ReallocNullFailurePASS",0);
+    lks_alloc_test_fail_on_attempt(1);p=lks_realloc(NULL,64);s=lks_alloc_stats_get();
+    if(p!=NULL||lks_alloc_test_get_attempt_count()!=1||!lks_alloc_test_failure_triggered()||
+        s.alloc_calls!=0||s.realloc_calls!=1||s.tags[LKS_ALLOC_TAG_OTHER].alloc_calls!=0||
+        s.tags[LKS_ALLOC_TAG_OTHER].realloc_calls!=1||s.failed_calls!=1||
         s.live_bytes!=0||s.live_blocks!=0)ok=0;
     return stage131_case_finish("ReallocNullFailurePASS",ok);
 }
 
 static int stage131_test_g_realloc_zero(void)
 {
-    void *p;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("ReallocZeroDoesNotConsumeAttemptPASS",0);
-    p=hps_alloc(32);if(p==NULL)ok=0;hps_alloc_test_fail_on_attempt(1);
-    if(hps_realloc(p,0)!=NULL)ok=0;
-    if(hps_alloc_test_get_attempt_count()!=0||hps_alloc_test_failure_triggered())ok=0;
-    p=hps_alloc(16);s=hps_alloc_stats_get();
-    if(p!=NULL||hps_alloc_test_get_attempt_count()!=1||!hps_alloc_test_failure_triggered()||
+    void *p;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("ReallocZeroDoesNotConsumeAttemptPASS",0);
+    p=lks_alloc(32);if(p==NULL)ok=0;lks_alloc_test_fail_on_attempt(1);
+    if(lks_realloc(p,0)!=NULL)ok=0;
+    if(lks_alloc_test_get_attempt_count()!=0||lks_alloc_test_failure_triggered())ok=0;
+    p=lks_alloc(16);s=lks_alloc_stats_get();
+    if(p!=NULL||lks_alloc_test_get_attempt_count()!=1||!lks_alloc_test_failure_triggered()||
         s.realloc_calls!=1||s.failed_calls!=1||s.live_bytes!=0||s.live_blocks!=0)ok=0;
     return stage131_case_finish("ReallocZeroDoesNotConsumeAttemptPASS",ok);
 }
 
 static int stage131_test_h_free_no_attempt(void)
 {
-    void *a,*b,*c;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("FreeDoesNotConsumeAttemptPASS",0);
-    a=hps_alloc(16);if(a==NULL)ok=0;hps_alloc_test_fail_on_attempt(2);hps_free(a);
-    if(hps_alloc_test_get_attempt_count()!=0)ok=0;
-    b=hps_alloc(8);c=hps_alloc(8);s=hps_alloc_stats_get();
-    if(b==NULL||c!=NULL||hps_alloc_test_get_attempt_count()!=2||!hps_alloc_test_failure_triggered()||
+    void *a,*b,*c;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("FreeDoesNotConsumeAttemptPASS",0);
+    a=lks_alloc(16);if(a==NULL)ok=0;lks_alloc_test_fail_on_attempt(2);lks_free(a);
+    if(lks_alloc_test_get_attempt_count()!=0)ok=0;
+    b=lks_alloc(8);c=lks_alloc(8);s=lks_alloc_stats_get();
+    if(b==NULL||c!=NULL||lks_alloc_test_get_attempt_count()!=2||!lks_alloc_test_failure_triggered()||
         s.failed_calls!=1||s.live_bytes!=8||s.live_blocks!=1)ok=0;
-    hps_free(b);hps_free(c);return stage131_case_finish("FreeDoesNotConsumeAttemptPASS",ok);
+    lks_free(b);lks_free(c);return stage131_case_finish("FreeDoesNotConsumeAttemptPASS",ok);
 }
 
 static int stage131_test_i_reconfigure(void)
 {
-    void *a=NULL,*b=NULL,*c=NULL,*d=NULL;HpsAllocStats s;int ok=stage131_case_start();
+    void *a=NULL,*b=NULL,*c=NULL,*d=NULL;LksAllocStats s;int ok=stage131_case_start();
     if(!ok)return stage131_case_finish("ReconfigureResetsCounterPASS",0);
-    hps_alloc_test_fail_on_attempt(5);a=hps_alloc(8);b=hps_alloc(16);
-    if(a==NULL||b==NULL||hps_alloc_test_get_attempt_count()!=2)ok=0;
-    if(hps_alloc_stats_reset()==0||hps_alloc_test_get_attempt_count()!=2)ok=0;
-    hps_alloc_test_reset_attempt_counter();if(hps_alloc_test_get_attempt_count()!=0)ok=0;
-    c=hps_alloc(24);if(c==NULL||hps_alloc_test_get_attempt_count()!=1||hps_alloc_test_failure_triggered())ok=0;
-    hps_alloc_test_fail_on_attempt(1);if(hps_alloc_test_get_attempt_count()!=0||hps_alloc_test_failure_triggered())ok=0;
-    d=hps_alloc(32);s=hps_alloc_stats_get();
-    if(d!=NULL||hps_alloc_test_get_attempt_count()!=1||!hps_alloc_test_failure_triggered()||
+    lks_alloc_test_fail_on_attempt(5);a=lks_alloc(8);b=lks_alloc(16);
+    if(a==NULL||b==NULL||lks_alloc_test_get_attempt_count()!=2)ok=0;
+    if(lks_alloc_stats_reset()==0||lks_alloc_test_get_attempt_count()!=2)ok=0;
+    lks_alloc_test_reset_attempt_counter();if(lks_alloc_test_get_attempt_count()!=0)ok=0;
+    c=lks_alloc(24);if(c==NULL||lks_alloc_test_get_attempt_count()!=1||lks_alloc_test_failure_triggered())ok=0;
+    lks_alloc_test_fail_on_attempt(1);if(lks_alloc_test_get_attempt_count()!=0||lks_alloc_test_failure_triggered())ok=0;
+    d=lks_alloc(32);s=lks_alloc_stats_get();
+    if(d!=NULL||lks_alloc_test_get_attempt_count()!=1||!lks_alloc_test_failure_triggered()||
         s.failed_calls!=1||s.live_bytes!=48||s.live_blocks!=3)ok=0;
-    hps_free(a);hps_free(b);hps_free(c);hps_free(d);
+    lks_free(a);lks_free(b);lks_free(c);lks_free(d);
     return stage131_case_finish("ReconfigureResetsCounterPASS",ok);
 }
 
 static int stage131_test_j_disable(void)
 {
-    void *a=NULL,*b=NULL;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("DisablePASS",0);
-    hps_alloc_test_fail_on_attempt(1);hps_alloc_test_fail_on_attempt(0);
-    if(hps_alloc_test_get_attempt_count()!=0||hps_alloc_test_failure_triggered())ok=0;
-    a=hps_alloc(8);hps_alloc_test_fail_on_attempt(1);hps_alloc_test_disable_failure();
-    if(hps_alloc_test_get_attempt_count()!=0||hps_alloc_test_failure_triggered())ok=0;
-    b=hps_alloc(8);s=hps_alloc_stats_get();
+    void *a=NULL,*b=NULL;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("DisablePASS",0);
+    lks_alloc_test_fail_on_attempt(1);lks_alloc_test_fail_on_attempt(0);
+    if(lks_alloc_test_get_attempt_count()!=0||lks_alloc_test_failure_triggered())ok=0;
+    a=lks_alloc(8);lks_alloc_test_fail_on_attempt(1);lks_alloc_test_disable_failure();
+    if(lks_alloc_test_get_attempt_count()!=0||lks_alloc_test_failure_triggered())ok=0;
+    b=lks_alloc(8);s=lks_alloc_stats_get();
     if(a==NULL||b==NULL||s.failed_calls!=0||s.alloc_calls!=2||s.live_bytes!=16||s.live_blocks!=2)ok=0;
-    hps_free(a);hps_free(b);return stage131_case_finish("DisablePASS",ok);
+    lks_free(a);lks_free(b);return stage131_case_finish("DisablePASS",ok);
 }
 
 static int stage131_test_k_tag_accounting(void)
 {
-    static const HpsAllocTag tags[3]={HPS_ALLOC_TAG_PATH_STEPS,
-        HPS_ALLOC_TAG_TREE_CHILDREN,HPS_ALLOC_TAG_MERGE_SCRATCH};
-    size_t i;HpsAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("TagAccountingPASS",0);
-    for(i=0;i<3;++i){void *p;hps_alloc_test_fail_on_attempt(1);p=hps_alloc_tagged(37,tags[i]);s=hps_alloc_stats_get();
-        if(p!=NULL||!hps_alloc_test_failure_triggered()||hps_alloc_test_get_attempt_count()!=1||
+    static const LksAllocTag tags[3]={LKS_ALLOC_TAG_PATH_STEPS,
+        LKS_ALLOC_TAG_TREE_CHILDREN,LKS_ALLOC_TAG_MERGE_SCRATCH};
+    size_t i;LksAllocStats s;int ok=stage131_case_start();if(!ok)return stage131_case_finish("TagAccountingPASS",0);
+    for(i=0;i<3;++i){void *p;lks_alloc_test_fail_on_attempt(1);p=lks_alloc_tagged(37,tags[i]);s=lks_alloc_stats_get();
+        if(p!=NULL||!lks_alloc_test_failure_triggered()||lks_alloc_test_get_attempt_count()!=1||
             s.failed_calls!=i+1||s.tags[tags[i]].live_bytes!=0||s.tags[tags[i]].live_blocks!=0||
             s.tags[tags[i]].alloc_calls!=1||s.total_successful_requested_bytes!=0||
-            s.tags[HPS_ALLOC_TAG_OTHER].live_bytes!=0||s.tags[HPS_ALLOC_TAG_OTHER].live_blocks!=0)ok=0;
-        hps_free(p);}
+            s.tags[LKS_ALLOC_TAG_OTHER].live_bytes!=0||s.tags[LKS_ALLOC_TAG_OTHER].live_blocks!=0)ok=0;
+        lks_free(p);}
     return stage131_case_finish("TagAccountingPASS",ok);
 }
 
 /* Stage 13.2 object-level exhaustive allocation-failure sweeps.  All
- * snapshots below use fixed test-side storage and never call hps_alloc(). */
+ * snapshots below use fixed test-side storage and never call lks_alloc(). */
 enum { STAGE132_MAX_NODES = 256, STAGE132_MAX_DEPTH = 16,
        STAGE132_MAX_GROUPS = 8, STAGE132_MAX_ITEMS = 40,
        STAGE132_TEXT = 256, STAGE132_OPS = 19 };
 
 typedef struct Stage132PathRecord {
-    HpsDirection direction;
+    LksDirection direction;
     size_t depth, capacity;
     unsigned int slots[STAGE132_MAX_DEPTH];
     size_t levels[STAGE132_MAX_DEPTH];
@@ -8450,7 +8450,7 @@ typedef struct Stage132TreeNodeRecord {
 
 typedef struct Stage132TreeRecord {
     size_t count;
-    HpsTreeInternalProfile profile;
+    LksTreeInternalProfile profile;
     Stage132TreeNodeRecord nodes[STAGE132_MAX_NODES];
 } Stage132TreeRecord;
 
@@ -8458,7 +8458,7 @@ typedef struct Stage132GroupRecord {
     size_t count;
     void *items[STAGE132_MAX_ITEMS];
     Stage132PathRecord paths[STAGE132_MAX_ITEMS];
-    HpsTreeInternalProfile profile;
+    LksTreeInternalProfile profile;
 } Stage132GroupRecord;
 
 typedef struct Stage132BatchRecord {
@@ -8467,8 +8467,8 @@ typedef struct Stage132BatchRecord {
 } Stage132BatchRecord;
 
 typedef struct Stage132LiveRecord {
-    size_t bytes, blocks, tag_bytes[HPS_ALLOC_TAG_COUNT];
-    size_t tag_blocks[HPS_ALLOC_TAG_COUNT];
+    size_t bytes, blocks, tag_bytes[LKS_ALLOC_TAG_COUNT];
+    size_t tag_blocks[LKS_ALLOC_TAG_COUNT];
 } Stage132LiveRecord;
 
 typedef struct Stage132Context {
@@ -8476,12 +8476,12 @@ typedef struct Stage132Context {
     int values[STAGE132_MAX_ITEMS];
     void *items[STAGE132_MAX_ITEMS];
     size_t item_count, group_size;
-    HpsPath *path, *left_path, *right_path, *out_path;
-    HpsTree *tree;
-    HpsGroup *group, *base, *incoming, *result;
-    HpsGroupBatch *batch;
-    const HpsTreeNode *out_node;
-    HpsStatus status;
+    LksPath *path, *left_path, *right_path, *out_path;
+    LksTree *tree;
+    LksGroup *group, *base, *incoming, *result;
+    LksGroupBatch *batch;
+    const LksTreeNode *out_node;
+    LksStatus status;
     Stage132LiveRecord private_incoming_live;
 } Stage132Context;
 
@@ -8513,106 +8513,106 @@ static const char *stage132_names[STAGE132_OPS] = {
     "BatchMergeAll_G6"
 };
 
-static int stage132_path_capture(const HpsPath *path, Stage132PathRecord *record)
+static int stage132_path_capture(const LksPath *path, Stage132PathRecord *record)
 {
     size_t i;
-    if (path == NULL || record == NULL || hps_path_depth(path) > STAGE132_MAX_DEPTH)
+    if (path == NULL || record == NULL || lks_path_depth(path) > STAGE132_MAX_DEPTH)
         return 0;
     memset(record, 0, sizeof(*record));
-    record->direction = hps_path_direction(path);
-    record->depth = hps_path_depth(path);
-    record->capacity = hps_path_internal_capacity(path);
+    record->direction = lks_path_direction(path);
+    record->depth = lks_path_depth(path);
+    record->capacity = lks_path_internal_capacity(path);
     for (i = 0; i < record->depth; ++i) {
-        if (hps_path_get_slot(path, i, &record->slots[i]) != HPS_STATUS_OK ||
-            hps_path_get_level(path, i, &record->levels[i]) != HPS_STATUS_OK) return 0;
+        if (lks_path_get_slot(path, i, &record->slots[i]) != LKS_STATUS_OK ||
+            lks_path_get_level(path, i, &record->levels[i]) != LKS_STATUS_OK) return 0;
     }
-    if (hps_path_text_length(path) >= sizeof(record->text) ||
-        hps_path_format(path, record->text, sizeof(record->text)) != HPS_STATUS_OK)
+    if (lks_path_text_length(path) >= sizeof(record->text) ||
+        lks_path_format(path, record->text, sizeof(record->text)) != LKS_STATUS_OK)
         return 0;
     return 1;
 }
 
-static int stage132_path_equal(const HpsPath *path, const Stage132PathRecord *record)
+static int stage132_path_equal(const LksPath *path, const Stage132PathRecord *record)
 {
     Stage132PathRecord now;
     return stage132_path_capture(path, &now) &&
         memcmp(&now, record, sizeof(now)) == 0;
 }
 
-static int stage132_tree_walk(const HpsTreeNode *node, size_t parent,
+static int stage132_tree_walk(const LksTreeNode *node, size_t parent,
     Stage132TreeRecord *record)
 {
     size_t index, own;
     if (node == NULL || record->count >= STAGE132_MAX_NODES) return 0;
     own = record->count++;
-    record->nodes[own].item = hps_tree_node_item(node);
+    record->nodes[own].item = lks_tree_node_item(node);
     record->nodes[own].parent_index = parent;
-    record->nodes[own].child_count = hps_tree_node_child_count(node);
-    if (!stage132_path_capture(hps_tree_node_path(node), &record->nodes[own].path)) return 0;
-    for (index = 0; index < hps_tree_node_child_count(node); ++index)
-        if (!stage132_tree_walk(hps_tree_node_child_at(node, index), own, record)) return 0;
+    record->nodes[own].child_count = lks_tree_node_child_count(node);
+    if (!stage132_path_capture(lks_tree_node_path(node), &record->nodes[own].path)) return 0;
+    for (index = 0; index < lks_tree_node_child_count(node); ++index)
+        if (!stage132_tree_walk(lks_tree_node_child_at(node, index), own, record)) return 0;
     return 1;
 }
 
-static int stage132_tree_capture(const HpsTree *tree, Stage132TreeRecord *record)
+static int stage132_tree_capture(const LksTree *tree, Stage132TreeRecord *record)
 {
     size_t i;
     if (tree == NULL || record == NULL) return 0;
     memset(record, 0, sizeof(*record));
-    if (hps_tree_internal_profile(tree, &record->profile) != HPS_STATUS_OK) return 0;
-    for (i = 0; i < hps_tree_root_child_count(tree); ++i)
-        if (!stage132_tree_walk(hps_tree_root_child_at(tree, i), (size_t)-1, record)) return 0;
-    return record->count == hps_tree_size(tree) &&
+    if (lks_tree_internal_profile(tree, &record->profile) != LKS_STATUS_OK) return 0;
+    for (i = 0; i < lks_tree_root_child_count(tree); ++i)
+        if (!stage132_tree_walk(lks_tree_root_child_at(tree, i), (size_t)-1, record)) return 0;
+    return record->count == lks_tree_size(tree) &&
         record->count == record->profile.real_node_count;
 }
 
-static int stage132_tree_equal(const HpsTree *tree, const Stage132TreeRecord *record)
+static int stage132_tree_equal(const LksTree *tree, const Stage132TreeRecord *record)
 {
     Stage132TreeRecord now;
     return stage132_tree_capture(tree, &now) &&
         memcmp(&now, record, sizeof(now)) == 0;
 }
 
-static int stage132_group_capture(const HpsGroup *group, Stage132GroupRecord *record)
+static int stage132_group_capture(const LksGroup *group, Stage132GroupRecord *record)
 {
     size_t i;
-    const HpsTree *tree;
-    if (group == NULL || record == NULL || hps_group_size(group) > STAGE132_MAX_ITEMS)
+    const LksTree *tree;
+    if (group == NULL || record == NULL || lks_group_size(group) > STAGE132_MAX_ITEMS)
         return 0;
     memset(record, 0, sizeof(*record));
-    record->count = hps_group_size(group);
-    tree = hps_group_internal_tree(group);
-    if (tree == NULL || hps_tree_internal_profile(tree, &record->profile) != HPS_STATUS_OK)
+    record->count = lks_group_size(group);
+    tree = lks_group_internal_tree(group);
+    if (tree == NULL || lks_tree_internal_profile(tree, &record->profile) != LKS_STATUS_OK)
         return 0;
     for (i = 0; i < record->count; ++i) {
-        record->items[i] = hps_group_item_at(group, i);
-        if (!stage132_path_capture(hps_group_path_at(group, i), &record->paths[i])) return 0;
+        record->items[i] = lks_group_item_at(group, i);
+        if (!stage132_path_capture(lks_group_path_at(group, i), &record->paths[i])) return 0;
     }
     return 1;
 }
 
-static int stage132_group_equal(const HpsGroup *group, const Stage132GroupRecord *record)
+static int stage132_group_equal(const LksGroup *group, const Stage132GroupRecord *record)
 {
     Stage132GroupRecord now;
     return stage132_group_capture(group, &now) &&
         memcmp(&now, record, sizeof(now)) == 0;
 }
 
-static int stage132_batch_capture(const HpsGroupBatch *batch, Stage132BatchRecord *record)
+static int stage132_batch_capture(const LksGroupBatch *batch, Stage132BatchRecord *record)
 {
     size_t i;
     if (batch == NULL || record == NULL ||
-        hps_group_batch_group_count(batch) > STAGE132_MAX_GROUPS) return 0;
+        lks_group_batch_group_count(batch) > STAGE132_MAX_GROUPS) return 0;
     memset(record, 0, sizeof(*record));
-    record->groups = hps_group_batch_group_count(batch);
-    record->total = hps_group_batch_total_size(batch);
-    record->group_size = hps_group_batch_group_size(batch);
+    record->groups = lks_group_batch_group_count(batch);
+    record->total = lks_group_batch_total_size(batch);
+    record->group_size = lks_group_batch_group_size(batch);
     for (i = 0; i < record->groups; ++i)
-        if (!stage132_group_capture(hps_group_batch_group_at(batch, i), &record->entries[i])) return 0;
+        if (!stage132_group_capture(lks_group_batch_group_at(batch, i), &record->entries[i])) return 0;
     return 1;
 }
 
-static int stage132_batch_equal(const HpsGroupBatch *batch, const Stage132BatchRecord *record)
+static int stage132_batch_equal(const LksGroupBatch *batch, const Stage132BatchRecord *record)
 {
     Stage132BatchRecord now;
     return stage132_batch_capture(batch, &now) &&
@@ -8621,12 +8621,12 @@ static int stage132_batch_equal(const HpsGroupBatch *batch, const Stage132BatchR
 
 static Stage132LiveRecord stage132_live_capture(void)
 {
-    HpsAllocStats stats = hps_alloc_stats_get();
+    LksAllocStats stats = lks_alloc_stats_get();
     Stage132LiveRecord record;
     size_t i;
     record.bytes = stats.live_bytes;
     record.blocks = stats.live_blocks;
-    for (i = 0; i < HPS_ALLOC_TAG_COUNT; ++i) {
+    for (i = 0; i < LKS_ALLOC_TAG_COUNT; ++i) {
         record.tag_bytes[i] = stats.tags[i].live_bytes;
         record.tag_blocks[i] = stats.tags[i].live_blocks;
     }
@@ -8637,7 +8637,7 @@ static int stage132_live_equal(Stage132LiveRecord a, Stage132LiveRecord b)
 {
     size_t i;
     if (a.bytes != b.bytes || a.blocks != b.blocks) return 0;
-    for (i = 0; i < HPS_ALLOC_TAG_COUNT; ++i)
+    for (i = 0; i < LKS_ALLOC_TAG_COUNT; ++i)
         if (a.tag_bytes[i] != b.tag_bytes[i] || a.tag_blocks[i] != b.tag_blocks[i]) return 0;
     return 1;
 }
@@ -8649,9 +8649,9 @@ static int stage132_compare_int(const void *left, const void *right, void *conte
     return a < b ? -1 : a > b ? 1 : 0;
 }
 
-static HpsComparator stage132_comparator(void)
+static LksComparator stage132_comparator(void)
 {
-    HpsComparator c;
+    LksComparator c;
     c.compare = stage132_compare_int; c.context = NULL; return c;
 }
 
@@ -8667,95 +8667,95 @@ static void stage132_items_init(Stage132Context *c, size_t count, int shuffled)
         c->items[i] = &c->values[shuffled ? (i * 7u) % count : i];
 }
 
-static HpsPath *stage132_make_path(unsigned int first, size_t level, int depth)
+static LksPath *stage132_make_path(unsigned int first, size_t level, int depth)
 {
-    HpsPath *p = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, first, level);
+    LksPath *p = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, first, level);
     size_t i;
     if (p == NULL) return NULL;
     for (i = 1; i < (size_t)depth; ++i)
-        if (hps_path_append_at_level(p, (unsigned int)(i + 10u), level + i * 2u) != HPS_STATUS_OK) {
-            hps_path_destroy(p); return NULL;
+        if (lks_path_append_at_level(p, (unsigned int)(i + 10u), level + i * 2u) != LKS_STATUS_OK) {
+            lks_path_destroy(p); return NULL;
         }
     return p;
 }
 
-static int stage132_insert_path(HpsTree *tree, HpsPath *path, void *item)
+static int stage132_insert_path(LksTree *tree, LksPath *path, void *item)
 {
-    return hps_tree_insert(tree, path, item, NULL) == HPS_STATUS_OK;
+    return lks_tree_insert(tree, path, item, NULL) == LKS_STATUS_OK;
 }
 
 static int stage132_setup(Stage132Context *c)
 {
     size_t i;
-    HpsComparator cmp = stage132_comparator();
-    hps_alloc_test_disable_failure();
+    LksComparator cmp = stage132_comparator();
+    lks_alloc_test_disable_failure();
     c->path = c->left_path = c->right_path = c->out_path = NULL;
     c->tree = NULL; c->group = c->base = c->incoming = c->result = NULL;
-    c->batch = NULL; c->out_node = NULL; c->status = HPS_STATUS_INTERNAL_ERROR;
+    c->batch = NULL; c->out_node = NULL; c->status = LKS_STATUS_INTERNAL_ERROR;
     switch (c->kind) {
     case 0: case 1: case 9: return 1;
     case 2:
         c->path = stage132_make_path(3, 0, 5);
         return c->path != NULL;
     case 3: case 4: case 5:
-        c->path = hps_path_create(HPS_DIRECTION_POSITIVE, 3);
+        c->path = lks_path_create(LKS_DIRECTION_POSITIVE, 3);
         if (c->path == NULL) return 0;
-        if (c->kind == 3) return hps_path_append(c->path, 4) == HPS_STATUS_OK &&
-            hps_path_append(c->path, 5) == HPS_STATUS_OK;
-        while (hps_path_depth(c->path) < hps_path_internal_capacity(c->path))
-            if (hps_path_append(c->path, 4) != HPS_STATUS_OK) return 0;
-        if (c->kind == 5 && hps_path_depth(c->path) < hps_path_internal_capacity(c->path))
+        if (c->kind == 3) return lks_path_append(c->path, 4) == LKS_STATUS_OK &&
+            lks_path_append(c->path, 5) == LKS_STATUS_OK;
+        while (lks_path_depth(c->path) < lks_path_internal_capacity(c->path))
+            if (lks_path_append(c->path, 4) != LKS_STATUS_OK) return 0;
+        if (c->kind == 5 && lks_path_depth(c->path) < lks_path_internal_capacity(c->path))
             return 0;
         return 1;
     case 6:
-        c->right_path = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, 20, 4);
+        c->right_path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, 20, 4);
         return c->right_path != NULL;
     case 7:
-        c->left_path = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, 4, 0);
-        c->right_path = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, 4, 0);
+        c->left_path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, 4, 0);
+        c->right_path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, 4, 0);
         if (c->left_path != NULL && c->right_path != NULL) {
-            if (hps_path_append_at_level(c->left_path, 11, 2) != HPS_STATUS_OK ||
-                hps_path_append_at_level(c->right_path, 11, 2) != HPS_STATUS_OK ||
-                hps_path_append_at_level(c->left_path, 20, 5) != HPS_STATUS_OK ||
-                hps_path_append_at_level(c->right_path, 21, 5) != HPS_STATUS_OK) return 0;
+            if (lks_path_append_at_level(c->left_path, 11, 2) != LKS_STATUS_OK ||
+                lks_path_append_at_level(c->right_path, 11, 2) != LKS_STATUS_OK ||
+                lks_path_append_at_level(c->left_path, 20, 5) != LKS_STATUS_OK ||
+                lks_path_append_at_level(c->right_path, 21, 5) != LKS_STATUS_OK) return 0;
         }
         return c->left_path != NULL && c->right_path != NULL;
     case 8:
         c->left_path = stage132_make_path(4, 1, 4);
         return c->left_path != NULL;
     case 10:
-        c->tree = hps_tree_create();
-        c->path = hps_path_create(HPS_DIRECTION_POSITIVE, 40);
+        c->tree = lks_tree_create();
+        c->path = lks_path_create(LKS_DIRECTION_POSITIVE, 40);
         return c->tree != NULL && c->path != NULL;
     case 11: case 12:
-        c->tree = hps_tree_create();
+        c->tree = lks_tree_create();
         if (c->tree == NULL) return 0;
         if (c->kind == 11) {
-            HpsPath *parent = hps_path_create(HPS_DIRECTION_POSITIVE, 10);
+            LksPath *parent = lks_path_create(LKS_DIRECTION_POSITIVE, 10);
             if (parent == NULL || !stage132_insert_path(c->tree, parent, &c->values[0])) {
-                hps_path_destroy(parent); return 0;
+                lks_path_destroy(parent); return 0;
             }
-            hps_path_destroy(parent);
+            lks_path_destroy(parent);
             for (i = 0; i < 3; ++i) {
-                HpsPath *child = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, 10, 0);
-                if (child == NULL || hps_path_append_at_level(child, (unsigned int)i, 1) != HPS_STATUS_OK ||
+                LksPath *child = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, 10, 0);
+                if (child == NULL || lks_path_append_at_level(child, (unsigned int)i, 1) != LKS_STATUS_OK ||
                     !stage132_insert_path(c->tree, child, &c->values[i + 1])) {
-                    hps_path_destroy(child); return 0;
+                    lks_path_destroy(child); return 0;
                 }
-                hps_path_destroy(child);
+                lks_path_destroy(child);
             }
-            c->path = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, 10, 0);
-            if (c->path != NULL) (void)hps_path_append_at_level(c->path, 3, 1);
+            c->path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, 10, 0);
+            if (c->path != NULL) (void)lks_path_append_at_level(c->path, 3, 1);
             return c->path != NULL;
         }
         for (i = 0; i < 2; ++i) {
-            HpsPath *root = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, (unsigned int)i, 0);
+            LksPath *root = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, (unsigned int)i, 0);
             if (root == NULL || !stage132_insert_path(c->tree, root, &c->values[i])) {
-                hps_path_destroy(root); return 0;
+                lks_path_destroy(root); return 0;
             }
-            hps_path_destroy(root);
+            lks_path_destroy(root);
         }
-        c->path = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, 2, 0);
+        c->path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, 2, 0);
         return c->path != NULL;
     case 13:
         stage132_items_init(c, 16, 1);
@@ -8769,65 +8769,65 @@ static int stage132_setup(Stage132Context *c)
         {
             void *left[8], *right[8];
             for (i = 0; i < 8; ++i) { left[i] = &c->values[i]; right[i] = &c->values[i + 8]; c->values[i + 8] = (int)(i * 2 + 1); c->values[i] = (int)(i * 2); }
-            if (hps_group_build(left, 8, &cmp, &c->base) != HPS_STATUS_OK ||
-                hps_group_build(right, 8, &cmp, &c->incoming) != HPS_STATUS_OK) return 0;
+            if (lks_group_build(left, 8, &cmp, &c->base) != LKS_STATUS_OK ||
+                lks_group_build(right, 8, &cmp, &c->incoming) != LKS_STATUS_OK) return 0;
         }
         if (c->kind == 16) {
             /* The owned-base contract consumes Base on every runtime failure;
              * preserve the exact Incoming-only live footprint as the target. */
-            hps_group_destroy(c->base);
+            lks_group_destroy(c->base);
             c->base = NULL;
             c->private_incoming_live = stage132_live_capture();
             /* Rebuild Base to leave the complete operation fixture in place. */
             {
                 void *left[8];
                 for (i = 0; i < 8; ++i) left[i] = &c->values[i];
-                if (hps_group_build(left, 8, &cmp, &c->base) != HPS_STATUS_OK) return 0;
+                if (lks_group_build(left, 8, &cmp, &c->base) != LKS_STATUS_OK) return 0;
             }
         }
         return 1;
     case 17: case 18:
         stage132_items_init(c, c->kind == 17 ? 25 : 30, 1);
         c->group_size = 5;
-        return hps_group_batch_build(c->items, c->item_count, c->group_size,
-            &cmp, &c->batch) == HPS_STATUS_OK;
+        return lks_group_batch_build(c->items, c->item_count, c->group_size,
+            &cmp, &c->batch) == LKS_STATUS_OK;
     default: return 0;
     }
 }
 
-static HpsStatus stage132_run(Stage132Context *c)
+static LksStatus stage132_run(Stage132Context *c)
 {
-    HpsComparator cmp = stage132_comparator();
+    LksComparator cmp = stage132_comparator();
     switch (c->kind) {
-    case 0: c->out_path = hps_path_create_at_level(HPS_DIRECTION_NEGATIVE, 9, 3); return c->out_path ? HPS_STATUS_OK : HPS_STATUS_OUT_OF_MEMORY;
-    case 1: c->out_path = hps_path_create_zero(); return c->out_path ? HPS_STATUS_OK : HPS_STATUS_OUT_OF_MEMORY;
-    case 2: c->out_path = hps_path_clone(c->path); return c->out_path ? HPS_STATUS_OK : HPS_STATUS_OUT_OF_MEMORY;
-    case 3: return hps_path_append(c->path, 8);
-    case 4: return hps_path_append(c->path, 8);
-    case 5: return hps_path_append_at_level(c->path, 8, 100);
-    case 6: return hps_path_before(c->right_path, &c->out_path);
-    case 7: return hps_path_between(c->left_path, c->right_path, &c->out_path);
-    case 8: return hps_path_after(c->left_path, &c->out_path);
-    case 9: c->tree = hps_tree_create(); return c->tree ? HPS_STATUS_OK : HPS_STATUS_OUT_OF_MEMORY;
-    case 10: case 11: case 12: return hps_tree_insert(c->tree, c->path, &c->values[20], &c->out_node);
-    case 13: return hps_group_build(c->items, c->item_count, &cmp, &c->group);
-    case 14: return hps_group_batch_build(c->items, c->item_count, c->group_size, &cmp, &c->batch);
-    case 15: return hps_group_merge(c->base, c->incoming, &cmp, &c->result);
-    case 16: return hps_group_merge_into_owned_base(&c->base, c->incoming, &cmp);
-    case 17: case 18: return hps_group_batch_merge_all(c->batch, &cmp, &c->result);
-    default: return HPS_STATUS_INTERNAL_ERROR;
+    case 0: c->out_path = lks_path_create_at_level(LKS_DIRECTION_NEGATIVE, 9, 3); return c->out_path ? LKS_STATUS_OK : LKS_STATUS_OUT_OF_MEMORY;
+    case 1: c->out_path = lks_path_create_zero(); return c->out_path ? LKS_STATUS_OK : LKS_STATUS_OUT_OF_MEMORY;
+    case 2: c->out_path = lks_path_clone(c->path); return c->out_path ? LKS_STATUS_OK : LKS_STATUS_OUT_OF_MEMORY;
+    case 3: return lks_path_append(c->path, 8);
+    case 4: return lks_path_append(c->path, 8);
+    case 5: return lks_path_append_at_level(c->path, 8, 100);
+    case 6: return lks_path_before(c->right_path, &c->out_path);
+    case 7: return lks_path_between(c->left_path, c->right_path, &c->out_path);
+    case 8: return lks_path_after(c->left_path, &c->out_path);
+    case 9: c->tree = lks_tree_create(); return c->tree ? LKS_STATUS_OK : LKS_STATUS_OUT_OF_MEMORY;
+    case 10: case 11: case 12: return lks_tree_insert(c->tree, c->path, &c->values[20], &c->out_node);
+    case 13: return lks_group_build(c->items, c->item_count, &cmp, &c->group);
+    case 14: return lks_group_batch_build(c->items, c->item_count, c->group_size, &cmp, &c->batch);
+    case 15: return lks_group_merge(c->base, c->incoming, &cmp, &c->result);
+    case 16: return lks_group_merge_into_owned_base(&c->base, c->incoming, &cmp);
+    case 17: case 18: return lks_group_batch_merge_all(c->batch, &cmp, &c->result);
+    default: return LKS_STATUS_INTERNAL_ERROR;
     }
 }
 
 static void stage132_cleanup(Stage132Context *c)
 {
-    hps_alloc_test_disable_failure();
-    hps_path_destroy(c->out_path); hps_path_destroy(c->path);
-    hps_path_destroy(c->left_path); hps_path_destroy(c->right_path);
-    hps_tree_destroy(c->tree);
-    hps_group_destroy(c->group); hps_group_destroy(c->base);
-    hps_group_destroy(c->incoming); hps_group_destroy(c->result);
-    hps_group_batch_destroy(c->batch);
+    lks_alloc_test_disable_failure();
+    lks_path_destroy(c->out_path); lks_path_destroy(c->path);
+    lks_path_destroy(c->left_path); lks_path_destroy(c->right_path);
+    lks_tree_destroy(c->tree);
+    lks_group_destroy(c->group); lks_group_destroy(c->base);
+    lks_group_destroy(c->incoming); lks_group_destroy(c->result);
+    lks_group_batch_destroy(c->batch);
     c->out_path=NULL; c->path=NULL; c->left_path=NULL; c->right_path=NULL;
     c->tree=NULL; c->group=NULL; c->base=NULL; c->incoming=NULL;
     c->result=NULL; c->batch=NULL;
@@ -8864,20 +8864,20 @@ static int stage132_failure_contract(Stage132Context *c,
     Stage132PathRecord *paths, Stage132TreeRecord *tree,
     Stage132GroupRecord *groups, Stage132BatchRecord *batch,
     int *values, void **items, Stage132LiveRecord before,
-    HpsAllocStats stats_before)
+    LksAllocStats stats_before)
 {
-    HpsAllocStats after = hps_alloc_stats_get();
+    LksAllocStats after = lks_alloc_stats_get();
     Stage132LiveRecord live_after = stage132_live_capture();
     Stage132LiveRecord expected_live = c->kind == 16 ? c->private_incoming_live : before;
     size_t i;
     int valid = 1;
-    if (!hps_alloc_test_failure_triggered()) { ++stage132_counts.failure_not_triggered; valid = 0; }
-    if (c->status != HPS_STATUS_OUT_OF_MEMORY) {
+    if (!lks_alloc_test_failure_triggered()) { ++stage132_counts.failure_not_triggered; valid = 0; }
+    if (c->status != LKS_STATUS_OUT_OF_MEMORY) {
         ++stage132_counts.wrong_status;
-        if (c->status == HPS_STATUS_OK) ++stage132_counts.unexpected_success;
+        if (c->status == LKS_STATUS_OK) ++stage132_counts.unexpected_success;
         valid = 0;
     }
-    if (hps_alloc_test_get_attempt_count() == 0) valid = 0;
+    if (lks_alloc_test_get_attempt_count() == 0) valid = 0;
     if (after.failed_calls != stats_before.failed_calls + 1) {
         ++stage133_failed_calls_delta_mismatches;
         ++stage132_counts.tag_mismatch; valid = 0;
@@ -8941,46 +8941,46 @@ static int stage132_baseline_contract(Stage132Context *c)
 {
     switch (c->kind) {
     case 0: case 1: case 2: case 6: case 7: case 8: return c->out_path != NULL;
-    case 3: case 4: case 5: return c->status == HPS_STATUS_OK && hps_path_depth(c->path) > 0;
-    case 9: return c->tree != NULL && hps_tree_size(c->tree) == 0;
-    case 10: case 11: case 12: return c->status == HPS_STATUS_OK && hps_tree_size(c->tree) > 0;
-    case 13: return c->group != NULL && hps_group_size(c->group) == c->item_count;
-    case 14: return c->batch != NULL && hps_group_batch_total_size(c->batch) == c->item_count;
-    case 15: return c->result != NULL && hps_group_size(c->result) == 16;
-    case 16: return c->base != NULL && hps_group_size(c->base) == 16;
+    case 3: case 4: case 5: return c->status == LKS_STATUS_OK && lks_path_depth(c->path) > 0;
+    case 9: return c->tree != NULL && lks_tree_size(c->tree) == 0;
+    case 10: case 11: case 12: return c->status == LKS_STATUS_OK && lks_tree_size(c->tree) > 0;
+    case 13: return c->group != NULL && lks_group_size(c->group) == c->item_count;
+    case 14: return c->batch != NULL && lks_group_batch_total_size(c->batch) == c->item_count;
+    case 15: return c->result != NULL && lks_group_size(c->result) == 16;
+    case 16: return c->base != NULL && lks_group_size(c->base) == 16;
     case 17: case 18: return c->result != NULL &&
-        hps_group_size(c->result) == c->item_count;
+        lks_group_size(c->result) == c->item_count;
     default: return 0;
     }
 }
 
 static int stage132_post_root128(void)
 {
-    HpsTree *tree = hps_tree_create();
+    LksTree *tree = lks_tree_create();
     int values[128], query = 127;
-    HpsComparator comparator;
-    const HpsTreeNode *equal = NULL, *left = NULL, *right = NULL;
+    LksComparator comparator;
+    const LksTreeNode *equal = NULL, *left = NULL, *right = NULL;
     BenchmarkCompareContext count = { 0, 0 };
     size_t i;
     comparator.compare = benchmark_compare_int;
     int ok = tree != NULL;
     for (i = 0; ok && i < 128; ++i) {
-        HpsPath *path;
+        LksPath *path;
         values[i] = (int)i;
-        path = hps_path_create_at_level(HPS_DIRECTION_POSITIVE, (unsigned int)i, 0);
-        if (path == NULL || hps_tree_insert(tree, path, &values[i], NULL) != HPS_STATUS_OK)
+        path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE, (unsigned int)i, 0);
+        if (path == NULL || lks_tree_insert(tree, path, &values[i], NULL) != LKS_STATUS_OK)
             ok = 0;
-        hps_path_destroy(path);
+        lks_path_destroy(path);
     }
     comparator.context = &count;
     /* Count this exact root search only, excluding tree construction. */
-    if (ok && hps_tree_locate_item(tree, &query, &comparator,
-            &left, &equal, &right) != HPS_STATUS_OK) ok = 0;
-    if (equal == NULL || hps_tree_node_item(equal) != &values[127] ||
+    if (ok && lks_tree_locate_item(tree, &query, &comparator,
+            &left, &equal, &right) != LKS_STATUS_OK) ok = 0;
+    if (equal == NULL || lks_tree_node_item(equal) != &values[127] ||
         count.comparison_count != 7) ok = 0;
     printf("Stage13.2PostSweepRoot128=%s Comparisons=%lu\n", ok?"PASS":"FAIL",
         (unsigned long)count.comparison_count);
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
     return ok;
 }
 
@@ -9001,40 +9001,40 @@ static int stage132_sweep_one(int kind)
     size_t unexpected_success_count = 0, batch_preserved_count = 0;
     size_t result_null_count = 0, oom_count = 0, base_consumed_count = 0;
     size_t incoming_preserved_count = 0;
-    HpsStatus baseline_status;
+    LksStatus baseline_status;
     int ok = 1;
     memset(&c, 0, sizeof(c)); c.kind = kind;
     if (!stage132_setup(&c)) { stage132_cleanup(&c); return 0; }
-    hps_alloc_test_disable_failure(); hps_alloc_test_reset_attempt_counter();
+    lks_alloc_test_disable_failure(); lks_alloc_test_reset_attempt_counter();
     baseline_status = stage132_run(&c);
-    baseline = hps_alloc_test_get_attempt_count();
+    baseline = lks_alloc_test_get_attempt_count();
     stage132_final_k[kind] = baseline;
     c.status = baseline_status;
-    if (baseline_status != HPS_STATUS_OK || !stage132_baseline_contract(&c) ||
+    if (baseline_status != LKS_STATUS_OK || !stage132_baseline_contract(&c) ||
         (kind == 3 && baseline != 0) ||
         (kind != 3 && baseline == 0)) ok = 0;
     stage132_cleanup(&c);
-    if (!benchmark_alloc_stats_empty(&(HpsAllocStats){0})) { /* no-op: live check below */ }
+    if (!benchmark_alloc_stats_empty(&(LksAllocStats){0})) { /* no-op: live check below */ }
     {
-        HpsAllocStats s = hps_alloc_stats_get();
+        LksAllocStats s = lks_alloc_stats_get();
         if (s.live_bytes != 0 || s.live_blocks != 0) { ++stage132_counts.leak; ok = 0; }
-        if (hps_alloc_stats_reset() != 0) ok = 0;
+        if (lks_alloc_stats_reset() != 0) ok = 0;
     }
     if (!ok) {
         printf("Stage13.2 %s baseline setup/run failed status=%s K=%lu\n",
-            stage132_names[kind], hps_status_string(baseline_status), (unsigned long)baseline);
+            stage132_names[kind], lks_status_string(baseline_status), (unsigned long)baseline);
         return 0;
     }
     ++stage132_counts.operations;
     if (kind == 3) {
         memset(&c, 0, sizeof(c)); c.kind = kind;
         if (!stage132_setup(&c)) return 0;
-        hps_alloc_test_fail_on_attempt(1);
+        lks_alloc_test_fail_on_attempt(1);
         c.status = stage132_run(&c);
-        if (c.status != HPS_STATUS_OK || hps_alloc_test_failure_triggered() ||
-            hps_alloc_test_get_attempt_count() != 0) ok = 0;
+        if (c.status != LKS_STATUS_OK || lks_alloc_test_failure_triggered() ||
+            lks_alloc_test_get_attempt_count() != 0) ok = 0;
         stage132_cleanup(&c);
-        if (hps_alloc_stats_reset() != 0) ok = 0;
+        if (lks_alloc_stats_reset() != 0) ok = 0;
         printf("Stage13.2OperationSummary,PathAppendNoGrow,BaselineAllocationAttempts=0,FailCasesRun=0,FailureTriggeredCount=0,ExpectedStatusCount=0,StateContractPassCount=0,LeakFreeCount=0,UnexpectedSuccessCount=0,ContractFailureCount=%d,NoAllocationPathPASS=%s\n",
             ok?0:1,ok?"PASS":"FAIL");
         return ok;
@@ -9045,7 +9045,7 @@ static int stage132_sweep_one(int kind)
         Stage132GroupRecord groups[2];
         Stage132BatchRecord batch;
         Stage132LiveRecord before;
-        HpsAllocStats stats_before;
+        LksAllocStats stats_before;
         int old_values[STAGE132_MAX_ITEMS];
         void *old_items[STAGE132_MAX_ITEMS];
         int pass;
@@ -9056,48 +9056,48 @@ static int stage132_sweep_one(int kind)
         if (!stage132_setup(&c)) { stage132_cleanup(&c); ++stage132_counts.leak; ok = 0; continue; }
         if (!stage132_operation_snapshot(&c, paths, &tree, groups, &batch,
                 old_values, old_items, &before)) { stage132_cleanup(&c); ok = 0; continue; }
-        stats_before = hps_alloc_stats_get();
-        hps_alloc_test_fail_on_attempt(i);
+        stats_before = lks_alloc_stats_get();
+        lks_alloc_test_fail_on_attempt(i);
         c.status = stage132_run(&c);
-        triggered_now = hps_alloc_test_failure_triggered();
+        triggered_now = lks_alloc_test_failure_triggered();
         contract_pass = stage132_failure_contract(&c, paths, &tree, groups, &batch,
                 old_values, old_items, before, stats_before);
-        pass = hps_alloc_test_get_attempt_count() == i && contract_pass;
+        pass = lks_alloc_test_get_attempt_count() == i && contract_pass;
         if (triggered_now) ++triggered_count;
-        if (c.status == HPS_STATUS_OUT_OF_MEMORY) ++expected_status_count;
-        if (c.status == HPS_STATUS_OK) ++unexpected_success_count;
-        if (contract_pass && hps_alloc_test_get_attempt_count() == i) ++state_pass_count;
+        if (c.status == LKS_STATUS_OUT_OF_MEMORY) ++expected_status_count;
+        if (c.status == LKS_STATUS_OK) ++unexpected_success_count;
+        if (contract_pass && lks_alloc_test_get_attempt_count() == i) ++state_pass_count;
         if (kind == 16) {
             if (c.base == NULL) ++base_consumed_count;
             if (stage132_group_equal(c.incoming, &groups[1])) ++incoming_preserved_count;
         }
         if (kind == 17 || kind == 18) {
             if (c.result == NULL) ++result_null_count;
-            if (c.status == HPS_STATUS_OUT_OF_MEMORY) ++oom_count;
+            if (c.status == LKS_STATUS_OUT_OF_MEMORY) ++oom_count;
             if (stage132_batch_equal(c.batch, &batch)) ++batch_preserved_count;
         }
         {
-            int triggered = hps_alloc_test_failure_triggered();
-            size_t attempts = hps_alloc_test_get_attempt_count();
+            int triggered = lks_alloc_test_failure_triggered();
+            size_t attempts = lks_alloc_test_get_attempt_count();
             if (!pass)
                 printf("Stage13.2FailPointFailure Operation=%s FailIndex=%lu BaselineK=%lu Status=%s Triggered=%d Attempts=%lu\n",
                     stage132_names[kind], (unsigned long)i, (unsigned long)baseline,
-                    hps_status_string(c.status), triggered, (unsigned long)attempts);
+                    lks_status_string(c.status), triggered, (unsigned long)attempts);
         }
-        hps_alloc_test_disable_failure();
+        lks_alloc_test_disable_failure();
         stage132_cleanup(&c);
         {
-            HpsAllocStats end = hps_alloc_stats_get();
+            LksAllocStats end = lks_alloc_stats_get();
             if (end.live_bytes != 0 || end.live_blocks != 0 ||
-                end.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-                end.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0) {
+                end.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+                end.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0) {
                 ++stage132_counts.leak; pass = 0;
             } else ++leak_free_count;
         }
         ++stage132_counts.points;
         if (pass) { ++stage132_counts.passes; ++pass_count; }
         else ok = 0;
-        if (hps_alloc_stats_reset() != 0) ok = 0;
+        if (lks_alloc_stats_reset() != 0) ok = 0;
     }
     {
         int category = stage132_count_kind(kind);
@@ -9129,30 +9129,30 @@ static int stage132_sweep_one(int kind)
     return ok && pass_count == baseline;
 }
 
-int hps_run_stage13_2_tests(void)
+int lks_run_stage13_2_tests(void)
 {
     int i, ok = 1, core_ok;
-    HpsAllocStats stats;
+    LksAllocStats stats;
     memset(&stage132_counts, 0, sizeof(stage132_counts));
-    printf("\nHPSort Stage 13.2: exhaustive object-level allocation fail-point sweeps\n");
+    printf("\nLayerKeySort Stage 13.2: exhaustive object-level allocation fail-point sweeps\n");
     for (i = 0; i < STAGE132_OPS; ++i)
         if (!stage132_sweep_one(i)) ok = 0;
-    hps_alloc_test_disable_failure();
-    stats = hps_alloc_stats_get();
+    lks_alloc_test_disable_failure();
+    stats = lks_alloc_stats_get();
     if (stats.live_bytes != 0 || stats.live_blocks != 0 ||
-        hps_alloc_stats_reset() != 0) ok = 0;
+        lks_alloc_stats_reset() != 0) ok = 0;
     /* Required post-sweep normal regressions start from reset stats and with
      * injection disabled. */
-    hps_alloc_test_disable_failure();
-    core_ok = hps_run_stage8_1_tests() == 0 && stage82_alignment_regression() &&
+    lks_alloc_test_disable_failure();
+    core_ok = lks_run_stage8_1_tests() == 0 && stage82_alignment_regression() &&
         stage83_tag_direct_test() && stage92_path_storage_regression() &&
-        hps_run_stage10_1_tests() == 0 && stage111_legacy_production_regressions() &&
-        hps_run_stage11_1_gs100_fixture_check() == 0 && stage122_direct_regressions() &&
+        lks_run_stage10_1_tests() == 0 && stage111_legacy_production_regressions() &&
+        lks_run_stage11_1_gs100_fixture_check() == 0 && stage122_direct_regressions() &&
         stage123_singleton_1024() && stage132_post_root128();
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0) core_ok = 0;
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0) core_ok = 0;
     if (!core_ok) ok = 0;
     printf("Stage13.2ErrorClassCounts\nFailureNotTriggered=%lu\nWrongStatus=%lu\nUnexpectedSuccess=%lu\nOutputNotNull=%lu\nInputMutated=%lu\nSourcePathMutated=%lu\nTreeMutated=%lu\nBatchMutated=%lu\nOwnedBaseNotConsumed=%lu\nIncomingMutated=%lu\nLiveBytesMismatch=%lu\nLiveBlocksMismatch=%lu\nTagAccountingMismatch=%lu\nLeak=%lu\nDoubleFreeOrCrash=%lu\n",
         (unsigned long)stage132_counts.failure_not_triggered,(unsigned long)stage132_counts.wrong_status,
@@ -9176,11 +9176,11 @@ int hps_run_stage13_2_tests(void)
         (unsigned long)stage132_counts.batch_points);
     printf("Stage13.2NormalRegressionPrecondition live=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
         (unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)stats.failed_calls);
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,(unsigned long)stats.failed_calls);
     printf("Stage13.2PostSweepNormalCoreRegression=%s FailedCalls=%lu FinalLive=%lu/%lu OTHER=%lu\n",
         core_ok?"PASS":"FAIL",(unsigned long)stats.failed_calls,
         (unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes);
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes);
     printf("Stage13.2Status=%s\n", ok?"PASS":"FAIL");
     return ok ? 0 : 1;
 }
@@ -9230,36 +9230,36 @@ static int stage133_run_kplus_one(void)
     for (kind = 0; kind < STAGE132_OPS; ++kind) {
         Stage132Context c;
         size_t measured, frozen = stage133_frozen_k[kind];
-        HpsStatus status;
+        LksStatus status;
         int passed;
         memset(&c, 0, sizeof(c)); c.kind = (int)kind;
         if (!stage132_setup(&c)) { stage132_cleanup(&c); ok=0; ++stage133_kplus_failures; continue; }
-        hps_alloc_test_disable_failure(); hps_alloc_test_reset_attempt_counter();
-        status = stage132_run(&c); measured = hps_alloc_test_get_attempt_count();
+        lks_alloc_test_disable_failure(); lks_alloc_test_reset_attempt_counter();
+        status = stage132_run(&c); measured = lks_alloc_test_get_attempt_count();
         c.status = status;
-        if (status != HPS_STATUS_OK || !stage132_baseline_contract(&c)) ok = 0;
+        if (status != LKS_STATUS_OK || !stage132_baseline_contract(&c)) ok = 0;
         if (measured != frozen || measured != stage132_final_k[kind]) {
             ++stage133_baseline_k_mismatches; ok = 0;
         }
         stage132_cleanup(&c);
-        if (hps_alloc_stats_reset() != 0) ok=0;
+        if (lks_alloc_stats_reset() != 0) ok=0;
 
         memset(&c, 0, sizeof(c)); c.kind = (int)kind;
         if (!stage132_setup(&c)) { stage132_cleanup(&c); ok=0; ++stage133_kplus_failures; continue; }
-        hps_alloc_test_fail_on_attempt(measured + 1);
+        lks_alloc_test_fail_on_attempt(measured + 1);
         status = stage132_run(&c);
         c.status = status;
-        passed = status == HPS_STATUS_OK && stage132_baseline_contract(&c) &&
-            !hps_alloc_test_failure_triggered() &&
-            hps_alloc_test_get_attempt_count() == measured;
+        passed = status == LKS_STATUS_OK && stage132_baseline_contract(&c) &&
+            !lks_alloc_test_failure_triggered() &&
+            lks_alloc_test_get_attempt_count() == measured;
         printf("%s,%lu,%s,%s,%lu\n", stage132_names[kind],(unsigned long)measured,
-            status==HPS_STATUS_OK && stage132_baseline_contract(&c)?"YES":"NO",
-            hps_alloc_test_failure_triggered()?"true":"false",
-            (unsigned long)hps_alloc_test_get_attempt_count());
+            status==LKS_STATUS_OK && stage132_baseline_contract(&c)?"YES":"NO",
+            lks_alloc_test_failure_triggered()?"true":"false",
+            (unsigned long)lks_alloc_test_get_attempt_count());
         ++stage133_kplus_tests;
         if (!passed) { ++stage133_kplus_failures; ok=0; }
-        hps_alloc_test_disable_failure(); stage132_cleanup(&c);
-        if (hps_alloc_stats_reset() != 0) { ++stage133_kplus_failures; ok=0; }
+        lks_alloc_test_disable_failure(); stage132_cleanup(&c);
+        if (lks_alloc_stats_reset() != 0) { ++stage133_kplus_failures; ok=0; }
     }
     printf("BaselineKMismatchCount=%lu\nKPlusOneTestsRun=%lu\nKPlusOneFailureCount=%lu\n",
         (unsigned long)stage133_baseline_k_mismatches,
@@ -9272,7 +9272,7 @@ static int stage133_debug_production_smoke(void)
     Stage103Sample sample = {0};
     Stage103Snapshot snapshot = {0};
     Stage112TreeCapture capture = {0};
-    HpsAllocStats final;
+    LksAllocStats final;
     int ok = 1;
     int gs_ok = stage123_gs100();
     int singleton_ok = stage123_singleton_1024();
@@ -9283,56 +9283,56 @@ static int stage133_debug_production_smoke(void)
     printf("Stage13.3G32C0FFEE,N=10000,G=32,Seed=0xC0FFEE,ResultOnly=%lu,OverallPeak=%lu,CorrectnessAndTags=%s\n",
         (unsigned long)sample.result_bytes,(unsigned long)sample.peak_bytes,ok?"PASS":"FAIL");
     stage112_tree_capture_destroy(&capture); stage103_snapshot_destroy(&snapshot);
-    final = hps_alloc_stats_get();
+    final = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final) || final.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&final,"13.3 production smoke final") ||
         !stage83_other_is_empty(&final,"13.3 production smoke final")) ok=0;
     printf("Stage13.3ProductionSmokeFinal=live:%lu/%lu OTHER:%lu FailedCalls:%lu Status:%s\n",
         (unsigned long)final.live_bytes,(unsigned long)final.live_blocks,
-        (unsigned long)final.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
+        (unsigned long)final.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
         (unsigned long)final.failed_calls,ok?"PASS":"FAIL");
-    printf("Stage13.3ProductionBaselines\nGS100BatchBytes=115880\nGS100PostMergeBytes=249472\nGS100ResultBytes=133592\nGS100PeakBytes=341984\nSingleton1024ResultBytes=5339184\nSingleton1024PeakBytes=14744752\nHpsPathSize=%lu\nHpsTreeNodeSize=%lu\nHpsTreeSize=%lu\nChildBlockHeaderBytes=%lu\nChildBlockAlignment=%lu\nPathSlotType=unsigned_short\nPathLevelType=size_t\n",
-        (unsigned long)hps_path_internal_sizeof_path(),
-        (unsigned long)hps_tree_internal_sizeof_node(),
-        (unsigned long)hps_tree_internal_sizeof_tree(),
-        (unsigned long)hps_tree_internal_child_block_header_size(),
-        (unsigned long)hps_tree_internal_alignof_child_block());
+    printf("Stage13.3ProductionBaselines\nGS100BatchBytes=115880\nGS100PostMergeBytes=249472\nGS100ResultBytes=133592\nGS100PeakBytes=341984\nSingleton1024ResultBytes=5339184\nSingleton1024PeakBytes=14744752\nLksPathSize=%lu\nLksTreeNodeSize=%lu\nLksTreeSize=%lu\nChildBlockHeaderBytes=%lu\nChildBlockAlignment=%lu\nPathSlotType=unsigned_short\nPathLevelType=size_t\n",
+        (unsigned long)lks_path_internal_sizeof_path(),
+        (unsigned long)lks_tree_internal_sizeof_node(),
+        (unsigned long)lks_tree_internal_sizeof_tree(),
+        (unsigned long)lks_tree_internal_child_block_header_size(),
+        (unsigned long)lks_tree_internal_alignof_child_block());
     return ok;
 }
 
-int hps_run_stage13_3_final_validation(void)
+int lks_run_stage13_3_final_validation(void)
 {
-    HpsAllocStats stats;
+    LksAllocStats stats;
     int direct_ok, sweep_ok, boundary_ok, normal_ok, smoke_ok, ok=1;
     stage133_failed_calls_delta_mismatches=0;
-    printf("HPSort Stage13.3FinalValidation\n");
-    direct_ok = hps_run_stage13_1_tests() == 0;
-    sweep_ok = hps_run_stage13_2_tests() == 0;
+    printf("LayerKeySort Stage13.3FinalValidation\n");
+    direct_ok = lks_run_stage13_1_tests() == 0;
+    sweep_ok = lks_run_stage13_2_tests() == 0;
     boundary_ok = stage133_run_kplus_one();
     stage133_print_contract_matrix();
 
-    hps_alloc_test_disable_failure();
-    stats = hps_alloc_stats_get();
+    lks_alloc_test_disable_failure();
+    stats = lks_alloc_stats_get();
     if (stats.live_bytes != 0 || stats.live_blocks != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0) ok=0;
-    if (hps_alloc_stats_reset() != 0 || hps_alloc_test_failure_triggered() ||
-        hps_alloc_test_get_attempt_count() != 0) ok=0;
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0) ok=0;
+    if (lks_alloc_stats_reset() != 0 || lks_alloc_test_failure_triggered() ||
+        lks_alloc_test_get_attempt_count() != 0) ok=0;
     printf("Stage13.3BeforeNormalRegression,FailureTargetActive=false,FailureTriggered=%s,AttemptCount=%lu,StatsReset=PASS\n",
-        hps_alloc_test_failure_triggered()?"true":"false",
-        (unsigned long)hps_alloc_test_get_attempt_count());
+        lks_alloc_test_failure_triggered()?"true":"false",
+        (unsigned long)lks_alloc_test_get_attempt_count());
 
-    normal_ok = hps_run_stage8_1_tests()==0 && stage82_alignment_regression() &&
+    normal_ok = lks_run_stage8_1_tests()==0 && stage82_alignment_regression() &&
         stage83_tag_direct_test() && stage92_path_storage_regression() &&
-        hps_run_stage10_1_tests()==0 && stage111_legacy_production_regressions() &&
-        hps_run_stage11_1_gs100_fixture_check()==0 && stage122_direct_regressions() &&
+        lks_run_stage10_1_tests()==0 && stage111_legacy_production_regressions() &&
+        lks_run_stage11_1_gs100_fixture_check()==0 && stage122_direct_regressions() &&
         stage123_singleton_1024() && stage132_post_root128();
     if (!normal_ok) ok=0;
     smoke_ok = stage133_debug_production_smoke();
     if (!smoke_ok) ok=0;
-    stats=hps_alloc_stats_get();
+    stats=lks_alloc_stats_get();
     if (stats.failed_calls != 0 || stats.live_bytes != 0 || stats.live_blocks != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes || stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks)
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes || stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks)
         ok=0;
 
     printf("Stage13FinalFaultFacts\nDirectTestsPassed=%lu\nOperationsSwept=%lu\nBaselineKTotal=%lu\nDebugFailPointsSwept=%lu\nDebugFailPointsPassed=%lu\nBaselineKMismatchCount=%lu\nKPlusOneTestsRun=%lu\nKPlusOneFailureCount=%lu\nFailureNotTriggeredCount=%lu\nWrongStatusCount=%lu\nUnexpectedSuccessCount=%lu\nStateContractFailureCount=%lu\nOwnershipContractFailureCount=%lu\nAllocatorStateMismatchCount=%lu\nFailedCallsDeltaMismatchCount=%lu\nLeakCount=%lu\nCrashCount=%lu\nPublicFaultInjectionSymbols=0\nReleaseRepresentativeFailCasesRun=0 (Release run follows Debug)\nReleaseRepresentativeFailCasesPassed=0 (Release run follows Debug)\n",
@@ -9351,14 +9351,14 @@ int hps_run_stage13_3_final_validation(void)
         printf("%s,%lu\n",stage132_names[i],(unsigned long)stage132_final_k[i]);
     printf("K values describe the current production allocation topology; future implementation changes may legitimately change them and they are not permanent API contracts.\n");
     printf("Stage13FailureContractFacts\nPathStrongGuarantee=YES\nTreeInsertStrongGuarantee=YES\nGroupBuildOutputNullOnOOM=YES\nGroupBatchBuildOutputNullOnOOM=YES\nPublicMergePreservesInputsOnOOM=YES\nPrivateMergeConsumesBaseOnRuntimeOOM=YES\nPrivateMergePreservesIncomingOnOOM=YES\nBatchMergeAllPreservesInputBatchOnOOM=YES\n");
-    printf("Stage13ProductionRegressionFacts\nRoot128Comparisons=7\nPublic500MergeComparisons=1998\nPrivate500MergeComparisons=1998\nSingleton1024Comparisons=14337\nGS100BatchBytes=115880\nGS100PostMergeBytes=249472\nGS100ResultBytes=133592\nGS100PeakBytes=341984\nSingleton1024ResultBytes=5339184\nSingleton1024PeakBytes=14744752\nHpsPathSize=%lu\nHpsTreeNodeSize=%lu\nHpsTreeSize=%lu\nChildBlockHeaderBytes=%lu\nChildBlockAlignment=%lu\nPathSlotType=unsigned_short\nPathLevelType=size_t\nNormalRegressionFailedCalls=%lu\nFinalLiveBytes=%lu\nFinalLiveBlocks=%lu\nFinalOtherBytes=%lu\n",
-        (unsigned long)hps_path_internal_sizeof_path(),(unsigned long)hps_tree_internal_sizeof_node(),
-        (unsigned long)hps_tree_internal_sizeof_tree(),
-        (unsigned long)hps_tree_internal_child_block_header_size(),
-        (unsigned long)hps_tree_internal_alignof_child_block(),(unsigned long)stats.failed_calls,
+    printf("Stage13ProductionRegressionFacts\nRoot128Comparisons=7\nPublic500MergeComparisons=1998\nPrivate500MergeComparisons=1998\nSingleton1024Comparisons=14337\nGS100BatchBytes=115880\nGS100PostMergeBytes=249472\nGS100ResultBytes=133592\nGS100PeakBytes=341984\nSingleton1024ResultBytes=5339184\nSingleton1024PeakBytes=14744752\nLksPathSize=%lu\nLksTreeNodeSize=%lu\nLksTreeSize=%lu\nChildBlockHeaderBytes=%lu\nChildBlockAlignment=%lu\nPathSlotType=unsigned_short\nPathLevelType=size_t\nNormalRegressionFailedCalls=%lu\nFinalLiveBytes=%lu\nFinalLiveBlocks=%lu\nFinalOtherBytes=%lu\n",
+        (unsigned long)lks_path_internal_sizeof_path(),(unsigned long)lks_tree_internal_sizeof_node(),
+        (unsigned long)lks_tree_internal_sizeof_tree(),
+        (unsigned long)lks_tree_internal_child_block_header_size(),
+        (unsigned long)lks_tree_internal_alignof_child_block(),(unsigned long)stats.failed_calls,
         (unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes);
-    printf("AllocatorHeaderLayoutAudit=typedef/layout in src/hps_alloc.c unchanged by Stage13.3; header size/alignment metadata unchanged\nPublicFaultInjectionSymbols=0\nStage13.3DebugStatus=%s\n",
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes);
+    printf("AllocatorHeaderLayoutAudit=typedef/layout in src/lks_alloc.c unchanged by Stage13.3; header size/alignment metadata unchanged\nPublicFaultInjectionSymbols=0\nStage13.3DebugStatus=%s\n",
         direct_ok&&sweep_ok&&boundary_ok&&normal_ok&&smoke_ok&&ok?"PASS":"FAIL");
     return direct_ok&&sweep_ok&&boundary_ok&&normal_ok&&smoke_ok&&ok?0:1;
 }
@@ -9368,7 +9368,7 @@ static int stage133_release_one_failure(int kind, size_t fail_index)
     Stage132Context c;
     Stage132PathRecord paths[2]; Stage132TreeRecord tree;
     Stage132GroupRecord groups[2]; Stage132BatchRecord batch;
-    Stage132LiveRecord before; HpsAllocStats stats_before;
+    Stage132LiveRecord before; LksAllocStats stats_before;
     int old_values[STAGE132_MAX_ITEMS]; void *old_items[STAGE132_MAX_ITEMS];
     int pass;
     memset(&c,0,sizeof(c));c.kind=kind;
@@ -9376,27 +9376,27 @@ static int stage133_release_one_failure(int kind, size_t fail_index)
     memset(groups,0,sizeof(groups));memset(&batch,0,sizeof(batch));
     if(!stage132_setup(&c)||!stage132_operation_snapshot(&c,paths,&tree,groups,&batch,
             old_values,old_items,&before)){stage132_cleanup(&c);return 0;}
-    stats_before=hps_alloc_stats_get();
-    hps_alloc_test_fail_on_attempt(fail_index);c.status=stage132_run(&c);
-    pass=hps_alloc_test_get_attempt_count()==fail_index&&
+    stats_before=lks_alloc_stats_get();
+    lks_alloc_test_fail_on_attempt(fail_index);c.status=stage132_run(&c);
+    pass=lks_alloc_test_get_attempt_count()==fail_index&&
         stage132_failure_contract(&c,paths,&tree,groups,&batch,old_values,old_items,before,stats_before);
-    hps_alloc_test_disable_failure();stage132_cleanup(&c);
+    lks_alloc_test_disable_failure();stage132_cleanup(&c);
     {
-        HpsAllocStats end=hps_alloc_stats_get();
-        if(end.live_bytes||end.live_blocks||end.tags[HPS_ALLOC_TAG_OTHER].live_bytes||
-            end.tags[HPS_ALLOC_TAG_OTHER].live_blocks)pass=0;
+        LksAllocStats end=lks_alloc_stats_get();
+        if(end.live_bytes||end.live_blocks||end.tags[LKS_ALLOC_TAG_OTHER].live_bytes||
+            end.tags[LKS_ALLOC_TAG_OTHER].live_blocks)pass=0;
     }
-    if(hps_alloc_stats_reset()!=0)pass=0;
+    if(lks_alloc_stats_reset()!=0)pass=0;
     return pass;
 }
 
-int hps_run_stage13_3_release_smoke(void)
+int lks_run_stage13_3_release_smoke(void)
 {
     static const int representative_kinds[7]={4,12,13,15,16,17,18};
     size_t i, direct=0, cases=0, passed=0;
     int b,e,g,j,ok=1,normal_ok;
-    HpsAllocStats stats;
-    printf("HPSort Stage13.3 Release smoke\n");
+    LksAllocStats stats;
+    printf("LayerKeySort Stage13.3 Release smoke\n");
     b=stage131_test_b_first_alloc_failure();e=stage131_test_e_realloc_preserves_old();
     g=stage131_test_g_realloc_zero();j=stage131_test_j_disable();
     direct=(size_t)(b+e+g+j);
@@ -9406,14 +9406,14 @@ int hps_run_stage13_3_release_smoke(void)
         int kind=representative_kinds[i];
         Stage132Context baseline;size_t k,indices[3],unique[3],u=0,n;
         size_t passed_before=passed;
-        HpsStatus status;
+        LksStatus status;
         memset(&baseline,0,sizeof(baseline));baseline.kind=kind;
         if(!stage132_setup(&baseline)){stage132_cleanup(&baseline);ok=0;continue;}
-        hps_alloc_test_disable_failure();hps_alloc_test_reset_attempt_counter();
-        status=stage132_run(&baseline);k=hps_alloc_test_get_attempt_count();
+        lks_alloc_test_disable_failure();lks_alloc_test_reset_attempt_counter();
+        status=stage132_run(&baseline);k=lks_alloc_test_get_attempt_count();
         baseline.status=status;
-        if(status!=HPS_STATUS_OK||!stage132_baseline_contract(&baseline)||k!=stage133_frozen_k[kind])ok=0;
-        stage132_cleanup(&baseline);if(hps_alloc_stats_reset()!=0)ok=0;
+        if(status!=LKS_STATUS_OK||!stage132_baseline_contract(&baseline)||k!=stage133_frozen_k[kind])ok=0;
+        stage132_cleanup(&baseline);if(lks_alloc_stats_reset()!=0)ok=0;
         indices[0]=1;indices[1]=(k+1)/2;indices[2]=k;
         for(n=0;n<3;++n){size_t q;for(q=0;q<u&&unique[q]!=indices[n];++q){}if(q==u)unique[u++]=indices[n];}
         for(n=0;n<u;++n){int pass=stage133_release_one_failure(kind,unique[n]);++cases;if(pass)++passed;else ok=0;}
@@ -9422,19 +9422,19 @@ int hps_run_stage13_3_release_smoke(void)
             (unsigned long)(passed-passed_before));
     }
     stage133_release_cases=cases;stage133_release_passed=passed;
-    hps_alloc_test_disable_failure();if(hps_alloc_stats_reset()!=0)ok=0;
-        normal_ok=hps_run_stage10_1_tests()==0&&stage111_legacy_production_regressions()&&
-        hps_run_stage11_1_gs100_fixture_check()==0&&stage132_post_root128()&&stage123_gs100();
+    lks_alloc_test_disable_failure();if(lks_alloc_stats_reset()!=0)ok=0;
+        normal_ok=lks_run_stage10_1_tests()==0&&stage111_legacy_production_regressions()&&
+        lks_run_stage11_1_gs100_fixture_check()==0&&stage132_post_root128()&&stage123_gs100();
     if(!normal_ok)ok=0;
-    stats=hps_alloc_stats_get();
+    stats=lks_alloc_stats_get();
     if(stats.failed_calls||stats.live_bytes||stats.live_blocks||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes||stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks)ok=0;
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes||stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks)ok=0;
     printf("Stage13FinalFaultFacts\nReleaseRepresentativeFailCasesRun=%lu\nReleaseRepresentativeFailCasesPassed=%lu\n",
         (unsigned long)cases,(unsigned long)passed);
     printf("Stage13.3ReleaseNormalSmoke=%s Root128=7 Public500=1998 Private500=1998 GS100=PASS FailedCalls=%lu Live=%lu/%lu OTHER=%lu\n",
         normal_ok?"PASS":"FAIL",(unsigned long)stats.failed_calls,
         (unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes);
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes);
     printf("Stage13.3ReleaseStatus=%s\n",ok?"PASS":"FAIL");
     return ok?0:1;
 }
@@ -9446,18 +9446,18 @@ static int stage141_public_private_500_smoke(size_t *out_public_count,
     static void *base_items[500];
     static void *incoming_items[500];
     BenchmarkCompareContext counter = { 0, 0 };
-    HpsComparator comparator = { benchmark_compare_int, &counter };
-    HpsGroup *base = NULL;
-    HpsGroup *incoming = NULL;
-    HpsGroup *public_result = NULL;
-    HpsGroup *owned_base = NULL;
-    HpsGroup *incoming2 = NULL;
+    LksComparator comparator = { benchmark_compare_int, &counter };
+    LksGroup *base = NULL;
+    LksGroup *incoming = NULL;
+    LksGroup *public_result = NULL;
+    LksGroup *owned_base = NULL;
+    LksGroup *incoming2 = NULL;
     size_t index;
     int valid = 1;
 
     *out_public_count = 0;
     *out_private_count = 0;
-    if (hps_alloc_stats_reset() != 0) return 0;
+    if (lks_alloc_stats_reset() != 0) return 0;
     for (index = 0; index < 500; ++index) {
         values[index] = (int)(index * 2);
         base_items[index] = &values[index];
@@ -9465,62 +9465,62 @@ static int stage141_public_private_500_smoke(size_t *out_public_count,
         incoming_items[index] = &values[500 + index];
     }
 
-    if (hps_group_build(base_items, 500, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(incoming_items, 500, &comparator, &incoming) != HPS_STATUS_OK ||
-        hps_group_build(base_items, 500, &comparator, &owned_base) != HPS_STATUS_OK ||
-        hps_group_build(incoming_items, 500, &comparator, &incoming2) != HPS_STATUS_OK) {
+    if (lks_group_build(base_items, 500, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(incoming_items, 500, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_group_build(base_items, 500, &comparator, &owned_base) != LKS_STATUS_OK ||
+        lks_group_build(incoming_items, 500, &comparator, &incoming2) != LKS_STATUS_OK) {
         valid = 0;
         goto cleanup;
     }
 
     counter.comparison_count = 0;
-    if (hps_group_merge(base, incoming, &comparator, &public_result) != HPS_STATUS_OK) {
+    if (lks_group_merge(base, incoming, &comparator, &public_result) != LKS_STATUS_OK) {
         valid = 0;
         goto cleanup;
     }
     *out_public_count = counter.comparison_count;
 
     counter.comparison_count = 0;
-    if (hps_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
-            HPS_STATUS_OK || owned_base == NULL) {
+    if (lks_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
+            LKS_STATUS_OK || owned_base == NULL) {
         valid = 0;
         goto cleanup;
     }
     *out_private_count = counter.comparison_count;
     if (!stage101_groups_equivalent(public_result, owned_base) ||
-        hps_group_size(owned_base) != 1000 ||
-        hps_group_size(incoming2) != 500) {
+        lks_group_size(owned_base) != 1000 ||
+        lks_group_size(incoming2) != 500) {
         valid = 0;
         goto cleanup;
     }
     for (index = 0; index < 1000; ++index) {
         void *expected_item = index % 2 == 0 ?
             base_items[index / 2] : incoming_items[index / 2];
-        if (hps_group_item_at(owned_base, index) != expected_item ||
-            hps_group_item_at(public_result, index) != expected_item) {
+        if (lks_group_item_at(owned_base, index) != expected_item ||
+            lks_group_item_at(public_result, index) != expected_item) {
             valid = 0;
             break;
         }
     }
     for (index = 0; valid && index < 500; ++index) {
-        if (hps_group_item_at(incoming2, index) != incoming_items[index]) {
+        if (lks_group_item_at(incoming2, index) != incoming_items[index]) {
             valid = 0;
         }
     }
     if (*out_public_count != 1998 || *out_private_count != 1998) valid = 0;
 
 cleanup:
-    hps_group_destroy(owned_base);
-    hps_group_destroy(incoming2);
-    hps_group_destroy(public_result);
-    hps_group_destroy(incoming);
-    hps_group_destroy(base);
+    lks_group_destroy(owned_base);
+    lks_group_destroy(incoming2);
+    lks_group_destroy(public_result);
+    lks_group_destroy(incoming);
+    lks_group_destroy(base);
     return valid;
 }
 
-int hps_run_stage14_1_core_smoke(void)
+int lks_run_stage14_1_core_smoke(void)
 {
-    HpsAllocStats final_stats;
+    LksAllocStats final_stats;
     size_t public_count = 0;
     size_t private_count = 0;
     int root_ok;
@@ -9529,18 +9529,18 @@ int hps_run_stage14_1_core_smoke(void)
     int gs100_ok;
     int valid;
 
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0) return 1;
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0) return 1;
     root_ok = stage132_post_root128();
     merge_ok = stage141_public_private_500_smoke(&public_count, &private_count);
     singleton_ok = stage123_singleton_1024();
     gs100_ok = stage123_gs100();
-    final_stats = hps_alloc_stats_get();
+    final_stats = lks_alloc_stats_get();
     valid = root_ok && merge_ok && singleton_ok && gs100_ok &&
         public_count == 1998 && private_count == 1998 &&
         final_stats.live_bytes == 0 && final_stats.live_blocks == 0 &&
-        final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes == 0 &&
-        final_stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks == 0 &&
+        final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes == 0 &&
+        final_stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks == 0 &&
         final_stats.failed_calls == 0;
     printf("Stage14.1CoreSmoke Root128=%s Public500+500=%s(%zu) "
         "Private500+500=%s(%zu) Singleton1024=%s(%d) GS100=%s\n",
@@ -9550,39 +9550,39 @@ int hps_run_stage14_1_core_smoke(void)
         gs100_ok ? "PASS" : "FAIL");
     printf("Stage14.1CoreSmokeAllocator=%zu/%zu OTHER=%zu/%zu FailedCalls=%zu\n",
         final_stats.live_bytes, final_stats.live_blocks,
-        final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
-        final_stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks,
+        final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
+        final_stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks,
         final_stats.failed_calls);
     return valid ? 0 : 1;
 }
 
-int hps_run_stage14_3_frozen_smoke(void)
+int lks_run_stage14_3_frozen_smoke(void)
 {
     Stage103Sample sample = {0};
     Stage103Snapshot snapshot = {0};
     Stage112TreeCapture capture = {0};
-    HpsAllocStats stats;
+    LksAllocStats stats;
     int direct_ok;
     int memory_ok;
     int layout_ok;
     int valid;
 
     direct_ok = stage131_test_b_first_alloc_failure();
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_test_get_attempt_count() != 0 ||
-        hps_alloc_test_failure_triggered() || hps_alloc_stats_reset() != 0) {
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_test_get_attempt_count() != 0 ||
+        lks_alloc_test_failure_triggered() || lks_alloc_stats_reset() != 0) {
         direct_ok = 0;
     }
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     if (stats.live_bytes != 0 || stats.live_blocks != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0 || stats.failed_calls != 0) {
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0 || stats.failed_calls != 0) {
         direct_ok = 0;
     }
     printf("Stage14.3DirectB=%s DisabledAndReset=%s FailedCalls=%lu\n",
         direct_ok ? "PASS" : "FAIL",
-        (!hps_alloc_test_failure_triggered() &&
-            hps_alloc_test_get_attempt_count() == 0) ? "PASS" : "FAIL",
+        (!lks_alloc_test_failure_triggered() &&
+            lks_alloc_test_get_attempt_count() == 0) ? "PASS" : "FAIL",
         (unsigned long)stats.failed_calls);
 
     memory_ok = stage103_run_one_internal(10000, 32, UINT32_C(0xC0FFEE), 0,
@@ -9595,60 +9595,60 @@ int hps_run_stage14_3_frozen_smoke(void)
     stage112_tree_capture_destroy(&capture);
     stage103_snapshot_destroy(&snapshot);
 
-    layout_ok = hps_path_internal_sizeof_path() == 32 &&
-        hps_tree_internal_sizeof_node() == 32 &&
-        hps_tree_internal_sizeof_tree() == 40 &&
-        hps_tree_internal_child_block_header_size() == 16 &&
+    layout_ok = lks_path_internal_sizeof_path() == 32 &&
+        lks_tree_internal_sizeof_node() == 32 &&
+        lks_tree_internal_sizeof_tree() == 40 &&
+        lks_tree_internal_child_block_header_size() == 16 &&
         sizeof(unsigned short) == 2;
-    printf("Stage14.3Representation HpsPath=%lu HpsTreeNode=%lu HpsTree=%lu ChildBlockHeader=%lu PathSlot=unsigned_short(%lu) PathLevel=size_t Status=%s\n",
-        (unsigned long)hps_path_internal_sizeof_path(),
-        (unsigned long)hps_tree_internal_sizeof_node(),
-        (unsigned long)hps_tree_internal_sizeof_tree(),
-        (unsigned long)hps_tree_internal_child_block_header_size(),
+    printf("Stage14.3Representation LksPath=%lu LksTreeNode=%lu LksTree=%lu ChildBlockHeader=%lu PathSlot=unsigned_short(%lu) PathLevel=size_t Status=%s\n",
+        (unsigned long)lks_path_internal_sizeof_path(),
+        (unsigned long)lks_tree_internal_sizeof_node(),
+        (unsigned long)lks_tree_internal_sizeof_tree(),
+        (unsigned long)lks_tree_internal_child_block_header_size(),
         (unsigned long)sizeof(unsigned short), layout_ok ? "PASS" : "FAIL");
 
-    stats = hps_alloc_stats_get();
+    stats = lks_alloc_stats_get();
     valid = direct_ok && memory_ok && layout_ok &&
         stats.live_bytes == 0 && stats.live_blocks == 0 &&
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes == 0 &&
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks == 0 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes == 0 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks == 0 &&
         stats.failed_calls == 0;
     printf("Stage14.3FrozenSmokeFinal live=%lu/%lu OTHER=%lu/%lu FailedCalls=%lu Status=%s\n",
         (unsigned long)stats.live_bytes, (unsigned long)stats.live_blocks,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks,
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks,
         (unsigned long)stats.failed_calls, valid ? "PASS" : "FAIL");
     return valid ? 0 : 1;
 }
 
-int hps_run_public_api_usage_smoke(void)
+int lks_run_public_api_usage_smoke(void)
 {
-    HpsAllocStats stats;
+    LksAllocStats stats;
     int usage_ok;
     int valid;
 
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0) return 1;
-    usage_ok = hps_public_api_usage_smoke();
-    stats = hps_alloc_stats_get();
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0) return 1;
+    usage_ok = lks_public_api_usage_smoke();
+    stats = lks_alloc_stats_get();
     valid = usage_ok && stats.live_bytes == 0 && stats.live_blocks == 0 &&
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes == 0 &&
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks == 0 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes == 0 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks == 0 &&
         stats.failed_calls == 0;
     printf("PublicApiUsageSmoke=%s final=%lu/%lu OTHER=%lu/%lu FailedCalls=%lu\n",
         usage_ok ? "PASS" : "FAIL", (unsigned long)stats.live_bytes,
         (unsigned long)stats.live_blocks,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
-        (unsigned long)stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks,
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
+        (unsigned long)stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks,
         (unsigned long)stats.failed_calls);
     return valid ? 0 : 1;
 }
 
-int hps_run_stage13_1_tests(void)
+int lks_run_stage13_1_tests(void)
 {
     int a,b,c,d,e,f,g,h,i,j,k,alignment,overflow,path,tag,core;
-    HpsAllocStats final;
-    printf("\nHPSort Stage 13.1: private allocator deterministic fault injection only\n");
+    LksAllocStats final;
+    printf("\nLayerKeySort Stage 13.1: private allocator deterministic fault injection only\n");
     printf("FaultInjectionThreadSafety=process-global private state; concurrent injection tests are unsupported\n");
     printf("FaultInjectionAttemptZero=disable; disable clears attempt count and triggered state; reset counter preserves one-shot latch\n");
     a=stage131_test_a_disabled();b=stage131_test_b_first_alloc_failure();c=stage131_test_c_single_shot();
@@ -9656,24 +9656,24 @@ int hps_run_stage13_1_tests(void)
     g=stage131_test_g_realloc_zero();h=stage131_test_h_free_no_attempt();i=stage131_test_i_reconfigure();
     j=stage131_test_j_disable();k=stage131_test_k_tag_accounting();
     stage131_direct_passed=(size_t)(a+b+c+d+e+f+g+h+i+j+k);
-    hps_alloc_test_disable_failure();
-    if(hps_alloc_stats_reset()!=0)return 1;
-    overflow=hps_run_stage8_1_tests()==0;
+    lks_alloc_test_disable_failure();
+    if(lks_alloc_stats_reset()!=0)return 1;
+    overflow=lks_run_stage8_1_tests()==0;
     alignment=stage82_alignment_regression();tag=stage83_tag_direct_test();path=stage92_path_storage_regression();
-    core=hps_run_stage10_1_tests()==0&&stage111_legacy_production_regressions()&&
-        hps_run_stage11_1_gs100_fixture_check()==0&&stage122_direct_regressions()&&
+    core=lks_run_stage10_1_tests()==0&&stage111_legacy_production_regressions()&&
+        lks_run_stage11_1_gs100_fixture_check()==0&&stage122_direct_regressions()&&
         stage123_singleton_1024();
-    hps_alloc_test_disable_failure();
-    final=hps_alloc_stats_get();
+    lks_alloc_test_disable_failure();
+    final=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final)||final.failed_calls!=0||
-        final.tags[HPS_ALLOC_TAG_OTHER].live_bytes||final.tags[HPS_ALLOC_TAG_OTHER].live_blocks||
+        final.tags[LKS_ALLOC_TAG_OTHER].live_bytes||final.tags[LKS_ALLOC_TAG_OTHER].live_blocks||
         !stage83_tag_accounting_valid(&final,"13.1 normal regressions final"))core=0;
     printf("Stage13.1FaultInjectionStatus\nDefaultDisabled=%s\nSingleShotFailure=%s\nAllocFailurePASS=%s\nZeroAllocFailurePASS=%s\nReallocFailurePreservesOldPASS=%s\nReallocNullFailurePASS=%s\nReallocZeroDoesNotConsumeAttemptPASS=%s\nFreeDoesNotConsumeAttemptPASS=%s\nReconfigureResetsCounterPASS=%s\nDisablePASS=%s\nTagAccountingPASS=%s\nAlignmentRegressionPASS=%s\nOverflowRegressionPASS=%s\nCoreRegressionInjectionDisabled=%s\nNormalRegressionFailedCalls=%lu\nFinalLiveBytes=%lu\nFinalLiveBlocks=%lu\nOTHER=%lu\n",
         a?"PASS":"FAIL",c?"PASS":"FAIL",b?"PASS":"FAIL",d?"PASS":"FAIL",e?"PASS":"FAIL",
         f?"PASS":"FAIL",g?"PASS":"FAIL",h?"PASS":"FAIL",i?"PASS":"FAIL",j?"PASS":"FAIL",
         k?"PASS":"FAIL",alignment?"PASS":"FAIL",overflow?"PASS":"FAIL",core?"PASS":"FAIL",
         (unsigned long)final.failed_calls,(unsigned long)final.live_bytes,(unsigned long)final.live_blocks,
-        (unsigned long)final.tags[HPS_ALLOC_TAG_OTHER].live_bytes);
+        (unsigned long)final.tags[LKS_ALLOC_TAG_OTHER].live_bytes);
     if(!a||!b||!c||!d||!e||!f||!g||!h||!i||!j||!k||!alignment||!overflow||!path||!tag||!core||
         final.failed_calls!=0||!benchmark_alloc_stats_empty(&final))return 1;
     printf("Stage13.1Status=PASS; no object-level fail sweep was run\n");

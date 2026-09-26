@@ -3,41 +3,41 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "../include/hps.h"
-#include "../src/hps_alloc_internal.h"
-#include "../src/hps_group_internal.h"
-#include "../src/hps_tree_internal.h"
+#include "../include/layerkeysort.h"
+#include "../src/lks_alloc_internal.h"
+#include "../src/lks_group_internal.h"
+#include "../src/lks_tree_internal.h"
 #include "benchmark.h"
 #include "property.h"
 
-#define HPS_PROPERTY_BASE_SEED UINT32_C(0x14A10C5D)
-#define HPS_PROPERTY_SEED_COUNT 64u
-#define HPS_PROPERTY_MAX_ITEMS 512u
-#define HPS_PROPERTY_PATH_ROUNDS 24u
-#define HPS_PROPERTY_PATH_COUNT 48u
-#define HPS_PROPERTY_PATH_TRIPLES 12000u
-#define HPS_PROPERTY_GAP_TARGET 256u
+#define LKS_PROPERTY_BASE_SEED UINT32_C(0x14A10C5D)
+#define LKS_PROPERTY_SEED_COUNT 64u
+#define LKS_PROPERTY_MAX_ITEMS 512u
+#define LKS_PROPERTY_PATH_ROUNDS 24u
+#define LKS_PROPERTY_PATH_COUNT 48u
+#define LKS_PROPERTY_PATH_TRIPLES 12000u
+#define LKS_PROPERTY_GAP_TARGET 256u
 
-typedef struct HpsPropertyItem {
+typedef struct LksPropertyItem {
     int key;
     unsigned int original_index;
-} HpsPropertyItem;
+} LksPropertyItem;
 
-typedef struct HpsPropertyRandom {
+typedef struct LksPropertyRandom {
     uint32_t state;
-} HpsPropertyRandom;
+} LksPropertyRandom;
 
-typedef enum HpsPropertyDistribution {
-    HPS_PROPERTY_UNIQUE = 0,
-    HPS_PROPERTY_DUPLICATE,
-    HPS_PROPERTY_HEAVY_DUPLICATE,
-    HPS_PROPERTY_ALL_EQUAL,
-    HPS_PROPERTY_SORTED,
-    HPS_PROPERTY_REVERSE,
-    HPS_PROPERTY_DISTRIBUTION_COUNT
-} HpsPropertyDistribution;
+typedef enum LksPropertyDistribution {
+    LKS_PROPERTY_UNIQUE = 0,
+    LKS_PROPERTY_DUPLICATE,
+    LKS_PROPERTY_HEAVY_DUPLICATE,
+    LKS_PROPERTY_ALL_EQUAL,
+    LKS_PROPERTY_SORTED,
+    LKS_PROPERTY_REVERSE,
+    LKS_PROPERTY_DISTRIBUTION_COUNT
+} LksPropertyDistribution;
 
-typedef struct HpsPropertyCounts {
+typedef struct LksPropertyCounts {
     size_t group_stable_oracle_cases;
     size_t batch_oracle_cases;
     size_t public_merge_oracle_cases;
@@ -67,27 +67,27 @@ typedef struct HpsPropertyCounts {
     size_t path_triple_checks;
     size_t antisymmetry_failures;
     size_t transitivity_failures;
-} HpsPropertyCounts;
+} LksPropertyCounts;
 
-typedef struct HpsPropertyGroupSnapshot {
+typedef struct LksPropertyGroupSnapshot {
     size_t count;
-    void *items[HPS_PROPERTY_MAX_ITEMS];
-    HpsPath *paths[HPS_PROPERTY_MAX_ITEMS];
-} HpsPropertyGroupSnapshot;
+    void *items[LKS_PROPERTY_MAX_ITEMS];
+    LksPath *paths[LKS_PROPERTY_MAX_ITEMS];
+} LksPropertyGroupSnapshot;
 
-typedef struct HpsPropertyBatchSnapshot {
+typedef struct LksPropertyBatchSnapshot {
     size_t group_count;
     size_t item_count;
-    size_t group_sizes[HPS_PROPERTY_MAX_ITEMS];
-    void *items[HPS_PROPERTY_MAX_ITEMS];
-    HpsPath *paths[HPS_PROPERTY_MAX_ITEMS];
-} HpsPropertyBatchSnapshot;
+    size_t group_sizes[LKS_PROPERTY_MAX_ITEMS];
+    void *items[LKS_PROPERTY_MAX_ITEMS];
+    LksPath *paths[LKS_PROPERTY_MAX_ITEMS];
+} LksPropertyBatchSnapshot;
 
 static const size_t property_sizes[] = {
     0, 1, 2, 3, 7, 16, 31, 32, 33, 63, 64
 };
 
-static uint32_t property_random_next(HpsPropertyRandom *random)
+static uint32_t property_random_next(LksPropertyRandom *random)
 {
     uint32_t value = random->state;
 
@@ -100,26 +100,26 @@ static uint32_t property_random_next(HpsPropertyRandom *random)
 
 static uint32_t property_seed_at(size_t seed_index)
 {
-    uint32_t seed = HPS_PROPERTY_BASE_SEED +
+    uint32_t seed = LKS_PROPERTY_BASE_SEED +
         (uint32_t)seed_index * UINT32_C(0x9E3779B9);
     return seed == 0 ? UINT32_C(0xA341316C) : seed;
 }
 
-static const char *property_distribution_name(HpsPropertyDistribution distribution)
+static const char *property_distribution_name(LksPropertyDistribution distribution)
 {
     static const char *const names[] = {
         "Unique", "Duplicate", "HeavyDuplicate", "AllEqual", "Sorted", "Reverse"
     };
-    return distribution >= HPS_PROPERTY_UNIQUE &&
-        distribution < HPS_PROPERTY_DISTRIBUTION_COUNT ?
+    return distribution >= LKS_PROPERTY_UNIQUE &&
+        distribution < LKS_PROPERTY_DISTRIBUTION_COUNT ?
         names[(size_t)distribution] : "Unknown";
 }
 
 static int property_compare_key(const void *left, const void *right,
     void *context)
 {
-    const HpsPropertyItem *left_item = (const HpsPropertyItem *)left;
-    const HpsPropertyItem *right_item = (const HpsPropertyItem *)right;
+    const LksPropertyItem *left_item = (const LksPropertyItem *)left;
+    const LksPropertyItem *right_item = (const LksPropertyItem *)right;
 
     (void)context;
     if (left_item->key < right_item->key) return -1;
@@ -129,14 +129,14 @@ static int property_compare_key(const void *left, const void *right,
 
 /* Stable test oracle: equal keys are never moved past one another. */
 static void property_stable_insertion_sort(
-    HpsPropertyItem **items,
+    LksPropertyItem **items,
     size_t count
 )
 {
     size_t index;
 
     for (index = 1; index < count; ++index) {
-        HpsPropertyItem *item = items[index];
+        LksPropertyItem *item = items[index];
         size_t position = index;
 
         while (position > 0 && items[position - 1]->key > item->key) {
@@ -147,25 +147,25 @@ static void property_stable_insertion_sort(
     }
 }
 
-static void property_shuffle(HpsPropertyRandom *random,
-    HpsPropertyItem **items, size_t count)
+static void property_shuffle(LksPropertyRandom *random,
+    LksPropertyItem **items, size_t count)
 {
     size_t index;
 
     for (index = count; index > 1; --index) {
         size_t other = (size_t)(property_random_next(random) % index);
-        HpsPropertyItem *temporary = items[index - 1];
+        LksPropertyItem *temporary = items[index - 1];
         items[index - 1] = items[other];
         items[other] = temporary;
     }
 }
 
 static void property_make_dataset(
-    HpsPropertyRandom *random,
-    HpsPropertyDistribution distribution,
+    LksPropertyRandom *random,
+    LksPropertyDistribution distribution,
     size_t count,
-    HpsPropertyItem *storage,
-    HpsPropertyItem **input
+    LksPropertyItem *storage,
+    LksPropertyItem **input
 )
 {
     size_t index;
@@ -173,20 +173,20 @@ static void property_make_dataset(
     for (index = 0; index < count; ++index) {
         storage[index].original_index = (unsigned int)index;
         switch (distribution) {
-        case HPS_PROPERTY_UNIQUE:
-        case HPS_PROPERTY_SORTED:
+        case LKS_PROPERTY_UNIQUE:
+        case LKS_PROPERTY_SORTED:
             storage[index].key = (int)index;
             break;
-        case HPS_PROPERTY_DUPLICATE:
+        case LKS_PROPERTY_DUPLICATE:
             storage[index].key = (int)(property_random_next(random) % 11u) - 5;
             break;
-        case HPS_PROPERTY_HEAVY_DUPLICATE:
+        case LKS_PROPERTY_HEAVY_DUPLICATE:
             storage[index].key = (int)(property_random_next(random) % 3u) - 1;
             break;
-        case HPS_PROPERTY_ALL_EQUAL:
+        case LKS_PROPERTY_ALL_EQUAL:
             storage[index].key = 7;
             break;
-        case HPS_PROPERTY_REVERSE:
+        case LKS_PROPERTY_REVERSE:
             storage[index].key = (int)(count - index);
             break;
         default:
@@ -196,32 +196,32 @@ static void property_make_dataset(
         input[index] = &storage[index];
     }
 
-    if (distribution == HPS_PROPERTY_UNIQUE ||
-        distribution == HPS_PROPERTY_DUPLICATE ||
-        distribution == HPS_PROPERTY_HEAVY_DUPLICATE ||
-        distribution == HPS_PROPERTY_ALL_EQUAL) {
+    if (distribution == LKS_PROPERTY_UNIQUE ||
+        distribution == LKS_PROPERTY_DUPLICATE ||
+        distribution == LKS_PROPERTY_HEAVY_DUPLICATE ||
+        distribution == LKS_PROPERTY_ALL_EQUAL) {
         property_shuffle(random, input, count);
     }
     for (index = 0; index < count; ++index)
         input[index]->original_index = (unsigned int)index;
 }
 
-static int property_paths_strictly_increase(const HpsGroup *group,
-    size_t count, HpsPropertyCounts *counts)
+static int property_paths_strictly_increase(const LksGroup *group,
+    size_t count, LksPropertyCounts *counts)
 {
     size_t index;
     int valid = 1;
 
     for (index = 1; index < count; ++index) {
         int order = 0;
-        HpsStatus status = hps_path_compare(hps_group_path_at(group, index - 1),
-            hps_group_path_at(group, index), &order);
+        LksStatus status = lks_path_compare(lks_group_path_at(group, index - 1),
+            lks_group_path_at(group, index), &order);
 
-        if (status != HPS_STATUS_OK || order >= 0) {
+        if (status != LKS_STATUS_OK || order >= 0) {
             ++counts->path_order_failures;
             valid = 0;
         }
-        if (status == HPS_STATUS_OK && order == 0) {
+        if (status == LKS_STATUS_OK && order == 0) {
             ++counts->path_uniqueness_failures;
             valid = 0;
         }
@@ -229,16 +229,16 @@ static int property_paths_strictly_increase(const HpsGroup *group,
     return valid;
 }
 
-static int property_group_matches_oracle(const HpsGroup *group,
-    HpsPropertyItem *const *expected, size_t count,
-    HpsPropertyCounts *counts)
+static int property_group_matches_oracle(const LksGroup *group,
+    LksPropertyItem *const *expected, size_t count,
+    LksPropertyCounts *counts)
 {
     size_t index;
     int valid = 1;
 
-    if (hps_group_size(group) != count) return 0;
+    if (lks_group_size(group) != count) return 0;
     for (index = 0; index < count; ++index) {
-        if (hps_group_item_at(group, index) != expected[index]) valid = 0;
+        if (lks_group_item_at(group, index) != expected[index]) valid = 0;
         if (index > 0 && expected[index - 1]->key == expected[index]->key &&
             expected[index - 1]->original_index > expected[index]->original_index)
             valid = 0;
@@ -247,17 +247,17 @@ static int property_group_matches_oracle(const HpsGroup *group,
     return valid;
 }
 
-static int property_snapshot_group(const HpsGroup *group,
-    HpsPropertyGroupSnapshot *snapshot)
+static int property_snapshot_group(const LksGroup *group,
+    LksPropertyGroupSnapshot *snapshot)
 {
     size_t index;
 
     memset(snapshot, 0, sizeof(*snapshot));
-    snapshot->count = hps_group_size(group);
-    if (snapshot->count > HPS_PROPERTY_MAX_ITEMS) return 0;
+    snapshot->count = lks_group_size(group);
+    if (snapshot->count > LKS_PROPERTY_MAX_ITEMS) return 0;
     for (index = 0; index < snapshot->count; ++index) {
-        snapshot->items[index] = hps_group_item_at(group, index);
-        snapshot->paths[index] = hps_path_clone(hps_group_path_at(group, index));
+        snapshot->items[index] = lks_group_item_at(group, index);
+        snapshot->paths[index] = lks_path_clone(lks_group_path_at(group, index));
         if (snapshot->items[index] == NULL || snapshot->paths[index] == NULL) {
             return 0;
         }
@@ -265,56 +265,56 @@ static int property_snapshot_group(const HpsGroup *group,
     return 1;
 }
 
-static int property_group_matches_snapshot(const HpsGroup *group,
-    const HpsPropertyGroupSnapshot *snapshot)
+static int property_group_matches_snapshot(const LksGroup *group,
+    const LksPropertyGroupSnapshot *snapshot)
 {
     size_t index;
 
-    if (hps_group_size(group) != snapshot->count) return 0;
+    if (lks_group_size(group) != snapshot->count) return 0;
     for (index = 0; index < snapshot->count; ++index) {
         int order;
-        if (hps_group_item_at(group, index) != snapshot->items[index] ||
-            hps_path_compare(hps_group_path_at(group, index),
-                snapshot->paths[index], &order) != HPS_STATUS_OK || order != 0) {
+        if (lks_group_item_at(group, index) != snapshot->items[index] ||
+            lks_path_compare(lks_group_path_at(group, index),
+                snapshot->paths[index], &order) != LKS_STATUS_OK || order != 0) {
             return 0;
         }
     }
     return 1;
 }
 
-static void property_destroy_group_snapshot(HpsPropertyGroupSnapshot *snapshot)
+static void property_destroy_group_snapshot(LksPropertyGroupSnapshot *snapshot)
 {
     size_t index;
     for (index = 0; index < snapshot->count; ++index) {
-        hps_path_destroy(snapshot->paths[index]);
+        lks_path_destroy(snapshot->paths[index]);
         snapshot->paths[index] = NULL;
     }
     snapshot->count = 0;
 }
 
-static int property_snapshot_batch(const HpsGroupBatch *batch,
-    HpsPropertyBatchSnapshot *snapshot)
+static int property_snapshot_batch(const LksGroupBatch *batch,
+    LksPropertyBatchSnapshot *snapshot)
 {
     size_t group_index;
     size_t offset = 0;
 
     memset(snapshot, 0, sizeof(*snapshot));
-    snapshot->group_count = hps_group_batch_group_count(batch);
-    snapshot->item_count = hps_group_batch_total_size(batch);
-    if (snapshot->group_count > HPS_PROPERTY_MAX_ITEMS ||
-        snapshot->item_count > HPS_PROPERTY_MAX_ITEMS) return 0;
+    snapshot->group_count = lks_group_batch_group_count(batch);
+    snapshot->item_count = lks_group_batch_total_size(batch);
+    if (snapshot->group_count > LKS_PROPERTY_MAX_ITEMS ||
+        snapshot->item_count > LKS_PROPERTY_MAX_ITEMS) return 0;
 
     for (group_index = 0; group_index < snapshot->group_count; ++group_index) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
-        size_t group_size = hps_group_size(group);
+        const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+        size_t group_size = lks_group_size(group);
         size_t item_index;
 
         if (group == NULL || offset + group_size > snapshot->item_count) return 0;
         snapshot->group_sizes[group_index] = group_size;
         for (item_index = 0; item_index < group_size; ++item_index) {
-            snapshot->items[offset] = hps_group_item_at(group, item_index);
-            snapshot->paths[offset] = hps_path_clone(
-                hps_group_path_at(group, item_index));
+            snapshot->items[offset] = lks_group_item_at(group, item_index);
+            snapshot->paths[offset] = lks_path_clone(
+                lks_group_path_at(group, item_index));
             if (snapshot->items[offset] == NULL || snapshot->paths[offset] == NULL)
                 return 0;
             ++offset;
@@ -323,26 +323,26 @@ static int property_snapshot_batch(const HpsGroupBatch *batch,
     return offset == snapshot->item_count;
 }
 
-static int property_batch_matches_snapshot(const HpsGroupBatch *batch,
-    const HpsPropertyBatchSnapshot *snapshot)
+static int property_batch_matches_snapshot(const LksGroupBatch *batch,
+    const LksPropertyBatchSnapshot *snapshot)
 {
     size_t group_index;
     size_t offset = 0;
 
-    if (hps_group_batch_group_count(batch) != snapshot->group_count ||
-        hps_group_batch_total_size(batch) != snapshot->item_count) return 0;
+    if (lks_group_batch_group_count(batch) != snapshot->group_count ||
+        lks_group_batch_total_size(batch) != snapshot->item_count) return 0;
 
     for (group_index = 0; group_index < snapshot->group_count; ++group_index) {
-        const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
+        const LksGroup *group = lks_group_batch_group_at(batch, group_index);
         size_t group_size = snapshot->group_sizes[group_index];
         size_t item_index;
 
-        if (group == NULL || hps_group_size(group) != group_size) return 0;
+        if (group == NULL || lks_group_size(group) != group_size) return 0;
         for (item_index = 0; item_index < group_size; ++item_index) {
             int order;
-            if (hps_group_item_at(group, item_index) != snapshot->items[offset] ||
-                hps_path_compare(hps_group_path_at(group, item_index),
-                    snapshot->paths[offset], &order) != HPS_STATUS_OK || order != 0)
+            if (lks_group_item_at(group, item_index) != snapshot->items[offset] ||
+                lks_path_compare(lks_group_path_at(group, item_index),
+                    snapshot->paths[offset], &order) != LKS_STATUS_OK || order != 0)
                 return 0;
             ++offset;
         }
@@ -350,26 +350,26 @@ static int property_batch_matches_snapshot(const HpsGroupBatch *batch,
     return offset == snapshot->item_count;
 }
 
-static void property_destroy_batch_snapshot(HpsPropertyBatchSnapshot *snapshot)
+static void property_destroy_batch_snapshot(LksPropertyBatchSnapshot *snapshot)
 {
     size_t index;
     for (index = 0; index < snapshot->item_count; ++index) {
-        hps_path_destroy(snapshot->paths[index]);
+        lks_path_destroy(snapshot->paths[index]);
         snapshot->paths[index] = NULL;
     }
     snapshot->item_count = 0;
 }
 
-static int property_tree_profile_matches(const HpsGroup *group,
-    size_t count, HpsPropertyCounts *counts)
+static int property_tree_profile_matches(const LksGroup *group,
+    size_t count, LksPropertyCounts *counts)
 {
-    HpsTreeInternalProfile profile;
-    const HpsTree *tree = hps_group_internal_tree(group);
+    LksTreeInternalProfile profile;
+    const LksTree *tree = lks_group_internal_tree(group);
     int valid;
 
     ++counts->tree_profile_checks;
     memset(&profile, 0, sizeof(profile));
-    if (tree == NULL || hps_tree_internal_profile(tree, &profile) != HPS_STATUS_OK) {
+    if (tree == NULL || lks_tree_internal_profile(tree, &profile) != LKS_STATUS_OK) {
         ++counts->tree_profile_failures;
         return 0;
     }
@@ -381,113 +381,113 @@ static int property_tree_profile_matches(const HpsGroup *group,
     return valid;
 }
 
-static void property_check_case_allocator(HpsPropertyCounts *counts,
+static void property_check_case_allocator(LksPropertyCounts *counts,
     const char *label)
 {
-    HpsAllocStats stats = hps_alloc_stats_get();
+    LksAllocStats stats = lks_alloc_stats_get();
 
     if (stats.live_bytes != 0 || stats.live_blocks != 0) {
         ++counts->leak_count;
         printf("LeakCount detail: %s live=%zu/%zu\n", label,
             stats.live_bytes, stats.live_blocks);
     }
-    if (stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-        stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0 ||
+    if (stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0 ||
         stats.failed_calls != 0 || stats.counter_overflowed) {
         ++counts->allocator_failures;
         printf("AllocatorFailures detail: %s OTHER=%zu/%zu FailedCalls=%zu "
             "Overflow=%d\n", label,
-            stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes,
-            stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks,
+            stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
+            stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks,
             stats.failed_calls, stats.counter_overflowed);
     }
 }
 
-static int property_begin_case(HpsPropertyCounts *counts, const char *label)
+static int property_begin_case(LksPropertyCounts *counts, const char *label)
 {
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() == 0) return 1;
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() == 0) return 1;
     ++counts->allocator_failures;
     printf("AllocatorFailures detail: stats reset refused at %s\n", label);
     return 0;
 }
 
-static int property_path_snapshot_unchanged(const HpsPath *path,
-    const HpsPath *snapshot)
+static int property_path_snapshot_unchanged(const LksPath *path,
+    const LksPath *snapshot)
 {
     int order;
-    return hps_path_compare(path, snapshot, &order) == HPS_STATUS_OK && order == 0;
+    return lks_path_compare(path, snapshot, &order) == LKS_STATUS_OK && order == 0;
 }
 
-static void property_check_gap_constructions(const HpsGroup *group,
-    size_t count, HpsPropertyCounts *counts)
+static void property_check_gap_constructions(const LksGroup *group,
+    size_t count, LksPropertyCounts *counts)
 {
     size_t index;
 
     for (index = 0; index < count; ++index) {
-        const HpsPath *path = hps_group_path_at(group, index);
+        const LksPath *path = lks_group_path_at(group, index);
 
-        if (counts->before_checks < HPS_PROPERTY_GAP_TARGET) {
-            HpsPath *snapshot = hps_path_clone(path);
-            HpsPath *before = NULL;
+        if (counts->before_checks < LKS_PROPERTY_GAP_TARGET) {
+            LksPath *snapshot = lks_path_clone(path);
+            LksPath *before = NULL;
             int order = 0;
-            if (snapshot == NULL || hps_path_before(path, &before) != HPS_STATUS_OK ||
-                before == NULL || hps_path_compare(before, path, &order) != HPS_STATUS_OK ||
+            if (snapshot == NULL || lks_path_before(path, &before) != LKS_STATUS_OK ||
+                before == NULL || lks_path_compare(before, path, &order) != LKS_STATUS_OK ||
                 order >= 0 || !property_path_snapshot_unchanged(path, snapshot)) {
                 ++counts->path_construction_failures;
             }
-            hps_path_destroy(before);
-            hps_path_destroy(snapshot);
+            lks_path_destroy(before);
+            lks_path_destroy(snapshot);
             ++counts->before_checks;
         }
 
-        if (counts->after_checks < HPS_PROPERTY_GAP_TARGET) {
-            HpsPath *snapshot = hps_path_clone(path);
-            HpsPath *after = NULL;
+        if (counts->after_checks < LKS_PROPERTY_GAP_TARGET) {
+            LksPath *snapshot = lks_path_clone(path);
+            LksPath *after = NULL;
             int order = 0;
-            if (snapshot == NULL || hps_path_after(path, &after) != HPS_STATUS_OK ||
-                after == NULL || hps_path_compare(path, after, &order) != HPS_STATUS_OK ||
+            if (snapshot == NULL || lks_path_after(path, &after) != LKS_STATUS_OK ||
+                after == NULL || lks_path_compare(path, after, &order) != LKS_STATUS_OK ||
                 order >= 0 || !property_path_snapshot_unchanged(path, snapshot)) {
                 ++counts->path_construction_failures;
             }
-            hps_path_destroy(after);
-            hps_path_destroy(snapshot);
+            lks_path_destroy(after);
+            lks_path_destroy(snapshot);
             ++counts->after_checks;
         }
 
-        if (index + 1 < count && counts->between_checks < HPS_PROPERTY_GAP_TARGET) {
-            const HpsPath *right = hps_group_path_at(group, index + 1);
-            HpsPath *left_snapshot = hps_path_clone(path);
-            HpsPath *right_snapshot = hps_path_clone(right);
-            HpsPath *between = NULL;
+        if (index + 1 < count && counts->between_checks < LKS_PROPERTY_GAP_TARGET) {
+            const LksPath *right = lks_group_path_at(group, index + 1);
+            LksPath *left_snapshot = lks_path_clone(path);
+            LksPath *right_snapshot = lks_path_clone(right);
+            LksPath *between = NULL;
             int left_order = 0;
             int right_order = 0;
             if (left_snapshot == NULL || right_snapshot == NULL ||
-                hps_path_between(path, right, &between) != HPS_STATUS_OK ||
-                between == NULL || hps_path_compare(path, between, &left_order) != HPS_STATUS_OK ||
-                hps_path_compare(between, right, &right_order) != HPS_STATUS_OK ||
+                lks_path_between(path, right, &between) != LKS_STATUS_OK ||
+                between == NULL || lks_path_compare(path, between, &left_order) != LKS_STATUS_OK ||
+                lks_path_compare(between, right, &right_order) != LKS_STATUS_OK ||
                 left_order >= 0 || right_order >= 0 ||
                 !property_path_snapshot_unchanged(path, left_snapshot) ||
                 !property_path_snapshot_unchanged(right, right_snapshot)) {
                 ++counts->path_construction_failures;
             }
-            hps_path_destroy(between);
-            hps_path_destroy(left_snapshot);
-            hps_path_destroy(right_snapshot);
+            lks_path_destroy(between);
+            lks_path_destroy(left_snapshot);
+            lks_path_destroy(right_snapshot);
             ++counts->between_checks;
         }
     }
 }
 
 static int property_run_group_case(size_t seed_index, uint32_t seed,
-    HpsPropertyDistribution distribution, size_t count,
-    HpsPropertyCounts *counts, HpsPropertyRandom *random)
+    LksPropertyDistribution distribution, size_t count,
+    LksPropertyCounts *counts, LksPropertyRandom *random)
 {
-    HpsPropertyItem storage[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *input[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *expected[HPS_PROPERTY_MAX_ITEMS];
-    HpsComparator comparator = { property_compare_key, NULL };
-    HpsGroup *group = NULL;
+    LksPropertyItem storage[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *input[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *expected[LKS_PROPERTY_MAX_ITEMS];
+    LksComparator comparator = { property_compare_key, NULL };
+    LksGroup *group = NULL;
     size_t index;
     int valid = 1;
     char label[64];
@@ -499,15 +499,15 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
     for (index = 0; index < count; ++index) expected[index] = input[index];
     property_stable_insertion_sort(expected, count);
 
-    if (hps_group_build((void *const *)input, count, &comparator, &group) !=
-            HPS_STATUS_OK || group == NULL ||
+    if (lks_group_build((void *const *)input, count, &comparator, &group) !=
+            LKS_STATUS_OK || group == NULL ||
         !property_group_matches_oracle(group, expected, count, counts)) {
         valid = 0;
         ++counts->group_oracle_failures;
         if (group != NULL) {
             for (index = 0; index < count; ++index) {
-                HpsPropertyItem *actual =
-                    (HpsPropertyItem *)hps_group_item_at(group, index);
+                LksPropertyItem *actual =
+                    (LksPropertyItem *)lks_group_item_at(group, index);
                 if (actual != NULL && actual != expected[index] &&
                     actual->key == expected[index]->key) {
                     ++counts->equal_stability_failures;
@@ -515,13 +515,13 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
             }
         }
     }
-    if (distribution == HPS_PROPERTY_DUPLICATE) ++counts->duplicate_cases;
-    if (distribution == HPS_PROPERTY_HEAVY_DUPLICATE) ++counts->heavy_duplicate_cases;
-    if (distribution == HPS_PROPERTY_ALL_EQUAL) {
+    if (distribution == LKS_PROPERTY_DUPLICATE) ++counts->duplicate_cases;
+    if (distribution == LKS_PROPERTY_HEAVY_DUPLICATE) ++counts->heavy_duplicate_cases;
+    if (distribution == LKS_PROPERTY_ALL_EQUAL) {
         ++counts->all_equal_cases;
         if (group != NULL) {
             for (index = 0; index < count; ++index) {
-                if (hps_group_item_at(group, index) != input[index]) {
+                if (lks_group_item_at(group, index) != input[index]) {
                     ++counts->equal_stability_failures;
                     valid = 0;
                     break;
@@ -534,7 +534,7 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
         ++counts->group_stable_oracle_cases;
         property_check_gap_constructions(group, count, counts);
     }
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     property_check_case_allocator(counts, label);
     if (!valid) printf("GroupOracleFailure seed=0x%08X N=%zu family=%s "
         "GroupSize=NA split=NA\n", (unsigned int)seed, count,
@@ -543,16 +543,16 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
 }
 
 static int property_run_batch_case(size_t seed_index,
-    HpsPropertyDistribution distribution, size_t count,
-    HpsPropertyCounts *counts, HpsPropertyRandom *random)
+    LksPropertyDistribution distribution, size_t count,
+    LksPropertyCounts *counts, LksPropertyRandom *random)
 {
-    HpsPropertyItem storage[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *input[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *expected[HPS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem storage[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *input[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *expected[LKS_PROPERTY_MAX_ITEMS];
     size_t group_sizes[3];
     size_t group_size_count = 0;
     size_t index;
-    HpsComparator comparator = { property_compare_key, NULL };
+    LksComparator comparator = { property_compare_key, NULL };
     int valid = 1;
 
     property_make_dataset(random, distribution, count, storage, input);
@@ -575,9 +575,9 @@ static int property_run_batch_case(size_t seed_index,
     }
 
     for (index = 0; index < group_size_count; ++index) {
-        HpsGroupBatch *batch = NULL;
-        HpsGroup *result = NULL;
-        HpsPropertyBatchSnapshot snapshot;
+        LksGroupBatch *batch = NULL;
+        LksGroup *result = NULL;
+        LksPropertyBatchSnapshot snapshot;
         size_t group_size = group_sizes[index];
     int snapshot_ok = 0;
         int config_valid = 1;
@@ -591,15 +591,15 @@ static int property_run_batch_case(size_t seed_index,
             continue;
         }
         memset(&snapshot, 0, sizeof(snapshot));
-        if (hps_group_batch_build((void *const *)input, count, group_size,
-                &comparator, &batch) != HPS_STATUS_OK || batch == NULL ||
+        if (lks_group_batch_build((void *const *)input, count, group_size,
+                &comparator, &batch) != LKS_STATUS_OK || batch == NULL ||
             !property_snapshot_batch(batch, &snapshot)) {
             config_valid = 0;
             ++counts->batch_oracle_failures;
         } else {
             snapshot_ok = 1;
-            if (hps_group_batch_merge_all(batch, &comparator, &result) !=
-                    HPS_STATUS_OK || result == NULL ||
+            if (lks_group_batch_merge_all(batch, &comparator, &result) !=
+                    LKS_STATUS_OK || result == NULL ||
                 !property_group_matches_oracle(result, expected, count, counts)) {
                 config_valid = 0;
                 ++counts->batch_oracle_failures;
@@ -610,19 +610,19 @@ static int property_run_batch_case(size_t seed_index,
             }
         }
 
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         property_destroy_batch_snapshot(&snapshot);
         if (result != NULL && snapshot_ok) {
             if (!property_tree_profile_matches(result, count, counts)) {
                 config_valid = 0;
             }
             {
-                HpsAllocStats result_stats = hps_alloc_stats_get();
-                HpsTreeInternalProfile result_profile;
-                if (hps_tree_internal_profile(hps_group_internal_tree(result),
-                        &result_profile) != HPS_STATUS_OK ||
-                    result_stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
-                    result_stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks !=
+                LksAllocStats result_stats = lks_alloc_stats_get();
+                LksTreeInternalProfile result_profile;
+                if (lks_tree_internal_profile(lks_group_internal_tree(result),
+                        &result_profile) != LKS_STATUS_OK ||
+                    result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
+                    result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks !=
                         result_profile.allocated_child_array_count) {
                     ++counts->tree_profile_failures;
                     config_valid = 0;
@@ -630,7 +630,7 @@ static int property_run_batch_case(size_t seed_index,
             }
             ++counts->batch_oracle_cases;
         }
-        hps_group_destroy(result);
+        lks_group_destroy(result);
         property_check_case_allocator(counts, label);
         if (!config_valid) {
             if (valid) printf("BatchOracleFailure seed-index=%zu distribution=%u "
@@ -643,23 +643,23 @@ static int property_run_batch_case(size_t seed_index,
 }
 
 static int property_run_merge_case(size_t case_index, uint32_t seed,
-    HpsPropertyDistribution distribution, size_t count,
-    HpsPropertyCounts *counts, HpsPropertyRandom *random)
+    LksPropertyDistribution distribution, size_t count,
+    LksPropertyCounts *counts, LksPropertyRandom *random)
 {
-    HpsPropertyItem storage[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *input[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *expected[HPS_PROPERTY_MAX_ITEMS];
-    void *base_items[HPS_PROPERTY_MAX_ITEMS];
-    void *incoming_items[HPS_PROPERTY_MAX_ITEMS];
-    HpsComparator comparator = { property_compare_key, NULL };
-    HpsGroup *base = NULL;
-    HpsGroup *incoming = NULL;
-    HpsGroup *public_result = NULL;
-    HpsGroup *owned_base = NULL;
-    HpsGroup *incoming2 = NULL;
-    HpsPropertyGroupSnapshot base_snapshot;
-    HpsPropertyGroupSnapshot incoming_snapshot;
-    HpsPropertyGroupSnapshot incoming2_snapshot;
+    LksPropertyItem storage[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *input[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *expected[LKS_PROPERTY_MAX_ITEMS];
+    void *base_items[LKS_PROPERTY_MAX_ITEMS];
+    void *incoming_items[LKS_PROPERTY_MAX_ITEMS];
+    LksComparator comparator = { property_compare_key, NULL };
+    LksGroup *base = NULL;
+    LksGroup *incoming = NULL;
+    LksGroup *public_result = NULL;
+    LksGroup *owned_base = NULL;
+    LksGroup *incoming2 = NULL;
+    LksPropertyGroupSnapshot base_snapshot;
+    LksPropertyGroupSnapshot incoming_snapshot;
+    LksPropertyGroupSnapshot incoming2_snapshot;
     size_t split;
     size_t index;
     int valid = 1;
@@ -678,9 +678,9 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
     memset(&base_snapshot, 0, sizeof(base_snapshot));
     memset(&incoming_snapshot, 0, sizeof(incoming_snapshot));
     memset(&incoming2_snapshot, 0, sizeof(incoming2_snapshot));
-    if (hps_group_build(base_items, split, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(incoming_items, count - split, &comparator,
-            &incoming) != HPS_STATUS_OK) {
+    if (lks_group_build(base_items, split, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(incoming_items, count - split, &comparator,
+            &incoming) != LKS_STATUS_OK) {
         valid = 0;
         ++counts->public_merge_oracle_failures;
         goto cleanup;
@@ -691,8 +691,8 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
         ++counts->public_merge_oracle_failures;
         goto cleanup;
     }
-    if (hps_group_merge(base, incoming, &comparator, &public_result) !=
-            HPS_STATUS_OK || public_result == NULL ||
+    if (lks_group_merge(base, incoming, &comparator, &public_result) !=
+            LKS_STATUS_OK || public_result == NULL ||
         !property_group_matches_oracle(public_result, expected, count, counts)) {
         valid = 0;
         ++counts->public_merge_oracle_failures;
@@ -703,28 +703,28 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
         ++counts->public_input_mutation_failures;
     }
 
-    if (hps_group_build(base_items, split, &comparator, &owned_base) != HPS_STATUS_OK ||
-        hps_group_build(incoming_items, count - split, &comparator,
-            &incoming2) != HPS_STATUS_OK ||
+    if (lks_group_build(base_items, split, &comparator, &owned_base) != LKS_STATUS_OK ||
+        lks_group_build(incoming_items, count - split, &comparator,
+            &incoming2) != LKS_STATUS_OK ||
         !property_snapshot_group(incoming2, &incoming2_snapshot)) {
         valid = 0;
         ++counts->private_merge_differential_failures;
         goto cleanup;
     }
-    if (hps_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
-            HPS_STATUS_OK || owned_base == NULL || public_result == NULL ||
+    if (lks_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
+            LKS_STATUS_OK || owned_base == NULL || public_result == NULL ||
         !property_group_matches_oracle(owned_base, expected, count, counts) ||
-        hps_group_size(public_result) != hps_group_size(owned_base)) {
+        lks_group_size(public_result) != lks_group_size(owned_base)) {
         valid = 0;
         ++counts->private_merge_differential_failures;
     } else {
         for (index = 0; index < count; ++index) {
             int path_order;
-            if (hps_group_item_at(public_result, index) !=
-                    hps_group_item_at(owned_base, index) ||
-                hps_path_compare(hps_group_path_at(public_result, index),
-                    hps_group_path_at(owned_base, index), &path_order) !=
-                    HPS_STATUS_OK || path_order != 0) {
+            if (lks_group_item_at(public_result, index) !=
+                    lks_group_item_at(owned_base, index) ||
+                lks_path_compare(lks_group_path_at(public_result, index),
+                    lks_group_path_at(owned_base, index), &path_order) !=
+                    LKS_STATUS_OK || path_order != 0) {
                 valid = 0;
                 ++counts->private_merge_differential_failures;
                 break;
@@ -740,16 +740,16 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
         ++counts->private_merge_differential_cases;
     }
 
-    if (distribution == HPS_PROPERTY_ALL_EQUAL && valid) {
+    if (distribution == LKS_PROPERTY_ALL_EQUAL && valid) {
         for (index = 0; index < split; ++index) {
-            if (hps_group_item_at(public_result, index) != input[index]) {
+            if (lks_group_item_at(public_result, index) != input[index]) {
                 ++counts->equal_stability_failures;
                 valid = 0;
                 break;
             }
         }
         for (index = split; valid && index < count; ++index) {
-            if (hps_group_item_at(public_result, index) != input[index]) {
+            if (lks_group_item_at(public_result, index) != input[index]) {
                 ++counts->equal_stability_failures;
                 valid = 0;
                 break;
@@ -758,11 +758,11 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
     }
 
 cleanup:
-    hps_group_destroy(owned_base);
-    hps_group_destroy(incoming2);
-    hps_group_destroy(public_result);
-    hps_group_destroy(incoming);
-    hps_group_destroy(base);
+    lks_group_destroy(owned_base);
+    lks_group_destroy(incoming2);
+    lks_group_destroy(public_result);
+    lks_group_destroy(incoming);
+    lks_group_destroy(base);
     property_destroy_group_snapshot(&incoming2_snapshot);
     property_destroy_group_snapshot(&incoming_snapshot);
     property_destroy_group_snapshot(&base_snapshot);
@@ -778,13 +778,13 @@ static int property_sign(int value)
     return value < 0 ? -1 : (value > 0 ? 1 : 0);
 }
 
-static void property_run_path_properties(HpsPropertyRandom *random,
-    HpsPropertyCounts *counts)
+static void property_run_path_properties(LksPropertyRandom *random,
+    LksPropertyCounts *counts)
 {
     size_t round;
 
-    for (round = 0; round < HPS_PROPERTY_PATH_ROUNDS; ++round) {
-        HpsPath *paths[HPS_PROPERTY_PATH_COUNT] = { 0 };
+    for (round = 0; round < LKS_PROPERTY_PATH_ROUNDS; ++round) {
+        LksPath *paths[LKS_PROPERTY_PATH_COUNT] = { 0 };
         size_t left_index;
         size_t right_index;
         size_t index;
@@ -794,28 +794,28 @@ static void property_run_path_properties(HpsPropertyRandom *random,
         (void)snprintf(label, sizeof(label), "Path-properties-%zu", round);
         if (!property_begin_case(counts, label)) continue;
 
-        for (index = 0; index < HPS_PROPERTY_PATH_COUNT; ++index) {
+        for (index = 0; index < LKS_PROPERTY_PATH_COUNT; ++index) {
             uint32_t choice = property_random_next(random) % 3u;
-            HpsDirection direction;
+            LksDirection direction;
             size_t depth;
             size_t level;
             size_t step;
 
             if (choice == 0) {
-                paths[index] = hps_path_create_zero();
+                paths[index] = lks_path_create_zero();
             } else {
-                direction = choice == 1 ? HPS_DIRECTION_NEGATIVE :
-                    HPS_DIRECTION_POSITIVE;
+                direction = choice == 1 ? LKS_DIRECTION_NEGATIVE :
+                    LKS_DIRECTION_POSITIVE;
                 depth = 1u + (size_t)(property_random_next(random) % 6u);
                 level = 1u + (size_t)(property_random_next(random) % 4u);
-                paths[index] = hps_path_create_at_level(direction,
-                    property_random_next(random) % (HPS_PATH_SLOT_MAX + 1u), level);
+                paths[index] = lks_path_create_at_level(direction,
+                    property_random_next(random) % (LKS_PATH_SLOT_MAX + 1u), level);
                 for (step = 1; paths[index] != NULL && step < depth; ++step) {
                     level += 1u + (size_t)(property_random_next(random) % 5u);
-                    if (hps_path_append_at_level(paths[index],
-                            property_random_next(random) % (HPS_PATH_SLOT_MAX + 1u),
-                            level) != HPS_STATUS_OK) {
-                        hps_path_destroy(paths[index]);
+                    if (lks_path_append_at_level(paths[index],
+                            property_random_next(random) % (LKS_PATH_SLOT_MAX + 1u),
+                            level) != LKS_STATUS_OK) {
+                        lks_path_destroy(paths[index]);
                         paths[index] = NULL;
                     }
                 }
@@ -823,16 +823,16 @@ static void property_run_path_properties(HpsPropertyRandom *random,
             if (paths[index] == NULL) ++counts->path_construction_failures;
         }
 
-        for (left_index = 0; left_index < HPS_PROPERTY_PATH_COUNT; ++left_index) {
-            for (right_index = 0; right_index < HPS_PROPERTY_PATH_COUNT;
+        for (left_index = 0; left_index < LKS_PROPERTY_PATH_COUNT; ++left_index) {
+            for (right_index = 0; right_index < LKS_PROPERTY_PATH_COUNT;
                     ++right_index) {
                 int forward = 0;
                 int reverse = 0;
                 if (paths[left_index] == NULL || paths[right_index] == NULL ||
-                    hps_path_compare(paths[left_index], paths[right_index],
-                        &forward) != HPS_STATUS_OK ||
-                    hps_path_compare(paths[right_index], paths[left_index],
-                        &reverse) != HPS_STATUS_OK ||
+                    lks_path_compare(paths[left_index], paths[right_index],
+                        &forward) != LKS_STATUS_OK ||
+                    lks_path_compare(paths[right_index], paths[left_index],
+                        &reverse) != LKS_STATUS_OK ||
                     property_sign(forward) != -property_sign(reverse)) {
                     ++counts->antisymmetry_failures;
                 }
@@ -840,25 +840,25 @@ static void property_run_path_properties(HpsPropertyRandom *random,
             }
         }
 
-        for (triple = 0; triple < HPS_PROPERTY_PATH_TRIPLES; ++triple) {
+        for (triple = 0; triple < LKS_PROPERTY_PATH_TRIPLES; ++triple) {
             size_t a = (size_t)(property_random_next(random) %
-                HPS_PROPERTY_PATH_COUNT);
+                LKS_PROPERTY_PATH_COUNT);
             size_t b = (size_t)(property_random_next(random) %
-                HPS_PROPERTY_PATH_COUNT);
+                LKS_PROPERTY_PATH_COUNT);
             size_t c = (size_t)(property_random_next(random) %
-                HPS_PROPERTY_PATH_COUNT);
+                LKS_PROPERTY_PATH_COUNT);
             int ab = 0, bc = 0, ac = 0;
             if (paths[a] == NULL || paths[b] == NULL || paths[c] == NULL ||
-                hps_path_compare(paths[a], paths[b], &ab) != HPS_STATUS_OK ||
-                hps_path_compare(paths[b], paths[c], &bc) != HPS_STATUS_OK ||
-                hps_path_compare(paths[a], paths[c], &ac) != HPS_STATUS_OK ||
+                lks_path_compare(paths[a], paths[b], &ab) != LKS_STATUS_OK ||
+                lks_path_compare(paths[b], paths[c], &bc) != LKS_STATUS_OK ||
+                lks_path_compare(paths[a], paths[c], &ac) != LKS_STATUS_OK ||
                 (ab <= 0 && bc <= 0 && ac > 0)) {
                 ++counts->transitivity_failures;
             }
             ++counts->path_triple_checks;
         }
-        for (index = 0; index < HPS_PROPERTY_PATH_COUNT; ++index)
-            hps_path_destroy(paths[index]);
+        for (index = 0; index < LKS_PROPERTY_PATH_COUNT; ++index)
+            lks_path_destroy(paths[index]);
         property_check_case_allocator(counts, label);
     }
 }
@@ -870,16 +870,16 @@ static size_t property_stress_size(size_t seed_index)
 }
 
 static size_t property_stress_size_for_distribution(size_t count,
-    HpsPropertyDistribution distribution)
+    LksPropertyDistribution distribution)
 {
-    if (distribution == HPS_PROPERTY_ALL_EQUAL && count > 64u) return 64u;
-    if (distribution == HPS_PROPERTY_HEAVY_DUPLICATE && count > 96u) return 96u;
-    if (distribution == HPS_PROPERTY_DUPLICATE && count > 192u) return 192u;
+    if (distribution == LKS_PROPERTY_ALL_EQUAL && count > 64u) return 64u;
+    if (distribution == LKS_PROPERTY_HEAVY_DUPLICATE && count > 96u) return 96u;
+    if (distribution == LKS_PROPERTY_DUPLICATE && count > 192u) return 192u;
     return count;
 }
 
 static size_t property_stress_group_size(size_t config_index, size_t count,
-    HpsPropertyRandom *random)
+    LksPropertyRandom *random)
 {
     switch (config_index % 7u) {
     case 0: return 1u;
@@ -895,17 +895,17 @@ static size_t property_stress_group_size(size_t config_index, size_t count,
 }
 
 static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
-    size_t config_index, size_t count, HpsPropertyDistribution distribution,
-    size_t group_size, HpsPropertyCounts *counts)
+    size_t config_index, size_t count, LksPropertyDistribution distribution,
+    size_t group_size, LksPropertyCounts *counts)
 {
-    HpsPropertyItem storage[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *input[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyItem *expected[HPS_PROPERTY_MAX_ITEMS];
-    HpsPropertyRandom random;
-    HpsComparator comparator = { property_compare_key, NULL };
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *result = NULL;
-    HpsPropertyBatchSnapshot snapshot;
+    LksPropertyItem storage[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *input[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyItem *expected[LKS_PROPERTY_MAX_ITEMS];
+    LksPropertyRandom random;
+    LksComparator comparator = { property_compare_key, NULL };
+    LksGroupBatch *batch = NULL;
+    LksGroup *result = NULL;
+    LksPropertyBatchSnapshot snapshot;
     size_t index;
     int snapshot_ok = 0;
     int valid = 1;
@@ -918,27 +918,27 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
     if (random.state == 0) random.state = UINT32_C(0x3C6EF372);
     memset(&snapshot, 0, sizeof(snapshot));
     property_make_dataset(&random, distribution, count, storage, input);
-    if (distribution == HPS_PROPERTY_ALL_EQUAL && count > 0)
+    if (distribution == LKS_PROPERTY_ALL_EQUAL && count > 0)
         ++counts->all_equal_cases;
     for (index = 0; index < count; ++index) expected[index] = input[index];
     property_stable_insertion_sort(expected, count);
 
-    if (hps_group_batch_build((void *const *)input, count, group_size,
-            &comparator, &batch) != HPS_STATUS_OK || batch == NULL ||
+    if (lks_group_batch_build((void *const *)input, count, group_size,
+            &comparator, &batch) != LKS_STATUS_OK || batch == NULL ||
         !property_snapshot_batch(batch, &snapshot)) {
         valid = 0;
         ++counts->batch_oracle_failures;
     } else {
         snapshot_ok = 1;
-        if (hps_group_batch_merge_all(batch, &comparator, &result) !=
-                HPS_STATUS_OK || result == NULL ||
+        if (lks_group_batch_merge_all(batch, &comparator, &result) !=
+                LKS_STATUS_OK || result == NULL ||
             !property_group_matches_oracle(result, expected, count, counts)) {
             valid = 0;
             ++counts->batch_oracle_failures;
         }
-        if (distribution == HPS_PROPERTY_ALL_EQUAL && count > 0 && result != NULL) {
+        if (distribution == LKS_PROPERTY_ALL_EQUAL && count > 0 && result != NULL) {
             for (index = 0; index < count; ++index) {
-                if (hps_group_item_at(result, index) != input[index]) {
+                if (lks_group_item_at(result, index) != input[index]) {
                     ++counts->equal_stability_failures;
                     valid = 0;
                     break;
@@ -951,17 +951,17 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
         }
     }
 
-    hps_group_batch_destroy(batch);
+    lks_group_batch_destroy(batch);
     property_destroy_batch_snapshot(&snapshot);
     if (result != NULL && snapshot_ok) {
         if (!property_tree_profile_matches(result, count, counts)) valid = 0;
         {
-            HpsTreeInternalProfile profile;
-            HpsAllocStats stats = hps_alloc_stats_get();
-            if (hps_tree_internal_profile(hps_group_internal_tree(result),
-                    &profile) != HPS_STATUS_OK ||
-                stats.tags[HPS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
-                stats.tags[HPS_ALLOC_TAG_TREE_CHILDREN].live_blocks !=
+            LksTreeInternalProfile profile;
+            LksAllocStats stats = lks_alloc_stats_get();
+            if (lks_tree_internal_profile(lks_group_internal_tree(result),
+                    &profile) != LKS_STATUS_OK ||
+                stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
+                stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks !=
                     profile.allocated_child_array_count) {
                 ++counts->tree_profile_failures;
                 valid = 0;
@@ -969,7 +969,7 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
         }
         if (valid) ++counts->batch_oracle_cases;
     }
-    hps_group_destroy(result);
+    lks_group_destroy(result);
     property_check_case_allocator(counts, label);
     if (!valid) {
         printf("StressFailure seed=0x%08X N=%zu family=%s GroupSize=%zu "
@@ -979,7 +979,7 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
     return valid;
 }
 
-static size_t property_add_failure_counts(const HpsPropertyCounts *counts)
+static size_t property_add_failure_counts(const LksPropertyCounts *counts)
 {
     return counts->group_oracle_failures + counts->batch_oracle_failures +
         counts->public_merge_oracle_failures +
@@ -993,9 +993,9 @@ static size_t property_add_failure_counts(const HpsPropertyCounts *counts)
         counts->antisymmetry_failures + counts->transitivity_failures;
 }
 
-int hps_run_stage14_2_stress_tests(void)
+int lks_run_stage14_2_stress_tests(void)
 {
-    HpsPropertyCounts counts;
+    LksPropertyCounts counts;
     size_t seed_index;
     size_t config_index;
     size_t merge_index;
@@ -1003,16 +1003,16 @@ int hps_run_stage14_2_stress_tests(void)
     int valid = 1;
 
     memset(&counts, 0, sizeof(counts));
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0) return 1;
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0) return 1;
 
     for (seed_index = 0; seed_index < 256u; ++seed_index) {
         uint32_t seed = property_seed_at(seed_index) ^
             (uint32_t)(seed_index * UINT32_C(0xD1B54A35));
-        HpsPropertyRandom random;
-        HpsPropertyDistribution distribution =
-            (HpsPropertyDistribution)(seed_index %
-                HPS_PROPERTY_DISTRIBUTION_COUNT);
+        LksPropertyRandom random;
+        LksPropertyDistribution distribution =
+            (LksPropertyDistribution)(seed_index %
+                LKS_PROPERTY_DISTRIBUTION_COUNT);
         size_t count = property_stress_size_for_distribution(
             property_stress_size(seed_index), distribution);
 
@@ -1027,13 +1027,13 @@ int hps_run_stage14_2_stress_tests(void)
         uint32_t seed = property_seed_at(seed_index) ^
             (uint32_t)(seed_index * UINT32_C(0xD1B54A35));
         size_t count = property_stress_size(seed_index);
-        HpsPropertyRandom random;
+        LksPropertyRandom random;
         if (seed == 0) seed = UINT32_C(0x94D049BB);
         random.state = seed;
         for (config_index = 0; config_index < 8u; ++config_index) {
-            HpsPropertyDistribution distribution =
-                (HpsPropertyDistribution)((seed_index + config_index) %
-                    HPS_PROPERTY_DISTRIBUTION_COUNT);
+            LksPropertyDistribution distribution =
+                (LksPropertyDistribution)((seed_index + config_index) %
+                    LKS_PROPERTY_DISTRIBUTION_COUNT);
             size_t stress_count = property_stress_size_for_distribution(
                 count, distribution);
             if (stress_count > max_n) max_n = stress_count;
@@ -1050,31 +1050,31 @@ int hps_run_stage14_2_stress_tests(void)
         size_t seed_index_for_case = merge_index % 256u;
         uint32_t seed = property_seed_at(seed_index_for_case) ^
             (uint32_t)(merge_index * UINT32_C(0xA24BAED5));
-        HpsPropertyRandom random;
+        LksPropertyRandom random;
         size_t count;
-        HpsPropertyDistribution distribution;
+        LksPropertyDistribution distribution;
 
         if (seed == 0) seed = UINT32_C(0x9FB21C65);
         random.state = seed;
         count = 2u + (size_t)(property_random_next(&random) % 511u);
-        distribution = (HpsPropertyDistribution)(merge_index % 4u == 0 ?
-            HPS_PROPERTY_DUPLICATE : merge_index % 4u == 1 ?
-            HPS_PROPERTY_HEAVY_DUPLICATE : merge_index % 4u == 2 ?
-            HPS_PROPERTY_ALL_EQUAL : HPS_PROPERTY_UNIQUE);
+        distribution = (LksPropertyDistribution)(merge_index % 4u == 0 ?
+            LKS_PROPERTY_DUPLICATE : merge_index % 4u == 1 ?
+            LKS_PROPERTY_HEAVY_DUPLICATE : merge_index % 4u == 2 ?
+            LKS_PROPERTY_ALL_EQUAL : LKS_PROPERTY_UNIQUE);
         count = property_stress_size_for_distribution(count, distribution);
         if (count > max_n) max_n = count;
         if (!property_run_merge_case(merge_index, seed, distribution, count,
                 &counts, &random)) valid = 0;
     }
 
-    hps_alloc_test_disable_failure();
+    lks_alloc_test_disable_failure();
     {
-        HpsAllocStats final_stats = hps_alloc_stats_get();
+        LksAllocStats final_stats = lks_alloc_stats_get();
         if (final_stats.live_bytes != 0 || final_stats.live_blocks != 0) {
             ++counts.leak_count;
         }
-        if (final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-            final_stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0 ||
+        if (final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+            final_stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0 ||
             final_stats.failed_calls != 0 || final_stats.counter_overflowed) {
             ++counts.allocator_failures;
         }
@@ -1111,74 +1111,74 @@ int hps_run_stage14_2_stress_tests(void)
     return valid ? 0 : 1;
 }
 
-typedef struct HpsPropertyTreeNodeState {
-    const HpsTreeNode *node;
-    const HpsTreeNode *parent;
-    const HpsTreeNode *children[16];
+typedef struct LksPropertyTreeNodeState {
+    const LksTreeNode *node;
+    const LksTreeNode *parent;
+    const LksTreeNode *children[16];
     size_t child_count;
     void *item;
-    HpsPath *path;
-} HpsPropertyTreeNodeState;
+    LksPath *path;
+} LksPropertyTreeNodeState;
 
-typedef struct HpsPropertyTreeSnapshot {
-    HpsPropertyTreeNodeState nodes[32];
+typedef struct LksPropertyTreeSnapshot {
+    LksPropertyTreeNodeState nodes[32];
     size_t node_count;
-    const HpsTreeNode *root_children[16];
+    const LksTreeNode *root_children[16];
     size_t root_child_count;
-    HpsTreeInternalProfile profile;
+    LksTreeInternalProfile profile;
     size_t histogram[17];
     size_t histogram_count;
-} HpsPropertyTreeSnapshot;
+} LksPropertyTreeSnapshot;
 
-static int property_snapshot_tree_node(const HpsTreeNode *node,
-    HpsPropertyTreeSnapshot *snapshot)
+static int property_snapshot_tree_node(const LksTreeNode *node,
+    LksPropertyTreeSnapshot *snapshot)
 {
-    HpsPropertyTreeNodeState *state;
+    LksPropertyTreeNodeState *state;
     size_t index;
     if (node == NULL || snapshot->node_count >= 32u) return 0;
     state = &snapshot->nodes[snapshot->node_count++];
     memset(state, 0, sizeof(*state));
     state->node = node;
-    state->parent = hps_tree_node_parent(node);
-    state->item = hps_tree_node_item(node);
-    state->path = hps_path_clone(hps_tree_node_path(node));
-    state->child_count = hps_tree_node_child_count(node);
+    state->parent = lks_tree_node_parent(node);
+    state->item = lks_tree_node_item(node);
+    state->path = lks_path_clone(lks_tree_node_path(node));
+    state->child_count = lks_tree_node_child_count(node);
     if (state->path == NULL || state->child_count > 16u) return 0;
     for (index = 0; index < state->child_count; ++index) {
-        state->children[index] = hps_tree_node_child_at(node, index);
+        state->children[index] = lks_tree_node_child_at(node, index);
         if (!property_snapshot_tree_node(state->children[index], snapshot))
             return 0;
     }
     return 1;
 }
 
-static int property_snapshot_tree(const HpsTree *tree,
-    HpsPropertyTreeSnapshot *snapshot)
+static int property_snapshot_tree(const LksTree *tree,
+    LksPropertyTreeSnapshot *snapshot)
 {
     size_t index;
     size_t required = 0;
     memset(snapshot, 0, sizeof(*snapshot));
-    snapshot->root_child_count = hps_tree_root_child_count(tree);
+    snapshot->root_child_count = lks_tree_root_child_count(tree);
     if (snapshot->root_child_count > 16u) return 0;
     for (index = 0; index < snapshot->root_child_count; ++index) {
-        snapshot->root_children[index] = hps_tree_root_child_at(tree, index);
+        snapshot->root_children[index] = lks_tree_root_child_at(tree, index);
         if (!property_snapshot_tree_node(snapshot->root_children[index], snapshot))
             return 0;
     }
-    if (hps_tree_internal_profile(tree, &snapshot->profile) != HPS_STATUS_OK ||
-        hps_tree_internal_capacity_histogram(tree, NULL, 0, &required) !=
-            HPS_STATUS_OK || required > 17u) return 0;
+    if (lks_tree_internal_profile(tree, &snapshot->profile) != LKS_STATUS_OK ||
+        lks_tree_internal_capacity_histogram(tree, NULL, 0, &required) !=
+            LKS_STATUS_OK || required > 17u) return 0;
     snapshot->histogram_count = required;
-    if (required != 0 && hps_tree_internal_capacity_histogram(tree,
-            snapshot->histogram, required, &required) != HPS_STATUS_OK)
+    if (required != 0 && lks_tree_internal_capacity_histogram(tree,
+            snapshot->histogram, required, &required) != LKS_STATUS_OK)
         return 0;
     return 1;
 }
 
-static int property_tree_snapshot_matches(const HpsTree *tree,
-    const HpsPropertyTreeSnapshot *snapshot)
+static int property_tree_snapshot_matches(const LksTree *tree,
+    const LksPropertyTreeSnapshot *snapshot)
 {
-    HpsPropertyTreeSnapshot current;
+    LksPropertyTreeSnapshot current;
     size_t index;
     size_t child;
     if (!property_snapshot_tree(tree, &current) ||
@@ -1193,20 +1193,20 @@ static int property_tree_snapshot_matches(const HpsTree *tree,
         if (current.root_children[index] != snapshot->root_children[index])
             return 0;
     for (index = 0; index < snapshot->node_count; ++index) {
-        const HpsPropertyTreeNodeState *old = &snapshot->nodes[index];
-        const HpsPropertyTreeNodeState *now = &current.nodes[index];
+        const LksPropertyTreeNodeState *old = &snapshot->nodes[index];
+        const LksPropertyTreeNodeState *now = &current.nodes[index];
         if (now->node != old->node || now->parent != old->parent ||
             now->item != old->item || now->child_count != old->child_count) {
             for (child = 0; child < current.node_count; ++child)
-                hps_path_destroy(current.nodes[child].path);
+                lks_path_destroy(current.nodes[child].path);
             return 0;
         }
         {
             int order = 1;
-            if (hps_path_compare(now->path, old->path, &order) != HPS_STATUS_OK ||
+            if (lks_path_compare(now->path, old->path, &order) != LKS_STATUS_OK ||
                 order != 0) {
                 for (child = 0; child < current.node_count; ++child)
-                    hps_path_destroy(current.nodes[child].path);
+                    lks_path_destroy(current.nodes[child].path);
                 return 0;
             }
         }
@@ -1214,44 +1214,44 @@ static int property_tree_snapshot_matches(const HpsTree *tree,
             if (now->children[child] != old->children[child]) {
                 size_t cleanup;
                 for (cleanup = 0; cleanup < current.node_count; ++cleanup)
-                    hps_path_destroy(current.nodes[cleanup].path);
+                    lks_path_destroy(current.nodes[cleanup].path);
                 return 0;
             }
     }
     for (index = 0; index < current.node_count; ++index)
-        hps_path_destroy(current.nodes[index].path);
+        lks_path_destroy(current.nodes[index].path);
     return 1;
 }
 
-static void property_destroy_tree_snapshot(HpsPropertyTreeSnapshot *snapshot)
+static void property_destroy_tree_snapshot(LksPropertyTreeSnapshot *snapshot)
 {
     size_t index;
     for (index = 0; index < snapshot->node_count; ++index) {
-        hps_path_destroy(snapshot->nodes[index].path);
+        lks_path_destroy(snapshot->nodes[index].path);
         snapshot->nodes[index].path = NULL;
     }
     snapshot->node_count = 0;
 }
 
-static int property_stats_live_equal(HpsAllocStats left, HpsAllocStats right)
+static int property_stats_live_equal(LksAllocStats left, LksAllocStats right)
 {
     return left.live_bytes == right.live_bytes &&
         left.live_blocks == right.live_blocks;
 }
 
-static int property_build_equal_tree(HpsTree **out_tree,
-    HpsPropertyItem *storage, size_t count, const HpsComparator *comparator)
+static int property_build_equal_tree(LksTree **out_tree,
+    LksPropertyItem *storage, size_t count, const LksComparator *comparator)
 {
-    HpsTree *tree = hps_tree_create();
+    LksTree *tree = lks_tree_create();
     size_t index;
     if (tree == NULL) return 0;
     for (index = 0; index < count; ++index) {
         storage[index].key = (index == 0 || index == count - 1) ?
             (index == 0 ? 1 : 4) : (index < 4 ? 2 : 4);
         storage[index].original_index = (unsigned int)index;
-        if (hps_tree_insert_item(tree, &storage[index], comparator, NULL) !=
-                HPS_STATUS_OK) {
-            hps_tree_destroy(tree);
+        if (lks_tree_insert_item(tree, &storage[index], comparator, NULL) !=
+                LKS_STATUS_OK) {
+            lks_tree_destroy(tree);
             return 0;
         }
     }
@@ -1259,9 +1259,9 @@ static int property_build_equal_tree(HpsTree **out_tree,
     return 1;
 }
 
-static int property_build_equal_merge_fixture(HpsGroup **base,
-    HpsGroup **incoming, HpsPropertyItem *storage,
-    HpsPropertyItem **all_items, const HpsComparator *comparator)
+static int property_build_equal_merge_fixture(LksGroup **base,
+    LksGroup **incoming, LksPropertyItem *storage,
+    LksPropertyItem **all_items, const LksComparator *comparator)
 {
     static const int keys[] = { 1, 2, 2, 2, 4, 4, 2, 2, 3, 4, 4, 4 };
     void *base_items[6];
@@ -1274,17 +1274,17 @@ static int property_build_equal_merge_fixture(HpsGroup **base,
         if (index < 6u) base_items[index] = &storage[index];
         else incoming_items[index - 6u] = &storage[index];
     }
-    return hps_group_build(base_items, 6u, comparator, base) == HPS_STATUS_OK &&
-        hps_group_build(incoming_items, 6u, comparator, incoming) == HPS_STATUS_OK;
+    return lks_group_build(base_items, 6u, comparator, base) == LKS_STATUS_OK &&
+        lks_group_build(incoming_items, 6u, comparator, incoming) == LKS_STATUS_OK;
 }
 
-static int property_group_equals_expected(const HpsGroup *group,
-    HpsPropertyItem **expected, size_t count)
+static int property_group_equals_expected(const LksGroup *group,
+    LksPropertyItem **expected, size_t count)
 {
     size_t index;
-    if (group == NULL || hps_group_size(group) != count) return 0;
+    if (group == NULL || lks_group_size(group) != count) return 0;
     for (index = 0; index < count; ++index)
-        if (hps_group_item_at(group, index) != expected[index]) return 0;
+        if (lks_group_item_at(group, index) != expected[index]) return 0;
     return 1;
 }
 
@@ -1292,27 +1292,27 @@ static int property_oom_tree_equal_range(size_t *out_k,
     size_t *out_passed, size_t *wrong_status, size_t *state_failures,
     size_t *leaks)
 {
-    HpsPropertyItem fixture[6];
-    HpsPropertyItem inserted = { 2, 6u };
-    HpsComparator comparator = { property_compare_key, NULL };
-    HpsTree *tree = NULL;
-    const HpsTreeNode *node;
-    HpsPropertyTreeSnapshot snapshot;
-    HpsAllocStats before;
-    HpsStatus status;
+    LksPropertyItem fixture[6];
+    LksPropertyItem inserted = { 2, 6u };
+    LksComparator comparator = { property_compare_key, NULL };
+    LksTree *tree = NULL;
+    const LksTreeNode *node;
+    LksPropertyTreeSnapshot snapshot;
+    LksAllocStats before;
+    LksStatus status;
     size_t k;
     size_t fail_index;
     int valid = 1;
 
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0 ||
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0 ||
         !property_build_equal_tree(&tree, fixture, 6u, &comparator)) return 0;
-    hps_alloc_test_disable_failure();
-    hps_alloc_test_reset_attempt_counter();
-    status = hps_tree_insert_item(tree, &inserted, &comparator, &node);
-    k = hps_alloc_test_get_attempt_count();
-    if (status != HPS_STATUS_OK || k == 0u) valid = 0;
-    hps_tree_destroy(tree);
+    lks_alloc_test_disable_failure();
+    lks_alloc_test_reset_attempt_counter();
+    status = lks_tree_insert_item(tree, &inserted, &comparator, &node);
+    k = lks_alloc_test_get_attempt_count();
+    if (status != LKS_STATUS_OK || k == 0u) valid = 0;
+    lks_tree_destroy(tree);
     tree = NULL;
     if (!valid) return 0;
     *out_k = k;
@@ -1320,29 +1320,29 @@ static int property_oom_tree_equal_range(size_t *out_k,
     for (fail_index = 1; fail_index <= k; ++fail_index) {
         int triggered;
         tree = NULL;
-        if (hps_alloc_stats_reset() != 0 ||
+        if (lks_alloc_stats_reset() != 0 ||
             !property_build_equal_tree(&tree, fixture, 6u, &comparator) ||
             !property_snapshot_tree(tree, &snapshot)) {
             valid = 0;
             break;
         }
-        before = hps_alloc_stats_get();
-        hps_alloc_test_fail_on_attempt(fail_index);
-        status = hps_tree_insert_item(tree, &inserted, &comparator, &node);
-        triggered = hps_alloc_test_failure_triggered();
-        hps_alloc_test_disable_failure();
-        if (status != HPS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
+        before = lks_alloc_stats_get();
+        lks_alloc_test_fail_on_attempt(fail_index);
+        status = lks_tree_insert_item(tree, &inserted, &comparator, &node);
+        triggered = lks_alloc_test_failure_triggered();
+        lks_alloc_test_disable_failure();
+        if (status != LKS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
         {
             int topology_ok = node == NULL &&
                 property_tree_snapshot_matches(tree, &snapshot);
-            HpsAllocStats after = hps_alloc_stats_get();
+            LksAllocStats after = lks_alloc_stats_get();
             int footprint_ok = property_stats_live_equal(before, after);
             int failed_calls_ok = after.failed_calls == before.failed_calls + 1u;
             if (!topology_ok || !footprint_ok || !triggered || !failed_calls_ok) {
                 printf("OOM TreeInsertEqualRange fail=%zu status=%s topology=%d "
                     "footprint=%d triggered=%d failedCalls=%d before=%zu/%zu "
                     "after=%zu/%zu failed=%zu/%zu\n", fail_index,
-                    hps_status_string(status), topology_ok, footprint_ok,
+                    lks_status_string(status), topology_ok, footprint_ok,
                     triggered, failed_calls_ok, before.live_bytes,
                     before.live_blocks, after.live_bytes, after.live_blocks,
                     before.failed_calls, after.failed_calls);
@@ -1350,29 +1350,29 @@ static int property_oom_tree_equal_range(size_t *out_k,
             }
         }
         property_destroy_tree_snapshot(&snapshot);
-        hps_tree_destroy(tree);
+        lks_tree_destroy(tree);
         tree = NULL;
-        if (hps_alloc_stats_get().live_bytes != 0 ||
-            hps_alloc_stats_get().live_blocks != 0) ++*leaks;
+        if (lks_alloc_stats_get().live_bytes != 0 ||
+            lks_alloc_stats_get().live_blocks != 0) ++*leaks;
         ++*out_passed;
     }
     if (valid) {
         int triggered;
         static const size_t stable_indices[] = { 0u, 1u, 2u, 3u, 6u, 4u, 5u };
-        HpsPropertyTreeSnapshot after;
+        LksPropertyTreeSnapshot after;
         size_t index;
         tree = NULL;
-        if (hps_alloc_stats_reset() != 0 ||
+        if (lks_alloc_stats_reset() != 0 ||
             !property_build_equal_tree(&tree, fixture, 6u, &comparator)) return 0;
-        hps_alloc_test_fail_on_attempt(k + 1u);
-        status = hps_tree_insert_item(tree, &inserted, &comparator, &node);
-        triggered = hps_alloc_test_failure_triggered();
-        hps_alloc_test_disable_failure();
-        if (status != HPS_STATUS_OK || triggered ||
-            hps_tree_size(tree) != 7u ||
+        lks_alloc_test_fail_on_attempt(k + 1u);
+        status = lks_tree_insert_item(tree, &inserted, &comparator, &node);
+        triggered = lks_alloc_test_failure_triggered();
+        lks_alloc_test_disable_failure();
+        if (status != LKS_STATUS_OK || triggered ||
+            lks_tree_size(tree) != 7u ||
             !property_snapshot_tree(tree, &after)) {
             printf("OOM TreeInsertEqualRange K+1 status=%s triggered=%d size=%zu\n",
-                hps_status_string(status), triggered, hps_tree_size(tree));
+                lks_status_string(status), triggered, lks_tree_size(tree));
             ++*state_failures;
         } else {
             if (after.node_count != 7u) {
@@ -1385,14 +1385,14 @@ static int property_oom_tree_equal_range(size_t *out_k,
                 if (after.nodes[index].item != expected_item) {
                     printf("OOM TreeInsertEqualRange K+1 sequence[%zu]=%u expected=%u\n",
                         index,
-                        ((HpsPropertyItem *)after.nodes[index].item)->original_index,
-                        ((HpsPropertyItem *)expected_item)->original_index);
+                        ((LksPropertyItem *)after.nodes[index].item)->original_index,
+                        ((LksPropertyItem *)expected_item)->original_index);
                     ++*state_failures;
                 }
             }
             property_destroy_tree_snapshot(&after);
         }
-        hps_tree_destroy(tree);
+        lks_tree_destroy(tree);
     }
     return valid;
 }
@@ -1400,14 +1400,14 @@ static int property_oom_tree_equal_range(size_t *out_k,
 static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
     size_t *wrong_status, size_t *state_failures, size_t *leaks)
 {
-    HpsPropertyItem storage[12];
-    HpsPropertyItem *items[12];
-    HpsPropertyItem *expected[12];
-    HpsComparator comparator = { property_compare_key, NULL };
-    HpsGroup *base = NULL, *incoming = NULL, *result = NULL;
-    HpsPropertyGroupSnapshot base_snapshot, incoming_snapshot;
-    HpsStatus status;
-    HpsAllocStats before;
+    LksPropertyItem storage[12];
+    LksPropertyItem *items[12];
+    LksPropertyItem *expected[12];
+    LksComparator comparator = { property_compare_key, NULL };
+    LksGroup *base = NULL, *incoming = NULL, *result = NULL;
+    LksPropertyGroupSnapshot base_snapshot, incoming_snapshot;
+    LksStatus status;
+    LksAllocStats before;
     size_t i, k, fail_index;
     int valid = 1;
     {
@@ -1419,15 +1419,15 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
         }
     }
     property_stable_insertion_sort(expected, 12u);
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0 ||
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0 ||
         !property_build_equal_merge_fixture(&base, &incoming, storage, items,
             &comparator)) return 0;
-    hps_alloc_test_reset_attempt_counter();
-    status = hps_group_merge(base, incoming, &comparator, &result);
-    k = hps_alloc_test_get_attempt_count();
-    if (status != HPS_STATUS_OK || k == 0u) valid = 0;
-    hps_group_destroy(result); hps_group_destroy(incoming); hps_group_destroy(base);
+    lks_alloc_test_reset_attempt_counter();
+    status = lks_group_merge(base, incoming, &comparator, &result);
+    k = lks_alloc_test_get_attempt_count();
+    if (status != LKS_STATUS_OK || k == 0u) valid = 0;
+    lks_group_destroy(result); lks_group_destroy(incoming); lks_group_destroy(base);
     if (!valid) return 0;
     *out_k = k;
     for (fail_index = 1; fail_index <= k; ++fail_index) {
@@ -1435,21 +1435,21 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
         base = incoming = result = NULL;
         memset(&base_snapshot, 0, sizeof(base_snapshot));
         memset(&incoming_snapshot, 0, sizeof(incoming_snapshot));
-        if (hps_alloc_stats_reset() != 0 ||
+        if (lks_alloc_stats_reset() != 0 ||
             !property_build_equal_merge_fixture(&base, &incoming, storage,
                 items, &comparator) ||
             !property_snapshot_group(base, &base_snapshot) ||
             !property_snapshot_group(incoming, &incoming_snapshot)) {
             valid = 0; break;
         }
-        before = hps_alloc_stats_get();
-        hps_alloc_test_fail_on_attempt(fail_index);
-        status = hps_group_merge(base, incoming, &comparator, &result);
-        triggered = hps_alloc_test_failure_triggered();
-        hps_alloc_test_disable_failure();
-        if (status != HPS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
+        before = lks_alloc_stats_get();
+        lks_alloc_test_fail_on_attempt(fail_index);
+        status = lks_group_merge(base, incoming, &comparator, &result);
+        triggered = lks_alloc_test_failure_triggered();
+        lks_alloc_test_disable_failure();
+        if (status != LKS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
         {
-            HpsAllocStats after = hps_alloc_stats_get();
+            LksAllocStats after = lks_alloc_stats_get();
             int state_ok = result == NULL &&
                 property_group_matches_snapshot(base, &base_snapshot) &&
                 property_group_matches_snapshot(incoming, &incoming_snapshot);
@@ -1459,7 +1459,7 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
                 printf("OOM EqualHeavyPublicMerge fail=%zu status=%s state=%d "
                     "footprint=%d triggered=%d failedCalls=%d before=%zu/%zu "
                     "after=%zu/%zu failed=%zu/%zu\n", fail_index,
-                    hps_status_string(status), state_ok, footprint_ok,
+                    lks_status_string(status), state_ok, footprint_ok,
                     triggered, failed_calls_ok, before.live_bytes,
                     before.live_blocks, after.live_bytes, after.live_blocks,
                     before.failed_calls, after.failed_calls);
@@ -1468,35 +1468,35 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
         }
         property_destroy_group_snapshot(&base_snapshot);
         property_destroy_group_snapshot(&incoming_snapshot);
-        hps_group_destroy(result); hps_group_destroy(incoming); hps_group_destroy(base);
-        if (hps_alloc_stats_get().live_bytes != 0 ||
-            hps_alloc_stats_get().live_blocks != 0) ++*leaks;
+        lks_group_destroy(result); lks_group_destroy(incoming); lks_group_destroy(base);
+        if (lks_alloc_stats_get().live_bytes != 0 ||
+            lks_alloc_stats_get().live_blocks != 0) ++*leaks;
         ++*out_passed;
     }
     if (valid) {
         int triggered;
         base = incoming = result = NULL;
-        if (hps_alloc_stats_reset() != 0 ||
+        if (lks_alloc_stats_reset() != 0 ||
             !property_build_equal_merge_fixture(&base, &incoming, storage,
                 items, &comparator)) return 0;
-        hps_alloc_test_fail_on_attempt(k + 1u);
-        status = hps_group_merge(base, incoming, &comparator, &result);
-        triggered = hps_alloc_test_failure_triggered();
-        if (status != HPS_STATUS_OK || triggered ||
+        lks_alloc_test_fail_on_attempt(k + 1u);
+        status = lks_group_merge(base, incoming, &comparator, &result);
+        triggered = lks_alloc_test_failure_triggered();
+        if (status != LKS_STATUS_OK || triggered ||
             !property_group_equals_expected(result, expected, 12u)) {
             printf("OOM EqualHeavyPublicMerge K+1 status=%s triggered=%d size=%zu\n",
-                hps_status_string(status), triggered,
-                result == NULL ? 0u : hps_group_size(result));
+                lks_status_string(status), triggered,
+                result == NULL ? 0u : lks_group_size(result));
             if (result != NULL) for (i = 0; i < 12u; ++i) {
-                HpsPropertyItem *actual = (HpsPropertyItem *)hps_group_item_at(result, i);
-                HpsPropertyItem *wanted = expected[i];
+                LksPropertyItem *actual = (LksPropertyItem *)lks_group_item_at(result, i);
+                LksPropertyItem *wanted = expected[i];
                 if (actual != wanted) printf("  sequence[%zu]=%u expected=%u\n",
                     i, actual->original_index, wanted->original_index);
             }
             ++*state_failures;
         }
-        hps_alloc_test_disable_failure();
-        hps_group_destroy(result); hps_group_destroy(incoming); hps_group_destroy(base);
+        lks_alloc_test_disable_failure();
+        lks_group_destroy(result); lks_group_destroy(incoming); lks_group_destroy(base);
     }
     return valid;
 }
@@ -1505,14 +1505,14 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
     size_t *wrong_status, size_t *state_failures, size_t *ownership_failures,
     size_t *leaks)
 {
-    HpsPropertyItem storage[12];
-    HpsPropertyItem *items[12];
-    HpsPropertyItem *expected[12];
-    HpsComparator comparator = { property_compare_key, NULL };
-    HpsGroup *base = NULL, *incoming = NULL;
-    HpsPropertyGroupSnapshot incoming_snapshot;
-    HpsStatus status;
-    HpsAllocStats incoming_footprint, before;
+    LksPropertyItem storage[12];
+    LksPropertyItem *items[12];
+    LksPropertyItem *expected[12];
+    LksComparator comparator = { property_compare_key, NULL };
+    LksGroup *base = NULL, *incoming = NULL;
+    LksPropertyGroupSnapshot incoming_snapshot;
+    LksStatus status;
+    LksAllocStats incoming_footprint, before;
     size_t i, k, fail_index;
     int valid = 1;
     {
@@ -1524,57 +1524,57 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
         }
     }
     property_stable_insertion_sort(expected, 12u);
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0 ||
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0 ||
         !property_build_equal_merge_fixture(&base, &incoming, storage, items,
             &comparator) || !property_snapshot_group(incoming, &incoming_snapshot))
         return 0;
-    hps_alloc_test_reset_attempt_counter();
-    status = hps_group_merge_into_owned_base(&base, incoming, &comparator);
-    k = hps_alloc_test_get_attempt_count();
-    if (status != HPS_STATUS_OK || k == 0u || base == NULL) valid = 0;
-    hps_group_destroy(base); hps_group_destroy(incoming);
+    lks_alloc_test_reset_attempt_counter();
+    status = lks_group_merge_into_owned_base(&base, incoming, &comparator);
+    k = lks_alloc_test_get_attempt_count();
+    if (status != LKS_STATUS_OK || k == 0u || base == NULL) valid = 0;
+    lks_group_destroy(base); lks_group_destroy(incoming);
     property_destroy_group_snapshot(&incoming_snapshot);
     if (!valid) return 0;
     *out_k = k;
     for (fail_index = 1; fail_index <= k; ++fail_index) {
-        HpsPropertyGroupSnapshot snapshot;
+        LksPropertyGroupSnapshot snapshot;
         void *base_items[6];
         int triggered;
         size_t j;
         base = incoming = NULL;
         memset(&snapshot, 0, sizeof(snapshot));
-        if (hps_alloc_stats_reset() != 0 ||
+        if (lks_alloc_stats_reset() != 0 ||
             !property_build_equal_merge_fixture(&base, &incoming, storage,
                 items, &comparator) || !property_snapshot_group(incoming, &snapshot)) {
             valid = 0; break;
         }
-        hps_group_destroy(base);
+        lks_group_destroy(base);
         base = NULL;
-        incoming_footprint = hps_alloc_stats_get();
+        incoming_footprint = lks_alloc_stats_get();
         for (j = 0; j < 6u; ++j) base_items[j] = items[j];
-        if (hps_group_build(base_items, 6u, &comparator, &base) != HPS_STATUS_OK) {
+        if (lks_group_build(base_items, 6u, &comparator, &base) != LKS_STATUS_OK) {
             ++*state_failures;
             property_destroy_group_snapshot(&snapshot);
-            hps_group_destroy(incoming);
+            lks_group_destroy(incoming);
             break;
         }
-        before = hps_alloc_stats_get();
-        hps_alloc_test_fail_on_attempt(fail_index);
-        status = hps_group_merge_into_owned_base(&base, incoming, &comparator);
-        triggered = hps_alloc_test_failure_triggered();
-        hps_alloc_test_disable_failure();
-        if (status != HPS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
+        before = lks_alloc_stats_get();
+        lks_alloc_test_fail_on_attempt(fail_index);
+        status = lks_group_merge_into_owned_base(&base, incoming, &comparator);
+        triggered = lks_alloc_test_failure_triggered();
+        lks_alloc_test_disable_failure();
+        if (status != LKS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
         if (base != NULL || !property_group_matches_snapshot(incoming, &snapshot) ||
             !triggered) ++*ownership_failures;
         {
-            HpsAllocStats now = hps_alloc_stats_get();
+            LksAllocStats now = lks_alloc_stats_get();
             if (now.live_bytes != incoming_footprint.live_bytes ||
                 now.live_blocks != incoming_footprint.live_blocks ||
                 now.failed_calls != before.failed_calls + 1u) {
                 printf("OOM EqualHeavyPrivateMerge fail=%zu status=%s "
                     "expectedLive=%zu/%zu actualLive=%zu/%zu failed=%zu/%zu\n",
-                    fail_index, hps_status_string(status),
+                    fail_index, lks_status_string(status),
                     incoming_footprint.live_bytes, incoming_footprint.live_blocks,
                     now.live_bytes, now.live_blocks, before.failed_calls + 1u,
                     now.failed_calls);
@@ -1582,46 +1582,46 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
             }
         }
         property_destroy_group_snapshot(&snapshot);
-        hps_group_destroy(base); hps_group_destroy(incoming);
-        if (hps_alloc_stats_get().live_bytes != 0 ||
-            hps_alloc_stats_get().live_blocks != 0) ++*leaks;
+        lks_group_destroy(base); lks_group_destroy(incoming);
+        if (lks_alloc_stats_get().live_bytes != 0 ||
+            lks_alloc_stats_get().live_blocks != 0) ++*leaks;
         ++*out_passed;
     }
     if (valid) {
-        HpsPropertyGroupSnapshot snapshot;
+        LksPropertyGroupSnapshot snapshot;
         int triggered;
         base = incoming = NULL;
         memset(&snapshot, 0, sizeof(snapshot));
-        if (hps_alloc_stats_reset() != 0 ||
+        if (lks_alloc_stats_reset() != 0 ||
             !property_build_equal_merge_fixture(&base, &incoming, storage,
                 items, &comparator) || !property_snapshot_group(incoming, &snapshot))
             return 0;
-        hps_alloc_test_fail_on_attempt(k + 1u);
-        status = hps_group_merge_into_owned_base(&base, incoming, &comparator);
-        triggered = hps_alloc_test_failure_triggered();
-        if (status != HPS_STATUS_OK || triggered ||
+        lks_alloc_test_fail_on_attempt(k + 1u);
+        status = lks_group_merge_into_owned_base(&base, incoming, &comparator);
+        triggered = lks_alloc_test_failure_triggered();
+        if (status != LKS_STATUS_OK || triggered ||
             !property_group_equals_expected(base, expected, 12u)) {
             printf("OOM EqualHeavyPrivateMerge K+1 status=%s triggered=%d size=%zu\n",
-                hps_status_string(status), triggered,
-                base == NULL ? 0u : hps_group_size(base));
+                lks_status_string(status), triggered,
+                base == NULL ? 0u : lks_group_size(base));
             if (base != NULL) for (i = 0; i < 12u; ++i) {
-                HpsPropertyItem *actual = (HpsPropertyItem *)hps_group_item_at(base, i);
-                HpsPropertyItem *wanted = expected[i];
+                LksPropertyItem *actual = (LksPropertyItem *)lks_group_item_at(base, i);
+                LksPropertyItem *wanted = expected[i];
                 if (actual != wanted) printf("  sequence[%zu]=%u expected=%u\n",
                     i, actual->original_index, wanted->original_index);
             }
             ++*state_failures;
         }
-        hps_alloc_test_disable_failure();
+        lks_alloc_test_disable_failure();
         if (!property_group_matches_snapshot(incoming, &snapshot))
             ++*ownership_failures;
         property_destroy_group_snapshot(&snapshot);
-        hps_group_destroy(base); hps_group_destroy(incoming);
+        lks_group_destroy(base); lks_group_destroy(incoming);
     }
     return valid;
 }
 
-int hps_run_stage14_2_oom_tests(void)
+int lks_run_stage14_2_oom_tests(void)
 {
     size_t tree_k = 0, tree_passed = 0;
     size_t public_k = 0, public_passed = 0;
@@ -1629,7 +1629,7 @@ int hps_run_stage14_2_oom_tests(void)
     size_t wrong_status = 0, state_failures = 0;
     size_t ownership_failures = 0, leaks = 0;
     int valid;
-    hps_alloc_test_disable_failure();
+    lks_alloc_test_disable_failure();
     valid = property_oom_tree_equal_range(&tree_k, &tree_passed,
         &wrong_status, &state_failures, &leaks);
     valid = property_oom_public_merge(&public_k, &public_passed,
@@ -1637,10 +1637,10 @@ int hps_run_stage14_2_oom_tests(void)
     valid = property_oom_private_merge(&private_k, &private_passed,
         &wrong_status, &state_failures, &ownership_failures, &leaks) && valid;
     {
-        HpsAllocStats final_stats = hps_alloc_stats_get();
+        LksAllocStats final_stats = lks_alloc_stats_get();
         if (final_stats.live_bytes != 0 || final_stats.live_blocks != 0 ||
-            final_stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-            final_stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0)
+            final_stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+            final_stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0)
             ++leaks;
     }
     printf("Stage14.2PostFixOOMFacts\n");
@@ -1663,37 +1663,37 @@ int hps_run_stage14_2_oom_tests(void)
     return valid ? 0 : 1;
 }
 
-int hps_run_stage14_2_release_smoke(void)
+int lks_run_stage14_2_release_smoke(void)
 {
-    int status = hps_run_stage14_1_property_tests();
+    int status = lks_run_stage14_1_property_tests();
     printf("Stage14.2ReleaseSmokeStatus=%s\n", status == 0 ? "PASS" : "FAIL");
     return status;
 }
 
-int hps_run_stage14_1_property_tests(void)
+int lks_run_stage14_1_property_tests(void)
 {
-    HpsPropertyCounts counts;
-    HpsPropertyRandom path_random;
+    LksPropertyCounts counts;
+    LksPropertyRandom path_random;
     size_t seed_index;
     size_t distribution_index;
     size_t merge_index;
     int valid = 1;
 
     memset(&counts, 0, sizeof(counts));
-    hps_alloc_test_disable_failure();
-    if (hps_alloc_stats_reset() != 0) {
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0) {
         printf("Stage14.1 setup failed: allocator has live allocations\n");
         return 1;
     }
 
-    for (seed_index = 0; seed_index < HPS_PROPERTY_SEED_COUNT; ++seed_index) {
-        HpsPropertyRandom random;
+    for (seed_index = 0; seed_index < LKS_PROPERTY_SEED_COUNT; ++seed_index) {
+        LksPropertyRandom random;
         random.state = property_seed_at(seed_index);
         for (distribution_index = 0;
-                distribution_index < HPS_PROPERTY_DISTRIBUTION_COUNT;
+                distribution_index < LKS_PROPERTY_DISTRIBUTION_COUNT;
                 ++distribution_index) {
-            HpsPropertyDistribution distribution =
-                (HpsPropertyDistribution)distribution_index;
+            LksPropertyDistribution distribution =
+                (LksPropertyDistribution)distribution_index;
             size_t size_index = (seed_index + distribution_index) %
                 (sizeof(property_sizes) / sizeof(property_sizes[0]));
             size_t count = property_sizes[size_index];
@@ -1707,11 +1707,11 @@ int hps_run_stage14_1_property_tests(void)
     }
 
     for (merge_index = 0; merge_index < 128u; ++merge_index) {
-        size_t seed_index_for_case = merge_index % HPS_PROPERTY_SEED_COUNT;
-        HpsPropertyRandom random;
-        HpsPropertyDistribution distribution =
-            (HpsPropertyDistribution)(merge_index %
-                HPS_PROPERTY_DISTRIBUTION_COUNT);
+        size_t seed_index_for_case = merge_index % LKS_PROPERTY_SEED_COUNT;
+        LksPropertyRandom random;
+        LksPropertyDistribution distribution =
+            (LksPropertyDistribution)(merge_index %
+                LKS_PROPERTY_DISTRIBUTION_COUNT);
         size_t count = 2u + (merge_index * 37u + seed_index_for_case * 11u) % 63u;
 
         random.state = property_seed_at(seed_index_for_case) ^
@@ -1722,7 +1722,7 @@ int hps_run_stage14_1_property_tests(void)
                 &counts, &random)) valid = 0;
     }
 
-    path_random.state = HPS_PROPERTY_BASE_SEED ^ UINT32_C(0x3C6EF372);
+    path_random.state = LKS_PROPERTY_BASE_SEED ^ UINT32_C(0x3C6EF372);
     if (path_random.state == 0) path_random.state = UINT32_C(0xA54FF53A);
     property_run_path_properties(&path_random, &counts);
 
@@ -1730,9 +1730,9 @@ int hps_run_stage14_1_property_tests(void)
         counts.batch_oracle_cases < 256u ||
         counts.public_merge_oracle_cases < 128u ||
         counts.private_merge_differential_cases < 128u ||
-        counts.before_checks < HPS_PROPERTY_GAP_TARGET ||
-        counts.after_checks < HPS_PROPERTY_GAP_TARGET ||
-        counts.between_checks < HPS_PROPERTY_GAP_TARGET ||
+        counts.before_checks < LKS_PROPERTY_GAP_TARGET ||
+        counts.after_checks < LKS_PROPERTY_GAP_TARGET ||
+        counts.between_checks < LKS_PROPERTY_GAP_TARGET ||
         counts.path_pair_checks != 55296u ||
         counts.path_triple_checks != 288000u ||
         counts.duplicate_cases == 0 || counts.heavy_duplicate_cases == 0 ||
@@ -1740,12 +1740,12 @@ int hps_run_stage14_1_property_tests(void)
         valid = 0;
     }
 
-    hps_alloc_test_disable_failure();
+    lks_alloc_test_disable_failure();
     {
-        HpsAllocStats stats = hps_alloc_stats_get();
+        LksAllocStats stats = lks_alloc_stats_get();
         if (stats.live_bytes != 0 || stats.live_blocks != 0) ++counts.leak_count;
-        if (stats.tags[HPS_ALLOC_TAG_OTHER].live_bytes != 0 ||
-            stats.tags[HPS_ALLOC_TAG_OTHER].live_blocks != 0 ||
+        if (stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes != 0 ||
+            stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks != 0 ||
             stats.failed_calls != 0 || stats.counter_overflowed)
             ++counts.allocator_failures;
     }
@@ -1762,7 +1762,7 @@ int hps_run_stage14_1_property_tests(void)
         counts.antisymmetry_failures || counts.transitivity_failures) valid = 0;
 
     {
-        int core_smoke_status = hps_run_stage14_1_core_smoke();
+        int core_smoke_status = lks_run_stage14_1_core_smoke();
         if (core_smoke_status != 0) valid = 0;
         printf("Stage14.1CoreSmokeStatus=%s\n",
             core_smoke_status == 0 ? "PASS" : "FAIL");
@@ -1770,8 +1770,8 @@ int hps_run_stage14_1_property_tests(void)
 
     printf("Stage14.1FinalStatus=%s\n", valid ? "PASS" : "FAIL");
     printf("DeterministicSeeds=%u BaseSeed=0x%08X SeedStride=0x9E3779B9\n",
-        (unsigned int)HPS_PROPERTY_SEED_COUNT,
-        (unsigned int)HPS_PROPERTY_BASE_SEED);
+        (unsigned int)LKS_PROPERTY_SEED_COUNT,
+        (unsigned int)LKS_PROPERTY_BASE_SEED);
     printf("GroupStableOracleCases=%zu BatchOracleCases=%zu "
         "PublicMergeOracleCases=%zu PrivateMergeDifferentialCases=%zu\n",
         counts.group_stable_oracle_cases, counts.batch_oracle_cases,

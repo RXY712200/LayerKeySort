@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hps.h"
+#include "layerkeysort.h"
 #include "../tests/benchmark.h"
 #include "../tests/property.h"
 
@@ -23,55 +23,55 @@ static int compare_int(const void *left, const void *right, void *context)
     return 0;
 }
 
-static HpsPath *make_path(
-    HpsDirection direction,
+static LksPath *make_path(
+    LksDirection direction,
     const unsigned int *slots,
     size_t count
 )
 {
-    HpsPath *path;
+    LksPath *path;
     size_t index;
 
     if (slots == NULL || count == 0) {
         return NULL;
     }
 
-    path = hps_path_create(direction, slots[0]);
+    path = lks_path_create(direction, slots[0]);
     if (path == NULL) {
         return NULL;
     }
 
     for (index = 1; index < count; ++index) {
-        if (hps_path_append(path, slots[index]) != HPS_STATUS_OK) {
-            hps_path_destroy(path);
+        if (lks_path_append(path, slots[index]) != LKS_STATUS_OK) {
+            lks_path_destroy(path);
             return NULL;
         }
     }
     return path;
 }
 
-static HpsPath *make_path_at_levels(
-    HpsDirection direction,
+static LksPath *make_path_at_levels(
+    LksDirection direction,
     const unsigned int *slots,
     const size_t *levels,
     size_t count
 )
 {
-    HpsPath *path;
+    LksPath *path;
     size_t index;
 
     if (slots == NULL || levels == NULL || count == 0) {
         return NULL;
     }
 
-    path = hps_path_create_at_level(direction, slots[0], levels[0]);
+    path = lks_path_create_at_level(direction, slots[0], levels[0]);
     if (path == NULL) {
         return NULL;
     }
     for (index = 1; index < count; ++index) {
-        if (hps_path_append_at_level(path, slots[index], levels[index]) !=
-            HPS_STATUS_OK) {
-            hps_path_destroy(path);
+        if (lks_path_append_at_level(path, slots[index], levels[index]) !=
+            LKS_STATUS_OK) {
+            lks_path_destroy(path);
             return NULL;
         }
     }
@@ -79,20 +79,20 @@ static HpsPath *make_path_at_levels(
 }
 static int expect_compare(
     const char *label,
-    const HpsPath *left,
-    const HpsPath *right,
+    const LksPath *left,
+    const LksPath *right,
     int expected
 )
 {
     int comparison = 99;
-    HpsStatus status;
+    LksStatus status;
 
-    status = hps_path_compare(left, right, &comparison);
+    status = lks_path_compare(left, right, &comparison);
     printf("%s: %d\n", label, comparison);
-    return status == HPS_STATUS_OK && comparison == expected;
+    return status == LKS_STATUS_OK && comparison == expected;
 }
 
-static int run_path_compare_demo(const HpsPath *zero_path)
+static int run_path_compare_demo(const LksPath *zero_path)
 {
     static const unsigned int negative_a1_slots[] = { 1u };
     static const unsigned int negative_a2_slots[] = { 2u };
@@ -104,51 +104,51 @@ static int run_path_compare_demo(const HpsPath *zero_path)
     static const unsigned int p3_slots[] = { 3u, 259u, 1u };
     static const unsigned int n2_slots[] = { 2u, 0u };
     static const unsigned int n3_slots[] = { 2u, 1u };
-    HpsPath *negative_a1 = NULL;
-    HpsPath *negative_a2 = NULL;
-    HpsPath *positive_a1 = NULL;
-    HpsPath *positive_a2 = NULL;
-    HpsPath *positive_parent = NULL;
-    HpsPath *positive_child = NULL;
-    HpsPath *p1 = NULL;
-    HpsPath *p2 = NULL;
-    HpsPath *p3 = NULL;
-    HpsPath *p1_clone = NULL;
-    HpsPath *n2 = NULL;
-    HpsPath *n3 = NULL;
+    LksPath *negative_a1 = NULL;
+    LksPath *negative_a2 = NULL;
+    LksPath *positive_a1 = NULL;
+    LksPath *positive_a2 = NULL;
+    LksPath *positive_parent = NULL;
+    LksPath *positive_child = NULL;
+    LksPath *p1 = NULL;
+    LksPath *p2 = NULL;
+    LksPath *p3 = NULL;
+    LksPath *p1_clone = NULL;
+    LksPath *n2 = NULL;
+    LksPath *n3 = NULL;
     int success = 0;
 
     negative_a1 = make_path(
-        HPS_DIRECTION_NEGATIVE, negative_a1_slots, 1
+        LKS_DIRECTION_NEGATIVE, negative_a1_slots, 1
     );
     negative_a2 = make_path(
-        HPS_DIRECTION_NEGATIVE, negative_a2_slots, 1
+        LKS_DIRECTION_NEGATIVE, negative_a2_slots, 1
     );
     positive_a1 = make_path(
-        HPS_DIRECTION_POSITIVE, positive_a1_slots, 1
+        LKS_DIRECTION_POSITIVE, positive_a1_slots, 1
     );
     positive_a2 = make_path(
-        HPS_DIRECTION_POSITIVE, positive_a2_slots, 1
+        LKS_DIRECTION_POSITIVE, positive_a2_slots, 1
     );
     positive_parent = make_path(
-        HPS_DIRECTION_POSITIVE, positive_parent_slots, 1
+        LKS_DIRECTION_POSITIVE, positive_parent_slots, 1
     );
     if (positive_parent != NULL) {
-        positive_child = hps_path_clone(positive_parent);
+        positive_child = lks_path_clone(positive_parent);
     }
     if (positive_child != NULL &&
-        hps_path_append(positive_child, 0u) != HPS_STATUS_OK) {
-        hps_path_destroy(positive_child);
+        lks_path_append(positive_child, 0u) != LKS_STATUS_OK) {
+        lks_path_destroy(positive_child);
         positive_child = NULL;
     }
-    p1 = make_path(HPS_DIRECTION_POSITIVE, p1_slots, 3);
-    p2 = make_path(HPS_DIRECTION_POSITIVE, p2_slots, 4);
-    p3 = make_path(HPS_DIRECTION_POSITIVE, p3_slots, 3);
+    p1 = make_path(LKS_DIRECTION_POSITIVE, p1_slots, 3);
+    p2 = make_path(LKS_DIRECTION_POSITIVE, p2_slots, 4);
+    p3 = make_path(LKS_DIRECTION_POSITIVE, p3_slots, 3);
     if (p1 != NULL) {
-        p1_clone = hps_path_clone(p1);
+        p1_clone = lks_path_clone(p1);
     }
-    n2 = make_path(HPS_DIRECTION_NEGATIVE, n2_slots, 2);
-    n3 = make_path(HPS_DIRECTION_NEGATIVE, n3_slots, 2);
+    n2 = make_path(LKS_DIRECTION_NEGATIVE, n2_slots, 2);
+    n3 = make_path(LKS_DIRECTION_NEGATIVE, n3_slots, 2);
 
     if (negative_a1 == NULL || negative_a2 == NULL ||
         positive_a1 == NULL || positive_a2 == NULL ||
@@ -182,18 +182,18 @@ static int run_path_compare_demo(const HpsPath *zero_path)
     success = 1;
 
 cleanup:
-    hps_path_destroy(n3);
-    hps_path_destroy(n2);
-    hps_path_destroy(p1_clone);
-    hps_path_destroy(p3);
-    hps_path_destroy(p2);
-    hps_path_destroy(p1);
-    hps_path_destroy(positive_child);
-    hps_path_destroy(positive_parent);
-    hps_path_destroy(positive_a2);
-    hps_path_destroy(positive_a1);
-    hps_path_destroy(negative_a2);
-    hps_path_destroy(negative_a1);
+    lks_path_destroy(n3);
+    lks_path_destroy(n2);
+    lks_path_destroy(p1_clone);
+    lks_path_destroy(p3);
+    lks_path_destroy(p2);
+    lks_path_destroy(p1);
+    lks_path_destroy(positive_child);
+    lks_path_destroy(positive_parent);
+    lks_path_destroy(positive_a2);
+    lks_path_destroy(positive_a1);
+    lks_path_destroy(negative_a2);
+    lks_path_destroy(negative_a1);
     return success;
 }
 
@@ -211,46 +211,46 @@ static int run_path_level_demo(void)
     static const size_t x_levels[] = { 0, 1, 2 };
     static const unsigned int z_slots[] = { 3u, 259u, 1u };
     static const size_t z_levels[] = { 0, 1, 2 };
-    HpsPath *parent = NULL;
-    HpsPath *a = NULL;
-    HpsPath *b = NULL;
-    HpsPath *c = NULL;
-    HpsPath *x = NULL;
-    HpsPath *y = NULL;
-    HpsPath *z = NULL;
+    LksPath *parent = NULL;
+    LksPath *a = NULL;
+    LksPath *b = NULL;
+    LksPath *c = NULL;
+    LksPath *x = NULL;
+    LksPath *y = NULL;
+    LksPath *z = NULL;
     char text[64];
     size_t level;
-    HpsStatus status;
+    LksStatus status;
     int success = 0;
 
     parent = make_path_at_levels(
-        HPS_DIRECTION_POSITIVE, parent_slots, parent_levels, 1
+        LKS_DIRECTION_POSITIVE, parent_slots, parent_levels, 1
     );
     if (parent != NULL) {
-        a = hps_path_clone(parent);
+        a = lks_path_clone(parent);
     }
-    if (a != NULL && hps_path_append(a, 0u) != HPS_STATUS_OK) {
-        hps_path_destroy(a);
+    if (a != NULL && lks_path_append(a, 0u) != LKS_STATUS_OK) {
+        lks_path_destroy(a);
         a = NULL;
     }
     b = make_path_at_levels(
-        HPS_DIRECTION_POSITIVE, b_slots, b_levels, 2
+        LKS_DIRECTION_POSITIVE, b_slots, b_levels, 2
     );
     c = make_path_at_levels(
-        HPS_DIRECTION_POSITIVE, c_slots, c_levels, 2
+        LKS_DIRECTION_POSITIVE, c_slots, c_levels, 2
     );
     x = make_path_at_levels(
-        HPS_DIRECTION_POSITIVE, x_slots, x_levels, 3
+        LKS_DIRECTION_POSITIVE, x_slots, x_levels, 3
     );
     if (x != NULL) {
-        y = hps_path_clone(x);
+        y = lks_path_clone(x);
     }
-    if (y != NULL && hps_path_append_at_level(y, 0u, 3) != HPS_STATUS_OK) {
-        hps_path_destroy(y);
+    if (y != NULL && lks_path_append_at_level(y, 0u, 3) != LKS_STATUS_OK) {
+        lks_path_destroy(y);
         y = NULL;
     }
     z = make_path_at_levels(
-        HPS_DIRECTION_POSITIVE, z_slots, z_levels, 3
+        LKS_DIRECTION_POSITIVE, z_slots, z_levels, 3
     );
 
     if (parent == NULL || a == NULL || b == NULL || c == NULL ||
@@ -259,22 +259,22 @@ static int run_path_level_demo(void)
     }
 
     printf("Path level tests:\n");
-    if (hps_path_get_level(a, 1, &level) != HPS_STATUS_OK || level != 1 ||
-        hps_path_get_level(b, 1, &level) != HPS_STATUS_OK || level != 2 ||
-        hps_path_get_level(c, 1, &level) != HPS_STATUS_OK || level != 3) {
+    if (lks_path_get_level(a, 1, &level) != LKS_STATUS_OK || level != 1 ||
+        lks_path_get_level(b, 1, &level) != LKS_STATUS_OK || level != 2 ||
+        lks_path_get_level(c, 1, &level) != LKS_STATUS_OK || level != 3) {
         goto cleanup;
     }
-    if (hps_path_format(a, text, sizeof(text)) != HPS_STATUS_OK ||
+    if (lks_path_format(a, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3/A0") != 0) {
         goto cleanup;
     }
     printf("Level A: %s\n", text);
-    if (hps_path_format(b, text, sizeof(text)) != HPS_STATUS_OK ||
+    if (lks_path_format(b, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3//A0") != 0) {
         goto cleanup;
     }
     printf("Level B: %s\n", text);
-    if (hps_path_format(c, text, sizeof(text)) != HPS_STATUS_OK ||
+    if (lks_path_format(c, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3///A0") != 0) {
         goto cleanup;
     }
@@ -287,17 +287,17 @@ static int run_path_level_demo(void)
         goto cleanup;
     }
 
-    if (hps_path_format(x, text, sizeof(text)) != HPS_STATUS_OK ||
+    if (lks_path_format(x, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3/Z9//A0") != 0) {
         goto cleanup;
     }
     printf("Complex X: %s\n", text);
-    if (hps_path_format(y, text, sizeof(text)) != HPS_STATUS_OK ||
+    if (lks_path_format(y, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3/Z9//A0///A0") != 0) {
         goto cleanup;
     }
     printf("Complex Y: %s\n", text);
-    if (hps_path_format(z, text, sizeof(text)) != HPS_STATUS_OK ||
+    if (lks_path_format(z, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, "0A3/Z9//A1") != 0) {
         goto cleanup;
     }
@@ -308,36 +308,36 @@ static int run_path_level_demo(void)
         goto cleanup;
     }
 
-    status = hps_path_append_at_level(b, 5u, 2);
-    printf("Append duplicate level: %s\n", hps_status_string(status));
-    if (status != HPS_STATUS_INVALID_ARGUMENT || hps_path_depth(b) != 2) {
+    status = lks_path_append_at_level(b, 5u, 2);
+    printf("Append duplicate level: %s\n", lks_status_string(status));
+    if (status != LKS_STATUS_INVALID_ARGUMENT || lks_path_depth(b) != 2) {
         goto cleanup;
     }
-    status = hps_path_append_at_level(b, 5u, 1);
-    printf("Append lower level: %s\n", hps_status_string(status));
-    if (status != HPS_STATUS_INVALID_ARGUMENT || hps_path_depth(b) != 2) {
+    status = lks_path_append_at_level(b, 5u, 1);
+    printf("Append lower level: %s\n", lks_status_string(status));
+    if (status != LKS_STATUS_INVALID_ARGUMENT || lks_path_depth(b) != 2) {
         goto cleanup;
     }
-    status = hps_path_append_at_level(b, 5u, 3);
-    printf("Append higher level: %s\n", hps_status_string(status));
-    if (status != HPS_STATUS_OK ||
-        hps_path_get_level(b, 2, &level) != HPS_STATUS_OK || level != 3) {
+    status = lks_path_append_at_level(b, 5u, 3);
+    printf("Append higher level: %s\n", lks_status_string(status));
+    if (status != LKS_STATUS_OK ||
+        lks_path_get_level(b, 2, &level) != LKS_STATUS_OK || level != 3) {
         goto cleanup;
     }
 
     success = 1;
 
 cleanup:
-    hps_path_destroy(z);
-    hps_path_destroy(y);
-    hps_path_destroy(x);
-    hps_path_destroy(c);
-    hps_path_destroy(b);
-    hps_path_destroy(a);
-    hps_path_destroy(parent);
+    lks_path_destroy(z);
+    lks_path_destroy(y);
+    lks_path_destroy(x);
+    lks_path_destroy(c);
+    lks_path_destroy(b);
+    lks_path_destroy(a);
+    lks_path_destroy(parent);
     return success;
 }
-static int run_negative_level_demo(const HpsPath *zero_path)
+static int run_negative_level_demo(const LksPath *zero_path)
 {
     static const unsigned int root_slots[] = { 2u };
     static const size_t root_levels[] = { 0 };
@@ -349,27 +349,27 @@ static int run_negative_level_demo(const HpsPath *zero_path)
     static const size_t level3_levels[] = { 0, 3 };
     static const unsigned int nearer_root_slots[] = { 1u };
     static const size_t nearer_root_levels[] = { 0 };
-    HpsPath *root;
-    HpsPath *level1;
-    HpsPath *level2;
-    HpsPath *level3;
-    HpsPath *nearer_root;
+    LksPath *root;
+    LksPath *level1;
+    LksPath *level2;
+    LksPath *level3;
+    LksPath *nearer_root;
     int success;
 
     root = make_path_at_levels(
-        HPS_DIRECTION_NEGATIVE, root_slots, root_levels, 1
+        LKS_DIRECTION_NEGATIVE, root_slots, root_levels, 1
     );
     level1 = make_path_at_levels(
-        HPS_DIRECTION_NEGATIVE, level1_slots, level1_levels, 2
+        LKS_DIRECTION_NEGATIVE, level1_slots, level1_levels, 2
     );
     level2 = make_path_at_levels(
-        HPS_DIRECTION_NEGATIVE, level2_slots, level2_levels, 2
+        LKS_DIRECTION_NEGATIVE, level2_slots, level2_levels, 2
     );
     level3 = make_path_at_levels(
-        HPS_DIRECTION_NEGATIVE, level3_slots, level3_levels, 2
+        LKS_DIRECTION_NEGATIVE, level3_slots, level3_levels, 2
     );
     nearer_root = make_path_at_levels(
-        HPS_DIRECTION_NEGATIVE, nearer_root_slots, nearer_root_levels, 1
+        LKS_DIRECTION_NEGATIVE, nearer_root_slots, nearer_root_levels, 1
     );
 
     if (root == NULL || level1 == NULL || level2 == NULL || level3 == NULL ||
@@ -385,14 +385,14 @@ static int run_negative_level_demo(const HpsPath *zero_path)
             expect_compare("Negative nearer root vs zero", nearer_root, zero_path, -1);
     }
 
-    hps_path_destroy(nearer_root);
-    hps_path_destroy(level3);
-    hps_path_destroy(level2);
-    hps_path_destroy(level1);
-    hps_path_destroy(root);
+    lks_path_destroy(nearer_root);
+    lks_path_destroy(level3);
+    lks_path_destroy(level2);
+    lks_path_destroy(level1);
+    lks_path_destroy(root);
     return success;
 }
-static int run_root_level_demo(const HpsPath *zero_path)
+static int run_root_level_demo(const LksPath *zero_path)
 {
     static const unsigned int p0_slots[] = { 0u };
     static const size_t p0_levels[] = { 0 };
@@ -418,33 +418,33 @@ static int run_root_level_demo(const HpsPath *zero_path)
     static const size_t n1z8_levels[] = { 1 };
     static const unsigned int n1a0_slots[] = { 0u };
     static const size_t n1a0_levels[] = { 1 };
-    HpsPath *p0 = NULL;
-    HpsPath *p1 = NULL;
-    HpsPath *p2 = NULL;
-    HpsPath *p3 = NULL;
-    HpsPath *p1a1 = NULL;
-    HpsPath *p1z9 = NULL;
-    HpsPath *n0 = NULL;
-    HpsPath *n1 = NULL;
-    HpsPath *n2 = NULL;
-    HpsPath *n3 = NULL;
-    HpsPath *n1z8 = NULL;
-    HpsPath *n1a0 = NULL;
+    LksPath *p0 = NULL;
+    LksPath *p1 = NULL;
+    LksPath *p2 = NULL;
+    LksPath *p3 = NULL;
+    LksPath *p1a1 = NULL;
+    LksPath *p1z9 = NULL;
+    LksPath *n0 = NULL;
+    LksPath *n1 = NULL;
+    LksPath *n2 = NULL;
+    LksPath *n3 = NULL;
+    LksPath *n1z8 = NULL;
+    LksPath *n1a0 = NULL;
     char text[64];
     int success = 0;
 
-    p0 = make_path_at_levels(HPS_DIRECTION_POSITIVE, p0_slots, p0_levels, 1);
-    p1 = make_path_at_levels(HPS_DIRECTION_POSITIVE, p1_slots, p1_levels, 1);
-    p2 = make_path_at_levels(HPS_DIRECTION_POSITIVE, p2_slots, p2_levels, 1);
-    p3 = make_path_at_levels(HPS_DIRECTION_POSITIVE, p3_slots, p3_levels, 1);
-    p1a1 = make_path_at_levels(HPS_DIRECTION_POSITIVE, p1a1_slots, p1a1_levels, 1);
-    p1z9 = make_path_at_levels(HPS_DIRECTION_POSITIVE, p1z9_slots, p1z9_levels, 1);
-    n0 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, n0_slots, n0_levels, 1);
-    n1 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, n1_slots, n1_levels, 1);
-    n2 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, n2_slots, n2_levels, 1);
-    n3 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, n3_slots, n3_levels, 1);
-    n1z8 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, n1z8_slots, n1z8_levels, 1);
-    n1a0 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, n1a0_slots, n1a0_levels, 1);
+    p0 = make_path_at_levels(LKS_DIRECTION_POSITIVE, p0_slots, p0_levels, 1);
+    p1 = make_path_at_levels(LKS_DIRECTION_POSITIVE, p1_slots, p1_levels, 1);
+    p2 = make_path_at_levels(LKS_DIRECTION_POSITIVE, p2_slots, p2_levels, 1);
+    p3 = make_path_at_levels(LKS_DIRECTION_POSITIVE, p3_slots, p3_levels, 1);
+    p1a1 = make_path_at_levels(LKS_DIRECTION_POSITIVE, p1a1_slots, p1a1_levels, 1);
+    p1z9 = make_path_at_levels(LKS_DIRECTION_POSITIVE, p1z9_slots, p1z9_levels, 1);
+    n0 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, n0_slots, n0_levels, 1);
+    n1 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, n1_slots, n1_levels, 1);
+    n2 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, n2_slots, n2_levels, 1);
+    n3 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, n3_slots, n3_levels, 1);
+    n1z8 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, n1z8_slots, n1z8_levels, 1);
+    n1a0 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, n1a0_slots, n1a0_levels, 1);
 
     if (p0 == NULL || p1 == NULL || p2 == NULL || p3 == NULL ||
         p1a1 == NULL || p1z9 == NULL || n0 == NULL || n1 == NULL ||
@@ -453,13 +453,13 @@ static int run_root_level_demo(const HpsPath *zero_path)
     }
 
     printf("Root-level positive paths:\n");
-    if (hps_path_format(p0, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "0A0") != 0) goto cleanup;
+    if (lks_path_format(p0, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "0A0") != 0) goto cleanup;
     printf("P0: %s\n", text);
-    if (hps_path_format(p1, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "000/A0") != 0) goto cleanup;
+    if (lks_path_format(p1, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "000/A0") != 0) goto cleanup;
     printf("P1: %s\n", text);
-    if (hps_path_format(p2, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "000//A0") != 0) goto cleanup;
+    if (lks_path_format(p2, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "000//A0") != 0) goto cleanup;
     printf("P2: %s\n", text);
-    if (hps_path_format(p3, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "000///A0") != 0) goto cleanup;
+    if (lks_path_format(p3, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "000///A0") != 0) goto cleanup;
     printf("P3: %s\n", text);
     if (!expect_compare("zero vs P3", zero_path, p3, -1) ||
         !expect_compare("P3 vs P2", p3, p2, -1) ||
@@ -473,13 +473,13 @@ static int run_root_level_demo(const HpsPath *zero_path)
     }
 
     printf("Root-level negative paths:\n");
-    if (hps_path_format(n0, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "1Z9") != 0) goto cleanup;
+    if (lks_path_format(n0, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "1Z9") != 0) goto cleanup;
     printf("N0: %s\n", text);
-    if (hps_path_format(n1, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "1/Z9") != 0) goto cleanup;
+    if (lks_path_format(n1, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "1/Z9") != 0) goto cleanup;
     printf("N1: %s\n", text);
-    if (hps_path_format(n2, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "1//Z9") != 0) goto cleanup;
+    if (lks_path_format(n2, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "1//Z9") != 0) goto cleanup;
     printf("N2: %s\n", text);
-    if (hps_path_format(n3, text, sizeof(text)) != HPS_STATUS_OK || strcmp(text, "1///Z9") != 0) goto cleanup;
+    if (lks_path_format(n3, text, sizeof(text)) != LKS_STATUS_OK || strcmp(text, "1///Z9") != 0) goto cleanup;
     printf("N3: %s\n", text);
     if (!expect_compare("N3 vs N2", n3, n2, -1) ||
         !expect_compare("N2 vs N1", n2, n1, -1) ||
@@ -494,86 +494,86 @@ static int run_root_level_demo(const HpsPath *zero_path)
     success = 1;
 
 cleanup:
-    hps_path_destroy(n1a0);
-    hps_path_destroy(n1z8);
-    hps_path_destroy(n3);
-    hps_path_destroy(n2);
-    hps_path_destroy(n1);
-    hps_path_destroy(n0);
-    hps_path_destroy(p1z9);
-    hps_path_destroy(p1a1);
-    hps_path_destroy(p3);
-    hps_path_destroy(p2);
-    hps_path_destroy(p1);
-    hps_path_destroy(p0);
+    lks_path_destroy(n1a0);
+    lks_path_destroy(n1z8);
+    lks_path_destroy(n3);
+    lks_path_destroy(n2);
+    lks_path_destroy(n1);
+    lks_path_destroy(n0);
+    lks_path_destroy(p1z9);
+    lks_path_destroy(p1a1);
+    lks_path_destroy(p3);
+    lks_path_destroy(p2);
+    lks_path_destroy(p1);
+    lks_path_destroy(p0);
     return success;
 }
 static int gap_case(
     const char *label,
-    const HpsPath *left,
-    const HpsPath *right,
+    const LksPath *left,
+    const LksPath *right,
     const char *expected_text,
-    HpsStatus expected_status
+    LksStatus expected_status
 )
 {
-    HpsPath *middle = NULL;
-    HpsStatus status;
+    LksPath *middle = NULL;
+    LksStatus status;
     int left_comparison;
     int right_comparison;
     char text[256];
 
-    status = hps_path_between(left, right, &middle);
+    status = lks_path_between(left, right, &middle);
     if (status != expected_status) {
-        printf("%s: unexpected status %s\n", label, hps_status_string(status));
-        hps_path_destroy(middle);
+        printf("%s: unexpected status %s\n", label, lks_status_string(status));
+        lks_path_destroy(middle);
         return 0;
     }
-    if (expected_status != HPS_STATUS_OK) {
-        printf("%s: %s\n", label, hps_status_string(status));
+    if (expected_status != LKS_STATUS_OK) {
+        printf("%s: %s\n", label, lks_status_string(status));
         if (middle != NULL) {
-            hps_path_destroy(middle);
+            lks_path_destroy(middle);
             return 0;
         }
         return 1;
     }
 
     if (middle == NULL ||
-        hps_path_format(middle, text, sizeof(text)) != HPS_STATUS_OK ||
+        lks_path_format(middle, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, expected_text) != 0 ||
-        hps_path_compare(left, middle, &left_comparison) != HPS_STATUS_OK ||
-        hps_path_compare(middle, right, &right_comparison) != HPS_STATUS_OK ||
+        lks_path_compare(left, middle, &left_comparison) != LKS_STATUS_OK ||
+        lks_path_compare(middle, right, &right_comparison) != LKS_STATUS_OK ||
         left_comparison != -1 || right_comparison != -1) {
         printf("%s: candidate verification failed\n", label);
-        hps_path_destroy(middle);
+        lks_path_destroy(middle);
         return 0;
     }
 
     printf("%s: %s\n", label, text);
-    hps_path_destroy(middle);
+    lks_path_destroy(middle);
     return 1;
 }
 
 static int invalid_gap_case(
     const char *label,
-    const HpsPath *left,
-    const HpsPath *right
+    const LksPath *left,
+    const LksPath *right
 )
 {
-    HpsPath *seed;
-    HpsPath *out_path;
-    HpsStatus status;
+    LksPath *seed;
+    LksPath *out_path;
+    LksStatus status;
     int valid;
 
-    seed = hps_path_create_zero();
+    seed = lks_path_create_zero();
     if (seed == NULL) {
         return 0;
     }
     out_path = seed;
-    status = hps_path_between(left, right, &out_path);
-    valid = status == HPS_STATUS_INVALID_ARGUMENT && out_path == NULL;
-    printf("%s: %s, output %s\n", label, hps_status_string(status),
+    status = lks_path_between(left, right, &out_path);
+    valid = status == LKS_STATUS_INVALID_ARGUMENT && out_path == NULL;
+    printf("%s: %s, output %s\n", label, lks_status_string(status),
         out_path == NULL ? "NULL" : "not NULL");
-    hps_path_destroy(seed);
+    lks_path_destroy(seed);
     return valid;
 }
 
@@ -601,42 +601,42 @@ static int run_gap_demo(void)
     static const unsigned int root_max0_slots[] = { 0u };
     static const unsigned int root_max1_slots[] = { 1u };
     static const size_t max_level[] = { (size_t)-1 };
-    HpsPath *zero = NULL;
-    HpsPath *p3 = NULL;
-    HpsPath *p4 = NULL;
-    HpsPath *p5 = NULL;
-    HpsPath *child5 = NULL;
-    HpsPath *child0 = NULL;
-    HpsPath *deep_left = NULL;
-    HpsPath *deep_right = NULL;
-    HpsPath *root0 = NULL;
-    HpsPath *root0_level3 = NULL;
-    HpsPath *negative5 = NULL;
-    HpsPath *negative2 = NULL;
-    HpsPath *negative1 = NULL;
-    HpsPath *negative0 = NULL;
-    HpsPath *limit_child = NULL;
-    HpsPath *max_root0 = NULL;
-    HpsPath *max_root1 = NULL;
+    LksPath *zero = NULL;
+    LksPath *p3 = NULL;
+    LksPath *p4 = NULL;
+    LksPath *p5 = NULL;
+    LksPath *child5 = NULL;
+    LksPath *child0 = NULL;
+    LksPath *deep_left = NULL;
+    LksPath *deep_right = NULL;
+    LksPath *root0 = NULL;
+    LksPath *root0_level3 = NULL;
+    LksPath *negative5 = NULL;
+    LksPath *negative2 = NULL;
+    LksPath *negative1 = NULL;
+    LksPath *negative0 = NULL;
+    LksPath *limit_child = NULL;
+    LksPath *max_root0 = NULL;
+    LksPath *max_root1 = NULL;
     int success = 0;
 
-    zero = hps_path_create_zero();
-    p3 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root3_slots, level0, 1);
-    p4 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root4_slots, level0, 1);
-    p5 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root5_slots, level0, 1);
-    child5 = make_path_at_levels(HPS_DIRECTION_POSITIVE, child5_slots, levels01, 2);
-    child0 = make_path_at_levels(HPS_DIRECTION_POSITIVE, child0_slots, levels01, 2);
-    deep_left = make_path_at_levels(HPS_DIRECTION_POSITIVE, deep_left_slots, levels012, 3);
-    deep_right = make_path_at_levels(HPS_DIRECTION_POSITIVE, deep_right_slots, levels012, 3);
-    root0 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root0_slots, level0, 1);
-    root0_level3 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root0_level3_slots, level3, 1);
-    negative5 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, negative5_slots, level0, 1);
-    negative2 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, negative2_slots, level0, 1);
-    negative1 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, negative1_slots, level0, 1);
-    negative0 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, negative0_slots, level0, 1);
-    limit_child = make_path_at_levels(HPS_DIRECTION_POSITIVE, zero_slot_child_slots, levels0max, 2);
-    max_root0 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root_max0_slots, max_level, 1);
-    max_root1 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root_max1_slots, max_level, 1);
+    zero = lks_path_create_zero();
+    p3 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root3_slots, level0, 1);
+    p4 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root4_slots, level0, 1);
+    p5 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root5_slots, level0, 1);
+    child5 = make_path_at_levels(LKS_DIRECTION_POSITIVE, child5_slots, levels01, 2);
+    child0 = make_path_at_levels(LKS_DIRECTION_POSITIVE, child0_slots, levels01, 2);
+    deep_left = make_path_at_levels(LKS_DIRECTION_POSITIVE, deep_left_slots, levels012, 3);
+    deep_right = make_path_at_levels(LKS_DIRECTION_POSITIVE, deep_right_slots, levels012, 3);
+    root0 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root0_slots, level0, 1);
+    root0_level3 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root0_level3_slots, level3, 1);
+    negative5 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, negative5_slots, level0, 1);
+    negative2 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, negative2_slots, level0, 1);
+    negative1 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, negative1_slots, level0, 1);
+    negative0 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, negative0_slots, level0, 1);
+    limit_child = make_path_at_levels(LKS_DIRECTION_POSITIVE, zero_slot_child_slots, levels0max, 2);
+    max_root0 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root_max0_slots, max_level, 1);
+    max_root1 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root_max1_slots, max_level, 1);
 
     if (zero == NULL || p3 == NULL || p4 == NULL || p5 == NULL ||
         child5 == NULL || child0 == NULL || deep_left == NULL ||
@@ -648,28 +648,28 @@ static int run_gap_demo(void)
     }
 
     printf("Path between tests:\n");
-    if (!gap_case("1 root slot gap", p3, p5, "0A4", HPS_STATUS_OK) ||
-        !gap_case("2 adjacent root slots", p3, p4, "0A3/A0", HPS_STATUS_OK) ||
-        !gap_case("3 parent before child", p3, child5, "0A3/A0", HPS_STATUS_OK) ||
-        !gap_case("4 parent before first child", p3, child0, "0A3//A0", HPS_STATUS_OK) ||
+    if (!gap_case("1 root slot gap", p3, p5, "0A4", LKS_STATUS_OK) ||
+        !gap_case("2 adjacent root slots", p3, p4, "0A3/A0", LKS_STATUS_OK) ||
+        !gap_case("3 parent before child", p3, child5, "0A3/A0", LKS_STATUS_OK) ||
+        !gap_case("4 parent before first child", p3, child0, "0A3//A0", LKS_STATUS_OK) ||
         !gap_case("5 deep adjacent siblings", deep_left, deep_right,
-            "0A3/Z9//A0///A0", HPS_STATUS_OK) ||
-        !gap_case("6 zero to root slot 5", zero, p5, "0A0", HPS_STATUS_OK) ||
-        !gap_case("7 zero to root slot 0", zero, root0, "000/A0", HPS_STATUS_OK) ||
+            "0A3/Z9//A0///A0", LKS_STATUS_OK) ||
+        !gap_case("6 zero to root slot 5", zero, p5, "0A0", LKS_STATUS_OK) ||
+        !gap_case("7 zero to root slot 0", zero, root0, "000/A0", LKS_STATUS_OK) ||
         !gap_case("8 zero to root level 3", zero, root0_level3,
-            "000////A0", HPS_STATUS_OK) ||
+            "000////A0", LKS_STATUS_OK) ||
         !gap_case("9 negative root slot gap", negative5, negative2,
-            "1A4", HPS_STATUS_OK) ||
+            "1A4", LKS_STATUS_OK) ||
         !gap_case("10 adjacent negative roots", negative2, negative1,
-            "1A2/A0", HPS_STATUS_OK) ||
+            "1A2/A0", LKS_STATUS_OK) ||
         !gap_case("11 negative to zero", negative2, zero,
-            "1A1", HPS_STATUS_OK) ||
+            "1A1", LKS_STATUS_OK) ||
         !gap_case("12 negative A0 to zero", negative0, zero,
-            "1A0/A0", HPS_STATUS_OK) ||
+            "1A0/A0", LKS_STATUS_OK) ||
         !gap_case("prefix level overflow", p3, limit_child,
-            NULL, HPS_STATUS_LEVEL_LIMIT) ||
+            NULL, LKS_STATUS_LEVEL_LIMIT) ||
         !gap_case("append level overflow", max_root0, max_root1,
-            NULL, HPS_STATUS_LEVEL_LIMIT) ||
+            NULL, LKS_STATUS_LEVEL_LIMIT) ||
         !invalid_gap_case("equal paths", p3, p3) ||
         !invalid_gap_case("left greater than right", p5, p3) ||
         !invalid_gap_case("negative to positive", negative2, p5) ||
@@ -678,111 +678,111 @@ static int run_gap_demo(void)
         goto cleanup;
     }
     {
-        HpsStatus status;
+        LksStatus status;
 
-        status = hps_path_between(p3, p5, NULL);
-        if (status != HPS_STATUS_INVALID_ARGUMENT) {
-            printf("NULL output pointer: %s\n", hps_status_string(status));
+        status = lks_path_between(p3, p5, NULL);
+        if (status != LKS_STATUS_INVALID_ARGUMENT) {
+            printf("NULL output pointer: %s\n", lks_status_string(status));
             goto cleanup;
         }
-        printf("NULL output pointer: %s\n", hps_status_string(status));
+        printf("NULL output pointer: %s\n", lks_status_string(status));
     }
 
     success = 1;
 
 cleanup:
-    hps_path_destroy(max_root1);
-    hps_path_destroy(max_root0);
-    hps_path_destroy(limit_child);
-    hps_path_destroy(negative0);
-    hps_path_destroy(negative1);
-    hps_path_destroy(negative2);
-    hps_path_destroy(negative5);
-    hps_path_destroy(root0_level3);
-    hps_path_destroy(root0);
-    hps_path_destroy(deep_right);
-    hps_path_destroy(deep_left);
-    hps_path_destroy(child0);
-    hps_path_destroy(child5);
-    hps_path_destroy(p5);
-    hps_path_destroy(p4);
-    hps_path_destroy(p3);
-    hps_path_destroy(zero);
+    lks_path_destroy(max_root1);
+    lks_path_destroy(max_root0);
+    lks_path_destroy(limit_child);
+    lks_path_destroy(negative0);
+    lks_path_destroy(negative1);
+    lks_path_destroy(negative2);
+    lks_path_destroy(negative5);
+    lks_path_destroy(root0_level3);
+    lks_path_destroy(root0);
+    lks_path_destroy(deep_right);
+    lks_path_destroy(deep_left);
+    lks_path_destroy(child0);
+    lks_path_destroy(child5);
+    lks_path_destroy(p5);
+    lks_path_destroy(p4);
+    lks_path_destroy(p3);
+    lks_path_destroy(zero);
     return success;
 }
 static int placement_case(
     const char *label,
     int is_before,
-    const HpsPath *input,
+    const LksPath *input,
     const char *expected_text
 )
 {
-    HpsPath *candidate = NULL;
-    HpsPath *zero_path = NULL;
-    HpsStatus status;
+    LksPath *candidate = NULL;
+    LksPath *zero_path = NULL;
+    LksStatus status;
     int comparison;
     char text[128];
     int valid;
 
-    status = is_before ? hps_path_before(input, &candidate) :
-        hps_path_after(input, &candidate);
-    if (status != HPS_STATUS_OK || candidate == NULL ||
-        hps_path_format(candidate, text, sizeof(text)) != HPS_STATUS_OK ||
+    status = is_before ? lks_path_before(input, &candidate) :
+        lks_path_after(input, &candidate);
+    if (status != LKS_STATUS_OK || candidate == NULL ||
+        lks_path_format(candidate, text, sizeof(text)) != LKS_STATUS_OK ||
         strcmp(text, expected_text) != 0) {
-        printf("%s: %s\n", label, hps_status_string(status));
-        hps_path_destroy(candidate);
+        printf("%s: %s\n", label, lks_status_string(status));
+        lks_path_destroy(candidate);
         return 0;
     }
 
     if (is_before) {
-        valid = hps_path_compare(candidate, input, &comparison) == HPS_STATUS_OK &&
+        valid = lks_path_compare(candidate, input, &comparison) == LKS_STATUS_OK &&
             comparison == -1;
-        if (valid && hps_path_direction(input) == HPS_DIRECTION_POSITIVE) {
-            zero_path = hps_path_create_zero();
+        if (valid && lks_path_direction(input) == LKS_DIRECTION_POSITIVE) {
+            zero_path = lks_path_create_zero();
             valid = zero_path != NULL &&
-                hps_path_compare(zero_path, candidate, &comparison) == HPS_STATUS_OK &&
+                lks_path_compare(zero_path, candidate, &comparison) == LKS_STATUS_OK &&
                 comparison == -1;
         }
     } else {
-        valid = hps_path_compare(input, candidate, &comparison) == HPS_STATUS_OK &&
+        valid = lks_path_compare(input, candidate, &comparison) == LKS_STATUS_OK &&
             comparison == -1;
-        if (valid && hps_path_direction(input) == HPS_DIRECTION_NEGATIVE) {
-            zero_path = hps_path_create_zero();
+        if (valid && lks_path_direction(input) == LKS_DIRECTION_NEGATIVE) {
+            zero_path = lks_path_create_zero();
             valid = zero_path != NULL &&
-                hps_path_compare(candidate, zero_path, &comparison) == HPS_STATUS_OK &&
+                lks_path_compare(candidate, zero_path, &comparison) == LKS_STATUS_OK &&
                 comparison == -1;
         }
     }
 
     printf("%s: %s%s\n", label, text, valid ? "" : " (order check failed)");
-    hps_path_destroy(zero_path);
-    hps_path_destroy(candidate);
+    lks_path_destroy(zero_path);
+    lks_path_destroy(candidate);
     return valid;
 }
 
 static int placement_status_case(
     const char *label,
     int is_before,
-    const HpsPath *input,
-    HpsStatus expected_status
+    const LksPath *input,
+    LksStatus expected_status
 )
 {
-    HpsPath *seed;
-    HpsPath *out_path;
-    HpsStatus status;
+    LksPath *seed;
+    LksPath *out_path;
+    LksStatus status;
     int valid;
 
-    seed = hps_path_create_zero();
+    seed = lks_path_create_zero();
     if (seed == NULL) {
         return 0;
     }
     out_path = seed;
-    status = is_before ? hps_path_before(input, &out_path) :
-        hps_path_after(input, &out_path);
+    status = is_before ? lks_path_before(input, &out_path) :
+        lks_path_after(input, &out_path);
     valid = status == expected_status && out_path == NULL;
-    printf("%s: %s, output %s\n", label, hps_status_string(status),
+    printf("%s: %s, output %s\n", label, lks_status_string(status),
         out_path == NULL ? "NULL" : "not NULL");
-    hps_path_destroy(seed);
+    lks_path_destroy(seed);
     return valid;
 }
 
@@ -799,35 +799,35 @@ static int run_placement_demo(void)
     static const size_t level3[] = { 3 };
     static const size_t levels01[] = { 0, 1 };
     static const size_t max_level[] = { (size_t)-1 };
-    HpsPath *zero = NULL;
-    HpsPath *pos0 = NULL;
-    HpsPath *pos3 = NULL;
-    HpsPath *pos5 = NULL;
-    HpsPath *pos_level3 = NULL;
-    HpsPath *negative2 = NULL;
-    HpsPath *negative_z9 = NULL;
-    HpsPath *negative_z9_level2 = NULL;
-    HpsPath *negative0 = NULL;
-    HpsPath *deep = NULL;
-    HpsPath *after_pos3 = NULL;
-    HpsPath *negative_z9_max = NULL;
-    HpsPath *positive_max = NULL;
+    LksPath *zero = NULL;
+    LksPath *pos0 = NULL;
+    LksPath *pos3 = NULL;
+    LksPath *pos5 = NULL;
+    LksPath *pos_level3 = NULL;
+    LksPath *negative2 = NULL;
+    LksPath *negative_z9 = NULL;
+    LksPath *negative_z9_level2 = NULL;
+    LksPath *negative0 = NULL;
+    LksPath *deep = NULL;
+    LksPath *after_pos3 = NULL;
+    LksPath *negative_z9_max = NULL;
+    LksPath *positive_max = NULL;
     int success = 0;
-    HpsStatus status;
+    LksStatus status;
 
-    zero = hps_path_create_zero();
-    pos0 = make_path_at_levels(HPS_DIRECTION_POSITIVE, slot0, level0, 1);
-    pos3 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root3_slots, level0, 1);
-    pos5 = make_path_at_levels(HPS_DIRECTION_POSITIVE, slot5, level0, 1);
-    pos_level3 = make_path_at_levels(HPS_DIRECTION_POSITIVE, slot0, level3, 1);
-    negative2 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, slot2, level0, 1);
-    negative_z9 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, slot259, level0, 1);
-    negative_z9_level2 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, slot259, level2, 1);
-    negative0 = make_path_at_levels(HPS_DIRECTION_NEGATIVE, slot0, level0, 1);
-    deep = make_path_at_levels(HPS_DIRECTION_POSITIVE, deep_slots, levels01, 2);
-    after_pos3 = make_path_at_levels(HPS_DIRECTION_POSITIVE, root3_slots, level0, 1);
-    negative_z9_max = make_path_at_levels(HPS_DIRECTION_NEGATIVE, slot259, max_level, 1);
-    positive_max = make_path_at_levels(HPS_DIRECTION_POSITIVE, slot0, max_level, 1);
+    zero = lks_path_create_zero();
+    pos0 = make_path_at_levels(LKS_DIRECTION_POSITIVE, slot0, level0, 1);
+    pos3 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root3_slots, level0, 1);
+    pos5 = make_path_at_levels(LKS_DIRECTION_POSITIVE, slot5, level0, 1);
+    pos_level3 = make_path_at_levels(LKS_DIRECTION_POSITIVE, slot0, level3, 1);
+    negative2 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, slot2, level0, 1);
+    negative_z9 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, slot259, level0, 1);
+    negative_z9_level2 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, slot259, level2, 1);
+    negative0 = make_path_at_levels(LKS_DIRECTION_NEGATIVE, slot0, level0, 1);
+    deep = make_path_at_levels(LKS_DIRECTION_POSITIVE, deep_slots, levels01, 2);
+    after_pos3 = make_path_at_levels(LKS_DIRECTION_POSITIVE, root3_slots, level0, 1);
+    negative_z9_max = make_path_at_levels(LKS_DIRECTION_NEGATIVE, slot259, max_level, 1);
+    positive_max = make_path_at_levels(LKS_DIRECTION_POSITIVE, slot0, max_level, 1);
 
     if (zero == NULL || pos0 == NULL || pos3 == NULL || pos5 == NULL || pos_level3 == NULL ||
         negative2 == NULL || negative_z9 == NULL || negative_z9_level2 == NULL ||
@@ -852,43 +852,43 @@ static int run_placement_demo(void)
         goto cleanup;
     }
 
-    if (!placement_status_case("before(NULL)", 1, NULL, HPS_STATUS_INVALID_ARGUMENT) ||
-        !placement_status_case("after(NULL)", 0, NULL, HPS_STATUS_INVALID_ARGUMENT) ||
-        !placement_status_case("before level limit", 1, negative_z9_max, HPS_STATUS_LEVEL_LIMIT) ||
-        !placement_status_case("after level limit", 0, positive_max, HPS_STATUS_LEVEL_LIMIT)) {
+    if (!placement_status_case("before(NULL)", 1, NULL, LKS_STATUS_INVALID_ARGUMENT) ||
+        !placement_status_case("after(NULL)", 0, NULL, LKS_STATUS_INVALID_ARGUMENT) ||
+        !placement_status_case("before level limit", 1, negative_z9_max, LKS_STATUS_LEVEL_LIMIT) ||
+        !placement_status_case("after level limit", 0, positive_max, LKS_STATUS_LEVEL_LIMIT)) {
         goto cleanup;
     }
-    status = hps_path_before(pos0, NULL);
-    printf("before(NULL out_path): %s\n", hps_status_string(status));
-    if (status != HPS_STATUS_INVALID_ARGUMENT) {
+    status = lks_path_before(pos0, NULL);
+    printf("before(NULL out_path): %s\n", lks_status_string(status));
+    if (status != LKS_STATUS_INVALID_ARGUMENT) {
         goto cleanup;
     }
-    status = hps_path_after(pos0, NULL);
-    printf("after(NULL out_path): %s\n", hps_status_string(status));
-    if (status != HPS_STATUS_INVALID_ARGUMENT) {
+    status = lks_path_after(pos0, NULL);
+    printf("after(NULL out_path): %s\n", lks_status_string(status));
+    if (status != LKS_STATUS_INVALID_ARGUMENT) {
         goto cleanup;
     }
 
     success = 1;
 
 cleanup:
-    hps_path_destroy(after_pos3);
-    hps_path_destroy(positive_max);
-    hps_path_destroy(negative_z9_max);
-    hps_path_destroy(deep);
-    hps_path_destroy(negative0);
-    hps_path_destroy(negative_z9_level2);
-    hps_path_destroy(negative_z9);
-    hps_path_destroy(negative2);
-    hps_path_destroy(pos_level3);
-    hps_path_destroy(pos5);
-    hps_path_destroy(pos3);
-    hps_path_destroy(pos0);
-    hps_path_destroy(zero);
+    lks_path_destroy(after_pos3);
+    lks_path_destroy(positive_max);
+    lks_path_destroy(negative_z9_max);
+    lks_path_destroy(deep);
+    lks_path_destroy(negative0);
+    lks_path_destroy(negative_z9_level2);
+    lks_path_destroy(negative_z9);
+    lks_path_destroy(negative2);
+    lks_path_destroy(pos_level3);
+    lks_path_destroy(pos5);
+    lks_path_destroy(pos3);
+    lks_path_destroy(pos0);
+    lks_path_destroy(zero);
     return success;
 }
-static HpsPath *tree_test_path(
-    HpsDirection direction,
+static LksPath *tree_test_path(
+    LksDirection direction,
     unsigned int first_slot,
     size_t first_level,
     const unsigned int *tail_slots,
@@ -896,32 +896,32 @@ static HpsPath *tree_test_path(
     size_t tail_count
 )
 {
-    HpsPath *path;
+    LksPath *path;
     size_t index;
 
-    if (direction == HPS_DIRECTION_ZERO) {
-        return hps_path_create_zero();
+    if (direction == LKS_DIRECTION_ZERO) {
+        return lks_path_create_zero();
     }
-    path = hps_path_create_at_level(direction, first_slot, first_level);
+    path = lks_path_create_at_level(direction, first_slot, first_level);
     if (path == NULL) {
         return NULL;
     }
     for (index = 0; index < tail_count; ++index) {
-        if (hps_path_append_at_level(path, tail_slots[index],
-                tail_levels[index]) != HPS_STATUS_OK) {
-            hps_path_destroy(path);
+        if (lks_path_append_at_level(path, tail_slots[index],
+                tail_levels[index]) != LKS_STATUS_OK) {
+            lks_path_destroy(path);
             return NULL;
         }
     }
     return path;
 }
 
-static int tree_path_is(const HpsPath *path, const char *expected)
+static int tree_path_is(const LksPath *path, const char *expected)
 {
     char text[128];
 
     return path != NULL &&
-        hps_path_format(path, text, sizeof(text)) == HPS_STATUS_OK &&
+        lks_path_format(path, text, sizeof(text)) == LKS_STATUS_OK &&
         strcmp(text, expected) == 0;
 }
 
@@ -932,301 +932,301 @@ static int run_tree_demo(void)
     };
     static const unsigned int levels_tail_slots[] = { 259u, 0u, 0u };
     static const size_t levels_tail_levels[] = { 1, 2, 3 };
-    HpsTree *tree = NULL;
-    HpsTree *sparse_tree = NULL;
-    HpsPath *paths[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
-    HpsPath *path = NULL;
-    HpsPath *parent_path = NULL;
-    HpsPath *child_path = NULL;
-    const HpsTreeNode *node = NULL;
-    const HpsTreeNode *parent = NULL;
-    const HpsTreeNode *found = NULL;
-    const HpsTreeNode *root_nodes[7];
+    LksTree *tree = NULL;
+    LksTree *sparse_tree = NULL;
+    LksPath *paths[7] = { NULL, NULL, NULL, NULL, NULL, NULL, NULL };
+    LksPath *path = NULL;
+    LksPath *parent_path = NULL;
+    LksPath *child_path = NULL;
+    const LksTreeNode *node = NULL;
+    const LksTreeNode *parent = NULL;
+    const LksTreeNode *found = NULL;
+    const LksTreeNode *root_nodes[7];
     size_t index;
     int borrowed_value;
-    HpsStatus status;
+    LksStatus status;
 
-    tree = hps_tree_create();
-    if (tree == NULL || hps_tree_size(tree) != 0 ||
-        hps_tree_root_child_count(tree) != 0) {
-        hps_tree_destroy(tree);
+    tree = lks_tree_create();
+    if (tree == NULL || lks_tree_size(tree) != 0 ||
+        lks_tree_root_child_count(tree) != 0) {
+        lks_tree_destroy(tree);
         return 0;
     }
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
     printf("Tree A empty: size 0, root children 0\n");
 
-    tree = hps_tree_create();
+    tree = lks_tree_create();
     if (tree == NULL) {
         return 0;
     }
-    paths[0] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
-    paths[1] = hps_path_create_zero();
-    paths[2] = tree_test_path(HPS_DIRECTION_NEGATIVE, 1u, 0, NULL, NULL, 0);
-    paths[3] = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 1, NULL, NULL, 0);
-    paths[4] = tree_test_path(HPS_DIRECTION_NEGATIVE, 2u, 0, NULL, NULL, 0);
-    paths[5] = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 0, NULL, NULL, 0);
-    paths[6] = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 2, NULL, NULL, 0);
+    paths[0] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+    paths[1] = lks_path_create_zero();
+    paths[2] = tree_test_path(LKS_DIRECTION_NEGATIVE, 1u, 0, NULL, NULL, 0);
+    paths[3] = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 1, NULL, NULL, 0);
+    paths[4] = tree_test_path(LKS_DIRECTION_NEGATIVE, 2u, 0, NULL, NULL, 0);
+    paths[5] = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 0, NULL, NULL, 0);
+    paths[6] = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 2, NULL, NULL, 0);
     for (index = 0; index < 7; ++index) {
-        if (paths[index] == NULL || hps_tree_insert(tree, paths[index], NULL,
-                NULL) != HPS_STATUS_OK) {
+        if (paths[index] == NULL || lks_tree_insert(tree, paths[index], NULL,
+                NULL) != LKS_STATUS_OK) {
             goto fail;
         }
     }
-    if (hps_tree_size(tree) != 7 || hps_tree_root_child_count(tree) != 7) {
+    if (lks_tree_size(tree) != 7 || lks_tree_root_child_count(tree) != 7) {
         goto fail;
     }
     printf("Tree B root order:");
     for (index = 0; index < 7; ++index) {
         int compare_status;
-        root_nodes[index] = hps_tree_root_child_at(tree, index);
+        root_nodes[index] = lks_tree_root_child_at(tree, index);
         if (root_nodes[index] == NULL ||
-            !tree_path_is(hps_tree_node_path(root_nodes[index]),
+            !tree_path_is(lks_tree_node_path(root_nodes[index]),
                 root_expected[index])) {
             goto fail;
         }
-        if (index > 0 && (hps_path_compare(
-                hps_tree_node_path(root_nodes[index - 1]),
-                hps_tree_node_path(root_nodes[index]), &compare_status) !=
-                HPS_STATUS_OK || compare_status != -1)) {
+        if (index > 0 && (lks_path_compare(
+                lks_tree_node_path(root_nodes[index - 1]),
+                lks_tree_node_path(root_nodes[index]), &compare_status) !=
+                LKS_STATUS_OK || compare_status != -1)) {
             goto fail;
         }
         printf(" %s", root_expected[index]);
     }
     printf("\n");
     for (index = 0; index < 7; ++index) {
-        hps_path_destroy(paths[index]);
+        lks_path_destroy(paths[index]);
         paths[index] = NULL;
     }
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
 
-    sparse_tree = hps_tree_create();
-    path = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 0, NULL, NULL, 0);
-    child_path = tree_test_path(HPS_DIRECTION_POSITIVE, 259u, 0, NULL, NULL, 0);
+    sparse_tree = lks_tree_create();
+    path = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 0, NULL, NULL, 0);
+    child_path = tree_test_path(LKS_DIRECTION_POSITIVE, 259u, 0, NULL, NULL, 0);
     if (sparse_tree == NULL || path == NULL || child_path == NULL ||
-        hps_tree_insert(sparse_tree, path, NULL, NULL) != HPS_STATUS_OK ||
-        hps_tree_insert(sparse_tree, child_path, NULL, NULL) != HPS_STATUS_OK ||
-        hps_tree_size(sparse_tree) != 2 ||
-        hps_tree_root_child_count(sparse_tree) != 2) {
-        hps_path_destroy(path);
-        hps_path_destroy(child_path);
-        hps_tree_destroy(sparse_tree);
+        lks_tree_insert(sparse_tree, path, NULL, NULL) != LKS_STATUS_OK ||
+        lks_tree_insert(sparse_tree, child_path, NULL, NULL) != LKS_STATUS_OK ||
+        lks_tree_size(sparse_tree) != 2 ||
+        lks_tree_root_child_count(sparse_tree) != 2) {
+        lks_path_destroy(path);
+        lks_path_destroy(child_path);
+        lks_tree_destroy(sparse_tree);
         goto fail;
     }
     printf("Tree C sparse root: 2 nodes, 2 children\n");
-    hps_path_destroy(path);
-    hps_path_destroy(child_path);
-    hps_tree_destroy(sparse_tree);
+    lks_path_destroy(path);
+    lks_path_destroy(child_path);
+    lks_tree_destroy(sparse_tree);
 
-    tree = hps_tree_create();
-    parent_path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+    tree = lks_tree_create();
+    parent_path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
     if (tree == NULL || parent_path == NULL ||
-        hps_tree_insert(tree, parent_path, NULL, &parent) != HPS_STATUS_OK) {
-        hps_path_destroy(parent_path);
-        hps_tree_destroy(tree);
+        lks_tree_insert(tree, parent_path, NULL, &parent) != LKS_STATUS_OK) {
+        lks_path_destroy(parent_path);
+        lks_tree_destroy(tree);
         goto fail;
     }
-    hps_path_destroy(parent_path);
-    paths[0] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    lks_path_destroy(parent_path);
+    paths[0] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 0u }, (const size_t[]){ 1 }, 1);
-    paths[1] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    paths[1] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 0u }, (const size_t[]){ 2 }, 1);
-    paths[2] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    paths[2] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 259u }, (const size_t[]){ 1 }, 1);
     for (index = 0; index < 3; ++index) {
-        if (paths[index] == NULL || hps_tree_insert(tree, paths[index], NULL,
-                NULL) != HPS_STATUS_OK) {
+        if (paths[index] == NULL || lks_tree_insert(tree, paths[index], NULL,
+                NULL) != LKS_STATUS_OK) {
             goto fail;
         }
     }
-    if (hps_tree_node_child_count(parent) != 3 ||
-        !tree_path_is(hps_tree_node_path(hps_tree_node_child_at(parent, 0)),
+    if (lks_tree_node_child_count(parent) != 3 ||
+        !tree_path_is(lks_tree_node_path(lks_tree_node_child_at(parent, 0)),
             "0A3//A0") ||
-        !tree_path_is(hps_tree_node_path(hps_tree_node_child_at(parent, 1)),
+        !tree_path_is(lks_tree_node_path(lks_tree_node_child_at(parent, 1)),
             "0A3/A0") ||
-        !tree_path_is(hps_tree_node_path(hps_tree_node_child_at(parent, 2)),
+        !tree_path_is(lks_tree_node_path(lks_tree_node_child_at(parent, 2)),
             "0A3/Z9")) {
         goto fail;
     }
     printf("Tree D children of 0A3: 0A3//A0, 0A3/A0, 0A3/Z9\n");
     for (index = 0; index < 3; ++index) {
-        hps_path_destroy(paths[index]);
+        lks_path_destroy(paths[index]);
         paths[index] = NULL;
     }
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    paths[0] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
-    paths[1] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    tree = lks_tree_create();
+    paths[0] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+    paths[1] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 259u }, (const size_t[]){ 1 }, 1);
-    paths[2] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    paths[2] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 259u, 0u }, (const size_t[]){ 1, 2 }, 2);
-    paths[3] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    paths[3] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         levels_tail_slots, levels_tail_levels, 3);
     if (tree == NULL) {
         goto fail;
     }
     for (index = 0; index < 4; ++index) {
-        if (paths[index] == NULL || hps_tree_insert(tree, paths[index], NULL,
-                NULL) != HPS_STATUS_OK) {
+        if (paths[index] == NULL || lks_tree_insert(tree, paths[index], NULL,
+                NULL) != LKS_STATUS_OK) {
             goto fail;
         }
     }
-    if (hps_tree_find_path(tree, paths[1], &node) != HPS_STATUS_OK ||
-        hps_tree_find_path(tree, paths[2], &found) != HPS_STATUS_OK ||
-        hps_tree_find_path(tree, paths[3], &parent) != HPS_STATUS_OK ||
-        hps_tree_node_parent(found) != node ||
-        hps_tree_node_parent(parent) != found ||
-        hps_tree_node_parent(node) != hps_tree_root_child_at(tree, 0)) {
+    if (lks_tree_find_path(tree, paths[1], &node) != LKS_STATUS_OK ||
+        lks_tree_find_path(tree, paths[2], &found) != LKS_STATUS_OK ||
+        lks_tree_find_path(tree, paths[3], &parent) != LKS_STATUS_OK ||
+        lks_tree_node_parent(found) != node ||
+        lks_tree_node_parent(parent) != found ||
+        lks_tree_node_parent(node) != lks_tree_root_child_at(tree, 0)) {
         goto fail;
     }
     printf("Tree E parent chain: 0A3 <- 0A3/Z9 <- 0A3/Z9//A0 <- 0A3/Z9//A0///A0\n");
     for (index = 0; index < 4; ++index) {
-        hps_path_destroy(paths[index]);
+        lks_path_destroy(paths[index]);
         paths[index] = NULL;
     }
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    path = hps_path_create_zero();
-    child_path = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 1, NULL, NULL, 0);
+    tree = lks_tree_create();
+    path = lks_path_create_zero();
+    child_path = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 1, NULL, NULL, 0);
     if (tree == NULL || path == NULL || child_path == NULL ||
-        hps_tree_insert(tree, path, NULL, &node) != HPS_STATUS_OK ||
-        hps_tree_insert(tree, child_path, NULL, &found) != HPS_STATUS_OK ||
-        hps_tree_node_parent(node) != NULL || hps_tree_node_parent(found) != NULL ||
-        hps_tree_root_child_count(tree) != 2) {
-        hps_path_destroy(path);
-        hps_path_destroy(child_path);
-        hps_tree_destroy(tree);
+        lks_tree_insert(tree, path, NULL, &node) != LKS_STATUS_OK ||
+        lks_tree_insert(tree, child_path, NULL, &found) != LKS_STATUS_OK ||
+        lks_tree_node_parent(node) != NULL || lks_tree_node_parent(found) != NULL ||
+        lks_tree_root_child_count(tree) != 2) {
+        lks_path_destroy(path);
+        lks_path_destroy(child_path);
+        lks_tree_destroy(tree);
         goto fail;
     }
     printf("Tree F 000 and 000/A0: both virtual-root children\n");
-    hps_path_destroy(path);
-    hps_path_destroy(child_path);
-    hps_tree_destroy(tree);
+    lks_path_destroy(path);
+    lks_path_destroy(child_path);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    path = tree_test_path(HPS_DIRECTION_POSITIVE, 1u, 0,
+    tree = lks_tree_create();
+    path = tree_test_path(LKS_DIRECTION_POSITIVE, 1u, 0,
         (const unsigned int[]){ 0u }, (const size_t[]){ 1 }, 1);
-    node = (const HpsTreeNode *)1;
-    status = hps_tree_insert(tree, path, NULL, &node);
-    if (tree == NULL || path == NULL || status != HPS_STATUS_NOT_FOUND ||
-        node != NULL || hps_tree_size(tree) != 0) {
-        hps_path_destroy(path);
-        hps_tree_destroy(tree);
+    node = (const LksTreeNode *)1;
+    status = lks_tree_insert(tree, path, NULL, &node);
+    if (tree == NULL || path == NULL || status != LKS_STATUS_NOT_FOUND ||
+        node != NULL || lks_tree_size(tree) != 0) {
+        lks_path_destroy(path);
+        lks_tree_destroy(tree);
         goto fail;
     }
     printf("Tree G missing parent: Not found, size 0, output NULL\n");
-    hps_path_destroy(path);
-    hps_tree_destroy(tree);
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+    tree = lks_tree_create();
+    path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
     if (tree == NULL || path == NULL ||
-        hps_tree_insert(tree, path, NULL, &node) != HPS_STATUS_OK) {
-        hps_path_destroy(path);
-        hps_tree_destroy(tree);
+        lks_tree_insert(tree, path, NULL, &node) != LKS_STATUS_OK) {
+        lks_path_destroy(path);
+        lks_tree_destroy(tree);
         goto fail;
     }
-    found = (const HpsTreeNode *)1;
-    status = hps_tree_insert(tree, path, NULL, &found);
-    if (status != HPS_STATUS_ALREADY_EXISTS || found != NULL ||
-        hps_tree_size(tree) != 1 ||
-        strcmp(hps_status_string(status), "Already exists") != 0) {
-        hps_path_destroy(path);
-        hps_tree_destroy(tree);
+    found = (const LksTreeNode *)1;
+    status = lks_tree_insert(tree, path, NULL, &found);
+    if (status != LKS_STATUS_ALREADY_EXISTS || found != NULL ||
+        lks_tree_size(tree) != 1 ||
+        strcmp(lks_status_string(status), "Already exists") != 0) {
+        lks_path_destroy(path);
+        lks_tree_destroy(tree);
         goto fail;
     }
     printf("Tree H duplicate: Already exists, size 1, output NULL\n");
-    hps_path_destroy(path);
-    hps_tree_destroy(tree);
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+    tree = lks_tree_create();
+    path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
     if (tree == NULL || path == NULL ||
-        hps_tree_insert(tree, path, NULL, &node) != HPS_STATUS_OK) {
-        hps_path_destroy(path);
-        hps_tree_destroy(tree);
+        lks_tree_insert(tree, path, NULL, &node) != LKS_STATUS_OK) {
+        lks_path_destroy(path);
+        lks_tree_destroy(tree);
         goto fail;
     }
-    hps_path_destroy(path);
-    if (!tree_path_is(hps_tree_node_path(node), "0A3")) {
-        hps_tree_destroy(tree);
+    lks_path_destroy(path);
+    if (!tree_path_is(lks_tree_node_path(node), "0A3")) {
+        lks_tree_destroy(tree);
         goto fail;
     }
     printf("Tree I cloned Path survives source destruction: 0A3\n");
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    path = hps_path_create_zero();
+    tree = lks_tree_create();
+    path = lks_path_create_zero();
     borrowed_value = 123;
     if (tree == NULL || path == NULL ||
-        hps_tree_insert(tree, path, &borrowed_value, &node) != HPS_STATUS_OK ||
-        hps_tree_node_item(node) != &borrowed_value) {
-        hps_path_destroy(path);
-        hps_tree_destroy(tree);
+        lks_tree_insert(tree, path, &borrowed_value, &node) != LKS_STATUS_OK ||
+        lks_tree_node_item(node) != &borrowed_value) {
+        lks_path_destroy(path);
+        lks_tree_destroy(tree);
         goto fail;
     }
-    hps_path_destroy(path);
-    hps_tree_destroy(tree);
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
     if (borrowed_value != 123) {
         goto fail;
     }
     printf("Tree J borrowed item remains valid: 123\n");
 
-    tree = hps_tree_create();
-    paths[0] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
-    paths[1] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    tree = lks_tree_create();
+    paths[0] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+    paths[1] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 259u }, (const size_t[]){ 1 }, 1);
-    paths[2] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    paths[2] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         (const unsigned int[]){ 259u, 0u }, (const size_t[]){ 1, 2 }, 2);
-    paths[3] = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+    paths[3] = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
         levels_tail_slots, levels_tail_levels, 3);
     for (index = 0; index < 4; ++index) {
         if (tree == NULL || paths[index] == NULL ||
-            hps_tree_insert(tree, paths[index], NULL, NULL) != HPS_STATUS_OK ||
-            hps_tree_find_path(tree, paths[index], &node) != HPS_STATUS_OK ||
-            !tree_path_is(hps_tree_node_path(node), index == 0 ? "0A3" :
+            lks_tree_insert(tree, paths[index], NULL, NULL) != LKS_STATUS_OK ||
+            lks_tree_find_path(tree, paths[index], &node) != LKS_STATUS_OK ||
+            !tree_path_is(lks_tree_node_path(node), index == 0 ? "0A3" :
                 index == 1 ? "0A3/Z9" : index == 2 ? "0A3/Z9//A0" :
                 "0A3/Z9//A0///A0")) {
             goto fail;
         }
     }
-    path = tree_test_path(HPS_DIRECTION_POSITIVE, 4u, 0, NULL, NULL, 0);
-    found = (const HpsTreeNode *)1;
-    status = hps_tree_find_path(tree, path, &found);
-    if (status != HPS_STATUS_NOT_FOUND || found != NULL) {
+    path = tree_test_path(LKS_DIRECTION_POSITIVE, 4u, 0, NULL, NULL, 0);
+    found = (const LksTreeNode *)1;
+    status = lks_tree_find_path(tree, path, &found);
+    if (status != LKS_STATUS_NOT_FOUND || found != NULL) {
         goto fail;
     }
     printf("Tree K exact find: 4 paths found; absent 0A4 -> Not found\n");
     for (index = 0; index < 4; ++index) {
-        hps_path_destroy(paths[index]);
+        lks_path_destroy(paths[index]);
         paths[index] = NULL;
     }
-    hps_path_destroy(path);
-    hps_tree_destroy(tree);
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
 
-    tree = hps_tree_create();
-    path = hps_path_create_zero();
-    node = (const HpsTreeNode *)1;
-    if (hps_tree_insert(NULL, path, NULL, &node) != HPS_STATUS_INVALID_ARGUMENT ||
-        node != NULL || hps_tree_insert(tree, NULL, NULL, &node) !=
-            HPS_STATUS_INVALID_ARGUMENT || node != NULL ||
-        hps_tree_find_path(NULL, path, &found) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_find_path(tree, NULL, &found) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_find_path(tree, path, NULL) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_size(NULL) != 0 || hps_tree_root_child_count(NULL) != 0 ||
-        hps_tree_root_child_at(NULL, 0) != NULL ||
-        hps_tree_node_path(NULL) != NULL || hps_tree_node_item(NULL) != NULL ||
-        hps_tree_node_parent(NULL) != NULL ||
-        hps_tree_node_child_count(NULL) != 0 ||
-        hps_tree_node_child_at(NULL, 0) != NULL) {
-        hps_path_destroy(path);
-        hps_tree_destroy(tree);
+    tree = lks_tree_create();
+    path = lks_path_create_zero();
+    node = (const LksTreeNode *)1;
+    if (lks_tree_insert(NULL, path, NULL, &node) != LKS_STATUS_INVALID_ARGUMENT ||
+        node != NULL || lks_tree_insert(tree, NULL, NULL, &node) !=
+            LKS_STATUS_INVALID_ARGUMENT || node != NULL ||
+        lks_tree_find_path(NULL, path, &found) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_find_path(tree, NULL, &found) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_find_path(tree, path, NULL) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_size(NULL) != 0 || lks_tree_root_child_count(NULL) != 0 ||
+        lks_tree_root_child_at(NULL, 0) != NULL ||
+        lks_tree_node_path(NULL) != NULL || lks_tree_node_item(NULL) != NULL ||
+        lks_tree_node_parent(NULL) != NULL ||
+        lks_tree_node_child_count(NULL) != 0 ||
+        lks_tree_node_child_at(NULL, 0) != NULL) {
+        lks_path_destroy(path);
+        lks_tree_destroy(tree);
         goto fail;
     }
-    hps_path_destroy(path);
-    hps_tree_destroy(tree);
-    hps_tree_destroy(NULL);
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
+    lks_tree_destroy(NULL);
     printf("Tree L invalid arguments and NULL getters: passed\n");
     return 1;
 
@@ -1252,7 +1252,7 @@ static int compare_int_counted(
 }
 
 static int item_node_matches(
-    const HpsTreeNode *node,
+    const LksTreeNode *node,
     int should_exist,
     int expected_value
 )
@@ -1260,13 +1260,13 @@ static int item_node_matches(
     if (!should_exist) {
         return node == NULL;
     }
-    return node != NULL && hps_tree_node_item(node) != NULL &&
-        *(const int *)hps_tree_node_item(node) == expected_value;
+    return node != NULL && lks_tree_node_item(node) != NULL &&
+        *(const int *)lks_tree_node_item(node) == expected_value;
 }
 
 static int expect_item_location(
-    const HpsTree *tree,
-    const HpsComparator *comparator,
+    const LksTree *tree,
+    const LksComparator *comparator,
     int target,
     int has_left,
     int left_value,
@@ -1277,21 +1277,21 @@ static int expect_item_location(
     const char *label
 )
 {
-    const HpsTreeNode *left;
-    const HpsTreeNode *equal;
-    const HpsTreeNode *right;
-    HpsStatus status;
+    const LksTreeNode *left;
+    const LksTreeNode *equal;
+    const LksTreeNode *right;
+    LksStatus status;
 
     left = NULL;
     equal = NULL;
     right = NULL;
-    status = hps_tree_locate_item(tree, &target, comparator,
+    status = lks_tree_locate_item(tree, &target, comparator,
         &left, &equal, &right);
-    if (status != HPS_STATUS_OK ||
+    if (status != LKS_STATUS_OK ||
         !item_node_matches(left, has_left, left_value) ||
         !item_node_matches(equal, has_equal, equal_value) ||
         !item_node_matches(right, has_right, right_value)) {
-        printf("Locate %s: FAILED (%s)\n", label, hps_status_string(status));
+        printf("Locate %s: FAILED (%s)\n", label, lks_status_string(status));
         return 0;
     }
 
@@ -1328,25 +1328,25 @@ static int run_tree_locate_demo(void)
     static const int expected_values[] = {
         10, 20, 30, 40, 50, 60, 100, 110, 120, 200, 210, 215, 300
     };
-    HpsTree *tree;
-    HpsTree *empty_tree;
-    HpsTree *wide_tree;
-    HpsPath *path;
-    const HpsTreeNode *node;
-    const HpsTreeNode *left;
-    const HpsTreeNode *equal;
-    const HpsTreeNode *right;
-    HpsComparator comparator;
-    HpsComparator invalid_comparator;
+    LksTree *tree;
+    LksTree *empty_tree;
+    LksTree *wide_tree;
+    LksPath *path;
+    const LksTreeNode *node;
+    const LksTreeNode *left;
+    const LksTreeNode *equal;
+    const LksTreeNode *right;
+    LksComparator comparator;
+    LksComparator invalid_comparator;
     CompareCounter counter;
     int values[13];
     int wide_values[128];
     int target;
     size_t index;
-    HpsStatus status;
+    LksStatus status;
     int success;
 
-    tree = hps_tree_create();
+    tree = lks_tree_create();
     if (tree == NULL) {
         return 0;
     }
@@ -1356,57 +1356,57 @@ static int run_tree_locate_demo(void)
         values[index] = expected_values[index];
         switch (index) {
         case 0:
-            path = tree_test_path(HPS_DIRECTION_NEGATIVE, 2u, 0, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_NEGATIVE, 2u, 0, NULL, NULL, 0);
             break;
         case 1:
-            path = tree_test_path(HPS_DIRECTION_NEGATIVE, 1u, 0, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_NEGATIVE, 1u, 0, NULL, NULL, 0);
             break;
         case 2:
-            path = hps_path_create_zero();
+            path = lks_path_create_zero();
             break;
         case 3:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 2, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 2, NULL, NULL, 0);
             break;
         case 4:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 1, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 1, NULL, NULL, 0);
             break;
         case 5:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 0u, 0, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 0u, 0, NULL, NULL, 0);
             break;
         case 6:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0, NULL, NULL, 0);
             break;
         case 7:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
                 child_slots1, child_levels2, 1);
             break;
         case 8:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
                 child_slots1, child_levels1, 1);
             break;
         case 9:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
                 child_slots2, child_levels1, 1);
             break;
         case 10:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
                 deep_slots, deep_levels2, 2);
             break;
         case 11:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 3u, 0,
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 3u, 0,
                 deepest_slots, deepest_levels, 3);
             break;
         default:
-            path = tree_test_path(HPS_DIRECTION_POSITIVE, 4u, 0, NULL, NULL, 0);
+            path = tree_test_path(LKS_DIRECTION_POSITIVE, 4u, 0, NULL, NULL, 0);
             break;
         }
-        if (path == NULL || hps_tree_insert(tree, path, &values[index],
-                &node) != HPS_STATUS_OK) {
-            hps_path_destroy(path);
-            hps_tree_destroy(tree);
+        if (path == NULL || lks_tree_insert(tree, path, &values[index],
+                &node) != LKS_STATUS_OK) {
+            lks_path_destroy(path);
+            lks_tree_destroy(tree);
             return 0;
         }
-        hps_path_destroy(path);
+        lks_path_destroy(path);
     }
 
     success =
@@ -1427,53 +1427,53 @@ static int run_tree_locate_demo(void)
         expect_item_location(tree, &comparator, 120, 0, 0, 1, 120, 0, 0, "equal 120") &&
         expect_item_location(tree, &comparator, 215, 0, 0, 1, 215, 0, 0, "equal 215") &&
         expect_item_location(tree, &comparator, 300, 0, 0, 1, 300, 0, 0, "equal 300");
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
     if (!success) {
         return 0;
     }
 
-    empty_tree = hps_tree_create();
+    empty_tree = lks_tree_create();
     if (empty_tree == NULL) {
         return 0;
     }
     target = 100;
-    left = (const HpsTreeNode *)1;
-    equal = (const HpsTreeNode *)1;
-    right = (const HpsTreeNode *)1;
-    status = hps_tree_locate_item(empty_tree, &target, &comparator,
+    left = (const LksTreeNode *)1;
+    equal = (const LksTreeNode *)1;
+    right = (const LksTreeNode *)1;
+    status = lks_tree_locate_item(empty_tree, &target, &comparator,
         &left, &equal, &right);
-    hps_tree_destroy(empty_tree);
-    if (status != HPS_STATUS_OK || left != NULL || equal != NULL || right != NULL) {
+    lks_tree_destroy(empty_tree);
+    if (status != LKS_STATUS_OK || left != NULL || equal != NULL || right != NULL) {
         return 0;
     }
     printf("Locate empty tree: OK, NULL / NULL / NULL\n");
 
-    empty_tree = hps_tree_create();
+    empty_tree = lks_tree_create();
     if (empty_tree == NULL) {
         return 0;
     }
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
     target = 1;
-    if (hps_tree_locate_item(NULL, &target, &comparator,
-            &left, &equal, &right) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_locate_item(empty_tree, &target, NULL,
-            &left, &equal, &right) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_locate_item(empty_tree, &target, &invalid_comparator,
-            &left, &equal, &right) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_locate_item(empty_tree, &target, &comparator,
-            NULL, &equal, &right) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_locate_item(empty_tree, &target, &comparator,
-            &left, NULL, &right) != HPS_STATUS_INVALID_ARGUMENT ||
-        hps_tree_locate_item(empty_tree, &target, &comparator,
-            &left, &equal, NULL) != HPS_STATUS_INVALID_ARGUMENT) {
-        hps_tree_destroy(empty_tree);
+    if (lks_tree_locate_item(NULL, &target, &comparator,
+            &left, &equal, &right) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_locate_item(empty_tree, &target, NULL,
+            &left, &equal, &right) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_locate_item(empty_tree, &target, &invalid_comparator,
+            &left, &equal, &right) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_locate_item(empty_tree, &target, &comparator,
+            NULL, &equal, &right) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_locate_item(empty_tree, &target, &comparator,
+            &left, NULL, &right) != LKS_STATUS_INVALID_ARGUMENT ||
+        lks_tree_locate_item(empty_tree, &target, &comparator,
+            &left, &equal, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
+        lks_tree_destroy(empty_tree);
         return 0;
     }
-    hps_tree_destroy(empty_tree);
+    lks_tree_destroy(empty_tree);
     printf("Locate invalid arguments: all six rejected\n");
 
-    wide_tree = hps_tree_create();
+    wide_tree = lks_tree_create();
     if (wide_tree == NULL) {
         return 0;
     }
@@ -1482,53 +1482,53 @@ static int run_tree_locate_demo(void)
     comparator.context = &counter;
     for (index = 0; index < 128; ++index) {
         wide_values[index] = (int)(index * 2);
-        path = tree_test_path(HPS_DIRECTION_POSITIVE, (unsigned int)index,
+        path = tree_test_path(LKS_DIRECTION_POSITIVE, (unsigned int)index,
             0, NULL, NULL, 0);
-        if (path == NULL || hps_tree_insert(wide_tree, path, &wide_values[index],
-                NULL) != HPS_STATUS_OK) {
-            hps_path_destroy(path);
-            hps_tree_destroy(wide_tree);
+        if (path == NULL || lks_tree_insert(wide_tree, path, &wide_values[index],
+                NULL) != LKS_STATUS_OK) {
+            lks_path_destroy(path);
+            lks_tree_destroy(wide_tree);
             return 0;
         }
-        hps_path_destroy(path);
+        lks_path_destroy(path);
     }
     target = 127;
     counter.calls = 0;
-    status = hps_tree_locate_item(wide_tree, &target, &comparator,
+    status = lks_tree_locate_item(wide_tree, &target, &comparator,
         &left, &equal, &right);
-    if (status != HPS_STATUS_OK || !item_node_matches(left, 1, 126) ||
+    if (status != LKS_STATUS_OK || !item_node_matches(left, 1, 126) ||
         equal != NULL || !item_node_matches(right, 1, 128) ||
         counter.calls >= 20) {
-        hps_tree_destroy(wide_tree);
+        lks_tree_destroy(wide_tree);
         return 0;
     }
     printf("Locate 128 root children: 126 < 127 < 128; comparisons %lu\n",
         (unsigned long)counter.calls);
-    hps_tree_destroy(wide_tree);
+    lks_tree_destroy(wide_tree);
     return 1;
 }
 typedef struct TreeWalkCheck {
-    const HpsComparator *comparator;
-    const HpsTreeNode *previous;
+    const LksComparator *comparator;
+    const LksTreeNode *previous;
     int *values;
-    const HpsTreeNode **nodes;
+    const LksTreeNode **nodes;
     size_t count;
     size_t capacity;
     int allow_equal_items;
     int valid;
 } TreeWalkCheck;
 
-static void tree_walk_node(const HpsTreeNode *node, TreeWalkCheck *check)
+static void tree_walk_node(const LksTreeNode *node, TreeWalkCheck *check)
 {
     size_t index;
-    const HpsPath *path;
+    const LksPath *path;
 
     if (!check->valid || node == NULL || check->count >= check->capacity) {
         check->valid = 0;
         return;
     }
-    path = hps_tree_node_path(node);
-    if (path == NULL || hps_tree_node_item(node) == NULL) {
+    path = lks_tree_node_path(node);
+    if (path == NULL || lks_tree_node_item(node) == NULL) {
         check->valid = 0;
         return;
     }
@@ -1537,23 +1537,23 @@ static void tree_walk_node(const HpsTreeNode *node, TreeWalkCheck *check)
         int path_order;
 
         item_order = check->comparator->compare(
-            hps_tree_node_item(check->previous),
-            hps_tree_node_item(node),
+            lks_tree_node_item(check->previous),
+            lks_tree_node_item(node),
             check->comparator->context);
         if (item_order > 0 || (!check->allow_equal_items && item_order == 0) ||
-            hps_path_compare(hps_tree_node_path(check->previous), path,
-                &path_order) != HPS_STATUS_OK || path_order != -1) {
+            lks_path_compare(lks_tree_node_path(check->previous), path,
+                &path_order) != LKS_STATUS_OK || path_order != -1) {
             check->valid = 0;
             return;
         }
     }
 
-    check->values[check->count] = *(const int *)hps_tree_node_item(node);
+    check->values[check->count] = *(const int *)lks_tree_node_item(node);
     check->nodes[check->count] = node;
     ++check->count;
     check->previous = node;
-    for (index = 0; index < hps_tree_node_child_count(node); ++index) {
-        tree_walk_node(hps_tree_node_child_at(node, index), check);
+    for (index = 0; index < lks_tree_node_child_count(node); ++index) {
+        tree_walk_node(lks_tree_node_child_at(node, index), check);
         if (!check->valid) {
             return;
         }
@@ -1561,8 +1561,8 @@ static void tree_walk_node(const HpsTreeNode *node, TreeWalkCheck *check)
 }
 
 static int verify_tree_walk(
-    const HpsTree *tree,
-    const HpsComparator *comparator,
+    const LksTree *tree,
+    const LksComparator *comparator,
     const int *expected,
     size_t expected_count,
     int allow_equal_items,
@@ -1570,7 +1570,7 @@ static int verify_tree_walk(
 )
 {
     int actual[32];
-    const HpsTreeNode *nodes[32];
+    const LksTreeNode *nodes[32];
     TreeWalkCheck check;
     size_t index;
 
@@ -1583,8 +1583,8 @@ static int verify_tree_walk(
     check.allow_equal_items = allow_equal_items;
     check.valid = 1;
 
-    for (index = 0; index < hps_tree_root_child_count(tree); ++index) {
-        tree_walk_node(hps_tree_root_child_at(tree, index), &check);
+    for (index = 0; index < lks_tree_root_child_count(tree); ++index) {
+        tree_walk_node(lks_tree_root_child_at(tree, index), &check);
         if (!check.valid) {
             break;
         }
@@ -1610,29 +1610,29 @@ static int verify_tree_walk(
 }
 
 static int insert_item_and_check_path(
-    HpsTree *tree,
+    LksTree *tree,
     int *item,
-    const HpsComparator *comparator,
+    const LksComparator *comparator,
     const char *expected_path,
     int check_exact_path,
     const char *label
 )
 {
-    const HpsTreeNode *node;
-    const HpsPath *node_path;
+    const LksTreeNode *node;
+    const LksPath *node_path;
     char text[128];
-    HpsStatus status;
+    LksStatus status;
 
     node = NULL;
-    status = hps_tree_insert_item(tree, item, comparator, &node);
-    if (status != HPS_STATUS_OK || node == NULL ||
-        hps_tree_node_item(node) != item) {
-        printf("%s insert: %s\n", label, hps_status_string(status));
+    status = lks_tree_insert_item(tree, item, comparator, &node);
+    if (status != LKS_STATUS_OK || node == NULL ||
+        lks_tree_node_item(node) != item) {
+        printf("%s insert: %s\n", label, lks_status_string(status));
         return 0;
     }
-    node_path = hps_tree_node_path(node);
-    if (node_path == NULL || hps_path_format(node_path, text, sizeof(text)) !=
-            HPS_STATUS_OK ||
+    node_path = lks_tree_node_path(node);
+    if (node_path == NULL || lks_path_format(node_path, text, sizeof(text)) !=
+            LKS_STATUS_OK ||
         (check_exact_path && strcmp(text, expected_path) != 0)) {
         printf("%s Path mismatch\n", label);
         return 0;
@@ -1661,18 +1661,18 @@ static int run_tree_insert_item_demo(void)
     static const int order_d[] = { 10, 20, 30, 40, 50 };
     static const int input_e[] = { 100, 100 };
     static const int order_e[] = { 100, 100 };
-    HpsComparator comparator;
-    HpsComparator no_function;
-    HpsTree *tree;
-    HpsTree *duplicate_tree;
-    HpsTree *ascending_tree;
-    HpsTree *descending_tree;
-    HpsTree *equal_max_tree;
-    HpsTree *null_output_tree;
-    const HpsTreeNode *node;
-    const HpsTreeNode *left;
-    const HpsTreeNode *equal;
-    const HpsTreeNode *right;
+    LksComparator comparator;
+    LksComparator no_function;
+    LksTree *tree;
+    LksTree *duplicate_tree;
+    LksTree *ascending_tree;
+    LksTree *descending_tree;
+    LksTree *equal_max_tree;
+    LksTree *null_output_tree;
+    const LksTreeNode *node;
+    const LksTreeNode *left;
+    const LksTreeNode *equal;
+    const LksTreeNode *right;
     int values_a[10];
     int values_b[6];
     int values_c[5];
@@ -1686,7 +1686,7 @@ static int run_tree_insert_item_demo(void)
     comparator.compare = compare_int;
     comparator.context = NULL;
 
-    tree = hps_tree_create();
+    tree = lks_tree_create();
     if (tree == NULL) {
         return 0;
     }
@@ -1702,12 +1702,12 @@ static int run_tree_insert_item_demo(void)
     if (valid) {
         valid = verify_tree_walk(tree, &comparator, order_a, 10, 0, "A");
     }
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
     if (!valid) {
         return 0;
     }
 
-    duplicate_tree = hps_tree_create();
+    duplicate_tree = lks_tree_create();
     if (duplicate_tree == NULL) {
         return 0;
     }
@@ -1722,15 +1722,15 @@ static int run_tree_insert_item_demo(void)
         }
     }
     if (valid) {
-        valid = hps_tree_size(duplicate_tree) == 6 &&
+        valid = lks_tree_size(duplicate_tree) == 6 &&
             verify_tree_walk(duplicate_tree, &comparator, order_b, 6, 1, "B");
     }
-    hps_tree_destroy(duplicate_tree);
+    lks_tree_destroy(duplicate_tree);
     if (!valid) {
         return 0;
     }
 
-    ascending_tree = hps_tree_create();
+    ascending_tree = lks_tree_create();
     if (ascending_tree == NULL) {
         return 0;
     }
@@ -1746,12 +1746,12 @@ static int run_tree_insert_item_demo(void)
     if (valid) {
         valid = verify_tree_walk(ascending_tree, &comparator, order_c, 5, 0, "C");
     }
-    hps_tree_destroy(ascending_tree);
+    lks_tree_destroy(ascending_tree);
     if (!valid) {
         return 0;
     }
 
-    descending_tree = hps_tree_create();
+    descending_tree = lks_tree_create();
     if (descending_tree == NULL) {
         return 0;
     }
@@ -1767,12 +1767,12 @@ static int run_tree_insert_item_demo(void)
     if (valid) {
         valid = verify_tree_walk(descending_tree, &comparator, order_d, 5, 0, "D");
     }
-    hps_tree_destroy(descending_tree);
+    lks_tree_destroy(descending_tree);
     if (!valid) {
         return 0;
     }
 
-    equal_max_tree = hps_tree_create();
+    equal_max_tree = lks_tree_create();
     if (equal_max_tree == NULL) {
         return 0;
     }
@@ -1780,64 +1780,64 @@ static int run_tree_insert_item_demo(void)
         values_e[index] = input_e[index];
         if (!insert_item_and_check_path(equal_max_tree, &values_e[index],
                 &comparator, index == 0 ? "000" : "0A0", 1, "E")) {
-            hps_tree_destroy(equal_max_tree);
+            lks_tree_destroy(equal_max_tree);
             return 0;
         }
     }
     if (!verify_tree_walk(equal_max_tree, &comparator, order_e, 2, 1, "E") ||
-        hps_path_compare(hps_tree_node_path(hps_tree_root_child_at(equal_max_tree, 0)),
-            hps_tree_node_path(hps_tree_root_child_at(equal_max_tree, 1)),
-            &path_comparison) != HPS_STATUS_OK || path_comparison == 0) {
-        hps_tree_destroy(equal_max_tree);
+        lks_path_compare(lks_tree_node_path(lks_tree_root_child_at(equal_max_tree, 0)),
+            lks_tree_node_path(lks_tree_root_child_at(equal_max_tree, 1)),
+            &path_comparison) != LKS_STATUS_OK || path_comparison == 0) {
+        lks_tree_destroy(equal_max_tree);
         return 0;
     }
-    hps_tree_destroy(equal_max_tree);
+    lks_tree_destroy(equal_max_tree);
 
-    node = (const HpsTreeNode *)1;
-    if (hps_tree_insert_item(NULL, &values_e[0], &comparator, &node) !=
-            HPS_STATUS_INVALID_ARGUMENT || node != NULL) {
+    node = (const LksTreeNode *)1;
+    if (lks_tree_insert_item(NULL, &values_e[0], &comparator, &node) !=
+            LKS_STATUS_INVALID_ARGUMENT || node != NULL) {
         return 0;
     }
-    tree = hps_tree_create();
-    if (tree == NULL || hps_tree_insert_item(tree, &values_e[0], NULL,
-            NULL) != HPS_STATUS_INVALID_ARGUMENT || hps_tree_size(tree) != 0) {
-        hps_tree_destroy(tree);
+    tree = lks_tree_create();
+    if (tree == NULL || lks_tree_insert_item(tree, &values_e[0], NULL,
+            NULL) != LKS_STATUS_INVALID_ARGUMENT || lks_tree_size(tree) != 0) {
+        lks_tree_destroy(tree);
         return 0;
     }
     no_function = comparator;
     no_function.compare = NULL;
-    if (tree == NULL || hps_tree_insert_item(tree, &values_e[0], &no_function,
-            NULL) != HPS_STATUS_INVALID_ARGUMENT || hps_tree_size(tree) != 0) {
-        hps_tree_destroy(tree);
+    if (tree == NULL || lks_tree_insert_item(tree, &values_e[0], &no_function,
+            NULL) != LKS_STATUS_INVALID_ARGUMENT || lks_tree_size(tree) != 0) {
+        lks_tree_destroy(tree);
         return 0;
     }
-    hps_tree_destroy(tree);
+    lks_tree_destroy(tree);
     printf("F invalid arguments: NULL tree/comparator/function rejected; output pointer NULL allowed\n");
 
-    null_output_tree = hps_tree_create();
+    null_output_tree = lks_tree_create();
     borrowed = 42;
-    if (null_output_tree == NULL || hps_tree_insert_item(null_output_tree,
-            &borrowed, &comparator, NULL) != HPS_STATUS_OK ||
-        hps_tree_size(null_output_tree) != 1) {
-        hps_tree_destroy(null_output_tree);
+    if (null_output_tree == NULL || lks_tree_insert_item(null_output_tree,
+            &borrowed, &comparator, NULL) != LKS_STATUS_OK ||
+        lks_tree_size(null_output_tree) != 1) {
+        lks_tree_destroy(null_output_tree);
         return 0;
     }
     left = NULL;
     equal = NULL;
     right = NULL;
-    if (hps_tree_locate_item(null_output_tree, &borrowed, &comparator,
-            &left, &equal, &right) != HPS_STATUS_OK || equal == NULL ||
-        hps_tree_node_item(equal) != &borrowed) {
-        hps_tree_destroy(null_output_tree);
+    if (lks_tree_locate_item(null_output_tree, &borrowed, &comparator,
+            &left, &equal, &right) != LKS_STATUS_OK || equal == NULL ||
+        lks_tree_node_item(equal) != &borrowed) {
+        lks_tree_destroy(null_output_tree);
         return 0;
     }
-    hps_tree_destroy(null_output_tree);
+    lks_tree_destroy(null_output_tree);
     printf("F borrowed item: original int address retained\n");
     return 1;
 }
 static int group_check_order(
-    const HpsGroup *group,
-    const HpsComparator *comparator,
+    const LksGroup *group,
+    const LksComparator *comparator,
     const int *expected_values,
     size_t count,
     const char *const *expected_paths,
@@ -1849,19 +1849,19 @@ static int group_check_order(
 {
     size_t index;
 
-    if (hps_group_size(group) != count) {
+    if (lks_group_size(group) != count) {
         printf("%s size mismatch\n", label);
         return 0;
     }
     for (index = 0; index < count; ++index) {
         void *item;
-        const HpsPath *path;
+        const LksPath *path;
         int value;
         size_t source_index;
         int found_source;
 
-        item = hps_group_item_at(group, index);
-        path = hps_group_path_at(group, index);
+        item = lks_group_item_at(group, index);
+        path = lks_group_path_at(group, index);
         if (item == NULL || path == NULL) {
             return 0;
         }
@@ -1873,7 +1873,7 @@ static int group_check_order(
         if (expected_paths != NULL) {
             char text[256];
 
-            if (hps_path_format(path, text, sizeof(text)) != HPS_STATUS_OK ||
+            if (lks_path_format(path, text, sizeof(text)) != LKS_STATUS_OK ||
                 strcmp(text, expected_paths[index]) != 0) {
                 printf("%s Path mismatch at %lu\n", label, (unsigned long)index);
                 return 0;
@@ -1894,14 +1894,14 @@ static int group_check_order(
             int path_order;
             int item_order;
 
-            if (hps_path_compare(hps_group_path_at(group, index - 1), path,
-                    &path_order) != HPS_STATUS_OK || path_order != -1) {
+            if (lks_path_compare(lks_group_path_at(group, index - 1), path,
+                    &path_order) != LKS_STATUS_OK || path_order != -1) {
                 printf("%s Path order failure at %lu\n", label,
                     (unsigned long)index);
                 return 0;
             }
             item_order = comparator->compare(
-                hps_group_item_at(group, index - 1), item,
+                lks_group_item_at(group, index - 1), item,
                 comparator->context);
             if (item_order > 0) {
                 printf("%s business order failure at %lu\n", label,
@@ -1912,7 +1912,7 @@ static int group_check_order(
         if (verbose) {
             char text[256];
 
-            if (hps_path_format(path, text, sizeof(text)) != HPS_STATUS_OK) {
+            if (lks_path_format(path, text, sizeof(text)) != LKS_STATUS_OK) {
                 return 0;
             }
             printf("%s[%lu] %d -> %s\n", label, (unsigned long)index,
@@ -1929,27 +1929,27 @@ static int group_check_order(
 static int group_expect_invalid(
     void *const *items,
     size_t count,
-    const HpsComparator *comparator,
+    const LksComparator *comparator,
     int expect_null_out
 )
 {
-    HpsGroup *existing;
-    HpsGroup *out_group;
-    HpsComparator valid_comparator;
-    HpsStatus status;
+    LksGroup *existing;
+    LksGroup *out_group;
+    LksComparator valid_comparator;
+    LksStatus status;
 
     valid_comparator.compare = compare_int;
     valid_comparator.context = NULL;
     existing = NULL;
-    if (hps_group_build(NULL, 0, &valid_comparator, &existing) != HPS_STATUS_OK ||
+    if (lks_group_build(NULL, 0, &valid_comparator, &existing) != LKS_STATUS_OK ||
         existing == NULL) {
-        hps_group_destroy(existing);
+        lks_group_destroy(existing);
         return 0;
     }
     out_group = existing;
-    status = hps_group_build(items, count, comparator, &out_group);
-    hps_group_destroy(existing);
-    return status == HPS_STATUS_INVALID_ARGUMENT &&
+    status = lks_group_build(items, count, comparator, &out_group);
+    lks_group_destroy(existing);
+    return status == LKS_STATUS_INVALID_ARGUMENT &&
         (!expect_null_out || out_group == NULL);
 }
 static int run_group_demo(void)
@@ -1973,10 +1973,10 @@ static int run_group_demo(void)
     static const int sorted_f[] = { 10, 20, 30, 40, 50 };
     static const char *const paths_f[] = { "1A3", "1A2", "1A1", "1A0", "000" };
     static const int sorted_g[] = { 10, 20, 30, 40 };
-    HpsComparator comparator;
-    HpsComparator invalid_comparator;
-    HpsGroup *group;
-    HpsGroup *empty_group;
+    LksComparator comparator;
+    LksComparator invalid_comparator;
+    LksGroup *group;
+    LksGroup *empty_group;
     int single_value;
     int mutable_values[4];
     void *single_items[1];
@@ -1990,32 +1990,32 @@ static int run_group_demo(void)
     void **large_items;
     size_t index;
     int valid;
-    HpsStatus status;
+    LksStatus status;
 
     comparator.compare = compare_int;
     comparator.context = NULL;
 
     empty_group = NULL;
-    status = hps_group_build(NULL, 0, &comparator, &empty_group);
-    if (status != HPS_STATUS_OK || empty_group == NULL ||
-        hps_group_size(empty_group) != 0 ||
-        hps_group_item_at(empty_group, 0) != NULL ||
-        hps_group_path_at(empty_group, 0) != NULL) {
-        hps_group_destroy(empty_group);
+    status = lks_group_build(NULL, 0, &comparator, &empty_group);
+    if (status != LKS_STATUS_OK || empty_group == NULL ||
+        lks_group_size(empty_group) != 0 ||
+        lks_group_item_at(empty_group, 0) != NULL ||
+        lks_group_path_at(empty_group, 0) != NULL) {
+        lks_group_destroy(empty_group);
         return 0;
     }
-    hps_group_destroy(empty_group);
-    hps_group_destroy(NULL);
+    lks_group_destroy(empty_group);
+    lks_group_destroy(NULL);
     printf("Group A empty: OK, size 0, getters NULL\n");
 
     single_value = 100;
     single_items[0] = &single_value;
     group = NULL;
-    status = hps_group_build(single_items, 1, &comparator, &group);
-    valid = status == HPS_STATUS_OK && group != NULL &&
+    status = lks_group_build(single_items, 1, &comparator, &group);
+    valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, single_expected, 1,
             single_paths, &single_value, 1, "Group B", 1);
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2024,11 +2024,11 @@ static int run_group_demo(void)
     for (index = 0; index < 10; ++index) {
         items_c[index] = (void *)&values_c[index];
     }
-    status = hps_group_build(items_c, 10, &comparator, &group);
-    valid = status == HPS_STATUS_OK && group != NULL &&
+    status = lks_group_build(items_c, 10, &comparator, &group);
+    valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_c, 10, paths_c,
             values_c, 10, "Group C", 1);
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2037,11 +2037,11 @@ static int run_group_demo(void)
     for (index = 0; index < 6; ++index) {
         items_d[index] = (void *)&values_d[index];
     }
-    status = hps_group_build(items_d, 6, &comparator, &group);
-    valid = status == HPS_STATUS_OK && group != NULL &&
+    status = lks_group_build(items_d, 6, &comparator, &group);
+    valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_d, 6, NULL,
             values_d, 6, "Group D duplicates", 0);
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2050,11 +2050,11 @@ static int run_group_demo(void)
     for (index = 0; index < 5; ++index) {
         items_e[index] = (void *)&values_e[index];
     }
-    status = hps_group_build(items_e, 5, &comparator, &group);
-    valid = status == HPS_STATUS_OK && group != NULL &&
+    status = lks_group_build(items_e, 5, &comparator, &group);
+    valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_e, 5, paths_e,
             values_e, 5, "Group E ascending", 0);
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2063,11 +2063,11 @@ static int run_group_demo(void)
     for (index = 0; index < 5; ++index) {
         items_f[index] = (void *)&values_f[index];
     }
-    status = hps_group_build(items_f, 5, &comparator, &group);
-    valid = status == HPS_STATUS_OK && group != NULL &&
+    status = lks_group_build(items_f, 5, &comparator, &group);
+    valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_f, 5, paths_f,
             values_f, 5, "Group F descending", 0);
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2081,9 +2081,9 @@ static int run_group_demo(void)
     items_g[2] = &mutable_values[2];
     items_g[3] = &mutable_values[3];
     group = NULL;
-    status = hps_group_build(items_g, 4, &comparator, &group);
-    if (status != HPS_STATUS_OK || group == NULL) {
-        hps_group_destroy(group);
+    status = lks_group_build(items_g, 4, &comparator, &group);
+    if (status != LKS_STATUS_OK || group == NULL) {
+        lks_group_destroy(group);
         return 0;
     }
     for (index = 0; index < 4; ++index) {
@@ -2094,29 +2094,29 @@ static int run_group_demo(void)
     if (valid) {
         printf("Group H item pointers still refer to original values[]\n");
     }
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     if (!valid) {
         return 0;
     }
 
-    if (hps_group_size(NULL) != 0 || hps_group_item_at(NULL, 0) != NULL ||
-        hps_group_path_at(NULL, 0) != NULL) {
+    if (lks_group_size(NULL) != 0 || lks_group_item_at(NULL, 0) != NULL ||
+        lks_group_path_at(NULL, 0) != NULL) {
         return 0;
     }
     group = NULL;
-    status = hps_group_build(items_e, 5, &comparator, &group);
-    if (status != HPS_STATUS_OK || group == NULL ||
-        hps_group_item_at(group, 5) != NULL || hps_group_path_at(group, 5) != NULL) {
-        hps_group_destroy(group);
+    status = lks_group_build(items_e, 5, &comparator, &group);
+    if (status != LKS_STATUS_OK || group == NULL ||
+        lks_group_item_at(group, 5) != NULL || lks_group_path_at(group, 5) != NULL) {
+        lks_group_destroy(group);
         return 0;
     }
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     printf("Group I NULL and out-of-range getters: passed\n");
 
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
-    if (hps_group_build(NULL, 0, &comparator, NULL) !=
-            HPS_STATUS_INVALID_ARGUMENT ||
+    if (lks_group_build(NULL, 0, &comparator, NULL) !=
+            LKS_STATUS_INVALID_ARGUMENT ||
         !group_expect_invalid(single_items, 1, NULL, 1) ||
         !group_expect_invalid(single_items, 1, &invalid_comparator, 1) ||
         !group_expect_invalid(NULL, 1, &comparator, 1)) {
@@ -2139,28 +2139,28 @@ static int run_group_demo(void)
         large_items[index] = &large_values[index];
     }
     group = NULL;
-    status = hps_group_build(large_items, 1000, &comparator, &group);
-    valid = status == HPS_STATUS_OK && group != NULL &&
+    status = lks_group_build(large_items, 1000, &comparator, &group);
+    valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, large_expected, 1000, NULL,
             NULL, 0, "Group K 1000 elements", 0);
     if (valid) {
         for (index = 1; index < 1000; ++index) {
-            if (comparator.compare(hps_group_item_at(group, index - 1),
-                    hps_group_item_at(group, index), comparator.context) >= 0) {
+            if (comparator.compare(lks_group_item_at(group, index - 1),
+                    lks_group_item_at(group, index), comparator.context) >= 0) {
                 valid = 0;
                 break;
             }
         }
     }
-    hps_group_destroy(group);
+    lks_group_destroy(group);
     free(large_items);
     free(large_expected);
     free(large_values);
     return valid;
 }
 static int batch_group_check(
-    const HpsGroup *group,
-    const HpsComparator *comparator,
+    const LksGroup *group,
+    const LksComparator *comparator,
     const int *expected_values,
     size_t expected_count,
     const int *source_values,
@@ -2174,20 +2174,20 @@ static int batch_group_check(
     size_t index;
     int saw_first_zero;
 
-    if (group == NULL || hps_group_size(group) != expected_count) {
+    if (group == NULL || lks_group_size(group) != expected_count) {
         printf("%s size mismatch\n", label);
         return 0;
     }
     saw_first_zero = !require_first_zero;
     for (index = 0; index < expected_count; ++index) {
         void *item;
-        const HpsPath *path;
+        const LksPath *path;
         int value;
         int in_chunk;
         size_t source_index;
 
-        item = hps_group_item_at(group, index);
-        path = hps_group_path_at(group, index);
+        item = lks_group_item_at(group, index);
+        path = lks_group_path_at(group, index);
         if (item == NULL || path == NULL) {
             return 0;
         }
@@ -2204,8 +2204,8 @@ static int batch_group_check(
                 if (require_first_zero && source_index == source_start) {
                     char path_text[32];
 
-                    saw_first_zero = hps_path_format(path, path_text,
-                        sizeof(path_text)) == HPS_STATUS_OK &&
+                    saw_first_zero = lks_path_format(path, path_text,
+                        sizeof(path_text)) == LKS_STATUS_OK &&
                         strcmp(path_text, "000") == 0;
                 }
                 break;
@@ -2219,12 +2219,12 @@ static int batch_group_check(
             int path_order;
             int item_order;
 
-            if (hps_path_compare(hps_group_path_at(group, index - 1), path,
-                    &path_order) != HPS_STATUS_OK || path_order != -1) {
+            if (lks_path_compare(lks_group_path_at(group, index - 1), path,
+                    &path_order) != LKS_STATUS_OK || path_order != -1) {
                 printf("%s Path order failure\n", label);
                 return 0;
             }
-            item_order = comparator->compare(hps_group_item_at(group, index - 1),
+            item_order = comparator->compare(lks_group_item_at(group, index - 1),
                 item, comparator->context);
             if (item_order > 0 || (require_strict && item_order >= 0)) {
                 printf("%s business order failure\n", label);
@@ -2243,60 +2243,60 @@ static int batch_expect_invalid(
     void *const *items,
     size_t count,
     size_t group_size,
-    const HpsComparator *candidate_comparator
+    const LksComparator *candidate_comparator
 )
 {
-    HpsComparator valid_comparator;
-    HpsGroupBatch *existing;
-    HpsGroupBatch *out_batch;
-    HpsStatus status;
+    LksComparator valid_comparator;
+    LksGroupBatch *existing;
+    LksGroupBatch *out_batch;
+    LksStatus status;
 
     valid_comparator.compare = compare_int;
     valid_comparator.context = NULL;
     existing = NULL;
-    if (hps_group_batch_build(NULL, 0, 1, &valid_comparator, &existing) !=
-            HPS_STATUS_OK || existing == NULL) {
-        hps_group_batch_destroy(existing);
+    if (lks_group_batch_build(NULL, 0, 1, &valid_comparator, &existing) !=
+            LKS_STATUS_OK || existing == NULL) {
+        lks_group_batch_destroy(existing);
         return 0;
     }
     out_batch = existing;
-    status = hps_group_batch_build(items, count, group_size,
+    status = lks_group_batch_build(items, count, group_size,
         candidate_comparator, &out_batch);
-    hps_group_batch_destroy(existing);
-    return status == HPS_STATUS_INVALID_ARGUMENT && out_batch == NULL;
+    lks_group_batch_destroy(existing);
+    return status == LKS_STATUS_INVALID_ARGUMENT && out_batch == NULL;
 }
 
 static int merge_group_expect(
-    const HpsGroup *group,
+    const LksGroup *group,
     void *const *expected_items,
     const char *const *expected_paths,
     size_t count,
-    const HpsComparator *comparator
+    const LksComparator *comparator
 )
 {
     size_t index;
 
-    if (group == NULL || hps_group_size(group) != count) {
+    if (group == NULL || lks_group_size(group) != count) {
         return 0;
     }
     for (index = 0; index < count; ++index) {
         char path_text[128];
 
-        if (hps_group_item_at(group, index) != expected_items[index] ||
+        if (lks_group_item_at(group, index) != expected_items[index] ||
             (expected_paths != NULL &&
-             (hps_path_format(hps_group_path_at(group, index), path_text,
-                sizeof(path_text)) != HPS_STATUS_OK ||
+             (lks_path_format(lks_group_path_at(group, index), path_text,
+                sizeof(path_text)) != LKS_STATUS_OK ||
               strcmp(path_text, expected_paths[index]) != 0))) {
             return 0;
         }
         if (index > 0) {
             int path_order;
 
-            if (hps_path_compare(hps_group_path_at(group, index - 1),
-                    hps_group_path_at(group, index), &path_order) !=
-                    HPS_STATUS_OK || path_order != -1 ||
-                comparator->compare(hps_group_item_at(group, index - 1),
-                    hps_group_item_at(group, index), comparator->context) > 0) {
+            if (lks_path_compare(lks_group_path_at(group, index - 1),
+                    lks_group_path_at(group, index), &path_order) !=
+                    LKS_STATUS_OK || path_order != -1 ||
+                comparator->compare(lks_group_item_at(group, index - 1),
+                    lks_group_item_at(group, index), comparator->context) > 0) {
                 return 0;
             }
         }
@@ -2333,120 +2333,120 @@ static int run_group_merge_demo(void)
     void *e_in_items[] = { &e_in_values[0], &e_in_values[1], &e_in_values[2] };
     void *e_result_items[] = { &e_in_values[0], &e_in_values[1], &e_in_values[2] };
     const char *e_result_paths[] = { "000", "0A0", "0A0/A0" };
-    HpsComparator comparator;
-    HpsComparator counted_comparator;
-    HpsGroup *a_base = NULL;
-    HpsGroup *a_incoming = NULL;
-    HpsGroup *a_result = NULL;
-    HpsGroup *base = NULL;
-    HpsGroup *incoming = NULL;
-    HpsGroup *result = NULL;
-    HpsGroup *empty = NULL;
+    LksComparator comparator;
+    LksComparator counted_comparator;
+    LksGroup *a_base = NULL;
+    LksGroup *a_incoming = NULL;
+    LksGroup *a_result = NULL;
+    LksGroup *base = NULL;
+    LksGroup *incoming = NULL;
+    LksGroup *result = NULL;
+    LksGroup *empty = NULL;
     void *base_snapshot[10];
     char base_path_snapshot[10][128];
     void *incoming_snapshot[10];
     char incoming_path_snapshot[10][128];
-    HpsStatus status;
+    LksStatus status;
     size_t index;
     int valid = 0;
 
     comparator.compare = compare_int;
     comparator.context = NULL;
-    if (hps_group_build(a_base_items, 3, &comparator, &a_base) != HPS_STATUS_OK ||
-        hps_group_build(a_in_items, 4, &comparator, &a_incoming) != HPS_STATUS_OK) {
+    if (lks_group_build(a_base_items, 3, &comparator, &a_base) != LKS_STATUS_OK ||
+        lks_group_build(a_in_items, 4, &comparator, &a_incoming) != LKS_STATUS_OK) {
         goto cleanup;
     }
-    if (hps_path_format(hps_group_path_at(a_incoming, 0),
-            base_path_snapshot[0], sizeof(base_path_snapshot[0])) != HPS_STATUS_OK ||
+    if (lks_path_format(lks_group_path_at(a_incoming, 0),
+            base_path_snapshot[0], sizeof(base_path_snapshot[0])) != LKS_STATUS_OK ||
         strcmp(base_path_snapshot[0], "000") != 0) {
         goto cleanup;
     }
-    for (index = 0; index < hps_group_size(a_base); ++index) {
-        base_snapshot[index] = hps_group_item_at(a_base, index);
-        if (hps_path_format(hps_group_path_at(a_base, index),
+    for (index = 0; index < lks_group_size(a_base); ++index) {
+        base_snapshot[index] = lks_group_item_at(a_base, index);
+        if (lks_path_format(lks_group_path_at(a_base, index),
                 base_path_snapshot[index], sizeof(base_path_snapshot[index])) !=
-                HPS_STATUS_OK) {
+                LKS_STATUS_OK) {
             goto cleanup;
         }
     }
-    for (index = 0; index < hps_group_size(a_incoming); ++index) {
-        incoming_snapshot[index] = hps_group_item_at(a_incoming, index);
-        if (hps_path_format(hps_group_path_at(a_incoming, index),
+    for (index = 0; index < lks_group_size(a_incoming); ++index) {
+        incoming_snapshot[index] = lks_group_item_at(a_incoming, index);
+        if (lks_path_format(lks_group_path_at(a_incoming, index),
                 incoming_path_snapshot[index], sizeof(incoming_path_snapshot[index])) !=
-                HPS_STATUS_OK) {
+                LKS_STATUS_OK) {
             goto cleanup;
         }
     }
-    status = hps_group_merge(a_base, a_incoming, &comparator, &a_result);
-    if (status != HPS_STATUS_OK || a_result == NULL ||
+    status = lks_group_merge(a_base, a_incoming, &comparator, &a_result);
+    if (status != LKS_STATUS_OK || a_result == NULL ||
         !merge_group_expect(a_result, a_result_items, a_result_paths, 7, &comparator)) {
         goto cleanup;
     }
-    for (index = 0; index < hps_group_size(a_base); ++index) {
+    for (index = 0; index < lks_group_size(a_base); ++index) {
         int path_order;
 
-        if (hps_group_item_at(a_base, index) != base_snapshot[index] ||
-            hps_path_compare(hps_group_path_at(a_base, index),
-                hps_group_path_at(a_result, index == 0 ? 1 : index == 1 ? 3 : 5),
-                &path_order) != HPS_STATUS_OK || path_order != 0) {
+        if (lks_group_item_at(a_base, index) != base_snapshot[index] ||
+            lks_path_compare(lks_group_path_at(a_base, index),
+                lks_group_path_at(a_result, index == 0 ? 1 : index == 1 ? 3 : 5),
+                &path_order) != LKS_STATUS_OK || path_order != 0) {
             goto cleanup;
         }
-        if (hps_path_format(hps_group_path_at(a_base, index),
-                incoming_path_snapshot[9], sizeof(incoming_path_snapshot[9])) != HPS_STATUS_OK ||
+        if (lks_path_format(lks_group_path_at(a_base, index),
+                incoming_path_snapshot[9], sizeof(incoming_path_snapshot[9])) != LKS_STATUS_OK ||
             strcmp(incoming_path_snapshot[9], base_path_snapshot[index]) != 0) {
             goto cleanup;
         }
     }
-    for (index = 0; index < hps_group_size(a_incoming); ++index) {
+    for (index = 0; index < lks_group_size(a_incoming); ++index) {
         char path_text[128];
 
-        if (hps_group_item_at(a_incoming, index) != incoming_snapshot[index] ||
-            hps_path_format(hps_group_path_at(a_incoming, index), path_text,
-                sizeof(path_text)) != HPS_STATUS_OK ||
+        if (lks_group_item_at(a_incoming, index) != incoming_snapshot[index] ||
+            lks_path_format(lks_group_path_at(a_incoming, index), path_text,
+                sizeof(path_text)) != LKS_STATUS_OK ||
             strcmp(path_text, incoming_path_snapshot[index]) != 0) {
             goto cleanup;
         }
     }
     printf("Merge A: 50/1A1, 100/1A0, 150/1A0/A0, 200/000, 250/000/A0, 300/0A0, 350/0A0/A0\n");
     printf("Merge A: Base Paths retained; Incoming 50 re-encoded from 000 to 1A1; inputs unchanged\n");
-    hps_group_destroy(a_base);
+    lks_group_destroy(a_base);
     a_base = NULL;
-    hps_group_destroy(a_incoming);
+    lks_group_destroy(a_incoming);
     a_incoming = NULL;
     if (!merge_group_expect(a_result, a_result_items, a_result_paths, 7, &comparator)) {
         goto cleanup;
     }
     printf("Merge H: Result remains readable after both input Groups are destroyed\n");
 
-    if (hps_group_build(b_base_items, 2, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(b_in_items, 3, &comparator, &incoming) != HPS_STATUS_OK ||
-        hps_group_merge(base, incoming, &comparator, &result) != HPS_STATUS_OK ||
+    if (lks_group_build(b_base_items, 2, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(b_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
         !merge_group_expect(result, b_result_items, b_result_paths, 5, &comparator)) {
         goto cleanup;
     }
     printf("Merge B: 100/000, 110/000/A0, 120/000/A1, 130/000/A2, 200/0A0\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_destroy(incoming); incoming = NULL;
-    hps_group_destroy(base); base = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_destroy(incoming); incoming = NULL;
+    lks_group_destroy(base); base = NULL;
 
-    if (hps_group_build(c_base_items, 4, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(c_in_items, 3, &comparator, &incoming) != HPS_STATUS_OK ||
-        hps_group_merge(base, incoming, &comparator, &result) != HPS_STATUS_OK ||
+    if (lks_group_build(c_base_items, 4, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(c_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
         !merge_group_expect(result, c_result_items, NULL, 7, &comparator)) {
         goto cleanup;
     }
     printf("Merge C: equal values retain Base A/B before Incoming A/B; order stable within each input\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_destroy(incoming); incoming = NULL;
-    hps_group_destroy(base); base = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_destroy(incoming); incoming = NULL;
+    lks_group_destroy(base); base = NULL;
 
     for (index = 0; index < 10; ++index) {
         d_base_items[index] = &d_base_values[index];
     }
-    if (hps_group_build(d_base_items, 10, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(NULL, 0, &comparator, &empty) != HPS_STATUS_OK ||
-        hps_group_merge(base, empty, &comparator, &result) != HPS_STATUS_OK ||
-        result == base || hps_group_size(result) != 10) {
+    if (lks_group_build(d_base_items, 10, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(NULL, 0, &comparator, &empty) != LKS_STATUS_OK ||
+        lks_group_merge(base, empty, &comparator, &result) != LKS_STATUS_OK ||
+        result == base || lks_group_size(result) != 10) {
         goto cleanup;
     }
     for (index = 0; index < 10; ++index) {
@@ -2454,43 +2454,43 @@ static int run_group_merge_demo(void)
         size_t result_index;
 
         for (result_index = 0; result_index < 10; ++result_index) {
-            if (hps_group_item_at(result, result_index) ==
-                hps_group_item_at(base, index)) {
+            if (lks_group_item_at(result, result_index) ==
+                lks_group_item_at(base, index)) {
                 break;
             }
         }
-        if (result_index == 10 || hps_path_compare(hps_group_path_at(base, index),
-                hps_group_path_at(result, result_index), &path_order) !=
-                HPS_STATUS_OK || path_order != 0) {
+        if (result_index == 10 || lks_path_compare(lks_group_path_at(base, index),
+                lks_group_path_at(result, result_index), &path_order) !=
+                LKS_STATUS_OK || path_order != 0) {
             goto cleanup;
         }
     }
     printf("Merge D: empty Incoming creates an independent copy; all 10 Base Paths preserved\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_destroy(empty); empty = NULL;
-    hps_group_destroy(base); base = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_destroy(empty); empty = NULL;
+    lks_group_destroy(base); base = NULL;
 
-    if (hps_group_build(NULL, 0, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(e_in_items, 3, &comparator, &incoming) != HPS_STATUS_OK ||
-        hps_group_merge(base, incoming, &comparator, &result) != HPS_STATUS_OK ||
+    if (lks_group_build(NULL, 0, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(e_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
         !merge_group_expect(result, e_result_items, e_result_paths, 3, &comparator)) {
         goto cleanup;
     }
     printf("Merge E: empty Base re-encodes Incoming as 000, 0A0, 0A0/A0\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_destroy(incoming); incoming = NULL;
-    hps_group_destroy(base); base = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_destroy(incoming); incoming = NULL;
+    lks_group_destroy(base); base = NULL;
 
-    if (hps_group_build(NULL, 0, &comparator, &base) != HPS_STATUS_OK ||
-        hps_group_build(NULL, 0, &comparator, &incoming) != HPS_STATUS_OK ||
-        hps_group_merge(base, incoming, &comparator, &result) != HPS_STATUS_OK ||
-        result == NULL || hps_group_size(result) != 0) {
+    if (lks_group_build(NULL, 0, &comparator, &base) != LKS_STATUS_OK ||
+        lks_group_build(NULL, 0, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
+        result == NULL || lks_group_size(result) != 0) {
         goto cleanup;
     }
     printf("Merge F: empty + empty returns a valid empty Group\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_destroy(incoming); incoming = NULL;
-    hps_group_destroy(base); base = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_destroy(incoming); incoming = NULL;
+    lks_group_destroy(base); base = NULL;
 
     {
         int complex_base_values[] = { 100, 50, 150, 125, 75, 25, 175, 160, 170, 165 };
@@ -2504,43 +2504,43 @@ static int run_group_merge_demo(void)
         for (index = 0; index < 5; ++index) {
             complex_incoming_items[index] = &complex_incoming_values[index];
         }
-        status = hps_group_build(complex_base_items, 10, &comparator, &base);
-        if (status != HPS_STATUS_OK) {
-            printf("Merge I Base build failed: %s\n", hps_status_string(status));
+        status = lks_group_build(complex_base_items, 10, &comparator, &base);
+        if (status != LKS_STATUS_OK) {
+            printf("Merge I Base build failed: %s\n", lks_status_string(status));
             goto cleanup;
         }
-        status = hps_group_build(complex_incoming_items, 5, &comparator, &incoming);
-        if (status != HPS_STATUS_OK) {
-            printf("Merge I Incoming build failed: %s\n", hps_status_string(status));
+        status = lks_group_build(complex_incoming_items, 5, &comparator, &incoming);
+        if (status != LKS_STATUS_OK) {
+            printf("Merge I Incoming build failed: %s\n", lks_status_string(status));
             goto cleanup;
         }
-        status = hps_group_merge(base, incoming, &comparator, &result);
-        if (status != HPS_STATUS_OK) {
-            printf("Merge I merge failed: %s\n", hps_status_string(status));
+        status = lks_group_merge(base, incoming, &comparator, &result);
+        if (status != LKS_STATUS_OK) {
+            printf("Merge I merge failed: %s\n", lks_status_string(status));
             goto cleanup;
         }
         for (index = 0; index < 10; ++index) {
             size_t result_index;
             int path_order;
 
-            for (result_index = 0; result_index < hps_group_size(result); ++result_index) {
-                if (hps_group_item_at(result, result_index) ==
-                    hps_group_item_at(base, index)) {
+            for (result_index = 0; result_index < lks_group_size(result); ++result_index) {
+                if (lks_group_item_at(result, result_index) ==
+                    lks_group_item_at(base, index)) {
                     break;
                 }
             }
-            if (result_index == hps_group_size(result) ||
-                hps_path_compare(hps_group_path_at(base, index),
-                    hps_group_path_at(result, result_index), &path_order) !=
-                HPS_STATUS_OK || path_order != 0) {
+            if (result_index == lks_group_size(result) ||
+                lks_path_compare(lks_group_path_at(base, index),
+                    lks_group_path_at(result, result_index), &path_order) !=
+                LKS_STATUS_OK || path_order != 0) {
                 char old_text[128] = "<none>";
                 char new_text[128] = "<none>";
-                if (index < hps_group_size(base)) {
-                    hps_path_format(hps_group_path_at(base, index), old_text,
+                if (index < lks_group_size(base)) {
+                    lks_path_format(lks_group_path_at(base, index), old_text,
                         sizeof(old_text));
                 }
-                if (result_index < hps_group_size(result)) {
-                    hps_path_format(hps_group_path_at(result, result_index), new_text,
+                if (result_index < lks_group_size(result)) {
+                    lks_path_format(lks_group_path_at(result, result_index), new_text,
                         sizeof(new_text));
                 }
                 printf("Merge I Base Path mismatch at base index %lu, result index %lu, order %d\n",
@@ -2550,38 +2550,38 @@ static int run_group_merge_demo(void)
             }
         }
         printf("Merge I: all 10 complex Base Paths preserved\n");
-        hps_group_destroy(result); result = NULL;
-        hps_group_destroy(incoming); incoming = NULL;
-        hps_group_destroy(base); base = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_destroy(incoming); incoming = NULL;
+        lks_group_destroy(base); base = NULL;
     }
 
-    if (hps_group_build(NULL, 0, &comparator, &empty) != HPS_STATUS_OK) {
+    if (lks_group_build(NULL, 0, &comparator, &empty) != LKS_STATUS_OK) {
         goto cleanup;
     }
     {
-        HpsComparator invalid_comparator = comparator;
-        HpsGroup *invalid_result = NULL;
+        LksComparator invalid_comparator = comparator;
+        LksGroup *invalid_result = NULL;
 
         invalid_comparator.compare = NULL;
         invalid_result = empty;
-        if (hps_group_merge(NULL, empty, &comparator, &invalid_result) != HPS_STATUS_INVALID_ARGUMENT ||
+        if (lks_group_merge(NULL, empty, &comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL) {
             goto cleanup;
         }
         invalid_result = empty;
-        if (hps_group_merge(empty, NULL, &comparator, &invalid_result) != HPS_STATUS_INVALID_ARGUMENT ||
+        if (lks_group_merge(empty, NULL, &comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL) {
             goto cleanup;
         }
         invalid_result = empty;
-        if (hps_group_merge(empty, empty, NULL, &invalid_result) != HPS_STATUS_INVALID_ARGUMENT ||
+        if (lks_group_merge(empty, empty, NULL, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL) {
             goto cleanup;
         }
         invalid_result = empty;
-        if (hps_group_merge(empty, empty, &invalid_comparator, &invalid_result) != HPS_STATUS_INVALID_ARGUMENT ||
+        if (lks_group_merge(empty, empty, &invalid_comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL ||
-            hps_group_merge(empty, empty, &comparator, NULL) != HPS_STATUS_INVALID_ARGUMENT) {
+            lks_group_merge(empty, empty, &comparator, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
             goto cleanup;
         }
     }
@@ -2590,13 +2590,13 @@ static int run_group_merge_demo(void)
     valid = 1;
 
 cleanup:
-    hps_group_destroy(result);
-    hps_group_destroy(incoming);
-    hps_group_destroy(base);
-    hps_group_destroy(empty);
-    hps_group_destroy(a_result);
-    hps_group_destroy(a_incoming);
-    hps_group_destroy(a_base);
+    lks_group_destroy(result);
+    lks_group_destroy(incoming);
+    lks_group_destroy(base);
+    lks_group_destroy(empty);
+    lks_group_destroy(a_result);
+    lks_group_destroy(a_incoming);
+    lks_group_destroy(a_base);
     if (!valid) {
         return 0;
     }
@@ -2607,9 +2607,9 @@ cleanup:
         void *base_items[500];
         void *incoming_items[500];
         CompareCounter merge_counter;
-        HpsGroup *large_base = NULL;
-        HpsGroup *large_incoming = NULL;
-        HpsGroup *large_result = NULL;
+        LksGroup *large_base = NULL;
+        LksGroup *large_incoming = NULL;
+        LksGroup *large_result = NULL;
         int large_valid = 1;
 
         merge_counter.calls = 0;
@@ -2619,33 +2619,33 @@ cleanup:
             base_items[index] = &base_values[index];
             incoming_items[index] = &incoming_values[index];
         }
-        if (hps_group_build(base_items, 500, &comparator, &large_base) != HPS_STATUS_OK ||
-            hps_group_build(incoming_items, 500, &comparator, &large_incoming) != HPS_STATUS_OK) {
+        if (lks_group_build(base_items, 500, &comparator, &large_base) != LKS_STATUS_OK ||
+            lks_group_build(incoming_items, 500, &comparator, &large_incoming) != LKS_STATUS_OK) {
             large_valid = 0;
         }
         counted_comparator.compare = compare_int_counted;
         counted_comparator.context = &merge_counter;
-        if (large_valid && hps_group_merge(large_base, large_incoming,
-                &counted_comparator, &large_result) != HPS_STATUS_OK) {
+        if (large_valid && lks_group_merge(large_base, large_incoming,
+                &counted_comparator, &large_result) != LKS_STATUS_OK) {
             large_valid = 0;
         }
-        if (large_valid && hps_group_size(large_result) != 1000) {
+        if (large_valid && lks_group_size(large_result) != 1000) {
             large_valid = 0;
         }
         for (index = 0; large_valid && index < 1000; ++index) {
             int expected = (int)index;
-            if (hps_group_item_at(large_result, index) == NULL ||
-                *(int *)hps_group_item_at(large_result, index) != expected) {
+            if (lks_group_item_at(large_result, index) == NULL ||
+                *(int *)lks_group_item_at(large_result, index) != expected) {
                 large_valid = 0;
             }
         }
         for (index = 0; large_valid && index < 500; ++index) {
             size_t result_index = index * 2;
             int path_order;
-            if (hps_group_item_at(large_result, result_index) != base_items[index] ||
-                hps_path_compare(hps_group_path_at(large_base, index),
-                    hps_group_path_at(large_result, result_index), &path_order) !=
-                    HPS_STATUS_OK || path_order != 0) {
+            if (lks_group_item_at(large_result, result_index) != base_items[index] ||
+                lks_path_compare(lks_group_path_at(large_base, index),
+                    lks_group_path_at(large_result, result_index), &path_order) !=
+                    LKS_STATUS_OK || path_order != 0) {
                 large_valid = 0;
             }
         }
@@ -2654,9 +2654,9 @@ cleanup:
         }
         printf("Merge J: 500 + 500 -> 1000 ordered items; merge comparator calls %lu; 500 Base Paths preserved\n",
             (unsigned long)merge_counter.calls);
-        hps_group_destroy(large_result);
-        hps_group_destroy(large_incoming);
-        hps_group_destroy(large_base);
+        lks_group_destroy(large_result);
+        lks_group_destroy(large_incoming);
+        lks_group_destroy(large_base);
         return large_valid;
     }
 }
@@ -2672,13 +2672,13 @@ static int run_group_batch_demo(void)
     static const int values_e[] = { 4, 1, 3, 2 };
     static const int values_f[] = { 30, 10, 20 };
     static const int sorted_f[] = { 10, 20, 30 };
-    HpsComparator comparator;
-    HpsComparator invalid_comparator;
-    HpsGroupBatch *batch;
-    HpsGroupBatch *empty_batch;
-    HpsGroupBatch *one_batch;
-    HpsGroupBatch *big_batch;
-    HpsGroupBatch *remainder_batch;
+    LksComparator comparator;
+    LksComparator invalid_comparator;
+    LksGroupBatch *batch;
+    LksGroupBatch *empty_batch;
+    LksGroupBatch *one_batch;
+    LksGroupBatch *big_batch;
+    LksGroupBatch *remainder_batch;
     void *items_b[4];
     void *items_c[10];
     void *items_e[4];
@@ -2691,37 +2691,37 @@ static int run_group_batch_demo(void)
     size_t group_index;
     size_t size_sum;
     int valid;
-    HpsStatus status;
+    LksStatus status;
 
     comparator.compare = compare_int;
     comparator.context = NULL;
 
     empty_batch = NULL;
-    status = hps_group_batch_build(NULL, 0, 100, &comparator, &empty_batch);
-    if (status != HPS_STATUS_OK || empty_batch == NULL ||
-        hps_group_batch_total_size(empty_batch) != 0 ||
-        hps_group_batch_group_count(empty_batch) != 0 ||
-        hps_group_batch_group_size(empty_batch) != 100 ||
-        hps_group_batch_group_at(empty_batch, 0) != NULL) {
-        hps_group_batch_destroy(empty_batch);
+    status = lks_group_batch_build(NULL, 0, 100, &comparator, &empty_batch);
+    if (status != LKS_STATUS_OK || empty_batch == NULL ||
+        lks_group_batch_total_size(empty_batch) != 0 ||
+        lks_group_batch_group_count(empty_batch) != 0 ||
+        lks_group_batch_group_size(empty_batch) != 100 ||
+        lks_group_batch_group_at(empty_batch, 0) != NULL) {
+        lks_group_batch_destroy(empty_batch);
         return 0;
     }
-    hps_group_batch_destroy(empty_batch);
-    hps_group_batch_destroy(NULL);
+    lks_group_batch_destroy(empty_batch);
+    lks_group_batch_destroy(NULL);
     printf("Batch A empty: total 0, groups 0, configured size 100\n");
 
     for (index = 0; index < 4; ++index) {
         items_b[index] = (void *)&values_b[index];
     }
     one_batch = NULL;
-    status = hps_group_batch_build(items_b, 4, 4, &comparator, &one_batch);
-    valid = status == HPS_STATUS_OK && one_batch != NULL &&
-        hps_group_batch_group_count(one_batch) == 1 &&
-        hps_group_batch_total_size(one_batch) == 4 &&
-        hps_group_batch_group_size(one_batch) == 4 &&
-        batch_group_check(hps_group_batch_group_at(one_batch, 0), &comparator,
+    status = lks_group_batch_build(items_b, 4, 4, &comparator, &one_batch);
+    valid = status == LKS_STATUS_OK && one_batch != NULL &&
+        lks_group_batch_group_count(one_batch) == 1 &&
+        lks_group_batch_total_size(one_batch) == 4 &&
+        lks_group_batch_group_size(one_batch) == 4 &&
+        batch_group_check(lks_group_batch_group_at(one_batch, 0), &comparator,
             sorted_b, 4, values_b, 0, 4, 1, 0, "Batch B group 0");
-    hps_group_batch_destroy(one_batch);
+    lks_group_batch_destroy(one_batch);
     if (!valid) {
         return 0;
     }
@@ -2731,18 +2731,18 @@ static int run_group_batch_demo(void)
         items_c[index] = (void *)&values_c[index];
     }
     batch = NULL;
-    status = hps_group_batch_build(items_c, 10, 4, &comparator, &batch);
-    if (status != HPS_STATUS_OK || batch == NULL ||
-        hps_group_batch_group_count(batch) != 3 ||
-        hps_group_batch_total_size(batch) != 10 ||
-        hps_group_batch_group_size(batch) != 4 ||
-        !batch_group_check(hps_group_batch_group_at(batch, 0), &comparator,
+    status = lks_group_batch_build(items_c, 10, 4, &comparator, &batch);
+    if (status != LKS_STATUS_OK || batch == NULL ||
+        lks_group_batch_group_count(batch) != 3 ||
+        lks_group_batch_total_size(batch) != 10 ||
+        lks_group_batch_group_size(batch) != 4 ||
+        !batch_group_check(lks_group_batch_group_at(batch, 0), &comparator,
             sorted_c0, 4, values_c, 0, 4, 1, 1, "Batch C group 0") ||
-        !batch_group_check(hps_group_batch_group_at(batch, 1), &comparator,
+        !batch_group_check(lks_group_batch_group_at(batch, 1), &comparator,
             sorted_c1, 4, values_c, 4, 4, 1, 1, "Batch C group 1") ||
-        !batch_group_check(hps_group_batch_group_at(batch, 2), &comparator,
+        !batch_group_check(lks_group_batch_group_at(batch, 2), &comparator,
             sorted_c2, 2, values_c, 8, 2, 1, 1, "Batch C group 2")) {
-        hps_group_batch_destroy(batch);
+        lks_group_batch_destroy(batch);
         return 0;
     }
     printf("Batch C chunks: [90 10 70 30] -> 10 30 70 90; ");
@@ -2752,16 +2752,16 @@ static int run_group_batch_demo(void)
     for (index = 0; index < 10; ++index) {
         items_c[index] = NULL;
     }
-    valid = batch_group_check(hps_group_batch_group_at(batch, 0), &comparator,
+    valid = batch_group_check(lks_group_batch_group_at(batch, 0), &comparator,
                 sorted_c0, 4, values_c, 0, 4, 1, 1, "Batch G group 0") &&
-        batch_group_check(hps_group_batch_group_at(batch, 1), &comparator,
+        batch_group_check(lks_group_batch_group_at(batch, 1), &comparator,
                 sorted_c1, 4, values_c, 4, 4, 1, 1, "Batch G group 1") &&
-        batch_group_check(hps_group_batch_group_at(batch, 2), &comparator,
+        batch_group_check(lks_group_batch_group_at(batch, 2), &comparator,
                 sorted_c2, 2, values_c, 8, 2, 1, 1, "Batch G group 2");
     if (valid) {
         printf("Batch G/H: items[] cleared; values and original item addresses remain available\n");
     }
-    hps_group_batch_destroy(batch);
+    lks_group_batch_destroy(batch);
     if (!valid) {
         return 0;
     }
@@ -2770,50 +2770,50 @@ static int run_group_batch_demo(void)
         items_e[index] = (void *)&values_e[index];
     }
     batch = NULL;
-    status = hps_group_batch_build(items_e, 4, 1, &comparator, &batch);
-    if (status != HPS_STATUS_OK || batch == NULL ||
-        hps_group_batch_group_count(batch) != 4 ||
-        hps_group_batch_total_size(batch) != 4) {
-        hps_group_batch_destroy(batch);
+    status = lks_group_batch_build(items_e, 4, 1, &comparator, &batch);
+    if (status != LKS_STATUS_OK || batch == NULL ||
+        lks_group_batch_group_count(batch) != 4 ||
+        lks_group_batch_total_size(batch) != 4) {
+        lks_group_batch_destroy(batch);
         return 0;
     }
     for (index = 0; index < 4; ++index) {
-        const HpsGroup *group;
+        const LksGroup *group;
         char path_text[32];
 
-        group = hps_group_batch_group_at(batch, index);
-        if (group == NULL || hps_group_size(group) != 1 ||
-            hps_group_item_at(group, 0) != &values_e[index] ||
-            hps_path_format(hps_group_path_at(group, 0), path_text,
-                sizeof(path_text)) != HPS_STATUS_OK ||
+        group = lks_group_batch_group_at(batch, index);
+        if (group == NULL || lks_group_size(group) != 1 ||
+            lks_group_item_at(group, 0) != &values_e[index] ||
+            lks_path_format(lks_group_path_at(group, 0), path_text,
+                sizeof(path_text)) != LKS_STATUS_OK ||
             strcmp(path_text, "000") != 0) {
-            hps_group_batch_destroy(batch);
+            lks_group_batch_destroy(batch);
             return 0;
         }
     }
     printf("Batch E GroupSize 1: 4 singleton Groups, each Path 000\n");
-    hps_group_batch_destroy(batch);
+    lks_group_batch_destroy(batch);
 
     for (index = 0; index < 3; ++index) {
         items_f[index] = (void *)&values_f[index];
     }
     batch = NULL;
-    status = hps_group_batch_build(items_f, 3, 100, &comparator, &batch);
-    valid = status == HPS_STATUS_OK && batch != NULL &&
-        hps_group_batch_group_count(batch) == 1 &&
-        hps_group_batch_total_size(batch) == 3 &&
-        hps_group_batch_group_size(batch) == 100 &&
-        batch_group_check(hps_group_batch_group_at(batch, 0), &comparator,
+    status = lks_group_batch_build(items_f, 3, 100, &comparator, &batch);
+    valid = status == LKS_STATUS_OK && batch != NULL &&
+        lks_group_batch_group_count(batch) == 1 &&
+        lks_group_batch_total_size(batch) == 3 &&
+        lks_group_batch_group_size(batch) == 100 &&
+        batch_group_check(lks_group_batch_group_at(batch, 0), &comparator,
             sorted_f, 3, values_f, 0, 3, 1, 1, "Batch F larger GroupSize");
-    hps_group_batch_destroy(batch);
+    lks_group_batch_destroy(batch);
     if (!valid) {
         return 0;
     }
 
-    if (hps_group_batch_total_size(NULL) != 0 ||
-        hps_group_batch_group_count(NULL) != 0 ||
-        hps_group_batch_group_size(NULL) != 0 ||
-        hps_group_batch_group_at(NULL, 0) != NULL) {
+    if (lks_group_batch_total_size(NULL) != 0 ||
+        lks_group_batch_group_count(NULL) != 0 ||
+        lks_group_batch_group_size(NULL) != 0 ||
+        lks_group_batch_group_at(NULL, 0) != NULL) {
         return 0;
     }
 
@@ -2829,24 +2829,24 @@ static int run_group_batch_demo(void)
         items_1000[index] = &values_1000[index];
     }
     big_batch = NULL;
-    status = hps_group_batch_build(items_1000, 1000, 100, &comparator,
+    status = lks_group_batch_build(items_1000, 1000, 100, &comparator,
         &big_batch);
-    valid = status == HPS_STATUS_OK && big_batch != NULL &&
-        hps_group_batch_group_count(big_batch) == 10 &&
-        hps_group_batch_total_size(big_batch) == 1000 &&
-        hps_group_batch_group_size(big_batch) == 100;
+    valid = status == LKS_STATUS_OK && big_batch != NULL &&
+        lks_group_batch_group_count(big_batch) == 10 &&
+        lks_group_batch_total_size(big_batch) == 1000 &&
+        lks_group_batch_group_size(big_batch) == 100;
     for (group_index = 0; valid && group_index < 10; ++group_index) {
-        const HpsGroup *group;
+        const LksGroup *group;
 
-        group = hps_group_batch_group_at(big_batch, group_index);
-        valid = hps_group_size(group) == 100 &&
+        group = lks_group_batch_group_at(big_batch, group_index);
+        valid = lks_group_size(group) == 100 &&
             batch_group_check(group, &comparator, NULL, 100, values_1000,
                 group_index * 100, 100, 1, 1, "Batch I chunk");
     }
-    if (valid && hps_group_batch_group_at(big_batch, 10) != NULL) {
+    if (valid && lks_group_batch_group_at(big_batch, 10) != NULL) {
         valid = 0;
     }
-    hps_group_batch_destroy(big_batch);
+    lks_group_batch_destroy(big_batch);
     free(items_1000);
     free(values_1000);
     if (!valid) {
@@ -2863,25 +2863,25 @@ static int run_group_batch_demo(void)
         items_103[index] = &values_103[index];
     }
     remainder_batch = NULL;
-    status = hps_group_batch_build(items_103, 103, 20, &comparator,
+    status = lks_group_batch_build(items_103, 103, 20, &comparator,
         &remainder_batch);
-    valid = status == HPS_STATUS_OK && remainder_batch != NULL &&
-        hps_group_batch_group_count(remainder_batch) == 6 &&
-        hps_group_batch_total_size(remainder_batch) == 103 &&
-        hps_group_batch_group_size(remainder_batch) == 20;
+    valid = status == LKS_STATUS_OK && remainder_batch != NULL &&
+        lks_group_batch_group_count(remainder_batch) == 6 &&
+        lks_group_batch_total_size(remainder_batch) == 103 &&
+        lks_group_batch_group_size(remainder_batch) == 20;
     size_sum = 0;
     for (group_index = 0; valid && group_index < 6; ++group_index) {
         size_t expected_size;
 
         expected_size = group_index < 5 ? 20 : 3;
-        if (hps_group_size(hps_group_batch_group_at(remainder_batch,
+        if (lks_group_size(lks_group_batch_group_at(remainder_batch,
                 group_index)) != expected_size) {
             valid = 0;
         } else {
             size_sum += expected_size;
         }
     }
-    hps_group_batch_destroy(remainder_batch);
+    lks_group_batch_destroy(remainder_batch);
     free(items_103);
     if (!valid || size_sum != 103) {
         return 0;
@@ -2890,8 +2890,8 @@ static int run_group_batch_demo(void)
 
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
-    if (hps_group_batch_build(NULL, 0, 10, &comparator, NULL) !=
-            HPS_STATUS_INVALID_ARGUMENT ||
+    if (lks_group_batch_build(NULL, 0, 10, &comparator, NULL) !=
+            LKS_STATUS_INVALID_ARGUMENT ||
         !batch_expect_invalid(NULL, 0, 0, &comparator) ||
         !batch_expect_invalid(NULL, 0, 10, NULL) ||
         !batch_expect_invalid(NULL, 0, 10, &invalid_comparator) ||
@@ -2901,14 +2901,14 @@ static int run_group_batch_demo(void)
     printf("Batch K invalid parameters and NULL/out-of-range getters: passed\n");
 
     batch = NULL;
-    status = hps_group_batch_build(NULL, 0, 1, &comparator, &batch);
-    if (status != HPS_STATUS_OK || batch == NULL ||
-        hps_group_batch_group_at(batch,
-            hps_group_batch_group_count(batch)) != NULL) {
-        hps_group_batch_destroy(batch);
+    status = lks_group_batch_build(NULL, 0, 1, &comparator, &batch);
+    if (status != LKS_STATUS_OK || batch == NULL ||
+        lks_group_batch_group_at(batch,
+            lks_group_batch_group_count(batch)) != NULL) {
+        lks_group_batch_destroy(batch);
         return 0;
     }
-    hps_group_batch_destroy(batch);
+    lks_group_batch_destroy(batch);
     return 1;
 }
 
@@ -2924,43 +2924,43 @@ static int run_group_batch_merge_demo(void)
     int eight_values[16];
     void *eight_items[16];
     void *eight_expected[16];
-    HpsComparator comparator;
-    HpsComparator invalid_comparator;
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *result = NULL;
-    HpsStatus status;
+    LksComparator comparator;
+    LksComparator invalid_comparator;
+    LksGroupBatch *batch = NULL;
+    LksGroup *result = NULL;
+    LksStatus status;
     size_t index;
     int valid = 0;
 
     comparator.compare = compare_int;
     comparator.context = NULL;
 
-    status = hps_group_batch_build(NULL, 0, 3, &comparator, &batch);
-    if (status != HPS_STATUS_OK || batch == NULL ||
-        hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
-        result == NULL || hps_group_size(result) != 0) {
+    status = lks_group_batch_build(NULL, 0, 3, &comparator, &batch);
+    if (status != LKS_STATUS_OK || batch == NULL ||
+        lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        result == NULL || lks_group_size(result) != 0) {
         goto cleanup;
     }
     printf("Merge all empty Batch: independent empty Group returned\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_batch_destroy(batch); batch = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_batch_destroy(batch); batch = NULL;
 
     {
         int values4[] = { 10, 20, 30, 40 };
         void *items4[] = { &values4[0], &values4[1], &values4[2], &values4[3] };
         void *expected4[] = { &values4[0], &values4[1], &values4[2], &values4[3] };
         const char *paths4[] = { "000", "0A0", "0A0/A0", "0A0/A0//A0" };
-        if (hps_group_batch_build(items4, 4, 1, &comparator, &batch) != HPS_STATUS_OK ||
-            hps_group_batch_group_count(batch) != 4 ||
-            hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
+        if (lks_group_batch_build(items4, 4, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_group_batch_group_count(batch) != 4 ||
+            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             !merge_group_expect(result, expected4, paths4, 4, &comparator)) {
             goto cleanup;
         }
         for (index = 0; index < 4; ++index) {
             printf("Merge all 4 singleton: %d -> %s\n", values4[index], paths4[index]);
         }
-        hps_group_destroy(result); result = NULL;
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -2970,26 +2970,26 @@ static int run_group_batch_merge_demo(void)
         const char *paths5[] = { "000", "0A0", "0A0/A0", "0A0/A0//A0",
             "0A0/A0//A0///A0" };
         char carried_path[32];
-        const HpsGroup *last_original;
+        const LksGroup *last_original;
 
-        if (hps_group_batch_build(items5, 5, 1, &comparator, &batch) != HPS_STATUS_OK) {
+        if (lks_group_batch_build(items5, 5, 1, &comparator, &batch) != LKS_STATUS_OK) {
             goto cleanup;
         }
-        last_original = hps_group_batch_group_at(batch, 4);
-        if (hps_path_format(hps_group_path_at(last_original, 0), carried_path,
-                sizeof(carried_path)) != HPS_STATUS_OK || strcmp(carried_path, "000") != 0 ||
-            hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
+        last_original = lks_group_batch_group_at(batch, 4);
+        if (lks_path_format(lks_group_path_at(last_original, 0), carried_path,
+                sizeof(carried_path)) != LKS_STATUS_OK || strcmp(carried_path, "000") != 0 ||
+            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             !merge_group_expect(result, expected5, paths5, 5, &comparator) ||
-            hps_path_format(hps_group_path_at(last_original, 0), carried_path,
-                sizeof(carried_path)) != HPS_STATUS_OK || strcmp(carried_path, "000") != 0) {
+            lks_path_format(lks_group_path_at(last_original, 0), carried_path,
+                sizeof(carried_path)) != LKS_STATUS_OK || strcmp(carried_path, "000") != 0) {
             goto cleanup;
         }
         for (index = 0; index < 5; ++index) {
             printf("Merge all 5 singleton: %d -> %s\n", values5[index], paths5[index]);
         }
         printf("Merge all 5 singleton: G4 stayed at 000 in original Batch during carry\n");
-        hps_group_destroy(result); result = NULL;
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -2998,20 +2998,20 @@ static int run_group_batch_merge_demo(void)
             &values6[3], &values6[4], &values6[5] };
         int expected6[] = { 1, 2, 3, 4, 5, 6 };
 
-        if (hps_group_batch_build(items6, 6, 1, &comparator, &batch) != HPS_STATUS_OK ||
-            hps_group_batch_group_count(batch) != 6 ||
-            hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
-            hps_group_size(result) != 6) {
+        if (lks_group_batch_build(items6, 6, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_group_batch_group_count(batch) != 6 ||
+            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_group_size(result) != 6) {
             goto cleanup;
         }
         for (index = 0; index < 6; ++index) {
-            if (*(int *)hps_group_item_at(result, index) != expected6[index]) {
+            if (*(int *)lks_group_item_at(result, index) != expected6[index]) {
                 goto cleanup;
             }
         }
         printf("Merge all 6 singleton: 1 2 3 4 5 6; size 6, no lost or duplicate items\n");
-        hps_group_destroy(result); result = NULL;
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -3019,28 +3019,28 @@ static int run_group_batch_merge_demo(void)
         void *items_equal5[] = { &values_equal5[0], &values_equal5[1],
             &values_equal5[2], &values_equal5[3], &values_equal5[4] };
 
-        if (hps_group_batch_build(items_equal5, 5, 1, &comparator, &batch) != HPS_STATUS_OK ||
-            hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
-            hps_group_size(result) != 5) {
+        if (lks_group_batch_build(items_equal5, 5, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_group_size(result) != 5) {
             goto cleanup;
         }
         for (index = 0; index < 5; ++index) {
-            if (hps_group_item_at(result, index) != &values_equal5[index]) {
+            if (lks_group_item_at(result, index) != &values_equal5[index]) {
                 goto cleanup;
             }
         }
         printf("Merge all 5 equal singleton items: origins 0,1,2,3,4 retained by pointer\n");
-        hps_group_destroy(result); result = NULL;
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
     }
 
     {
         int values10[] = { 90, 10, 70, 30, 80, 20, 60, 40, 100, 50 };
         void *items10[10];
         int expected10[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-        const HpsGroup *g0;
+        const LksGroup *g0;
         void *g0_items[4];
-        const HpsPath *g0_paths[4];
+        const LksPath *g0_paths[4];
         void *batch_items_snapshot[3][4];
         char batch_path_snapshot[3][4][128];
         size_t group_index;
@@ -3048,33 +3048,33 @@ static int run_group_batch_merge_demo(void)
         for (index = 0; index < 10; ++index) {
             items10[index] = &values10[index];
         }
-        if (hps_group_batch_build(items10, 10, 4, &comparator, &batch) != HPS_STATUS_OK ||
-            hps_group_batch_group_count(batch) != 3) {
+        if (lks_group_batch_build(items10, 10, 4, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_group_batch_group_count(batch) != 3) {
             goto cleanup;
         }
-        g0 = hps_group_batch_group_at(batch, 0);
+        g0 = lks_group_batch_group_at(batch, 0);
         for (group_index = 0; group_index < 3; ++group_index) {
-            const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
-            size_t group_size = hps_group_size(group);
+            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+            size_t group_size = lks_group_size(group);
             for (index = 0; index < group_size; ++index) {
-                batch_items_snapshot[group_index][index] = hps_group_item_at(group, index);
-                if (hps_path_format(hps_group_path_at(group, index),
+                batch_items_snapshot[group_index][index] = lks_group_item_at(group, index);
+                if (lks_path_format(lks_group_path_at(group, index),
                         batch_path_snapshot[group_index][index],
-                        sizeof(batch_path_snapshot[group_index][index])) != HPS_STATUS_OK) {
+                        sizeof(batch_path_snapshot[group_index][index])) != LKS_STATUS_OK) {
                     goto cleanup;
                 }
             }
         }
         for (index = 0; index < 4; ++index) {
-            g0_items[index] = hps_group_item_at(g0, index);
-            g0_paths[index] = hps_group_path_at(g0, index);
+            g0_items[index] = lks_group_item_at(g0, index);
+            g0_paths[index] = lks_group_path_at(g0, index);
         }
-        if (hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
-            hps_group_size(result) != 10) {
+        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_group_size(result) != 10) {
             goto cleanup;
         }
         for (index = 0; index < 10; ++index) {
-            if (*(int *)hps_group_item_at(result, index) != expected10[index]) {
+            if (*(int *)lks_group_item_at(result, index) != expected10[index]) {
                 goto cleanup;
             }
         }
@@ -3085,42 +3085,42 @@ static int run_group_batch_merge_demo(void)
             char path_text[128];
 
             for (result_index = 0; result_index < 10; ++result_index) {
-                if (hps_group_item_at(result, result_index) == g0_items[index]) {
+                if (lks_group_item_at(result, result_index) == g0_items[index]) {
                     break;
                 }
             }
-            if (result_index == 10 || hps_path_compare(g0_paths[index],
-                    hps_group_path_at(result, result_index), &path_order) !=
-                    HPS_STATUS_OK || path_order != 0 ||
-                hps_path_format(g0_paths[index], path_text, sizeof(path_text)) != HPS_STATUS_OK) {
+            if (result_index == 10 || lks_path_compare(g0_paths[index],
+                    lks_group_path_at(result, result_index), &path_order) !=
+                    LKS_STATUS_OK || path_order != 0 ||
+                lks_path_format(g0_paths[index], path_text, sizeof(path_text)) != LKS_STATUS_OK) {
                 goto cleanup;
             }
             printf("G0 item %d Path retained: %s\n", *(int *)g0_items[index], path_text);
         }
         for (group_index = 0; group_index < 3; ++group_index) {
-            const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
-            for (index = 0; index < hps_group_size(group); ++index) {
+            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+            for (index = 0; index < lks_group_size(group); ++index) {
                 char path_text[128];
-                if (hps_group_item_at(group, index) != batch_items_snapshot[group_index][index] ||
-                    hps_path_format(hps_group_path_at(group, index), path_text,
-                        sizeof(path_text)) != HPS_STATUS_OK ||
+                if (lks_group_item_at(group, index) != batch_items_snapshot[group_index][index] ||
+                    lks_path_format(lks_group_path_at(group, index), path_text,
+                        sizeof(path_text)) != LKS_STATUS_OK ||
                     strcmp(path_text, batch_path_snapshot[group_index][index]) != 0) {
                     goto cleanup;
                 }
             }
         }
         printf("Merge all: input Batch items and Paths unchanged\n");
-        hps_group_destroy(result); result = NULL;
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
     }
 
     {
         int *values1024 = (int *)malloc(1024 * sizeof(*values1024));
         void **items1024 = (void **)malloc(1024 * sizeof(*items1024));
         CompareCounter merge_counter;
-        HpsComparator merge_comparator;
-        const HpsGroup *original_g0;
-        const HpsPath *original_item0_path;
+        LksComparator merge_comparator;
+        const LksGroup *original_g0;
+        const LksPath *original_item0_path;
         char item0_path_text[32];
         int big_valid = 1;
 
@@ -3133,16 +3133,16 @@ static int run_group_batch_merge_demo(void)
             values1024[index] = (int)index;
             items1024[index] = &values1024[index];
         }
-        if (hps_group_batch_build(items1024, 1024, 1, &comparator, &batch) != HPS_STATUS_OK ||
-            hps_group_batch_group_count(batch) != 1024) {
+        if (lks_group_batch_build(items1024, 1024, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_group_batch_group_count(batch) != 1024) {
             free(items1024);
             free(values1024);
             goto cleanup;
         }
-        original_g0 = hps_group_batch_group_at(batch, 0);
-        original_item0_path = hps_group_path_at(original_g0, 0);
-        if (hps_path_format(original_item0_path, item0_path_text,
-                sizeof(item0_path_text)) != HPS_STATUS_OK ||
+        original_g0 = lks_group_batch_group_at(batch, 0);
+        original_item0_path = lks_group_path_at(original_g0, 0);
+        if (lks_path_format(original_item0_path, item0_path_text,
+                sizeof(item0_path_text)) != LKS_STATUS_OK ||
             strcmp(item0_path_text, "000") != 0) {
             free(items1024);
             free(values1024);
@@ -3151,33 +3151,33 @@ static int run_group_batch_merge_demo(void)
         merge_counter.calls = 0;
         merge_comparator.compare = compare_int_counted;
         merge_comparator.context = &merge_counter;
-        if (hps_group_batch_merge_all(batch, &merge_comparator, &result) != HPS_STATUS_OK ||
-            result == NULL || hps_group_size(result) != 1024) {
+        if (lks_group_batch_merge_all(batch, &merge_comparator, &result) != LKS_STATUS_OK ||
+            result == NULL || lks_group_size(result) != 1024) {
             big_valid = 0;
         }
         for (index = 0; big_valid && index < 1024; ++index) {
             int path_order;
-            if (hps_group_item_at(result, index) != &values1024[index] ||
-                (index > 0 && (hps_path_compare(hps_group_path_at(result, index - 1),
-                    hps_group_path_at(result, index), &path_order) != HPS_STATUS_OK ||
+            if (lks_group_item_at(result, index) != &values1024[index] ||
+                (index > 0 && (lks_path_compare(lks_group_path_at(result, index - 1),
+                    lks_group_path_at(result, index), &path_order) != LKS_STATUS_OK ||
                     path_order != -1))) {
                 big_valid = 0;
             }
         }
         if (big_valid) {
             int path_order;
-            if (hps_path_compare(original_item0_path,
-                    hps_group_path_at(result, 0), &path_order) != HPS_STATUS_OK ||
-                path_order != 0 || hps_path_format(hps_group_path_at(result, 0),
-                    item0_path_text, sizeof(item0_path_text)) != HPS_STATUS_OK ||
+            if (lks_path_compare(original_item0_path,
+                    lks_group_path_at(result, 0), &path_order) != LKS_STATUS_OK ||
+                path_order != 0 || lks_path_format(lks_group_path_at(result, 0),
+                    item0_path_text, sizeof(item0_path_text)) != LKS_STATUS_OK ||
                 strcmp(item0_path_text, "000") != 0) {
                 big_valid = 0;
             }
         }
         printf("Merge all 1024 singleton Groups: size 1024, order 0..1023, comparisons %lu, item 0 Path %s\n",
             (unsigned long)merge_counter.calls, item0_path_text);
-        hps_group_destroy(result); result = NULL;
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_destroy(result); result = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
         free(items1024);
         free(values1024);
         if (!big_valid || merge_counter.calls >= 30000) {
@@ -3188,33 +3188,33 @@ static int run_group_batch_merge_demo(void)
     for (index = 0; index < 10; ++index) {
         odd_items[index] = &odd_values[index];
     }
-    if (hps_group_batch_build(odd_items, 10, 2, &comparator, &batch) != HPS_STATUS_OK ||
-        hps_group_batch_group_count(batch) != 5) {
+    if (lks_group_batch_build(odd_items, 10, 2, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_group_batch_group_count(batch) != 5) {
         goto cleanup;
     }
     {
-        const HpsGroup *first_group = hps_group_batch_group_at(batch, 0);
+        const LksGroup *first_group = lks_group_batch_group_at(batch, 0);
         void *first_items[2];
         void *batch_items_snapshot[5][2];
         char batch_paths_snapshot[5][2][128];
         size_t group_index;
 
         for (group_index = 0; group_index < 5; ++group_index) {
-            const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
+            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
             for (index = 0; index < 2; ++index) {
-                batch_items_snapshot[group_index][index] = hps_group_item_at(group, index);
-                if (hps_path_format(hps_group_path_at(group, index),
+                batch_items_snapshot[group_index][index] = lks_group_item_at(group, index);
+                if (lks_path_format(lks_group_path_at(group, index),
                         batch_paths_snapshot[group_index][index],
-                        sizeof(batch_paths_snapshot[group_index][index])) != HPS_STATUS_OK) {
+                        sizeof(batch_paths_snapshot[group_index][index])) != LKS_STATUS_OK) {
                     goto cleanup;
                 }
             }
         }
         for (index = 0; index < 2; ++index) {
-            first_items[index] = hps_group_item_at(first_group, index);
+            first_items[index] = lks_group_item_at(first_group, index);
         }
-        status = hps_group_batch_merge_all(batch, &comparator, &result);
-        if (status != HPS_STATUS_OK || result == NULL ||
+        status = lks_group_batch_merge_all(batch, &comparator, &result);
+        if (status != LKS_STATUS_OK || result == NULL ||
             !merge_group_expect(result, odd_expected, NULL, 10, &comparator)) {
             goto cleanup;
         }
@@ -3223,25 +3223,25 @@ static int run_group_batch_merge_demo(void)
             int path_order;
 
             for (result_index = 0; result_index < 10; ++result_index) {
-                if (hps_group_item_at(result, result_index) == first_items[index]) {
+                if (lks_group_item_at(result, result_index) == first_items[index]) {
                     break;
                 }
             }
             if (result_index == 10 ||
-                hps_path_compare(hps_group_path_at(first_group, index),
-                    hps_group_path_at(result, result_index), &path_order) !=
-                    HPS_STATUS_OK || path_order != 0) {
+                lks_path_compare(lks_group_path_at(first_group, index),
+                    lks_group_path_at(result, result_index), &path_order) !=
+                    LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
         for (group_index = 0; group_index < 5; ++group_index) {
-            const HpsGroup *group = hps_group_batch_group_at(batch, group_index);
+            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
             for (index = 0; index < 2; ++index) {
                 char path_text[128];
-                if (hps_group_item_at(group, index) !=
+                if (lks_group_item_at(group, index) !=
                         batch_items_snapshot[group_index][index] ||
-                    hps_path_format(hps_group_path_at(group, index), path_text,
-                        sizeof(path_text)) != HPS_STATUS_OK ||
+                    lks_path_format(lks_group_path_at(group, index), path_text,
+                        sizeof(path_text)) != LKS_STATUS_OK ||
                     strcmp(path_text, batch_paths_snapshot[group_index][index]) != 0) {
                     goto cleanup;
                 }
@@ -3249,28 +3249,28 @@ static int run_group_batch_merge_demo(void)
         }
     }
     printf("Merge all 5 groups: balanced pairs with odd carry; sorted 0..9; G0 Paths unchanged; Batch readable\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_batch_destroy(batch); batch = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_batch_destroy(batch); batch = NULL;
 
     for (index = 0; index < 16; ++index) {
         eight_values[index] = (int)(15 - index);
         eight_items[index] = &eight_values[index];
         eight_expected[index] = &eight_values[15 - index];
     }
-    if (hps_group_batch_build(eight_items, 16, 2, &comparator, &batch) != HPS_STATUS_OK ||
-        hps_group_batch_group_count(batch) != 8) {
+    if (lks_group_batch_build(eight_items, 16, 2, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_group_batch_group_count(batch) != 8) {
         goto cleanup;
     }
     {
-        const HpsGroup *first_group = hps_group_batch_group_at(batch, 0);
-        const HpsPath *old_paths[2];
+        const LksGroup *first_group = lks_group_batch_group_at(batch, 0);
+        const LksPath *old_paths[2];
         void *first_group_items[2];
 
         for (index = 0; index < 2; ++index) {
-            old_paths[index] = hps_group_path_at(first_group, index);
-            first_group_items[index] = hps_group_item_at(first_group, index);
+            old_paths[index] = lks_group_path_at(first_group, index);
+            first_group_items[index] = lks_group_item_at(first_group, index);
         }
-        if (hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
+        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             !merge_group_expect(result, eight_expected, NULL, 16, &comparator)) {
             goto cleanup;
         }
@@ -3278,74 +3278,74 @@ static int run_group_batch_merge_demo(void)
             size_t result_index;
             int path_order;
             for (result_index = 0; result_index < 16; ++result_index) {
-                if (hps_group_item_at(result, result_index) == first_group_items[index]) {
+                if (lks_group_item_at(result, result_index) == first_group_items[index]) {
                     break;
                 }
             }
-            if (result_index == 16 || hps_path_compare(old_paths[index],
-                    hps_group_path_at(result, result_index), &path_order) !=
-                    HPS_STATUS_OK || path_order != 0) {
+            if (result_index == 16 || lks_path_compare(old_paths[index],
+                    lks_group_path_at(result, result_index), &path_order) !=
+                    LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
     }
     printf("Merge all 8 groups: G0 remains on left Base lineage across rounds\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_batch_destroy(batch); batch = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_batch_destroy(batch); batch = NULL;
 
     for (index = 0; index < 8; ++index) {
         equal_items[index] = &equal_values[index];
     }
-    if (hps_group_batch_build(equal_items, 8, 2, &comparator, &batch) != HPS_STATUS_OK ||
-        hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
-        hps_group_size(result) != 8) {
+    if (lks_group_batch_build(equal_items, 8, 2, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        lks_group_size(result) != 8) {
         goto cleanup;
     }
     for (index = 0; index < 8; ++index) {
-        if (hps_group_item_at(result, index) != equal_items[index]) {
+        if (lks_group_item_at(result, index) != equal_items[index]) {
             goto cleanup;
         }
     }
     printf("Merge all equal keys: original Group order and in-Group order retained\n");
-    hps_group_destroy(result); result = NULL;
-    hps_group_batch_destroy(batch); batch = NULL;
+    lks_group_destroy(result); result = NULL;
+    lks_group_batch_destroy(batch); batch = NULL;
 
     {
         int single_values[] = { 3, 1, 2 };
         void *single_items[] = { &single_values[0], &single_values[1], &single_values[2] };
-        const HpsGroup *source;
+        const LksGroup *source;
         void *snapshot_items[3];
-        const HpsPath *snapshot_paths[3];
+        const LksPath *snapshot_paths[3];
 
-        if (hps_group_batch_build(single_items, 3, 3, &comparator, &batch) != HPS_STATUS_OK) {
+        if (lks_group_batch_build(single_items, 3, 3, &comparator, &batch) != LKS_STATUS_OK) {
             goto cleanup;
         }
-        source = hps_group_batch_group_at(batch, 0);
+        source = lks_group_batch_group_at(batch, 0);
         for (index = 0; index < 3; ++index) {
-            snapshot_items[index] = hps_group_item_at(source, index);
-            snapshot_paths[index] = hps_group_path_at(source, index);
+            snapshot_items[index] = lks_group_item_at(source, index);
+            snapshot_paths[index] = lks_group_path_at(source, index);
         }
-        if (hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
-            result == source || hps_group_size(result) != 3) {
+        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            result == source || lks_group_size(result) != 3) {
             goto cleanup;
         }
         for (index = 0; index < 3; ++index) {
             int path_order;
-            if (hps_group_item_at(result, index) != snapshot_items[index] ||
-                hps_path_compare(snapshot_paths[index], hps_group_path_at(result, index),
-                    &path_order) != HPS_STATUS_OK || path_order != 0) {
+            if (lks_group_item_at(result, index) != snapshot_items[index] ||
+                lks_path_compare(snapshot_paths[index], lks_group_path_at(result, index),
+                    &path_order) != LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
-        hps_group_batch_destroy(batch); batch = NULL;
-        if (hps_group_item_at(result, 0) != &single_values[1] ||
-            hps_group_item_at(result, 1) != &single_values[2] ||
-            hps_group_item_at(result, 2) != &single_values[0]) {
+        lks_group_batch_destroy(batch); batch = NULL;
+        if (lks_group_item_at(result, 0) != &single_values[1] ||
+            lks_group_item_at(result, 1) != &single_values[2] ||
+            lks_group_item_at(result, 2) != &single_values[0]) {
             goto cleanup;
         }
         printf("Merge all one Group: independent Path-preserving clone survives Batch destruction\n");
     }
-    hps_group_destroy(result); result = NULL;
+    lks_group_destroy(result); result = NULL;
 
     {
         int single_values[] = { 40, 10, 30, 20 };
@@ -3353,70 +3353,70 @@ static int run_group_batch_merge_demo(void)
             &single_values[2], &single_values[3] };
         void *expected_items[] = { &single_values[1], &single_values[3],
             &single_values[2], &single_values[0] };
-        const HpsGroup *source;
-        const HpsPath *source_paths[4];
+        const LksGroup *source;
+        const LksPath *source_paths[4];
         char source_text[4][128];
         const char *expected_paths[4];
 
-        if (hps_group_batch_build(single_items, 4, 100, &comparator, &batch) != HPS_STATUS_OK ||
-            hps_group_batch_group_count(batch) != 1) {
+        if (lks_group_batch_build(single_items, 4, 100, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_group_batch_group_count(batch) != 1) {
             goto cleanup;
         }
-        source = hps_group_batch_group_at(batch, 0);
+        source = lks_group_batch_group_at(batch, 0);
         for (index = 0; index < 4; ++index) {
-            source_paths[index] = hps_group_path_at(source, index);
-            if (hps_path_format(source_paths[index], source_text[index],
-                    sizeof(source_text[index])) != HPS_STATUS_OK) {
+            source_paths[index] = lks_group_path_at(source, index);
+            if (lks_path_format(source_paths[index], source_text[index],
+                    sizeof(source_text[index])) != LKS_STATUS_OK) {
                 goto cleanup;
             }
             expected_paths[index] = source_text[index];
         }
-        if (hps_group_batch_merge_all(batch, &comparator, &result) != HPS_STATUS_OK ||
+        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             result == source || !merge_group_expect(result, expected_items,
                 expected_paths, 4, &comparator)) {
             goto cleanup;
         }
         for (index = 0; index < 4; ++index) {
             int path_order;
-            if (hps_path_compare(source_paths[index], hps_group_path_at(result, index),
-                    &path_order) != HPS_STATUS_OK || path_order != 0) {
+            if (lks_path_compare(source_paths[index], lks_group_path_at(result, index),
+                    &path_order) != LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
-        hps_group_batch_destroy(batch); batch = NULL;
+        lks_group_batch_destroy(batch); batch = NULL;
         for (index = 0; index < 4; ++index) {
             char result_text[128];
-            if (hps_group_item_at(result, index) != expected_items[index] ||
-                hps_path_format(hps_group_path_at(result, index), result_text,
-                    sizeof(result_text)) != HPS_STATUS_OK ||
+            if (lks_group_item_at(result, index) != expected_items[index] ||
+                lks_path_format(lks_group_path_at(result, index), result_text,
+                    sizeof(result_text)) != LKS_STATUS_OK ||
                 strcmp(result_text, expected_paths[index]) != 0) {
                 goto cleanup;
             }
         }
         printf("Merge all one GroupSize 100: 10 20 30 40 Paths cloned exactly; Result survives Batch destruction\n");
     }
-    hps_group_destroy(result); result = NULL;
+    lks_group_destroy(result); result = NULL;
 
-    if (hps_group_batch_build(equal_items, 8, 2, &comparator, &batch) != HPS_STATUS_OK) {
+    if (lks_group_batch_build(equal_items, 8, 2, &comparator, &batch) != LKS_STATUS_OK) {
         goto cleanup;
     }
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
     {
-        HpsGroup *invalid_output = (HpsGroup *)hps_group_batch_group_at(batch, 0);
-        if (hps_group_batch_merge_all(NULL, &comparator, &invalid_output) != HPS_STATUS_INVALID_ARGUMENT ||
+        LksGroup *invalid_output = (LksGroup *)lks_group_batch_group_at(batch, 0);
+        if (lks_group_batch_merge_all(NULL, &comparator, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_output != NULL) {
             goto cleanup;
         }
-        invalid_output = (HpsGroup *)hps_group_batch_group_at(batch, 0);
-        if (hps_group_batch_merge_all(batch, NULL, &invalid_output) != HPS_STATUS_INVALID_ARGUMENT ||
+        invalid_output = (LksGroup *)lks_group_batch_group_at(batch, 0);
+        if (lks_group_batch_merge_all(batch, NULL, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_output != NULL) {
             goto cleanup;
         }
-        invalid_output = (HpsGroup *)hps_group_batch_group_at(batch, 0);
-        if (hps_group_batch_merge_all(batch, &invalid_comparator, &invalid_output) != HPS_STATUS_INVALID_ARGUMENT ||
+        invalid_output = (LksGroup *)lks_group_batch_group_at(batch, 0);
+        if (lks_group_batch_merge_all(batch, &invalid_comparator, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_output != NULL ||
-            hps_group_batch_merge_all(batch, &comparator, NULL) != HPS_STATUS_INVALID_ARGUMENT) {
+            lks_group_batch_merge_all(batch, &comparator, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
             goto cleanup;
         }
     }
@@ -3424,8 +3424,8 @@ static int run_group_batch_merge_demo(void)
     printf("Merge all invalid arguments: passed; output reset to NULL\n");
 
 cleanup:
-    hps_group_destroy(result);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(result);
+    lks_group_batch_destroy(batch);
     return valid;
 }
 
@@ -3436,33 +3436,33 @@ int main(int argc, char **argv)
     int stage13_result;
 
     if (argc == 2 && strcmp(argv[1], "--stage14.1-only") == 0) {
-        return hps_run_stage14_1_property_tests();
+        return lks_run_stage14_1_property_tests();
     }
     if (argc == 2 && strcmp(argv[1], "--stage14.2-only") == 0) {
-        if (hps_run_stage14_1_property_tests() != 0) return 1;
-        if (hps_run_stage14_2_stress_tests() != 0) return 1;
-        return hps_run_stage14_2_oom_tests();
+        if (lks_run_stage14_1_property_tests() != 0) return 1;
+        if (lks_run_stage14_2_stress_tests() != 0) return 1;
+        return lks_run_stage14_2_oom_tests();
     }
     if (argc == 2 && strcmp(argv[1], "--stage14.2-oom-only") == 0) {
-        return hps_run_stage14_2_oom_tests();
+        return lks_run_stage14_2_oom_tests();
     }
     if (argc == 2 && strcmp(argv[1], "--stage14.2-release-smoke") == 0) {
-        return hps_run_stage14_2_release_smoke();
+        return lks_run_stage14_2_release_smoke();
     }
     if (argc == 2 && strcmp(argv[1], "--stage14.3-frozen-smoke") == 0) {
-        return hps_run_stage14_3_frozen_smoke();
+        return lks_run_stage14_3_frozen_smoke();
     }
     if (argc == 2 && strcmp(argv[1], "--public-api-usage-smoke") == 0) {
-        return hps_run_public_api_usage_smoke();
+        return lks_run_public_api_usage_smoke();
     }
 
 #ifdef _DEBUG
-    stage13_result = hps_run_stage13_3_final_validation();
+    stage13_result = lks_run_stage13_3_final_validation();
 #else
-    stage13_result = hps_run_stage13_3_release_smoke();
+    stage13_result = lks_run_stage13_3_release_smoke();
 #endif
     if (stage13_result != 0) return stage13_result;
-    return hps_run_stage14_1_property_tests();
+    return lks_run_stage14_1_property_tests();
 }
 
 

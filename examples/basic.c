@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "hps.h"
+#include "layerkeysort.h"
 
 typedef struct Item {
     int key;
@@ -23,32 +23,32 @@ int main(void)
         { 1, 3 }, { 2, 4 }, { 0, 5 }
     };
     void *item_pointers[sizeof(items) / sizeof(items[0])];
-    HpsComparator comparator = { compare_item_key, NULL };
-    HpsGroupBatch *batch = NULL;
-    HpsGroup *result = NULL;
+    LksComparator comparator = { compare_item_key, NULL };
+    LksGroupBatch *batch = NULL;
+    LksGroup *result = NULL;
     size_t index;
-    HpsStatus status;
+    LksStatus status;
 
     for (index = 0; index < sizeof(items) / sizeof(items[0]); ++index) {
         item_pointers[index] = &items[index];
     }
-    status = hps_group_batch_build(item_pointers,
+    status = lks_group_batch_build(item_pointers,
         sizeof(items) / sizeof(items[0]), 3, &comparator, &batch);
-    if (status != HPS_STATUS_OK) {
-        fprintf(stderr, "Batch build failed: %s\n", hps_status_string(status));
+    if (status != LKS_STATUS_OK) {
+        fprintf(stderr, "Batch build failed: %s\n", lks_status_string(status));
         return 1;
     }
-    status = hps_group_batch_merge_all(batch, &comparator, &result);
-    if (status != HPS_STATUS_OK) {
-        fprintf(stderr, "Merge failed: %s\n", hps_status_string(status));
-        hps_group_batch_destroy(batch);
+    status = lks_group_batch_merge_all(batch, &comparator, &result);
+    if (status != LKS_STATUS_OK) {
+        fprintf(stderr, "Merge failed: %s\n", lks_status_string(status));
+        lks_group_batch_destroy(batch);
         return 1;
     }
-    for (index = 0; index < hps_group_size(result); ++index) {
-        const Item *item = (const Item *)hps_group_item_at(result, index);
+    for (index = 0; index < lks_group_size(result); ++index) {
+        const Item *item = (const Item *)lks_group_item_at(result, index);
         printf("key=%d source_order=%d\n", item->key, item->source_order);
     }
-    hps_group_destroy(result);
-    hps_group_batch_destroy(batch);
+    lks_group_destroy(result);
+    lks_group_batch_destroy(batch);
     return 0;
 }
