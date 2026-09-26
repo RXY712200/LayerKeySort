@@ -1,0 +1,35 @@
+# Visual Studio user/cache files
+.vs/
+*.user
+*.suo
+
+# Build directories
+x64/
+Debug/
+Release/
+ASan/
+
+# C/C++ build outputs
+*.obj
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.exp
+*.idb
+*.pch
+*.iobj
+*.ipdb
+
+# MSBuild intermediate files
+*.tlog
+*.lastbuildstate
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Internal development and validation logs
+stage*.txt
