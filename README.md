@@ -154,6 +154,14 @@ LICENSE
 CHANGELOG.md
 ```
 
+## Documentation
+
+- [Usage guide](docs/USAGE.md)
+- [API reference](docs/API.md)
+- [Development guide](docs/DEVELOPMENT.md)
+- [Contributing](CONTRIBUTING.md)
+- [Interactive visualizer source](docs/demo/index.html)
+
 ## License
 
 LayerKeySort is licensed under the [MIT License](LICENSE).

@@ -1,0 +1,121 @@
+# Using LayerKeySort
+
+## Requirements
+
+- C17.
+- Currently validated with Microsoft Visual Studio / MSVC on x64.
+
+Other compiler and platform combinations have not been validated in this repository.
+
+## Adding LayerKeySort to a project
+
+LayerKeySort currently uses source-based integration; the repository does not provide an installed library package or package-manager recipe. Add the production C files to your application build and make the public include directory available to the compiler.
+
+The public header is `include/layerkeysort.h`. Include it as:
+
+```c
+#include "layerkeysort.h"
+```
+
+Set the compiler include search path to the repository’s `include/` directory. The production implementation files currently are:
+
+- `src/lks_alloc.c`
+- `src/lks_base.c`
+- `src/path.c`
+- `src/path_text.c`
+- `src/path_compare.c`
+- `src/gap.c`
+- `src/tree.c`
+- `src/group.c`
+
+The private headers under `src/` are implementation details. The Visual Studio project also compiles the library and validation code into one executable; it is not an installed-library packaging project.
+
+## Comparator
+
+Provide an `LksComparator` whose `compare` callback follows this convention:
+
+- A result below zero means the left item sorts before the right item.
+- Zero means they are equal under the selected comparison rule.
+- A result above zero means the left item sorts after the right item.
+
+The `context` pointer may be `NULL`. LayerKeySort passes it to the callback without interpreting it, so the caller can use it for comparison configuration. Avoid subtraction-based integer comparisons when overflow is possible; compare with explicit less-than and greater-than checks.
+
+## Building a Group
+
+A Group sorts the supplied borrowed pointers using the comparator. This compact example follows the repository’s `examples/basic.c` pattern:
+
+```c
+LksComparator comparator = { compare_item, NULL };
+LksGroup *group = NULL;
+LksStatus status;
+
+status = lks_group_build(items, item_count, &comparator, &group);
+if (status != LKS_STATUS_OK) {
+    /* Handle the error. */
+}
+
+/* Read the ordered Group, then release its structure. */
+lks_group_destroy(group);
+```
+
+`items` is an array of pointers to caller-owned objects. Check the full example for comparator definition, status handling, result validation, and cleanup.
+
+## Building and merging a GroupBatch
+
+`lks_group_batch_build` partitions the input sequence into consecutive chunks of at most `group_size` items and sorts each chunk into a Group. It does not randomize or reorder the chunks before building them. `lks_group_batch_merge_all` merges all constituent Groups into a new independent result Group; the Batch remains readable until it is destroyed.
+
+```c
+LksGroupBatch *batch = NULL;
+LksGroup *result = NULL;
+
+status = lks_group_batch_build(items, item_count, group_size,
+    &comparator, &batch);
+if (status == LKS_STATUS_OK) {
+    status = lks_group_batch_merge_all(batch, &comparator, &result);
+}
+/* Check status, read result, then destroy result and batch. */
+```
+
+See [`examples/basic.c`](../examples/basic.c) for a complete compilable example.
+
+## Reading results
+
+Use the Group accessors to inspect items in comparator order and their assigned Paths:
+
+```c
+size_t count = lks_group_size(result);
+size_t index;
+for (index = 0; index < count; ++index) {
+    void *item = lks_group_item_at(result, index);
+    const LksPath *path = lks_group_path_at(result, index);
+    /* Use the borrowed item and Path while result remains alive. */
+}
+```
+
+`lks_group_item_at` returns the item pointer at a sorted index. `lks_group_path_at` returns a borrowed Path owned by the Group. Both remain usable only while the owning Group is alive.
+
+## Ownership
+
+- Item pointers are borrowed.
+- LayerKeySort does not clone caller business items.
+- LayerKeySort does not free caller business items.
+- The caller controls item lifetime and must keep each item valid for as long as it may be compared or read.
+- Caller-owned Paths, Groups, Trees, and Batches must be released with their matching public destroy functions. Accessors that return `const` Path or node pointers return borrowed views; do not destroy them separately.
+
+## Stability
+
+Comparator-equal input items retain their input order. For the public two-Group merge, equal items from the Base Group precede equal items from the Incoming Group, while order within each source is preserved. GroupBatch merging preserves source chunk order for equal items.
+
+## Path locality
+
+A Path describes a position within the Group or Tree that created it. Paths built independently inside different Groups are local coordinates; do not compare them as though they already occupied one shared global coordinate space. A merge establishes positions in the result Group’s coordinate space.
+
+## Error handling
+
+Functions that return `LksStatus` report their outcome with values such as `LKS_STATUS_OK`, `LKS_STATUS_INVALID_ARGUMENT`, and `LKS_STATUS_OUT_OF_MEMORY`. Use `lks_status_string(status)` for a static human-readable description. Constructors returning pointers use `NULL` on failure. Consult [`API.md`](API.md) for the complete public status and function reference. There is no public allocator fault-injection API.
+
+## Limitations
+
+- Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
+- Paths from separate Groups are local coordinates until a merge establishes the result’s path space.
+- Serialization, a Path text parser, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
