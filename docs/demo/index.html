@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A LayerKeySort bar visualizer with real Path values verified against the production Group implementation.">
+  <title>LayerKeySort — Path showcase visualizer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js?bar-render-fix-2" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <p class="eyebrow">LayerKeySort · Path-based ordering</p>
+    <h1>Watch items find ordered positions</h1>
+    <p class="intro">Bar height represents comparator value. The default 16-item run shows real Path values captured from LayerKeySort Group builds as items enter one at a time.</p>
+  </header>
+  <main>
+    <section class="visualizer" aria-labelledby="chart-title">
+      <div class="chart-heading">
+        <div><h2 id="chart-title">Incremental Group build</h2><p>Placed values grow into an ascending staircase; input order stays visible in item labels.</p></div>
+        <p class="legend" aria-label="Chart legend"><span class="key queued">Queued</span><span class="key current">Current item</span><span class="key boundary">Located boundary</span><span class="key placed">Placed</span></p>
+      </div>
+      <div class="chart-frame"><div id="chart" class="chart" role="group" aria-label="Bar chart: bar height represents comparator value"></div></div>
+      <ol id="path-strip" class="path-strip" aria-label="Assigned Paths in current ordered bar order"></ol>
+      <div class="controls" aria-label="Visualizer controls">
+        <button id="randomize" type="button">Randomize</button>
+        <button id="step" class="primary" type="button">Step</button>
+        <button id="play" type="button">Play</button>
+        <button id="pause" type="button" disabled>Pause</button>
+        <button id="reset" type="button">Reset</button>
+        <label class="speed-control" for="speed">Speed <select id="speed"><option value="1000">Slow</option><option value="550" selected>Normal</option><option value="220">Fast</option></select></label>
+      </div>
+      <div class="below-chart">
+        <section class="details" aria-labelledby="details-title" aria-live="polite" aria-atomic="true">
+          <h2 id="details-title">Current step</h2>
+          <p id="step-status" class="step-status">Ready. Step inserts the next item from the verified Path showcase.</p>
+          <dl>
+            <div><dt>Current value</dt><dd id="current-value">—</dd></div>
+            <div><dt>Original input index</dt><dd id="original-index">—</dd></div>
+            <div><dt>Located position / boundaries</dt><dd id="location">Not started</dd></div>
+            <div><dt>Assigned Path</dt><dd id="assigned-path">No Path assigned yet</dd></div>
+            <div><dt>Direction / depth</dt><dd id="direction-depth">—</dd></div>
+            <div><dt>Placement relation</dt><dd id="placement">—</dd></div>
+            <div><dt>Existing Paths changed</dt><dd id="paths-changed">—</dd></div>
+          </dl>
+          <p id="path-policy" class="path-note">Exact Path values are shown for the verified default showcase only. Randomized runs show ordering but hide unverified Path values.</p>
+        </section>
+        <section class="coverage" aria-labelledby="coverage-title">
+          <h2 id="coverage-title">Path forms encountered</h2>
+          <p id="coverage-note" class="coverage-note">Chips activate only after a verified Path in this run is placed.</p>
+          <ul id="coverage-chips" class="coverage-chips"></ul>
+        </section>
+      </div>
+      <p id="completion" class="completion" hidden></p>
+    </section>
+    <aside class="algorithm-note"><h2>How the display maps to LayerKeySort</h2><p>The production Group builder processes input items in order. Tree lookup binary-searches ordered child lists and descends through predecessor children; it returns located neighbors, not a public linear scan. The animation shows the verified position and Path result, without inventing internal comparison probes.</p><p>The default values are unique. This run does not demonstrate stability; LayerKeySort preserves input order for comparator-equal items.</p></aside>
+  </main>
+  <footer>This is an explanatory visualization; it does not execute the production C implementation in the browser. Randomized runs do not display exact Path text because no JavaScript Path generator is used.</footer>
+</body>
+</html>

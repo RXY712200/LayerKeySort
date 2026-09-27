@@ -4,6 +4,10 @@
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
+![LayerKeySort transforms unordered values into an ascending sequence by locating each item and assigning a hierarchical Path](docs/assets/layerkeysort-insertion.svg)
+
+The visual shows items moving from unordered input through Tree-guided location into ordered Path positions. The local bar-based visualizer in [`docs/demo/`](docs/demo/) includes a verified Path showcase; randomized runs hide unverified Path text. It does not execute the production C implementation.
+
 ## Visual overview
 
 ```mermaid

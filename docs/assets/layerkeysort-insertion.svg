@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title description">
+  <title id="title">LayerKeySort orders items with hierarchical Paths</title>
+  <desc id="description">Unordered value bars are processed incrementally into an ascending staircase. Verified representative Paths include zero, positive, negative, same-level, child, skipped-level and deeper forms.</desc>
+  <defs>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: #17212b; }
+      .title { font-size: 34px; font-weight: 750; }
+      .sub { font-size: 17px; fill: #536273; }
+      .panel { fill: #fff; stroke: #d4dde7; stroke-width: 2; }
+      .label { font-size: 20px; font-weight: 700; }
+      .small { font-size: 14px; fill: #586879; }
+      .bar { stroke-width: 2; }
+      .queued { fill: #d4dfe9; stroke: #8094a8; }
+      .current { fill: #ffc25e; stroke: #a35d00; }
+      .placed { fill: #62cda5; stroke: #087955; }
+      .arrow { stroke: #315f91; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .path { font-family: ui-monospace, Consolas, monospace; font-size: 16px; font-weight: 700; fill: #315e98; }
+      .cue { font-size: 19px; font-weight: 700; fill: #315e98; }
+      .legend { font-size: 13px; fill: #4d5c6d; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#315f91"/></marker>
+  </defs>
+  <rect width="1200" height="650" fill="#f3f6fa"/>
+  <text class="title" x="48" y="58">LayerKeySort: incremental ordering with Path positions</text>
+  <text class="sub" x="48" y="89">A verified 16-item Group build: Tree location assigns each item a real hierarchical Path.</text>
+
+  <rect class="panel" x="40" y="120" width="330" height="300" rx="16"/>
+  <text class="label" x="64" y="158">1 · Unordered input</text>
+  <text class="small" x="64" y="183">Bar height = comparator value</text>
+  <g transform="translate(66 380)">
+    <rect class="bar queued" x="0" y="-145" width="29" height="145" rx="4"/><rect class="bar queued" x="35" y="-73" width="29" height="73" rx="4"/>
+    <rect class="bar queued" x="70" y="-205" width="29" height="205" rx="4"/><rect class="bar queued" x="105" y="-168" width="29" height="168" rx="4"/>
+    <rect class="bar queued" x="140" y="-110" width="29" height="110" rx="4"/><rect class="bar queued" x="175" y="-37" width="29" height="37" rx="4"/>
+    <rect class="bar queued" x="210" y="-238" width="29" height="238" rx="4"/><rect class="bar queued" x="245" y="-195" width="29" height="195" rx="4"/>
+  </g>
+  <text class="legend" x="64" y="405">Input order · values from the verified showcase</text>
+
+  <path class="arrow" d="M382 270 H426"/>
+  <rect class="panel" x="435" y="120" width="330" height="300" rx="16"/>
+  <text class="label" x="459" y="158">2 · Locate and place</text>
+  <text class="small" x="459" y="183">One input item joins the ordered prefix</text>
+  <g transform="translate(470 380)">
+    <rect class="bar placed" x="0" y="-50" width="34" height="50" rx="4"/><rect class="bar placed" x="42" y="-82" width="34" height="82" rx="4"/>
+    <rect class="bar current" x="84" y="-125" width="34" height="125" rx="4"/><rect class="bar queued" x="126" y="-170" width="34" height="170" rx="4"/>
+    <rect class="bar queued" x="168" y="-210" width="34" height="210" rx="4"/><rect class="bar queued" x="210" y="-238" width="34" height="238" rx="4"/>
+  </g>
+  <text class="legend" x="459" y="405">Tree navigation · verified Path assignment</text>
+
+  <path class="arrow" d="M777 270 H821"/>
+  <rect class="panel" x="830" y="120" width="330" height="300" rx="16"/>
+  <text class="label" x="854" y="158">3 · Ordered staircase</text>
+  <text class="small" x="854" y="183">Every item receives a Path position</text>
+  <g transform="translate(856 380)">
+    <rect class="bar placed" x="0" y="-38" width="28" height="38" rx="4"/><rect class="bar placed" x="36" y="-66" width="28" height="66" rx="4"/>
+    <rect class="bar placed" x="72" y="-96" width="28" height="96" rx="4"/><rect class="bar placed" x="108" y="-124" width="28" height="124" rx="4"/>
+    <rect class="bar placed" x="144" y="-154" width="28" height="154" rx="4"/><rect class="bar placed" x="180" y="-186" width="28" height="186" rx="4"/>
+    <rect class="bar placed" x="216" y="-238" width="28" height="238" rx="4"/>
+  </g>
+  <text class="legend" x="854" y="405">Ascending comparator values</text>
+
+  <rect class="panel" x="40" y="445" width="1120" height="160" rx="15"/>
+  <text class="label" x="64" y="480">Verified Path forms from the default showcase</text>
+  <text class="small" x="64" y="505">Compare → locate → assign Path → place</text>
+  <text class="path" x="64" y="552">Zero   000</text>
+  <text class="path" x="250" y="552">Negative   1A0 · 1A1</text>
+  <text class="path" x="565" y="552">Positive   0A0</text>
+  <text class="path" x="770" y="552">Child   0A0/A0</text>
+  <text class="path" x="64" y="584">Skipped   0A0//A0</text>
+  <text class="path" x="380" y="584">Deeper   0A0//A0///A0</text>
+  <text class="small" x="790" y="584">Existing Paths stay unchanged during Group build</text>
+</svg>
