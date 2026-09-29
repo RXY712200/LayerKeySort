@@ -4,6 +4,7 @@
 #include "lks_group_internal.h"
 #include "lks_bulk_internal.h"
 #include "lks_sort_internal.h"
+#include "lks_tree_internal.h"
 
 struct LksGroupBatch {
     LksGroup **groups;
@@ -21,33 +22,6 @@ struct LksGroup {
 const LksTree *lks_group_internal_tree(const LksGroup *group)
 {
     return group == NULL ? NULL : group->tree;
-}
-
-static LksStatus flatten_subtree(
-    const LksTreeNode *node,
-    const LksTreeNode **ordered_nodes,
-    size_t capacity,
-    size_t *write_index
-)
-{
-    size_t index;
-
-    if (node == NULL || *write_index >= capacity) {
-        return LKS_STATUS_INTERNAL_ERROR;
-    }
-    ordered_nodes[*write_index] = node;
-    ++*write_index;
-
-    for (index = 0; index < lks_tree_node_child_count(node); ++index) {
-        LksStatus status;
-
-        status = flatten_subtree(lks_tree_node_child_at(node, index),
-            ordered_nodes, capacity, write_index);
-        if (status != LKS_STATUS_OK) {
-            return status;
-        }
-    }
-    return LKS_STATUS_OK;
 }
 
 static LksStatus validate_ordered_nodes(
@@ -89,8 +63,6 @@ static LksStatus group_build_ordered_nodes(const LksGroup *group,
     const LksComparator *comparator, const LksTreeNode ***out_ordered_nodes)
 {
     const LksTreeNode **ordered_nodes;
-    size_t index;
-    size_t write_index;
     LksStatus status;
 
     if (out_ordered_nodes == NULL) return LKS_STATUS_INVALID_ARGUMENT;
@@ -105,18 +77,11 @@ static LksStatus group_build_ordered_nodes(const LksGroup *group,
         return LKS_STATUS_OUT_OF_MEMORY;
     }
 
-    write_index = 0;
-    for (index = 0; index < lks_tree_root_child_count(group->tree); ++index) {
-        status = flatten_subtree(lks_tree_root_child_at(group->tree, index),
-            ordered_nodes, group->count, &write_index);
-        if (status != LKS_STATUS_OK) {
-            lks_free(ordered_nodes);
-            return status;
-        }
-    }
-    if (write_index != group->count) {
+    status = lks_tree_internal_fill_ordered(group->tree,
+        ordered_nodes, group->count);
+    if (status != LKS_STATUS_OK) {
         lks_free(ordered_nodes);
-        return LKS_STATUS_INTERNAL_ERROR;
+        return status;
     }
     status = validate_ordered_nodes(ordered_nodes, group->count, comparator);
     if (status != LKS_STATUS_OK) {

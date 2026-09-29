@@ -373,8 +373,7 @@ static int property_tree_profile_matches(const LksGroup *group,
         ++counts->tree_profile_failures;
         return 0;
     }
-    valid = profile.real_node_count == count &&
-        profile.total_child_count == profile.real_node_count &&
+    valid = profile.real_node_count == count && profile.balance_valid &&
         profile.leaf_count + profile.unary_count + profile.branching_count ==
             profile.real_node_count;
     if (!valid) ++counts->tree_profile_failures;
@@ -622,8 +621,7 @@ static int property_run_batch_case(size_t seed_index,
                 if (lks_tree_internal_profile(lks_group_internal_tree(result),
                         &result_profile) != LKS_STATUS_OK ||
                     result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
-                    result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks !=
-                        result_profile.allocated_child_array_count) {
+                    result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks != 0) {
                     ++counts->tree_profile_failures;
                     config_valid = 0;
                 }
@@ -957,8 +955,7 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
             if (lks_tree_internal_profile(lks_group_internal_tree(result),
                     &profile) != LKS_STATUS_OK ||
                 stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
-                stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks !=
-                    profile.allocated_child_array_count) {
+                stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks != 0) {
                 ++counts->tree_profile_failures;
                 valid = 0;
             }
@@ -1122,8 +1119,6 @@ typedef struct LksPropertyTreeSnapshot {
     const LksTreeNode *root_children[16];
     size_t root_child_count;
     LksTreeInternalProfile profile;
-    size_t histogram[17];
-    size_t histogram_count;
 } LksPropertyTreeSnapshot;
 
 static int property_snapshot_tree_node(const LksTreeNode *node,
@@ -1152,7 +1147,6 @@ static int property_snapshot_tree(const LksTree *tree,
     LksPropertyTreeSnapshot *snapshot)
 {
     size_t index;
-    size_t required = 0;
     memset(snapshot, 0, sizeof(*snapshot));
     snapshot->root_child_count = lks_tree_root_child_count(tree);
     if (snapshot->root_child_count > 16u) return 0;
@@ -1161,12 +1155,7 @@ static int property_snapshot_tree(const LksTree *tree,
         if (!property_snapshot_tree_node(snapshot->root_children[index], snapshot))
             return 0;
     }
-    if (lks_tree_internal_profile(tree, &snapshot->profile) != LKS_STATUS_OK ||
-        lks_tree_internal_capacity_histogram(tree, NULL, 0, &required) !=
-            LKS_STATUS_OK || required > 17u) return 0;
-    snapshot->histogram_count = required;
-    if (required != 0 && lks_tree_internal_capacity_histogram(tree,
-            snapshot->histogram, required, &required) != LKS_STATUS_OK)
+    if (lks_tree_internal_profile(tree, &snapshot->profile) != LKS_STATUS_OK)
         return 0;
     return 1;
 }
@@ -1181,10 +1170,7 @@ static int property_tree_snapshot_matches(const LksTree *tree,
         current.node_count != snapshot->node_count ||
         current.root_child_count != snapshot->root_child_count ||
         memcmp(&current.profile, &snapshot->profile,
-            sizeof(current.profile)) != 0 ||
-        current.histogram_count != snapshot->histogram_count ||
-        memcmp(current.histogram, snapshot->histogram,
-            snapshot->histogram_count * sizeof(size_t)) != 0) return 0;
+            sizeof(current.profile)) != 0) return 0;
     for (index = 0; index < snapshot->root_child_count; ++index)
         if (current.root_children[index] != snapshot->root_children[index])
             return 0;
@@ -1356,6 +1342,7 @@ static int property_oom_tree_equal_range(size_t *out_k,
         int triggered;
         static const size_t stable_indices[] = { 0u, 1u, 2u, 3u, 6u, 4u, 5u };
         LksPropertyTreeSnapshot after;
+        const LksTreeNode *ordered[7];
         size_t index;
         tree = NULL;
         if (lks_alloc_stats_reset() != 0 ||
@@ -1375,13 +1362,15 @@ static int property_oom_tree_equal_range(size_t *out_k,
                 printf("OOM TreeInsertEqualRange K+1 nodeCount=%zu\n", after.node_count);
                 ++*state_failures;
             }
-            for (index = 0; index < 7u && index < after.node_count; ++index) {
+            if (lks_tree_internal_fill_ordered(tree, ordered, 7u) != LKS_STATUS_OK)
+                ++*state_failures;
+            else for (index = 0; index < 7u && index < after.node_count; ++index) {
                 void *expected_item = stable_indices[index] == 6u ?
                     (void *)&inserted : (void *)&fixture[stable_indices[index]];
-                if (after.nodes[index].item != expected_item) {
+                if (lks_tree_node_item(ordered[index]) != expected_item) {
                     printf("OOM TreeInsertEqualRange K+1 sequence[%zu]=%u expected=%u\n",
                         index,
-                        ((LksPropertyItem *)after.nodes[index].item)->original_index,
+                        ((LksPropertyItem *)lks_tree_node_item(ordered[index]))->original_index,
                         ((LksPropertyItem *)expected_item)->original_index);
                     ++*state_failures;
                 }

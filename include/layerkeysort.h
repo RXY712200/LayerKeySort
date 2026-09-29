@@ -243,7 +243,8 @@ void lks_tree_destroy(LksTree *tree);
 /* Return node count; NULL is treated as empty. */
 size_t lks_tree_size(const LksTree *tree);
 /* Insert a unique explicit Path and borrowed item pointer. Tree clones PATH
- * without re-encoding it. On success optional OUT_NODE borrows the inserted
+ * without re-encoding it; no proper Path prefix needs to exist in the Tree.
+ * Duplicate Paths return ALREADY_EXISTS. On success optional OUT_NODE borrows the inserted
  * node; earlier borrowed Tree observations must be reacquired. Failure leaves
  * the logical Tree unchanged and OUT_NODE NULL. */
 LksStatus lks_tree_insert(
@@ -252,10 +253,12 @@ LksStatus lks_tree_insert(
     void *item,
     const LksTreeNode **out_node
 );
-/* Insert ITEM at a position determined by COMPARATOR. Equal items are inserted
+/* Insert ITEM at a position determined by COMPARATOR. Existing items must be
+ * ordered compatibly with COMPARATOR and its context in Path order. Explicit
+ * Path insertion does not validate this condition. Equal items are inserted
  * stably after existing comparator-equal items. Item remains borrowed; failure
  * leaves the logical Tree unchanged and OUT_NODE NULL. Success may replace a
- * local subtree or the entire Tree; discard every borrowed Tree node/Path/navigation
+ * bounded logical range or the entire Tree; discard every borrowed Tree node/Path/navigation
  * result and use OUT_NODE as the new inserted node if requested. */
 LksStatus lks_tree_insert_item(
     LksTree *tree,
@@ -263,7 +266,8 @@ LksStatus lks_tree_insert_item(
     const LksComparator *comparator,
     const LksTreeNode **out_node
 );
-/* Locate the neighboring/equal nodes for ITEM under COMPARATOR. Returned nodes
+/* Locate the neighboring/equal nodes for ITEM under COMPARATOR. Existing item
+ * order must be compatible with COMPARATOR and its context in Path order. Returned nodes
  * are borrowed from TREE and remain valid until mutation/destruction. */
 LksStatus lks_tree_locate_item(
     const LksTree *tree,
@@ -284,16 +288,22 @@ LksStatus lks_tree_find_path(
 const LksPath *lks_tree_node_path(const LksTreeNode *node);
 /* Return the borrowed item pointer stored in a node; NULL node returns NULL. */
 void *lks_tree_node_item(const LksTreeNode *node);
-/* Return borrowed parent node; the virtual root is reported as NULL. */
+/* Physical index navigation is implementation-defined and may change on any
+ * successful mutation. A physical parent need not be a Path prefix; children
+ * need not be logical Path descendants. Physical preorder is not Path order.
+ * Compare Paths with lks_path_compare() for logical ordering. */
+/* Return borrowed physical parent; the virtual root is reported as NULL. */
 const LksTreeNode *lks_tree_node_parent(const LksTreeNode *node);
-/* Return child count; NULL is treated as zero. */
+/* Return physical child count (currently at most two); NULL is zero. */
 size_t lks_tree_node_child_count(const LksTreeNode *node);
-/* Return borrowed child node or NULL for an invalid index. */
+/* Return borrowed physical child or NULL for an invalid index. When two
+ * children exist, index 0 has the lower Path and index 1 the higher Path.
+ * A sole child is returned at index 0. */
 const LksTreeNode *lks_tree_node_child_at(
     const LksTreeNode *node,
     size_t index
 );
-/* Return virtual-root child count; NULL is treated as zero. */
+/* Return virtual-root child count (zero when empty, one otherwise). */
 size_t lks_tree_root_child_count(const LksTree *tree);
 /* Return borrowed virtual-root child node or NULL for an invalid index. */
 const LksTreeNode *lks_tree_root_child_at(

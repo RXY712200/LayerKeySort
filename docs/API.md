@@ -412,7 +412,10 @@ size_t lks_tree_size(const LksTree *tree);
 
 ### `lks_tree_insert`
 
-Insert an item at a unique explicit Path, which the Tree copies.
+Insert an item at a unique explicit Path, which the Tree copies. Any valid
+unique Path is accepted without requiring its proper prefixes to be present;
+this removes a restriction of the former physical prefix representation.
+Duplicate Paths return `LKS_STATUS_ALREADY_EXISTS`.
 
 ```c
 LksStatus lks_tree_insert(
@@ -425,7 +428,8 @@ LksStatus lks_tree_insert(
 
 ### `lks_tree_insert_item`
 
-Insert an item at a position selected by the comparator.
+Insert an item at a position selected by the comparator. Existing items must
+already be ordered compatibly with that comparator and context in Path order.
 
 ```c
 LksStatus lks_tree_insert_item(
@@ -438,7 +442,9 @@ LksStatus lks_tree_insert_item(
 
 ### `lks_tree_locate_item`
 
-Locate neighboring and equal nodes for an item under a comparator.
+Locate neighboring and equal nodes for an item under a comparator. Existing
+items must already be ordered compatibly with that comparator and context in
+Path order. Explicit-Path insertion does not check this condition.
 
 ```c
 LksStatus lks_tree_locate_item(
@@ -481,7 +487,7 @@ void *lks_tree_node_item(const LksTreeNode *node);
 
 ### `lks_tree_node_parent`
 
-Read a node’s borrowed parent; the virtual root is NULL.
+Read a node’s borrowed physical parent; the virtual root is NULL.
 
 ```c
 const LksTreeNode *lks_tree_node_parent(const LksTreeNode *node);
@@ -489,7 +495,7 @@ const LksTreeNode *lks_tree_node_parent(const LksTreeNode *node);
 
 ### `lks_tree_node_child_count`
 
-Return a node’s child count.
+Return a node’s physical child count (currently at most two).
 
 ```c
 size_t lks_tree_node_child_count(const LksTreeNode *node);
@@ -497,7 +503,8 @@ size_t lks_tree_node_child_count(const LksTreeNode *node);
 
 ### `lks_tree_node_child_at`
 
-Borrow a child node by index.
+Borrow a physical child by index. With two children, index 0 has the lower
+Path and index 1 the higher Path. With one child, it is at index 0.
 
 ```c
 const LksTreeNode *lks_tree_node_child_at(
@@ -508,7 +515,7 @@ const LksTreeNode *lks_tree_node_child_at(
 
 ### `lks_tree_root_child_count`
 
-Return the number of virtual-root children.
+Return zero for an empty Tree and one for a nonempty Tree.
 
 ```c
 size_t lks_tree_root_child_count(const LksTree *tree);
@@ -524,6 +531,12 @@ const LksTreeNode *lks_tree_root_child_at(
     size_t index
 );
 ```
+
+The physical Tree index shape is implementation-defined and is not a stable
+API contract. Physical parents need not be Path prefixes, physical children
+need not be logical Path descendants, and physical preorder is not logical
+Path order. Shape may change after mutation. Use `lks_path_compare()` to
+compare positions; reacquire all borrowed navigation results after success.
 
 ## Group API
 
@@ -679,7 +692,7 @@ Comparator identity is not checked at runtime. A successful Tree mutation may
 replace all internal nodes: every borrowed Tree node, Path, and navigation
 result must be reacquired afterward. Explicit-Path `lks_tree_insert` preserves
 the supplied coordinate; comparator-driven `lks_tree_insert_item` may rebuild
-and re-encode a bounded subtree or, as a final fallback, the entire Tree.
+and re-encode a bounded logical-order range or, as a final fallback, the entire Tree.
 A failed operation with a documented strong guarantee commits no Tree
 mutation. Comparator equality concerns item ordering and stable source order;
 it does not mean two items share an equal Path. Public Group merge places

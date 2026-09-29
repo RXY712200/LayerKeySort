@@ -27,6 +27,10 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 
+Unreleased V2 stabilization work on the development branch decouples mutable
+Tree indexing from Path prefixes. The released Preview.3 tag remains unchanged;
+the development branch is not a production release.
+
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
 ![LayerKeySort transforms unordered values into an ascending sequence by locating each item and assigning a hierarchical Path](docs/assets/layerkeysort-insertion.svg)

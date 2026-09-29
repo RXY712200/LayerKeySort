@@ -161,10 +161,19 @@ Comparator-equal input items retain their input order. For the public two-Group 
 ## Path locality
 
 Comparator-driven online Tree insertion first uses a direct Path when it fits.
-When a Path becomes deep, it may re-encode a bounded complete subtree using
-sparse slots. It can accept a deeper Path if local repair is too costly, or
+When a Path becomes deep, it may re-encode a bounded contiguous logical-order
+range. It can accept a deeper Path if local repair is unsuitable, or
 rebuild the whole Tree as a final fallback. These are preview heuristics, not
-stable Path identities or a promise of fixed memory use.
+stable Path identities or a promise of fixed memory use. Comparator-driven
+Tree operations require existing items to be sorted compatibly with the
+supplied comparator and context in Path order; explicit Path insertion does
+not check item ordering.
+
+Tree navigation exposes an implementation-defined physical index. A parent
+need not be a Path prefix, children need not be logical descendants, and
+physical preorder does not define logical order. The virtual root has one
+physical child when nonempty. Compare Paths with `lks_path_compare()` and
+reacquire borrowed navigation results after each successful mutation.
 
 A Path describes order within the Group or Tree that created it, not a stable
 application identity. Paths from independent Groups are local coordinates.

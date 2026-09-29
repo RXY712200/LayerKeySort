@@ -79,15 +79,9 @@
     <ClInclude Include="src\lks_policy_internal.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClCompile Include="tests\benchmark.c">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="tests\property.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClInclude Include="tests\benchmark.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="tests\property.h">
       <Filter>头文件</Filter>
     </ClInclude>

@@ -2,6 +2,18 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## Unreleased V2 stabilization
+
+- Decoupled mutable Tree topology from Path hierarchy with a Path-keyed
+  balanced index. Explicit unique Paths no longer require physical prefixes.
+- Removed mutable ChildBlock storage and linear equal-run successor scanning.
+  Comparator insertion can relabel a bounded logical-order range; full rebuild
+  remains a failure-atomic fallback.
+- Deep Path values no longer impose equivalent physical Tree depth. Physical
+  navigation is implementation-defined; ownership and failure atomicity remain.
+- Public delete/move, persistence, parsing, and distributed semantics remain
+  deferred. This development state is not production-ready.
+
 ## [2.0.0-preview.3] - 2026-09-29
 
 Preview.3 is a released Preview snapshot, not a production-ready release.

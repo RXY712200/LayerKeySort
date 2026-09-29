@@ -126,7 +126,7 @@ and text encoding. Its sparse bulk rule is integer division
 `((index + 1) * 65536) / (blocks + 1)` for block indexes `0..blocks-1`.
 It distributes roots through the full coordinate space and leaves both
 endpoints unused. With one block, the slot is 32768. Bulk recursion uses at
-most 26 child blocks, a topology choice independent of the codec's radix 54;
+most 26 logical Path blocks, independent of physical index shape and codec radix 54;
 the goal is insertion room, not slot exhaustion. The initial online slot is
 also 32768. Endpoint target spacing stays 10. Preferred/hard depths 4/6,
 local windows 8/16/32/64, minimum repair gain 1, and minimum useful spacing
@@ -163,19 +163,35 @@ placing comparator-equal Base items before Incoming items, then builds a new
 Group with fresh Paths. Neither source Group changes. The private historical
 v1 owned-base helper instead preserves an exclusively owned Base object and
 plans Incoming coordinates; it remains only to compare against v1 regression
-evidence. `tests/property.c` and `tests/benchmark.c` exercise it under
+evidence. `tests/property.c` exercises it under
 `LKS_ENABLE_V1_REGRESSION_HELPERS`. The ordinary CMake production library
 excludes that gate; the separate diagnostic target and Visual Studio test
-configurations enable it. Symbol inspection found the helper absent from the
-production library and present in the diagnostic library. It is not public API.
+configurations enable it. The frozen `tests/benchmark.c` source is retained
+for historical tag analysis but excluded from the current Visual Studio build:
+its ChildBlock measurements are not meaningful for the new representation.
+The former `--stage14.3-frozen-smoke` runner belongs to that historical
+benchmark; current validation uses the active V2 tests and
+`--public-api-usage-smoke`. The helper is not public API.
 
-The online repair policy lives in `src/lks_policy_internal.h`. The
-smallest eligible complete positive subtree is rebuilt off-Tree with the same
-sparse bulk layout; enclosing ancestors are considered within a fixed node
-limit. The root Path of the selected subtree remains fixed. All new Paths,
-nodes, and child storage are ready before an allocation-free pointer splice.
-The full rebuild remains the final fallback. Repair counters are process-wide
-only in diagnostic builds; normal production builds do not update them.
+The online repair policy lives in `src/lks_policy_internal.h`. Tree stores a
+single Path-keyed AVL index; its physical shape is implementation-defined,
+independent of Path hierarchy. Bulk generation first assigns sparse ordered
+Paths, then builds a balanced index. Group order comes from in-order traversal.
+The comparator upper-bound search directly finds the last existing equal item
+in index-height work rather than scanning the equal run.
+
+Online local repair prepares up to 64 contiguous logical-order nodes, creates
+new Paths between unchanged exterior bounds, and validates depth/order before
+commit. Existing nodes retain their in-order ranks, so a strictly increasing
+replacement key sequence preserves the BST relations of their current shape;
+the new node is then linked and rebalanced without allocation. The full
+rebuild remains the correctness fallback and swaps an independently built
+Tree. No ChildBlock is used by the mutable index. This also makes physical
+height depend on node count rather than caller-supplied Path depth. Repair
+counters are process-wide only in diagnostic builds. Future private
+detach/reinsert can use parent/left/right links and rotations, but public
+delete/move semantics require separate design; persistence/parser/distributed
+semantics remain deferred.
 
 - Keep implementation in portable C17 under both build systems.
 - Preserve public ownership and ordering semantics; generated Path coordinates

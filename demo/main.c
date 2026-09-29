@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "layerkeysort.h"
-#include "../tests/benchmark.h"
+#include "../src/lks_alloc_internal.h"
 #include "../tests/property.h"
 
 static int compare_int(const void *left, const void *right, void *context)
@@ -3432,6 +3432,26 @@ cleanup:
 
 
 int lks_run_v2_preview_tests(void);
+int lks_public_api_usage_smoke(void);
+
+static int run_public_api_usage_smoke(void)
+{
+    LksAllocStats stats;
+    int usage_ok, valid;
+    lks_alloc_test_disable_failure();
+    if (lks_alloc_stats_reset() != 0) return 1;
+    usage_ok = lks_public_api_usage_smoke();
+    stats = lks_alloc_stats_get();
+    valid = usage_ok && stats.live_bytes == 0 && stats.live_blocks == 0 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes == 0 &&
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks == 0 &&
+        stats.failed_calls == 0;
+    printf("PublicApiUsageSmoke=%s final=%zu/%zu OTHER=%zu/%zu FailedCalls=%zu\n",
+        usage_ok ? "PASS" : "FAIL", stats.live_bytes, stats.live_blocks,
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_bytes,
+        stats.tags[LKS_ALLOC_TAG_OTHER].live_blocks, stats.failed_calls);
+    return valid ? 0 : 1;
+}
 
 int main(int argc, char **argv)
 {
@@ -3451,15 +3471,12 @@ int main(int argc, char **argv)
     if (argc == 2 && strcmp(argv[1], "--stage14.2-release-smoke") == 0) {
         return lks_run_stage14_2_release_smoke();
     }
-    if (argc == 2 && strcmp(argv[1], "--stage14.3-frozen-smoke") == 0) {
-        return lks_run_stage14_3_frozen_smoke();
-    }
     if (argc == 2 && strcmp(argv[1], "--public-api-usage-smoke") == 0) {
-        return lks_run_public_api_usage_smoke();
+        return run_public_api_usage_smoke();
     }
 
     v2_result = lks_run_v2_preview_tests();
-    if (v2_result != 0 || lks_run_public_api_usage_smoke() != 0 ||
+    if (v2_result != 0 || run_public_api_usage_smoke() != 0 ||
         lks_run_stage14_1_property_tests() != 0 ||
         lks_run_stage14_2_stress_tests() != 0 ||
         lks_run_stage14_2_oom_tests() != 0) return 1;
