@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. v2.0.0-preview.3 development snapshot.*
+*A C17 library for stable ordering with hierarchical Path positions. v2.0.0-preview.3 released Preview snapshot.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -25,7 +25,7 @@ lks_sort(items, count, compare_items, NULL);
 | --- | --- | --- |
 | v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
 | v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
-| v2.0.0-preview.3 (development) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
+| v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -68,7 +68,7 @@ X         0DEq/2222
 B         0DEr
 ```
 
-The Path comparison and gap APIs implement this ordering. Successful Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths afterward. Exact generated Path text can change across previews and has no public parser or persistence guarantee. Preview.3 remains unreleased development work and does not imply production readiness.
+The Path comparison and gap APIs implement this ordering. Successful Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths afterward. Exact generated Path text can change across previews and has no public parser or persistence guarantee. Preview.3 is a released Preview snapshot and does not imply production readiness.
 
 ## Ordering and stability guarantees
 

@@ -2,10 +2,9 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [2.0.0-preview.3] - Unreleased
+## [2.0.0-preview.3] - 2026-09-29
 
-Preview.3 is the current development snapshot; it has not been tagged or
-released.
+Preview.3 is a released Preview snapshot, not a production-ready release.
 
 ### Added
 
