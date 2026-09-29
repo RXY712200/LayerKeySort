@@ -3,16 +3,16 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A LayerKeySort bar visualizer with real Path values verified against the production Group implementation.">
-  <title>LayerKeySort — Path showcase visualizer</title>
+  <meta name="description" content="Historical LayerKeySort v1 bar visualizer with recorded v1 Group Path values.">
+  <title>LayerKeySort — historical v1 Path showcase</title>
   <link rel="stylesheet" href="style.css">
   <script src="app.js?bar-render-fix-2" defer></script>
 </head>
 <body>
   <header class="page-header">
-    <p class="eyebrow">LayerKeySort · Path-based ordering</p>
+    <p class="eyebrow">LayerKeySort · historical v1 Path showcase</p>
     <h1>Watch items find ordered positions</h1>
-    <p class="intro">Bar height represents comparator value. The default 16-item run shows real Path values captured from LayerKeySort Group builds as items enter one at a time.</p>
+    <p class="intro">Bar height represents comparator value. The default 16-item run shows recorded Path values from historical v1 Group builds. V2 uses a different bulk allocator; these exact strings are not V2 output.</p>
   </header>
   <main>
     <section class="visualizer" aria-labelledby="chart-title">
@@ -43,7 +43,7 @@
             <div><dt>Placement relation</dt><dd id="placement">—</dd></div>
             <div><dt>Existing Paths changed</dt><dd id="paths-changed">—</dd></div>
           </dl>
-          <p id="path-policy" class="path-note">Exact Path values are shown for the verified default showcase only. Randomized runs show ordering but hide unverified Path values.</p>
+          <p id="path-policy" class="path-note">Exact historical v1 Path values are shown for the verified default showcase only. Randomized runs show ordering but hide unverified Path values.</p>
         </section>
         <section class="coverage" aria-labelledby="coverage-title">
           <h2 id="coverage-title">Path forms encountered</h2>
@@ -53,8 +53,8 @@
       </div>
       <p id="completion" class="completion" hidden></p>
     </section>
-    <aside class="algorithm-note"><h2>How the display maps to LayerKeySort</h2><p>The production Group builder processes input items in order. Tree lookup binary-searches ordered child lists and descends through predecessor children; it returns located neighbors, not a public linear scan. The animation shows the verified position and Path result, without inventing internal comparison probes.</p><p>The default values are unique. This run does not demonstrate stability; LayerKeySort preserves input order for comparator-equal items.</p></aside>
+    <aside class="algorithm-note"><h2>Historical v1 algorithm mapping</h2><p>The v1 Group builder processed input items in order. Tree lookup binary-searched ordered child lists and descended through predecessor children; it returned located neighbors, not a public linear scan. The animation shows recorded v1 positions and Paths, without inventing internal comparison probes. V2 Group build sorts first and bulk-assigns Paths, so this animation does not depict V2 construction.</p><p>The default values are unique. This run does not demonstrate stability; LayerKeySort preserves input order for comparator-equal items.</p></aside>
   </main>
-  <footer>This is an explanatory visualization; it does not execute the production C implementation in the browser. Randomized runs do not display exact Path text because no JavaScript Path generator is used.</footer>
+  <footer>This is a historical v1 explanatory visualization; it does not execute production C in the browser. Randomized runs do not display exact Path text because no JavaScript Path generator is used.</footer>
 </body>
 </html>

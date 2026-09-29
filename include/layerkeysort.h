@@ -8,8 +8,11 @@
 extern "C" {
 #endif
 
-#define LKS_VERSION_MAJOR 1
+#define LKS_VERSION_MAJOR 2
 #define LKS_VERSION_MINOR 0
+#define LKS_VERSION_PATCH 0
+#define LKS_VERSION_PRERELEASE "preview.1"
+#define LKS_VERSION_STRING "2.0.0-preview.1"
 
 /* Public Path slot range: A0..Z9 maps to values 0..259. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -55,6 +58,12 @@ typedef struct LksPath LksPath;
 
 /* Return a static, library-owned description of a status value. */
 const char *lks_status_string(LksStatus status);
+
+/* Stable-sort the caller's pointer array in place. Items remain caller-owned.
+ * Equal items retain input order. On allocation failure the array is unchanged.
+ * COUNT may be zero with ITEMS == NULL. */
+LksStatus lks_sort(void **items, size_t count, LksCompareFn compare,
+    void *context);
 
 /* Create a ZERO Path. Caller owns the returned Path and destroys it with
  * lks_path_destroy; returns NULL if allocation fails. */
@@ -134,13 +143,13 @@ LksStatus lks_path_compare(
     const LksPath *right,
     int *out_result
 );
-/* Allocate a position immediately before RIGHT. Caller owns *out_path on
+/* Allocate a valid position ordered before RIGHT. Caller owns *out_path on
  * success; output is set to NULL on failure. RIGHT is unchanged. */
 LksStatus lks_path_before(
     const LksPath *right,
     LksPath **out_path
 );
-/* Allocate a position immediately after LEFT. Caller owns *out_path on
+/* Allocate a valid position ordered after LEFT. Caller owns *out_path on
  * success; output is set to NULL on failure. LEFT is unchanged. */
 LksStatus lks_path_after(
     const LksPath *left,
@@ -165,7 +174,8 @@ LksStatus lks_group_build(
     const LksComparator *comparator,
     LksGroup **out_group
 );
-/* Merge two sorted Groups into a new independent Group. Equal items from BASE
+/* Merge two sorted Groups into a new independent Group. Result Paths may be
+ * reassigned, including Base Paths. Equal items from BASE
  * precede equal items from INCOMING; order within each source is preserved.
  * Inputs/items are borrowed and unchanged; caller owns the result. On failure
  * output is NULL and both inputs remain usable. */
@@ -181,7 +191,8 @@ void lks_group_destroy(LksGroup *group);
 size_t lks_group_size(const LksGroup *group);
 /* Borrow an item pointer by sorted index; returns NULL for invalid input/index. */
 void *lks_group_item_at(const LksGroup *group, size_t index);
-/* Borrow a Group-owned Path, valid until the Group is destroyed. */
+/* Borrow a Group-owned Path, stable until the Group is destroyed.
+ * Paths are local order coordinates, not persistent item identities. */
 const LksPath *lks_group_path_at(const LksGroup *group, size_t index);
 
 /* Build a Batch by splitting borrowed items into consecutive input chunks of
@@ -257,7 +268,8 @@ LksStatus lks_tree_find_path(
     const LksPath *path,
     const LksTreeNode **out_node
 );
-/* Return a node-owned Path borrowed until the Tree changes or is destroyed. */
+/* Return a node-owned Path borrowed until the Tree changes or is destroyed.
+ * A successful Tree mutation may re-encode existing Paths. */
 const LksPath *lks_tree_node_path(const LksTreeNode *node);
 /* Return the borrowed item pointer stored in a node; NULL node returns NULL. */
 void *lks_tree_node_item(const LksTreeNode *node);

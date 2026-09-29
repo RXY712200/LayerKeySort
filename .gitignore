@@ -4,6 +4,7 @@
 *.suo
 
 # Build directories
+build/
 x64/
 Debug/
 Release/

@@ -58,6 +58,21 @@
     <ClCompile Include="src\group.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\sort.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bulk.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClInclude Include="src\lks_sort_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lks_bulk_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lks_policy_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClCompile Include="tests\benchmark.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -71,6 +86,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClCompile Include="tests\public_api_usage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="tests\v2_preview.c">
       <Filter>源文件</Filter>
     </ClCompile>
     <None Include="examples\basic.c">

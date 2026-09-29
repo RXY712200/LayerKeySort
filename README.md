@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A stable C17 ordering library based on hierarchical path keys.*
+*A stable C17 ordering library based on hierarchical path keys. v2.0.0-preview.1.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -8,7 +8,7 @@ LayerKeySort orders caller-owned item pointers with a comparator and gives each 
 
 ![LayerKeySort transforms unordered values into an ascending sequence by locating each item and assigning a hierarchical Path](docs/assets/layerkeysort-insertion.svg)
 
-The visual shows items moving from unordered input through Tree-guided location into ordered Path positions. The local bar-based visualizer in [`docs/demo/`](docs/demo/) includes a verified Path showcase; randomized runs hide unverified Path text. It does not execute the production C implementation.
+The visual shows a **historical v1** Path showcase. The local browser visualizer in [`docs/demo/`](docs/demo/) does not execute the production C implementation and its recorded Path values do not describe the V2 allocator.
 
 ## Visual overview
 
@@ -17,18 +17,17 @@ flowchart TD
     A[Input items] --> B[Build local Groups]
     B --> C[Assign local hierarchical Paths]
     C --> D[Stable merge]
-    D --> E[Preserve Base Paths]
-    D --> F[Re-encode Incoming Paths]
+    D --> E[Assign fresh result Paths]
     E --> G[Final ordered Group]
-    F --> G
 ```
 
-Paths in separate Groups are local positions. During a merge, Base positions are retained and Incoming positions are encoded in the result's path space.
+Paths in separate Groups are local positions. A merge leaves both inputs unchanged and assigns a fresh coordinate layout to the result; exact Base Paths may change.
 
 ## Why LayerKeySort?
 
 - Stable ordering for items that compare equal.
 - Hierarchical Path positions that can represent deeper levels and gaps.
+- A one-call stable pointer-array sort for ordinary use.
 - Explicit Group and GroupBatch construction and merge operations.
 - Base-first ordering for equal items from a public two-Group merge.
 - A C17 public API that borrows caller-owned item pointers.
@@ -50,67 +49,22 @@ The Path comparison and gap APIs implement this ordering.
 
 ## Quick start
 
-This example builds local Groups from chunks, merges them, and reads the ordered items by index. The complete example, including output and cleanup details, is in [`examples/basic.c`](examples/basic.c).
+Include the public header and stable-sort a pointer array in one call.
+The pointed-to objects remain caller-owned; equal keys keep input order.
 
 ```c
 #include "layerkeysort.h"
 
-typedef struct Item {
-    int key;
-    int source_order;
-} Item;
-
-static int compare_item_key(const void *left, const void *right, void *context)
-{
-    const Item *a = (const Item *)left;
-    const Item *b = (const Item *)right;
-    (void)context;
-    if (a->key < b->key) return -1;
-    if (a->key > b->key) return 1;
-    return 0;
-}
-
-int main(void)
-{
-    Item items[] = { { 2, 0 }, { 1, 1 }, { 2, 2 }, { 1, 3 } };
-    void *item_pointers[sizeof(items) / sizeof(items[0])];
-    const size_t item_count = sizeof(items) / sizeof(items[0]);
-    LksComparator comparator = { compare_item_key, NULL };
-    LksGroupBatch *batch = NULL;
-    LksGroup *result = NULL;
-    size_t index;
-    int previous_key = 0;
-    LksStatus status;
-
-    for (index = 0; index < item_count; ++index) {
-        item_pointers[index] = &items[index];
-    }
-
-    status = lks_group_batch_build(item_pointers, item_count, 2,
-        &comparator, &batch);
-    if (status != LKS_STATUS_OK) return 1;
-
-    status = lks_group_batch_merge_all(batch, &comparator, &result);
-    if (status != LKS_STATUS_OK) {
-        lks_group_batch_destroy(batch);
-        return 1;
-    }
-
-    for (index = 0; index < lks_group_size(result); ++index) {
-        const Item *item = (const Item *)lks_group_item_at(result, index);
-        if (item == NULL || (index != 0 && item->key < previous_key)) {
-            lks_group_destroy(result);
-            lks_group_batch_destroy(batch);
-            return 1;
-        }
-        previous_key = item->key;
-    }
-
-    lks_group_destroy(result);
-    lks_group_batch_destroy(batch);
-    return 0;
+/* compare_items has signature: int (const void *, const void *, void *) */
+LksStatus status = lks_sort(items, item_count, compare_items, NULL);
+if (status != LKS_STATUS_OK) {
+    /* Handle allocation or argument failure. */
 }
 ```
+
+The complete compilable example is [`examples/basic.c`](examples/basic.c).
+For inspectable Path coordinates and explicit Group merging, see the
+[usage guide](docs/USAGE.md).
 
 ## Ordering and stability guarantees
 
@@ -123,6 +77,7 @@ int main(void)
 The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
 
 - **Path:** create, clone, append, format, compare, and find positions before, after, or between other Paths.
+- **Simple sort:** `lks_sort()` stable-sorts the caller's pointer array.
 - **Tree:** insert items or explicit Paths, locate entries, and navigate nodes.
 - **Group:** build a sorted Group and access its items and Paths.
 - **GroupBatch / merge:** build Groups from consecutive input chunks and merge Groups or a Batch.
@@ -130,16 +85,25 @@ The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
 
 ## Build
 
-Open `LayerKeySort.slnx` or `LayerKeySort.vcxproj` in Microsoft Visual Studio. The project targets x64 and compiles `.c` files as C17 with MSVC. Existing configurations are **Debug**, **Release**, and **ASan** (AddressSanitizer).
+For the reusable library and test suite:
+
+```sh
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+The existing `LayerKeySort.slnx` / `.vcxproj` remain available for MSVC C17 validation. Build artifacts belong in an out-of-source `build/` directory.
 
 ## Validation
 
-The repository includes deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and a public API smoke test. The project has been validated with MSVC x64 Debug, Release, and AddressSanitizer configurations. GCC and Clang builds and 32-bit targets have not been validated.
+The repository includes deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and a public API smoke test. CI checks MSVC, GCC, and Clang. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
 
 ## Current limitations
 
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result's path space.
+- Published Groups are immutable; their borrowed Paths stay stable until Group destruction. Successful Tree mutation may re-encode and invalidate borrowed Tree node/Path views.
 - Serialization, a Path text parser, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
 
 ## Project layout

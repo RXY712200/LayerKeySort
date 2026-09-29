@@ -3,13 +3,14 @@
 ## Requirements
 
 - C17.
-- Currently validated with Microsoft Visual Studio / MSVC on x64.
-
-Other compiler and platform combinations have not been validated in this repository.
+- A C17 compiler and CMake 3.21 or newer for the CMake build.
 
 ## Adding LayerKeySort to a project
 
-LayerKeySort currently uses source-based integration; the repository does not provide an installed library package or package-manager recipe. Add the production C files to your application build and make the public include directory available to the compiler.
+The CMake target `layerkeysort` is a reusable static library and exposes the
+public include directory. The repository does not provide an installed package
+or package-manager recipe. For source-based integration, compile the production
+C files and add `include/` to the compiler search path.
 
 The public header is `include/layerkeysort.h`. Include it as:
 
@@ -27,8 +28,35 @@ Set the compiler include search path to the repository’s `include/` directory.
 - `src/gap.c`
 - `src/tree.c`
 - `src/group.c`
+- `src/sort.c`
+- `src/bulk.c`
 
-The private headers under `src/` are implementation details. The Visual Studio project also compiles the library and validation code into one executable; it is not an installed-library packaging project.
+The private headers under `src/` are implementation details. The Visual Studio
+project also provides a combined validation executable; use the CMake library
+target for an application build.
+
+## Sorting a pointer array
+
+Define a comparator over your pointed-to item type, then call:
+
+```c
+LksStatus status = lks_sort(items, item_count, compare_items, NULL);
+```
+
+`lks_sort` changes the pointer array, not the pointed-to objects. It is stable
+for comparator-equal items and leaves the input array unchanged if allocation
+fails. [`examples/basic.c`](../examples/basic.c) is the complete first-use example.
+
+To build and run it with CMake:
+
+```sh
+cmake -S . -B build
+cmake --build build
+./build/layerkeysort_example
+```
+
+The executable path can differ with multi-configuration generators such as
+Visual Studio (for example, `build/Debug/layerkeysort_example.exe`).
 
 ## Comparator
 
@@ -42,7 +70,8 @@ The `context` pointer may be `NULL`. LayerKeySort passes it to the callback with
 
 ## Building a Group
 
-A Group sorts the supplied borrowed pointers using the comparator. This compact example follows the repository’s `examples/basic.c` pattern:
+A Group sorts supplied borrowed pointers and assigns Path coordinates. This
+is an advanced API; ordinary array sorting needs only `lks_sort`.
 
 ```c
 LksComparator comparator = { compare_item, NULL };
@@ -58,7 +87,8 @@ if (status != LKS_STATUS_OK) {
 lks_group_destroy(group);
 ```
 
-`items` is an array of pointers to caller-owned objects. Check the full example for comparator definition, status handling, result validation, and cleanup.
+`items` is an array of pointers to caller-owned objects. The comparator follows
+the same contract as `lks_sort`.
 
 ## Building and merging a GroupBatch
 
@@ -76,7 +106,7 @@ if (status == LKS_STATUS_OK) {
 /* Check status, read result, then destroy result and batch. */
 ```
 
-See [`examples/basic.c`](../examples/basic.c) for a complete compilable example.
+The Batch and its Groups remain readable after a successful merge.
 
 ## Reading results
 
@@ -92,7 +122,9 @@ for (index = 0; index < count; ++index) {
 }
 ```
 
-`lks_group_item_at` returns the item pointer at a sorted index. `lks_group_path_at` returns a borrowed Path owned by the Group. Both remain usable only while the owning Group is alive.
+`lks_group_item_at` returns the item pointer at a sorted index. `lks_group_path_at`
+returns a borrowed Path owned by the Group. A published Group is immutable;
+its Paths remain stable until that Group is destroyed.
 
 ## Ownership
 
@@ -108,7 +140,13 @@ Comparator-equal input items retain their input order. For the public two-Group 
 
 ## Path locality
 
-A Path describes a position within the Group or Tree that created it. Paths built independently inside different Groups are local coordinates; do not compare them as though they already occupied one shared global coordinate space. A merge establishes positions in the result Group’s coordinate space.
+A Path describes order within the Group or Tree that created it, not a stable
+application identity. Paths from independent Groups are local coordinates.
+Merge creates a new coordinate space and may reassign every result Path, while
+leaving both source Groups unchanged. Mutable Tree operations may re-encode
+Paths and invalidate previously borrowed Tree nodes/Paths. Do not persist or
+serialize generated Paths for later reuse. Path-allocation heuristics and exact
+generated strings may change before final v2.0.0.
 
 ## Error handling
 

@@ -2,6 +2,28 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [2.0.0-preview.1] - Unreleased
+
+### Added
+
+- `lks_sort` for stable sorting of a caller-owned pointer array.
+- CMake production library, example, and diagnostic test targets; cross-platform CI.
+- Sparse 26-way bulk Path construction and focused V2 regression coverage.
+
+### Changed
+
+- Group build and merge now assign a fresh balanced Path layout from the final
+  stable item order. Inputs remain immutable; result Paths need not retain the
+  exact values used in the source Groups.
+- Batch merge combines ordered pointer sequences before one final Group build.
+- Online Tree insertion uses available gaps and atomically rebuilds a Tree
+  when Path growth crosses the preview policy threshold.
+- Production allocation no longer updates process-global test counters;
+  fault injection and detailed accounting remain available in diagnostic builds.
+
+Path-allocation heuristics are provisional and may change before v2.0.0.
+Paths are ordering coordinates, not persistent IDs or a serialization format.
+
 ## [1.0.0] - 2026-09-26
 
 ### Added

@@ -4,6 +4,8 @@
 #include "layerkeysort.h"
 #include "lks_alloc_internal.h"
 #include "lks_tree_internal.h"
+#include "lks_bulk_internal.h"
+#include "lks_policy_internal.h"
 
 typedef struct LksTreeChildBlock LksTreeChildBlock;
 
@@ -475,6 +477,77 @@ static const LksTreeNode *tree_node_successor(
     return NULL;
 }
 
+static void collect_subtree_items(const LksTreeNode *node, void **items,
+    size_t *write_index)
+{
+    size_t child;
+    items[(*write_index)++] = node->item;
+    for (child = 0; child < tree_node_child_count(node); ++child)
+        collect_subtree_items(tree_node_children(node)[child], items, write_index);
+}
+
+static const LksTreeNode *node_at_preorder(const LksTreeNode *node,
+    size_t target, size_t *cursor)
+{
+    size_t child;
+    const LksTreeNode *found;
+    if ((*cursor)++ == target) return node;
+    for (child = 0; child < tree_node_child_count(node); ++child) {
+        found = node_at_preorder(tree_node_children(node)[child], target, cursor);
+        if (found != NULL) return found;
+    }
+    return NULL;
+}
+
+static LksStatus rebuild_with_item(LksTree *tree, void *item,
+    const LksComparator *comparator, const LksTreeNode **out_node)
+{
+    void **items;
+    LksTree *replacement = NULL;
+    size_t index = 0, position = 0, child, cursor = 0;
+    const LksTreeNode *inserted = NULL;
+    LksTreeChildBlock *old_block;
+    size_t old_size;
+    LksStatus status;
+    if (tree->size == (size_t)-1 || tree->size + 1 > (size_t)-1 / sizeof(*items))
+        return LKS_STATUS_OUT_OF_MEMORY;
+    items = (void **)lks_alloc_tagged((tree->size + 1) * sizeof(*items),
+        LKS_ALLOC_TAG_MERGE_SCRATCH);
+    if (items == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+    for (child = 0; child < tree_node_child_count(&tree->root); ++child)
+        collect_subtree_items(tree_node_children(&tree->root)[child], items, &index);
+    if (index != tree->size) { lks_free(items); return LKS_STATUS_INTERNAL_ERROR; }
+    /* Equality goes after the existing run. The old Tree is untouched. */
+    while (position < tree->size &&
+        comparator->compare(items[position], item, comparator->context) <= 0)
+        ++position;
+    memmove(items + position + 1, items + position,
+        (tree->size - position) * sizeof(*items));
+    items[position] = item;
+    status = lks_bulk_build_tree(items, tree->size + 1, &replacement);
+    lks_free(items);
+    if (status != LKS_STATUS_OK) return status;
+    for (child = 0; child < tree_node_child_count(&replacement->root); ++child) {
+        inserted = node_at_preorder(tree_node_children(&replacement->root)[child],
+            position, &cursor);
+        if (inserted != NULL) break;
+    }
+    if (inserted == NULL) { lks_tree_destroy(replacement); return LKS_STATUS_INTERNAL_ERROR; }
+    /* Commit is allocation-free. Reparent only direct root children because
+     * every deeper parent pointer already points inside the new Tree. */
+    old_block = tree->root.child_block;
+    old_size = tree->size;
+    tree->root.child_block = replacement->root.child_block;
+    tree->size = replacement->size;
+    replacement->root.child_block = old_block;
+    replacement->size = old_size;
+    for (child = 0; child < tree_node_child_count(&tree->root); ++child)
+        tree_node_children_mutable(&tree->root)[child]->parent = &tree->root;
+    lks_tree_destroy(replacement);
+    if (out_node != NULL) *out_node = inserted;
+    return LKS_STATUS_OK;
+}
+
 LksStatus lks_tree_insert_item(
     LksTree *tree,
     void *item,
@@ -544,10 +617,16 @@ LksStatus lks_tree_insert_item(
         }
     }
 
+    if (lks_path_depth(new_path) > LKS_POLICY_MAX_ONLINE_DEPTH) {
+        lks_path_destroy(new_path);
+        return rebuild_with_item(tree, item, comparator, out_node);
+    }
     status = lks_tree_insert(tree, new_path, item, out_node);
     lks_path_destroy(new_path);
     if (status == LKS_STATUS_ALREADY_EXISTS || status == LKS_STATUS_NOT_FOUND) {
-        return LKS_STATUS_INTERNAL_ERROR;
+        /* A standalone gap candidate need not have an existing Tree prefix.
+         * Both statuses leave the Tree untouched, so rebuild from item order. */
+        return rebuild_with_item(tree, item, comparator, out_node);
     }
     return status;
 }

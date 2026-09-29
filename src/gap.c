@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include "layerkeysort.h"
+#include "lks_policy_internal.h"
 
 static LksStatus validate_before_candidate(
     const LksPath *right,
@@ -35,6 +36,10 @@ static LksStatus validate_after_candidate(
     return LKS_STATUS_OK;
 }
 
+static LksStatus build_prefix_and_step(const LksPath *source,
+    size_t prefix_depth, unsigned int slot, size_t level,
+    LksPath **out_path);
+
 LksStatus lks_path_before(const LksPath *right, LksPath **out_path)
 {
     LksDirection direction;
@@ -57,7 +62,7 @@ LksStatus lks_path_before(const LksPath *right, LksPath **out_path)
     if (direction == LKS_DIRECTION_ZERO) {
         candidate = lks_path_create_at_level(
             LKS_DIRECTION_NEGATIVE,
-            LKS_PATH_SLOT_MIN,
+            LKS_POLICY_INITIAL_SLOT,
             0
         );
         if (candidate == NULL) {
@@ -84,7 +89,7 @@ LksStatus lks_path_before(const LksPath *right, LksPath **out_path)
 
     if (root_slot < LKS_PATH_SLOT_MAX) {
         candidate_level = root_level;
-        ++root_slot;
+        root_slot += lks_policy_endpoint_step(LKS_PATH_SLOT_MAX - root_slot);
     } else {
         if (root_level == (size_t)-1) {
             return LKS_STATUS_LEVEL_LIMIT;
@@ -109,6 +114,7 @@ LksStatus lks_path_after(const LksPath *left, LksPath **out_path)
     LksPath *candidate;
     size_t depth;
     size_t last_level;
+    unsigned int last_slot;
     LksStatus status;
 
     if (out_path == NULL) {
@@ -126,7 +132,7 @@ LksStatus lks_path_after(const LksPath *left, LksPath **out_path)
         }
         candidate = lks_path_create_at_level(
             LKS_DIRECTION_POSITIVE,
-            LKS_PATH_SLOT_MIN,
+            LKS_POLICY_INITIAL_SLOT,
             0
         );
         if (candidate == NULL) {
@@ -141,8 +147,27 @@ LksStatus lks_path_after(const LksPath *left, LksPath **out_path)
     }
     depth = lks_path_depth(left);
     if (depth == 0 ||
-        lks_path_get_level(left, depth - 1, &last_level) != LKS_STATUS_OK) {
+        lks_path_get_level(left, depth - 1, &last_level) != LKS_STATUS_OK ||
+        lks_path_get_slot(left, depth - 1, &last_slot) != LKS_STATUS_OK) {
         return LKS_STATUS_INTERNAL_ERROR;
+    }
+    /* Endpoint insertion spends the remaining same-level slots first.
+     * Negative root slots run in reverse order; descendants do not. */
+    if (direction == LKS_DIRECTION_NEGATIVE && depth == 1 &&
+        last_slot > LKS_PATH_SLOT_MIN) {
+        unsigned int step = lks_policy_endpoint_step(last_slot - LKS_PATH_SLOT_MIN);
+        candidate = lks_path_create_at_level(direction, last_slot - step, last_level);
+        return candidate == NULL ? LKS_STATUS_OUT_OF_MEMORY :
+            validate_after_candidate(left, candidate, out_path);
+    }
+    if ((direction == LKS_DIRECTION_POSITIVE || depth > 1) &&
+        last_slot < LKS_PATH_SLOT_MAX) {
+        /* Replace only the last step using the existing prefix. */
+        status = build_prefix_and_step(left, depth - 1,
+            last_slot + lks_policy_endpoint_step(LKS_PATH_SLOT_MAX - last_slot),
+            last_level, &candidate);
+        if (status != LKS_STATUS_OK) return status;
+        return validate_after_candidate(left, candidate, out_path);
     }
     if (last_level == (size_t)-1) {
         return LKS_STATUS_LEVEL_LIMIT;
@@ -152,7 +177,7 @@ LksStatus lks_path_after(const LksPath *left, LksPath **out_path)
     if (candidate == NULL) {
         return LKS_STATUS_OUT_OF_MEMORY;
     }
-    status = lks_path_append_at_level(candidate, LKS_PATH_SLOT_MIN, last_level + 1);
+    status = lks_path_append_at_level(candidate, LKS_POLICY_INITIAL_SLOT, last_level + 1);
     if (status != LKS_STATUS_OK) {
         lks_path_destroy(candidate);
         return status;
@@ -262,7 +287,7 @@ static LksStatus append_below_left(
     if (path == NULL) {
         return LKS_STATUS_OUT_OF_MEMORY;
     }
-    status = lks_path_append_at_level(path, LKS_PATH_SLOT_MIN, last_level + 1);
+    status = lks_path_append_at_level(path, LKS_POLICY_INITIAL_SLOT, last_level + 1);
     if (status != LKS_STATUS_OK) {
         lks_path_destroy(path);
         return status == LKS_STATUS_OUT_OF_MEMORY ? status : LKS_STATUS_INTERNAL_ERROR;
@@ -295,7 +320,10 @@ static LksStatus between_zero_and_positive(
     }
 
     path = lks_path_create_at_level(
-        LKS_DIRECTION_POSITIVE, LKS_PATH_SLOT_MIN, new_level
+        LKS_DIRECTION_POSITIVE,
+        first_slot > LKS_PATH_SLOT_MIN ?
+            lks_policy_midpoint(LKS_PATH_SLOT_MIN, first_slot) : LKS_PATH_SLOT_MIN,
+        new_level
     );
     if (path == NULL) {
         return LKS_STATUS_OUT_OF_MEMORY;
@@ -331,7 +359,8 @@ static LksStatus after_negative_before_zero(
 
     if (is_root) {
         if (current_slot > LKS_PATH_SLOT_MIN) {
-            next_slot = current_slot - 1;
+            next_slot = current_slot -
+                lks_policy_endpoint_step(current_slot - LKS_PATH_SLOT_MIN);
             return build_prefix_and_step(
                 left, last_index, next_slot, current_level, out_path
             );
@@ -339,7 +368,8 @@ static LksStatus after_negative_before_zero(
         minimum_level = 0;
     } else {
         if (current_slot < LKS_PATH_SLOT_MAX) {
-            next_slot = current_slot + 1;
+            next_slot = current_slot +
+                lks_policy_endpoint_step(LKS_PATH_SLOT_MAX - current_slot);
             return build_prefix_and_step(
                 left, last_index, next_slot, current_level, out_path
             );
@@ -403,9 +433,10 @@ static LksStatus between_same_direction(
             }
             candidate_level = right_level + 1;
         }
-        return build_prefix_and_step(
-            left, left_depth, LKS_PATH_SLOT_MIN, candidate_level, out_path
-        );
+        return build_prefix_and_step(left, left_depth,
+            right_slot > LKS_PATH_SLOT_MIN ?
+                lks_policy_midpoint(LKS_PATH_SLOT_MIN, right_slot) : LKS_PATH_SLOT_MIN,
+            candidate_level, out_path);
     }
     if (common_depth >= right_depth) {
         return LKS_STATUS_INTERNAL_ERROR;
@@ -423,14 +454,16 @@ static LksStatus between_same_direction(
 
     if (left_level == right_level) {
         if (reverse_root_slot) {
-            if (left_slot > right_slot && left_slot - right_slot > 1u) {
-                candidate_slot = left_slot - 1u;
+            if (left_slot > right_slot &&
+                left_slot - right_slot >= LKS_POLICY_MIN_USEFUL_SPACING) {
+                candidate_slot = lks_policy_midpoint(right_slot, left_slot);
                 return build_prefix_and_step(
                     left, common_depth, candidate_slot, left_level, out_path
                 );
             }
-        } else if (left_slot < right_slot && right_slot - left_slot > 1u) {
-            candidate_slot = left_slot + 1u;
+        } else if (left_slot < right_slot &&
+                   right_slot - left_slot >= LKS_POLICY_MIN_USEFUL_SPACING) {
+            candidate_slot = lks_policy_midpoint(left_slot, right_slot);
             return build_prefix_and_step(
                 left, common_depth, candidate_slot, left_level, out_path
             );
@@ -516,13 +549,12 @@ LksStatus lks_path_between(
 
     left_direction = lks_path_direction(left);
     right_direction = lks_path_direction(right);
+    candidate = NULL;
     if (left_direction == LKS_DIRECTION_NEGATIVE &&
         right_direction == LKS_DIRECTION_POSITIVE) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
-
-    candidate = NULL;
-    if (left_direction == LKS_DIRECTION_ZERO &&
+        candidate = lks_path_create_zero();
+        status = candidate == NULL ? LKS_STATUS_OUT_OF_MEMORY : LKS_STATUS_OK;
+    } else if (left_direction == LKS_DIRECTION_ZERO &&
         right_direction == LKS_DIRECTION_POSITIVE) {
         status = between_zero_and_positive(right, &candidate);
     } else if (left_direction == LKS_DIRECTION_NEGATIVE &&

@@ -2,6 +2,8 @@
 #include "layerkeysort.h"
 #include "lks_alloc_internal.h"
 #include "lks_group_internal.h"
+#include "lks_bulk_internal.h"
+#include "lks_sort_internal.h"
 
 struct LksGroupBatch {
     LksGroup **groups;
@@ -49,7 +51,6 @@ static LksStatus flatten_subtree(
 }
 
 static LksStatus validate_ordered_nodes(
-    const LksGroup *group,
     const LksTreeNode **ordered_nodes,
     size_t count,
     const LksComparator *comparator
@@ -117,7 +118,7 @@ static LksStatus group_build_ordered_nodes(const LksGroup *group,
         lks_free(ordered_nodes);
         return LKS_STATUS_INTERNAL_ERROR;
     }
-    status = validate_ordered_nodes(group, ordered_nodes, group->count, comparator);
+    status = validate_ordered_nodes(ordered_nodes, group->count, comparator);
     if (status != LKS_STATUS_OK) {
         lks_free(ordered_nodes);
         return status;
@@ -136,57 +137,44 @@ static LksStatus group_build_ordered_view(LksGroup *group,
     return LKS_STATUS_OK;
 }
 
-LksStatus lks_group_build(
-    void *const *items,
-    size_t count,
-    const LksComparator *comparator,
-    LksGroup **out_group
-)
+static LksStatus group_from_sorted(void *const *items, size_t count,
+    const LksComparator *comparator, LksGroup **out_group)
 {
     LksGroup *group;
-    size_t index;
     LksStatus status;
-
-    if (out_group == NULL) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
-    *out_group = NULL;
-    if (comparator == NULL || comparator->compare == NULL ||
-        (count > 0 && items == NULL)) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
-
+    LksTree *tree = NULL;
+    status = lks_bulk_build_tree(items, count, &tree);
+    if (status != LKS_STATUS_OK) return status;
     group = (LksGroup *)lks_alloc_tagged(sizeof(*group), LKS_ALLOC_TAG_GROUP_OBJECT);
     if (group == NULL) {
+        lks_tree_destroy(tree);
         return LKS_STATUS_OUT_OF_MEMORY;
     }
-    group->tree = lks_tree_create();
+    group->tree = tree;
     group->ordered_nodes = NULL;
     group->count = count;
-    if (group->tree == NULL) {
-        lks_free(group);
-        return LKS_STATUS_OUT_OF_MEMORY;
-    }
-
-    for (index = 0; index < count; ++index) {
-        status = lks_tree_insert_item(group->tree, items[index], comparator, NULL);
-        if (status != LKS_STATUS_OK) {
-            lks_tree_destroy(group->tree);
-            lks_free(group);
-            return status;
-        }
-    }
-
     status = group_build_ordered_view(group, comparator);
     if (status != LKS_STATUS_OK) {
-        lks_free(group->ordered_nodes);
-        lks_tree_destroy(group->tree);
-        lks_free(group);
+        lks_group_destroy(group);
         return status;
     }
-
     *out_group = group;
     return LKS_STATUS_OK;
+}
+
+LksStatus lks_group_build(void *const *items, size_t count,
+    const LksComparator *comparator, LksGroup **out_group)
+{
+    void **sorted = NULL;
+    LksStatus status;
+    if (out_group == NULL) return LKS_STATUS_INVALID_ARGUMENT;
+    *out_group = NULL;
+    status = lks_stable_sort_copy(items, count, comparator, &sorted);
+    if (status != LKS_STATUS_OK) return status;
+    /* Nothing borrowed from the caller is ever rewritten. */
+    status = group_from_sorted(sorted, count, comparator, out_group);
+    lks_free(sorted);
+    return status;
 }
 
 void lks_group_destroy(LksGroup *group)
@@ -291,83 +279,47 @@ LksStatus lks_group_merge(
     LksGroup **out_group
 )
 {
-    LksPath **planned_paths = NULL;
-    LksTree *tree = NULL;
-    LksGroup *result = NULL;
-    size_t base_count;
-    size_t incoming_count;
-    size_t total_count;
-    size_t index;
-    LksStatus status = LKS_STATUS_OK;
-
-    if (out_group == NULL) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
+    void **merged;
+    size_t base_count, incoming_count, total_count;
+    LksStatus status;
+    if (out_group == NULL) return LKS_STATUS_INVALID_ARGUMENT;
     *out_group = NULL;
     if (base == NULL || incoming == NULL || comparator == NULL ||
-        comparator->compare == NULL) {
+        comparator->compare == NULL)
         return LKS_STATUS_INVALID_ARGUMENT;
-    }
-
     base_count = lks_group_size(base);
     incoming_count = lks_group_size(incoming);
-    if (base_count > (size_t)-1 - incoming_count) {
+    if (base_count > (size_t)-1 - incoming_count ||
+        base_count + incoming_count > (size_t)-1 / sizeof(*merged))
         return LKS_STATUS_OUT_OF_MEMORY;
-    }
     total_count = base_count + incoming_count;
-
-    status = group_plan_incoming_paths(base, incoming, comparator, &planned_paths);
-    if (status != LKS_STATUS_OK) return status;
-
-    tree = lks_tree_create();
-    if (tree == NULL) {
-        status = LKS_STATUS_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-    for (index = 0; index < base_count; ++index) {
-        status = lks_tree_insert(tree, lks_group_path_at(base, index),
-            lks_group_item_at(base, index), NULL);
-        if (status == LKS_STATUS_NOT_FOUND ||
-            status == LKS_STATUS_ALREADY_EXISTS) {
-            status = LKS_STATUS_INTERNAL_ERROR;
-        }
-        if (status != LKS_STATUS_OK) {
-            goto cleanup;
-        }
-    }
-    for (index = 0; index < incoming_count; ++index) {
-        status = lks_tree_insert(tree, planned_paths[index],
-            lks_group_item_at(incoming, index), NULL);
-        if (status == LKS_STATUS_NOT_FOUND ||
-            status == LKS_STATUS_ALREADY_EXISTS) {
-            status = LKS_STATUS_INTERNAL_ERROR;
-        }
-        if (status != LKS_STATUS_OK) {
-            goto cleanup;
+    merged = NULL;
+    if (total_count != 0) {
+        merged = (void **)lks_alloc_tagged(total_count * sizeof(*merged),
+            LKS_ALLOC_TAG_MERGE_SCRATCH);
+        if (merged == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+        /* The result has its own coordinate space. No source Path is consulted. */
+        {
+            size_t left = 0, right = 0, output = 0;
+            while (left < base_count && right < incoming_count) {
+                void *base_item = lks_group_item_at(base, left);
+                void *incoming_item = lks_group_item_at(incoming, right);
+                if (comparator->compare(base_item, incoming_item,
+                        comparator->context) <= 0) {
+                    merged[output++] = base_item;
+                    ++left;
+                } else {
+                    merged[output++] = incoming_item;
+                    ++right;
+                }
+            }
+            while (left < base_count) merged[output++] = lks_group_item_at(base, left++);
+            while (right < incoming_count)
+                merged[output++] = lks_group_item_at(incoming, right++);
         }
     }
-
-    result = (LksGroup *)lks_alloc_tagged(sizeof(*result), LKS_ALLOC_TAG_GROUP_OBJECT);
-    if (result == NULL) {
-        status = LKS_STATUS_OUT_OF_MEMORY;
-        goto cleanup;
-    }
-    result->tree = tree;
-    result->ordered_nodes = NULL;
-    result->count = total_count;
-    tree = NULL;
-    status = group_build_ordered_view(result, comparator);
-    if (status != LKS_STATUS_OK) {
-        goto cleanup;
-    }
-
-    *out_group = result;
-    result = NULL;
-
-cleanup:
-    group_destroy_planned_paths(planned_paths, incoming_count);
-    lks_tree_destroy(tree);
-    lks_group_destroy(result);
+    status = group_from_sorted(merged, total_count, comparator, out_group);
+    lks_free(merged);
     return status;
 }
 
@@ -543,203 +495,63 @@ const LksGroup *lks_group_batch_group_at(
     return batch->groups[index];
 }
 
-typedef struct LksMergeEntry {
-    const LksGroup *group;
-    int owned;
-} LksMergeEntry;
-
-static LksStatus group_clone_preserving_paths(
-    const LksGroup *source,
-    const LksComparator *comparator,
-    LksGroup **out_group
-)
-{
-    LksTree *tree = NULL;
-    LksGroup *clone = NULL;
-    size_t index;
-    LksStatus status;
-
-    if (out_group == NULL) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
-    *out_group = NULL;
-    if (source == NULL || comparator == NULL || comparator->compare == NULL) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
-
-    tree = lks_tree_create();
-    if (tree == NULL) {
-        return LKS_STATUS_OUT_OF_MEMORY;
-    }
-    for (index = 0; index < source->count; ++index) {
-        status = lks_tree_insert(tree,
-            lks_tree_node_path(source->ordered_nodes[index]),
-            lks_tree_node_item(source->ordered_nodes[index]), NULL);
-        if (status == LKS_STATUS_NOT_FOUND ||
-            status == LKS_STATUS_ALREADY_EXISTS) {
-            status = LKS_STATUS_INTERNAL_ERROR;
-        }
-        if (status != LKS_STATUS_OK) {
-            lks_tree_destroy(tree);
-            return status;
-        }
-    }
-
-    clone = (LksGroup *)lks_alloc_tagged(sizeof(*clone), LKS_ALLOC_TAG_GROUP_OBJECT);
-    if (clone == NULL) {
-        lks_tree_destroy(tree);
-        return LKS_STATUS_OUT_OF_MEMORY;
-    }
-    clone->tree = tree;
-    clone->ordered_nodes = NULL;
-    clone->count = source->count;
-    status = group_build_ordered_view(clone, comparator);
-    if (status != LKS_STATUS_OK) {
-        lks_group_destroy(clone);
-        return status;
-    }
-    *out_group = clone;
-    return LKS_STATUS_OK;
-}
-
 LksStatus lks_group_batch_merge_all(
     const LksGroupBatch *batch,
     const LksComparator *comparator,
     LksGroup **out_group
 )
 {
-    LksMergeEntry *current = NULL;
-    LksMergeEntry *next = NULL;
-    size_t current_count;
-    size_t next_count = 0;
-    size_t index;
+    void **source = NULL;
+    void **scratch = NULL;
+    size_t *run_sizes = NULL;
+    size_t total, run_count, index, offset;
     LksStatus status;
-
-    if (out_group == NULL) {
-        return LKS_STATUS_INVALID_ARGUMENT;
-    }
+    if (out_group == NULL) return LKS_STATUS_INVALID_ARGUMENT;
     *out_group = NULL;
-    if (batch == NULL || comparator == NULL || comparator->compare == NULL) {
+    if (batch == NULL || comparator == NULL || comparator->compare == NULL)
         return LKS_STATUS_INVALID_ARGUMENT;
-    }
-
-    current_count = batch->group_count;
-    if (current_count == 0) {
-        return lks_group_build(NULL, 0, comparator, out_group);
-    }
-    if (current_count == 1) {
-        return group_clone_preserving_paths(batch->groups[0], comparator,
-            out_group);
-    }
-    if (current_count > ((size_t)-1) / sizeof(*current)) {
+    total = batch->total_count;
+    run_count = batch->group_count;
+    if (total == 0) return group_from_sorted(NULL, 0, comparator, out_group);
+    if (total > (size_t)-1 / sizeof(*source) ||
+        run_count > (size_t)-1 / sizeof(*run_sizes))
         return LKS_STATUS_OUT_OF_MEMORY;
+    source = (void **)lks_alloc_tagged(total * sizeof(*source), LKS_ALLOC_TAG_MERGE_SCRATCH);
+    scratch = (void **)lks_alloc_tagged(total * sizeof(*scratch), LKS_ALLOC_TAG_MERGE_SCRATCH);
+    run_sizes = (size_t *)lks_alloc_tagged(run_count * sizeof(*run_sizes), LKS_ALLOC_TAG_MERGE_SCRATCH);
+    if (source == NULL || scratch == NULL || run_sizes == NULL) {
+        status = LKS_STATUS_OUT_OF_MEMORY;
+        goto cleanup;
     }
-    current = (LksMergeEntry *)lks_alloc_tagged(
-        current_count * sizeof(*current), LKS_ALLOC_TAG_MERGE_SCRATCH);
-    if (current == NULL) {
-        return LKS_STATUS_OUT_OF_MEMORY;
+    offset = 0;
+    for (index = 0; index < run_count; ++index) {
+        const LksGroup *group = batch->groups[index];
+        size_t item_index;
+        run_sizes[index] = group->count;
+        for (item_index = 0; item_index < group->count; ++item_index)
+            source[offset++] = lks_group_item_at(group, item_index);
     }
-    for (index = 0; index < current_count; ++index) {
-        current[index].group = batch->groups[index];
-        current[index].owned = 0;
+    if (offset != total) { status = LKS_STATUS_INTERNAL_ERROR; goto cleanup; }
+    while (run_count > 1) {
+        size_t next_count = 0;
+        offset = 0;
+        for (index = 0; index < run_count; index += 2) {
+            size_t left = run_sizes[index];
+            size_t right = index + 1 < run_count ? run_sizes[index + 1] : 0;
+            /* Earlier chunks are on the left, so equality keeps chunk order. */
+            lks_merge_sorted_pointers(source + offset, left,
+                source + offset + left, right, comparator, scratch + offset);
+            run_sizes[next_count++] = left + right;
+            offset += left + right;
+        }
+        { void **temporary = source; source = scratch; scratch = temporary; }
+        run_count = next_count;
     }
-
-    while (current_count > 1) {
-        size_t next_index;
-        size_t current_index;
-
-        next_count = current_count / 2;
-        if (current_count % 2 != 0) {
-            ++next_count;
-        }
-        if (next_count > ((size_t)-1) / sizeof(*next)) {
-            status = LKS_STATUS_OUT_OF_MEMORY;
-            goto cleanup;
-        }
-        next = (LksMergeEntry *)lks_alloc_tagged(
-            next_count * sizeof(*next), LKS_ALLOC_TAG_MERGE_SCRATCH);
-        if (next == NULL) {
-            status = LKS_STATUS_OUT_OF_MEMORY;
-            goto cleanup;
-        }
-        for (next_index = 0; next_index < next_count; ++next_index) {
-            next[next_index].group = NULL;
-            next[next_index].owned = 0;
-        }
-
-        next_index = 0;
-        current_index = 0;
-        while (current_index < current_count) {
-            if (current_index < current_count - 1) {
-                LksMergeEntry *left = &current[current_index];
-                LksMergeEntry *right = &current[current_index + 1];
-                LksGroup *owned_base = NULL;
-
-                if (left->owned) {
-                    owned_base = (LksGroup *)left->group;
-                    left->group = NULL;
-                    left->owned = 0;
-                    status = lks_group_merge_into_owned_base(&owned_base,
-                        right->group, comparator);
-                } else {
-                    status = lks_group_merge(left->group, right->group,
-                        comparator, &owned_base);
-                }
-                if (status != LKS_STATUS_OK) {
-                    goto cleanup;
-                }
-                next[next_index].group = owned_base;
-                next[next_index].owned = 1;
-                ++next_index;
-
-                if (right->owned) {
-                    lks_group_destroy((LksGroup *)right->group);
-                    right->group = NULL;
-                    right->owned = 0;
-                }
-                left->group = NULL;
-                current_index += 2;
-            } else {
-                next[next_index] = current[current_index];
-                ++next_index;
-                current[current_index].group = NULL;
-                current[current_index].owned = 0;
-                ++current_index;
-            }
-        }
-
-        lks_free(current);
-        current = next;
-        current_count = next_count;
-        next = NULL;
-    }
-
-    if (current[0].owned) {
-        *out_group = (LksGroup *)current[0].group;
-        current[0].group = NULL;
-        current[0].owned = 0;
-        status = LKS_STATUS_OK;
-    } else {
-        /* A multi-group reduction must have produced an owned lineage. */
-        status = LKS_STATUS_INTERNAL_ERROR;
-    }
-
+    /* Build one final Tree; intermediate merge passes contain pointers only. */
+    status = group_from_sorted(source, total, comparator, out_group);
 cleanup:
-    if (next != NULL) {
-        for (index = 0; index < next_count; ++index) {
-            if (next[index].owned) {
-                lks_group_destroy((LksGroup *)next[index].group);
-            }
-        }
-        lks_free(next);
-    }
-    if (current != NULL) {
-        for (index = 0; index < current_count; ++index) {
-            if (current[index].owned) {
-                lks_group_destroy((LksGroup *)current[index].group);
-            }
-        }
-        lks_free(current);
-    }
+    lks_free(run_sizes);
+    lks_free(scratch);
+    lks_free(source);
     return status;
 }

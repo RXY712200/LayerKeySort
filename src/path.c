@@ -138,7 +138,7 @@ LksPath *lks_path_create_at_level(LksDirection direction, unsigned int first_slo
     LksPath *path;
     size_t offset, bytes;
     if ((direction != LKS_DIRECTION_POSITIVE && direction != LKS_DIRECTION_NEGATIVE) ||
-        first_slot < LKS_PATH_SLOT_MIN || first_slot > LKS_PATH_SLOT_MAX ||
+        first_slot > LKS_PATH_SLOT_MAX ||
         path_storage_layout(1, &offset, &bytes) != LKS_STATUS_OK) return NULL;
     path = (LksPath *)lks_alloc_tagged(sizeof(*path), LKS_ALLOC_TAG_PATH_OBJECT);
     if (path == NULL) return NULL;
@@ -181,7 +181,7 @@ LksStatus lks_path_append_at_level(LksPath *path, unsigned int slot, size_t leve
     LksStatus status;
     size_t depth;
     if (path == NULL || path->direction == LKS_DIRECTION_ZERO ||
-        slot < LKS_PATH_SLOT_MIN || slot > LKS_PATH_SLOT_MAX || path->depth == 0 ||
+        slot > LKS_PATH_SLOT_MAX || path->depth == 0 ||
         level <= path_levels(path)[path->depth - 1]) return LKS_STATUS_INVALID_ARGUMENT;
     status = lks_path_reserve_one(path);
     if (status != LKS_STATUS_OK) return status;
@@ -196,7 +196,7 @@ LksStatus lks_path_append(LksPath *path, unsigned int slot)
 {
     size_t last_level;
     if (path == NULL || path->direction == LKS_DIRECTION_ZERO ||
-        slot < LKS_PATH_SLOT_MIN || slot > LKS_PATH_SLOT_MAX || path->depth == 0)
+        slot > LKS_PATH_SLOT_MAX || path->depth == 0)
         return LKS_STATUS_INVALID_ARGUMENT;
     last_level = path_levels(path)[path->depth - 1];
     if (last_level == (size_t)-1) return LKS_STATUS_INVALID_ARGUMENT;

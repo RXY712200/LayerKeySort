@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title description">
   <title id="title">LayerKeySort orders items with hierarchical Paths</title>
-  <desc id="description">Unordered value bars are processed incrementally into an ascending staircase. Verified representative Paths include zero, positive, negative, same-level, child, skipped-level and deeper forms.</desc>
+  <desc id="description">Historical v1 showcase: unordered value bars are processed incrementally into an ascending staircase. Recorded v1 Paths include zero, positive, negative, same-level, child, skipped-level and deeper forms. V2 uses a different bulk Path allocator.</desc>
   <defs>
     <style>
       text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; fill: #17212b; }
@@ -21,8 +21,8 @@
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#315f91"/></marker>
   </defs>
   <rect width="1200" height="650" fill="#f3f6fa"/>
-  <text class="title" x="48" y="58">LayerKeySort: incremental ordering with Path positions</text>
-  <text class="sub" x="48" y="89">A verified 16-item Group build: Tree location assigns each item a real hierarchical Path.</text>
+  <text class="title" x="48" y="58">LayerKeySort v1: incremental ordering with Path positions</text>
+  <text class="sub" x="48" y="89">Historical v1 16-item Group build: online Tree location assigned each item a Path.</text>
 
   <rect class="panel" x="40" y="120" width="330" height="300" rx="16"/>
   <text class="label" x="64" y="158">1 · Unordered input</text>
@@ -67,5 +67,5 @@
   <text class="path" x="770" y="552">Child   0A0/A0</text>
   <text class="path" x="64" y="584">Skipped   0A0//A0</text>
   <text class="path" x="380" y="584">Deeper   0A0//A0///A0</text>
-  <text class="small" x="790" y="584">Existing Paths stay unchanged during Group build</text>
+  <text class="small" x="790" y="584">Historical v1 Path assignment; V2 uses a new bulk layout</text>
 </svg>

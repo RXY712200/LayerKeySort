@@ -3431,9 +3431,11 @@ cleanup:
 
 
 
+int lks_run_v2_preview_tests(void);
+
 int main(int argc, char **argv)
 {
-    int stage13_result;
+    int v2_result;
 
     if (argc == 2 && strcmp(argv[1], "--stage14.1-only") == 0) {
         return lks_run_stage14_1_property_tests();
@@ -3456,13 +3458,12 @@ int main(int argc, char **argv)
         return lks_run_public_api_usage_smoke();
     }
 
-#ifdef _DEBUG
-    stage13_result = lks_run_stage13_3_final_validation();
-#else
-    stage13_result = lks_run_stage13_3_release_smoke();
-#endif
-    if (stage13_result != 0) return stage13_result;
-    return lks_run_stage14_1_property_tests();
+    v2_result = lks_run_v2_preview_tests();
+    if (v2_result != 0 || lks_run_public_api_usage_smoke() != 0 ||
+        lks_run_stage14_1_property_tests() != 0 ||
+        lks_run_stage14_2_stress_tests() != 0 ||
+        lks_run_stage14_2_oom_tests() != 0) return 1;
+    return 0;
 }
 
 

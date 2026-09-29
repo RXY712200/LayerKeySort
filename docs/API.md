@@ -6,8 +6,27 @@
 
 ## Version macros
 
-- `LKS_VERSION_MAJOR` is `1`.
+- `LKS_VERSION_MAJOR` is `2`.
 - `LKS_VERSION_MINOR` is `0`.
+- `LKS_VERSION_PATCH` is `0`.
+- `LKS_VERSION_PRERELEASE` is `"preview.1"`.
+- `LKS_VERSION_STRING` is `"2.0.0-preview.1"`.
+
+Path values are ordering coordinates, not persistent application IDs. Exact
+generated Path strings can change with the allocation policy; serializing them
+for later reuse is not supported in this preview.
+
+## Simple stable sort
+
+`lks_sort(items, count, compare, context)` sorts the caller's pointer array in
+place. It borrows the pointed-to objects and preserves the array on allocation
+failure. Comparator-equal pointers keep their input order. A zero or one item
+array needs no allocation. See the public header for the full argument contract.
+
+```c
+LksStatus lks_sort(void **items, size_t count,
+    LksCompareFn compare, void *context);
+```
 ## Path slot bounds
 
 - `LKS_PATH_SLOT_MIN` is `0u`.
@@ -201,7 +220,7 @@ LksStatus lks_path_compare(
 
 ### `lks_path_before`
 
-Allocate a Path immediately before another Path.
+Generate a valid Path ordered before another Path.
 
 ```c
 LksStatus lks_path_before(
@@ -212,7 +231,7 @@ LksStatus lks_path_before(
 
 ### `lks_path_after`
 
-Allocate a Path immediately after another Path.
+Generate a valid Path ordered after another Path.
 
 ```c
 LksStatus lks_path_after(
@@ -378,7 +397,7 @@ const LksTreeNode *lks_tree_root_child_at(
 
 ### `lks_group_build`
 
-Build a sorted Group from borrowed item pointers.
+Stably sort borrowed item pointers and bulk-assign Paths to a new immutable Group.
 
 ```c
 LksStatus lks_group_build(
@@ -391,7 +410,9 @@ LksStatus lks_group_build(
 
 ### `lks_group_merge`
 
-Merge two sorted Groups into a new Group, with equal Base items first.
+Merge two sorted Groups into a new immutable Group, with equal Base items first.
+Both inputs stay unchanged. The result receives a fresh Path layout, including
+possibly different Paths for items originating in Base.
 
 ```c
 LksStatus lks_group_merge(
@@ -495,7 +516,8 @@ const LksGroup *lks_group_batch_group_at(
 
 ### `lks_group_batch_merge_all`
 
-Merge all Batch Groups into a new independent Group.
+Stably merge the Batch's ordered Groups in source order and assign Paths once
+to a new independent Group. Source Groups stay unchanged.
 
 ```c
 LksStatus lks_group_batch_merge_all(
@@ -519,4 +541,6 @@ const char *lks_status_string(LksStatus status);
 
 `LksCompareFn` returns a negative value when the left item sorts first, zero when the values compare equal, and a positive value when the left item sorts after the right. The `context` pointer is passed through unchanged and is not interpreted by LayerKeySort.
 
-The public baseline contains **9 types** and **45 functions**. Private allocator, profile, benchmark, and test entry points are not part of this reference.
+The v2.0.0-preview.1 public header contains **9 types** and **46 functions**,
+including `lks_sort`. Private allocator, profile, benchmark, and test entry
+points are not part of this reference.

@@ -172,7 +172,7 @@ function describeItem(item, position, left, right, isCurrent) {
   placement.textContent = item.relation || "Display-only placement; no production Path run";
   pathsChanged.textContent = item.path ? "0" : "Not reported for randomized data";
   stepStatus.textContent = isCurrent
-    ? `Step ${item.step} placed value ${item.value} from original input #${item.originalIndex}. The highlighted boundary bars are the verified neighboring items; individual Tree comparison probes are not simulated.`
+    ? `Step ${item.step} placed value ${item.value} from original input #${item.originalIndex}. The highlighted boundary bars show neighboring items; individual Tree comparison probes are not simulated. Exact Paths, when shown, are historical v1 values.`
     : `Selected placed value ${item.value} from original input #${item.originalIndex}.`;
   pathPolicy.hidden = false;
 }
@@ -233,7 +233,7 @@ function finish() {
   const ascending = values.every((value, index) => index === 0 || values[index - 1] <= value);
   completion.hidden = false;
   completion.textContent = ascending
-    ? `Complete: ${values.join(" · ")}. Each input item was incrementally located and assigned its recorded hierarchical Path.`
+    ? `Complete: ${values.join(" · ")}. ${verifiedShowcase ? "Each item has its recorded historical v1 Path." : "Randomized items have no verified exact Path values."}`
     : "The display did not reach ascending order.";
   if (ascending && lastEvent) {
     const finalPosition = placedItems.indexOf(lastEvent.item);

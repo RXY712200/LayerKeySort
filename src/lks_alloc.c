@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include "lks_alloc_internal.h"
 
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+
 #if defined(_MSC_VER)
 /* MSVC's C17 headers do not expose max_align_t; use fundamental C types. */
 typedef union LksMaxAlignmentFallback {
@@ -298,3 +300,27 @@ LksAllocStats lks_alloc_stats_get(void)
 {
     return lks_alloc_stats;
 }
+
+#else
+
+/* Production allocations have no shared mutable diagnostic state. malloc
+ * already supplies fundamental alignment; tests use the instrumented build. */
+void *lks_alloc(size_t size) { return malloc(size == 0 ? 1 : size); }
+void *lks_alloc_tagged(size_t size, LksAllocTag tag)
+{ (void)tag; return lks_alloc(size); }
+void *lks_realloc(void *ptr, size_t size)
+{
+    if (ptr == NULL) return lks_alloc(size);
+    if (size == 0) { free(ptr); return NULL; }
+    return realloc(ptr, size);
+}
+void lks_free(void *ptr) { free(ptr); }
+int lks_alloc_stats_reset(void) { return 0; }
+LksAllocStats lks_alloc_stats_get(void) { LksAllocStats stats = {0}; return stats; }
+void lks_alloc_test_fail_on_attempt(size_t index) { (void)index; }
+void lks_alloc_test_disable_failure(void) { }
+void lks_alloc_test_reset_attempt_counter(void) { }
+size_t lks_alloc_test_get_attempt_count(void) { return 0; }
+int lks_alloc_test_failure_triggered(void) { return 0; }
+
+#endif

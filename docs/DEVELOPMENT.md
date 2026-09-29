@@ -10,10 +10,29 @@
 - `docs/` — user documentation, visualizer, and site assets.
 - `LayerKeySort.slnx` — Visual Studio solution.
 - `LayerKeySort.vcxproj` — Visual Studio project and build configurations.
+- `CMakeLists.txt` — reusable production library, example, and test targets.
+- `.github/workflows/ci.yml` — MSVC, GCC, and Clang validation.
 
 ## Toolchain
 
-The checked-in project configures Microsoft Visual Studio / MSVC, x64, and C17. This is the toolchain currently validated by the repository. Do not infer support for other compiler/platform combinations from the C source alone.
+Both Visual Studio and CMake compile as C17. The CMake matrix also targets
+GCC and Clang on Ubuntu. New production C source belongs in both build systems.
+
+## CMake build and tests
+
+```sh
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+`layerkeysort` contains production source only. `layerkeysort_example` links
+that library. `layerkeysort_tests` links a separately compiled diagnostic
+variant so allocation counters and single-shot fault injection remain usable
+without shared mutable instrumentation in ordinary production allocations.
+For a supported GCC or Clang toolchain, `-DLKS_ENABLE_SANITIZERS=ON` enables
+AddressSanitizer and UndefinedBehaviorSanitizer. Diagnostic fault injection is
+process-global test state and carries no concurrent-test guarantee.
 
 ## Build configurations
 
@@ -21,7 +40,12 @@ The Visual Studio project defines **Debug**, **Release**, and **ASan** configura
 
 ## Running the validation runner
 
-The current executable entry point is `demo/main.c`. With no argument, Debug runs the final Debug validation path and then the deterministic property tests. Non-Debug builds run the Release smoke path and then the deterministic property tests.
+The Visual Studio executable entry point is `demo/main.c`. With no argument it
+runs the V2 focused tests, public API smoke, deterministic property tests,
+stress tests, and OOM tests. The CMake test executable uses `tests/v2_main.c`
+for the same preview suite. `tests/benchmark.c` preserves the historical v1
+benchmark evidence and remains available through its existing focused runner
+switches; its exact v1 baseline expectations do not describe V2 Path output.
 
 The entry point also handles the existing focused arguments below; these spellings are read from `demo/main.c`:
 
@@ -51,8 +75,9 @@ The repository contains public API smoke coverage, deterministic property tests,
 
 ## Coding constraints
 
-- Keep implementation in C17 under the existing project configuration.
-- Preserve public API and Path semantics.
+- Keep implementation in portable C17 under both build systems.
+- Preserve public ownership and ordering semantics; generated Path coordinates
+  can change when the preview allocator policy changes.
 - Preserve stable ordering and the documented ownership rules.
 - Keep relevant regression coverage passing when behavior changes.
 
