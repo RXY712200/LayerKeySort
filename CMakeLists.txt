@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-# CMake accepts a numeric project version; the public header carries preview.2.
+# CMake accepts a numeric project version; the public header carries preview.3.
 project(LayerKeySort VERSION 2.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
@@ -10,7 +10,7 @@ option(LKS_BUILD_TESTS "Build diagnostic tests" ON)
 option(LKS_ENABLE_SANITIZERS "Enable AddressSanitizer and UBSan where supported" OFF)
 
 set(LKS_SOURCES
-    src/lks_alloc.c src/lks_base.c src/path.c src/path_text.c
+    src/lks_alloc.c src/lks_base.c src/path.c src/path_text.c src/slot_codec.c
     src/path_compare.c src/gap.c src/tree.c src/group.c
     src/sort.c src/bulk.c)
 
@@ -33,14 +33,16 @@ target_link_libraries(layerkeysort_example PRIVATE layerkeysort)
 
 if(LKS_BUILD_TESTS)
     include(CTest)
-    # Instrumentation is test-only. Production allocations do not touch shared
-    # diagnostic counters or fault-injection state.
+    # Instrumentation and historical v1 owned-base merge are test-only.
+    # Production has neither shared diagnostic state nor v1 merge machinery.
     add_library(layerkeysort_diagnostics STATIC ${LKS_SOURCES})
-    target_compile_definitions(layerkeysort_diagnostics PRIVATE LKS_ENABLE_ALLOC_DIAGNOSTICS)
+    target_compile_definitions(layerkeysort_diagnostics PRIVATE
+        LKS_ENABLE_ALLOC_DIAGNOSTICS LKS_ENABLE_V1_REGRESSION_HELPERS)
     lks_configure_target(layerkeysort_diagnostics)
     add_executable(layerkeysort_tests tests/v2_main.c tests/v2_preview.c
         tests/property.c tests/public_api_usage.c)
-    target_compile_definitions(layerkeysort_tests PRIVATE LKS_V2_PREVIEW)
+    target_compile_definitions(layerkeysort_tests PRIVATE
+        LKS_V2_PREVIEW LKS_ENABLE_V1_REGRESSION_HELPERS)
     target_include_directories(layerkeysort_tests PRIVATE src tests)
     target_link_libraries(layerkeysort_tests PRIVATE layerkeysort_diagnostics)
     add_test(NAME layerkeysort_v2_preview COMMAND layerkeysort_tests)

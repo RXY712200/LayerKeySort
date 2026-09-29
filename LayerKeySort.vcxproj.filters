@@ -34,6 +34,9 @@
     <ClCompile Include="src\path_text.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\slot_codec.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\path_compare.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -47,6 +50,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\lks_path_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lks_slot_codec_internal.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\lks_group_internal.h">

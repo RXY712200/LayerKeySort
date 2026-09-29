@@ -15,8 +15,7 @@ static LksStatus bulk_subtree(LksTree *tree, void *const *items, size_t count,
     extra = count % blocks;
     for (block = 0; block < blocks; ++block) {
         size_t block_size = common_size + (block < extra ? 1u : 0u);
-        unsigned int slot = LKS_POLICY_BULK_FIRST_SLOT +
-            (unsigned int)block * LKS_POLICY_BULK_STRIDE;
+        unsigned int slot = lks_policy_bulk_slot(block, blocks);
         LksPath *path;
         LksStatus status;
         if (parent == NULL) {

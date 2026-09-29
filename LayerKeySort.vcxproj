@@ -81,13 +81,17 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <!-- This project is the combined diagnostic runner in every configuration.
+       LKS_V2_PREVIEW selects its entry point; allocator diagnostics and the
+       historical v1 helper gate support regression tests only. The ordinary
+       production library is the separate CMake layerkeysort target. -->
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -107,7 +111,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -125,7 +129,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -145,7 +149,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
@@ -163,7 +167,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableASAN>true</EnableASAN>
@@ -182,11 +186,13 @@
     <ClCompile Include="src\lks_base.c" />
     <ClCompile Include="src\path.c" />
     <ClCompile Include="src\path_text.c" />
+    <ClCompile Include="src\slot_codec.c" />
     <ClCompile Include="src\path_compare.c" />
     <ClCompile Include="src\gap.c" />
     <ClInclude Include="include\layerkeysort.h" />
     <ClInclude Include="src\lks_alloc_internal.h" />
     <ClInclude Include="src\lks_path_internal.h" />
+    <ClInclude Include="src\lks_slot_codec_internal.h" />
     <ClInclude Include="src\lks_group_internal.h" />
     <ClCompile Include="src\tree.c" />
     <ClCompile Include="src\group.c" />

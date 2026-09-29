@@ -24,6 +24,7 @@ Set the compiler include search path to the repository’s `include/` directory.
 - `src/lks_base.c`
 - `src/path.c`
 - `src/path_text.c`
+- `src/slot_codec.c`
 - `src/path_compare.c`
 - `src/gap.c`
 - `src/tree.c`
@@ -113,6 +114,20 @@ if (status == LKS_STATUS_OK) {
 
 The Batch and its Groups remain readable after a successful merge.
 
+## Reading Path text
+
+`lks_path_text_length(path)` returns the character count excluding the null
+terminator. Supply at least one additional byte to `lks_path_format`. ZERO is
+`000`; a positive Path with slot 32768 at level zero formats as `0DEq`.
+Appending slot 0 at level five gives `0DEq/5222`, where `5` is the level
+delta. Ordinary next-level steps omit the numeric prefix. Each slot is three
+radix-54 characters from the case-sensitive ASCII alphabet documented in
+[`API.md`](API.md); `/` separates steps and never counts levels. The
+formatter writes canonical current output, but there is no public parser or
+stable serialized format. **Use `lks_path_compare()` to order Paths; do not
+use `strcmp` on complete formatted text.** Text and generated coordinates may
+change in later previews. Do not persist Path text as an item ID.
+
 ## Reading results
 
 Use the Group accessors to inspect items in comparator order and their assigned Paths:
@@ -154,9 +169,11 @@ stable Path identities or a promise of fixed memory use.
 A Path describes order within the Group or Tree that created it, not a stable
 application identity. Paths from independent Groups are local coordinates.
 Merge creates a new coordinate space and may reassign every result Path, while
-leaving both source Groups unchanged. Mutable Tree operations may re-encode
-Paths and invalidate **all** previously borrowed Tree nodes, Paths, and
-navigation results after any successful mutation. Do not persist or
+leaving both source Groups unchanged. The source Groups' published Paths stay
+valid for their respective Group lifetimes. A successful mutable Tree operation
+may locally relabel or fully rebuild; **reacquire all** borrowed Tree nodes,
+Paths, and navigation results after success. A failed operation with the
+documented strong guarantee does not commit a mutation. Do not persist or
 serialize generated Paths for later reuse. Path-allocation heuristics and exact
 generated strings may change before final v2.0.0.
 

@@ -1,15 +1,27 @@
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include "layerkeysort.h"
 #include "lks_alloc_internal.h"
 #include "lks_path_internal.h"
 
+_Static_assert(LKS_PATH_SLOT_MIN == 0u && LKS_PATH_SLOT_MAX == UINT16_MAX,
+    "Path slot range must match uint16_t storage");
+
+/* A Path is a re-encodable ordering coordinate. Its slot and level arrays
+ * share one allocation, so internal storage stays linear in depth; the
+ * formatted display text is never stored here. */
 struct LksPath {
     LksDirection direction;
     unsigned char *storage;
     size_t depth;
     size_t capacity;
 };
+
+/* The public unsigned-int slot arguments preserve the API shape. Constructors
+ * and append operations check LKS_PATH_SLOT_MAX before narrowing to uint16_t.
+ * Using every representable slot delays same-level congestion without growing
+ * the existing 16-bit per-step storage. */
 
 static LksStatus path_storage_layout(size_t capacity, size_t *levels_offset,
     size_t *total_bytes)
@@ -19,9 +31,9 @@ static LksStatus path_storage_layout(size_t capacity, size_t *levels_offset,
     *levels_offset = 0;
     *total_bytes = 0;
     if (capacity == 0) return LKS_STATUS_OK;
-    if (capacity > (size_t)-1 / sizeof(unsigned short) ||
+    if (capacity > (size_t)-1 / sizeof(uint16_t) ||
         capacity > (size_t)-1 / sizeof(size_t)) return LKS_STATUS_OUT_OF_MEMORY;
-    slot_bytes = capacity * sizeof(unsigned short);
+    slot_bytes = capacity * sizeof(uint16_t);
     level_bytes = capacity * sizeof(size_t);
     alignment = _Alignof(size_t);
     if (alignment == 0) return LKS_STATUS_OUT_OF_MEMORY;
@@ -35,14 +47,14 @@ static LksStatus path_storage_layout(size_t capacity, size_t *levels_offset,
     return LKS_STATUS_OK;
 }
 
-static unsigned short *path_slots(LksPath *path)
+static uint16_t *path_slots(LksPath *path)
 {
-    return path == NULL || path->storage == NULL ? NULL : (unsigned short *)(void *)path->storage;
+    return path == NULL || path->storage == NULL ? NULL : (uint16_t *)(void *)path->storage;
 }
 
-static const unsigned short *path_slots_const(const LksPath *path)
+static const uint16_t *path_slots_const(const LksPath *path)
 {
-    return path == NULL || path->storage == NULL ? NULL : (const unsigned short *)(const void *)path->storage;
+    return path == NULL || path->storage == NULL ? NULL : (const uint16_t *)(const void *)path->storage;
 }
 
 static size_t *path_levels(LksPath *path)
@@ -147,7 +159,7 @@ LksPath *lks_path_create_at_level(LksDirection direction, unsigned int first_slo
     path->direction = direction;
     path->depth = 1;
     path->capacity = 1;
-    path_slots(path)[0] = (unsigned short)first_slot;
+    path_slots(path)[0] = (uint16_t)first_slot;
     path_levels(path)[0] = level;
     return path;
 }
@@ -169,7 +181,7 @@ LksPath *lks_path_clone(const LksPath *source)
         }
         copy->storage = (unsigned char *)lks_alloc_tagged(bytes, LKS_ALLOC_TAG_PATH_STEPS);
         if (copy->storage == NULL) { lks_free(copy); return NULL; }
-        memcpy(path_slots(copy), path_slots_const(source), source->depth * sizeof(unsigned short));
+        memcpy(path_slots(copy), path_slots_const(source), source->depth * sizeof(uint16_t));
         memcpy(path_levels(copy), path_levels_const(source), source->depth * sizeof(size_t));
     }
     (void)offset;
@@ -186,7 +198,7 @@ LksStatus lks_path_append_at_level(LksPath *path, unsigned int slot, size_t leve
     status = lks_path_reserve_one(path);
     if (status != LKS_STATUS_OK) return status;
     depth = path->depth;
-    path_slots(path)[depth] = (unsigned short)slot;
+    path_slots(path)[depth] = (uint16_t)slot;
     path_levels(path)[depth] = level;
     ++path->depth;
     return LKS_STATUS_OK;

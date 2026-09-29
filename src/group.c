@@ -208,6 +208,9 @@ const LksPath *lks_group_path_at(const LksGroup *group, size_t index)
     return lks_tree_node_path(group->ordered_nodes[index]);
 }
 
+/* Historical v1 owned-base machinery for regression comparisons only. The
+ * public V2 merge below builds a fresh result and never mutates either source. */
+#ifdef LKS_ENABLE_V1_REGRESSION_HELPERS
 static void group_destroy_planned_paths(LksPath **planned_paths, size_t count)
 {
     size_t index;
@@ -272,6 +275,8 @@ fail:
     return status;
 }
 
+#endif
+
 LksStatus lks_group_merge(
     const LksGroup *base,
     const LksGroup *incoming,
@@ -323,6 +328,7 @@ LksStatus lks_group_merge(
     return status;
 }
 
+#ifdef LKS_ENABLE_V1_REGRESSION_HELPERS
 LksStatus lks_group_merge_into_owned_base(LksGroup **inout_base,
     const LksGroup *incoming, const LksComparator *comparator)
 {
@@ -377,6 +383,7 @@ consume_base:
     *inout_base = NULL;
     return status;
 }
+#endif
 
 LksStatus lks_group_batch_build(
     void *const *items,

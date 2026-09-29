@@ -11,12 +11,12 @@ extern "C" {
 #define LKS_VERSION_MAJOR 2
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.2"
-#define LKS_VERSION_STRING "2.0.0-preview.2"
+#define LKS_VERSION_PRERELEASE "preview.3"
+#define LKS_VERSION_STRING "2.0.0-preview.3"
 
-/* Public Path slot range: A0..Z9 maps to values 0..259. */
+/* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
-#define LKS_PATH_SLOT_MAX 259u
+#define LKS_PATH_SLOT_MAX 65535u
 
 /* Operation results. Constructors returning pointers use NULL on failure. */
 typedef enum LksStatus {
@@ -53,7 +53,7 @@ typedef enum LksDirection {
     LKS_DIRECTION_NEGATIVE = -1
 } LksDirection;
 
-/* Opaque position value. */
+/* Opaque, re-encodable ordering coordinate, not a persistent item identity. */
 typedef struct LksPath LksPath;
 
 /* Return a static, library-owned description of a status value. */
@@ -130,8 +130,9 @@ void lks_path_destroy(
 size_t lks_path_text_length(
     const LksPath *path
 );
-/* Format into caller-owned storage. BUFFER_TOO_SMALL reports insufficient
- * capacity; the Path is never modified. */
+/* Format into caller-owned storage without allocating. BUFFER_TOO_SMALL reports
+ * insufficient capacity; the Path is never modified. Text is for display, not
+ * persistent serialization or lexicographic replacement for Path comparison. */
 LksStatus lks_path_format(
     const LksPath *path,
     char *buffer,

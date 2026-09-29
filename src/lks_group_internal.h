@@ -5,6 +5,8 @@
 
 const LksTree *lks_group_internal_tree(const LksGroup *group);
 
+/* Only historical v1 regression/benchmark builds enable this helper. */
+#ifdef LKS_ENABLE_V1_REGRESSION_HELPERS
 /*
  * Historical v1 owned-base merge retained for regression comparisons. V2
  * public Group and Batch merges use sorted pointer sequences and bulk Paths.
@@ -18,5 +20,6 @@ LksStatus lks_group_merge_into_owned_base(
     const LksGroup *incoming,
     const LksComparator *comparator
 );
+#endif
 
 #endif /* LKS_GROUP_INTERNAL_H */

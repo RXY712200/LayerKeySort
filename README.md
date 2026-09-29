@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. v2.0.0-preview.2.*
+*A C17 library for stable ordering with hierarchical Path positions. v2.0.0-preview.3 development snapshot.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -24,7 +24,8 @@ lks_sort(items, count, compare_items, NULL);
 | Version | Main purpose | Still provisional or deferred |
 | --- | --- | --- |
 | v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
-| v2.0.0-preview.2 (in preparation) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
+| v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
+| v2.0.0-preview.3 (development) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -56,18 +57,18 @@ Paths in separate Groups are local positions. A merge leaves both inputs unchang
 
 ## Core idea
 
-A Path is an ordering position, not an application key. `000` is the zero Path code and is distinct from the Tree's virtual root. Positive paths begin with `0`, while negative paths begin with `1`. Each step uses a slot from `A0` through `Z9`. A slash introduces a deeper step, and repeated slashes represent skipped levels. A parent position sorts before its descendants.
+A Path is an ordering coordinate, **not a permanent item ID**. `000` is the ZERO Path, distinct from the Tree's virtual root. Preview.3 offers all 65,536 numeric slots (`0..65535`); each formats as three radix-54 characters from the current ASCII alphabet. Positive Paths begin with `0`, negative Paths with `1`; `/` separates steps, and optional decimal metadata records a nonzero first level or a later level jump. A parent sorts before its descendants. Use `lks_path_compare()` for ordering: complete formatted Path strings are not a general lexicographic sort key. The exact alphabet, comparison rules, and formatter grammar are specified in the [API reference](docs/API.md).
 
 For example, an additional position can be inserted between a parent and an existing descendant by using a deeper skipped level:
 
 ```text
-A         0A3
-Inserted  0A3//A0
-X         0A3/A0
-B         0A4
+A         0DEq
+Inserted  0DEq/5222
+X         0DEq/2222
+B         0DEr
 ```
 
-The Path comparison and gap APIs implement this ordering.
+The Path comparison and gap APIs implement this ordering. Successful Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths afterward. Exact generated Path text can change across previews and has no public parser or persistence guarantee. Preview.3 remains unreleased development work and does not imply production readiness.
 
 ## Ordering and stability guarantees
 

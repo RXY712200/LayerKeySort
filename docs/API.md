@@ -9,12 +9,14 @@
 - `LKS_VERSION_MAJOR` is `2`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.2"`.
-- `LKS_VERSION_STRING` is `"2.0.0-preview.2"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.3"`.
+- `LKS_VERSION_STRING` is `"2.0.0-preview.3"`.
 
-Path values are ordering coordinates, not persistent application IDs. Exact
-generated Path strings can change with the allocation policy; serializing them
-for later reuse is not supported in this preview.
+Path values are ordering coordinates, not permanent application item IDs.
+Preview.3 specifies the current formatter output, but provides no public
+parser, stable persistence format, binary serialization protocol, or
+cross-Preview compatibility for stored Path strings. Exact coordinates and
+their text can change when a Tree is re-encoded or Preview policy changes.
 
 ## Simple stable sort
 
@@ -27,10 +29,140 @@ array needs no allocation. See the public header for the full argument contract.
 LksStatus lks_sort(void **items, size_t count,
     LksCompareFn compare, void *context);
 ```
-## Path slot bounds
+## Path slots and codec
 
-- `LKS_PATH_SLOT_MIN` is `0u`.
-- `LKS_PATH_SLOT_MAX` is `259u`, covering slots A0 through Z9.
+`LKS_PATH_SLOT_MIN` is `0u` and `LKS_PATH_SLOT_MAX` is `65535u`: 65,536 legal
+numeric values. Public slot arguments and results use `unsigned int`; the
+implementation range-checks before storing each slot as `uint16_t`. A Path
+stores numeric slots and `size_t` levels, not its formatted text. The
+three-character text width does **not** imply three stored bytes per slot.
+
+The current fixed-width slot codec uses radix 54 and this exact alphabet,
+listed in increasing **codec rank**:
+
+```text
+23456789ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz
+2 < 3 < 4 < 5 < 6 < 7 < 8 < 9
+  < A < B < C < D < E < F < G < H < J < K < M < N < P < Q < R < S < T < U < V < W < X < Y < Z
+  < a < b < c < d < e < f < g < h < j < k < m < n < p < q < r < s < t < u < v < w < x < y < z
+```
+
+`alphabet[0]` is radix digit 0 (`'2'`), `alphabet[1]` is digit 1 (`'3'`),
+`'9'` is digit 7, `'A'` is digit 8, and `'z'` is digit 53. The visible
+character `'2'` does not mean numeric digit 2; slot 0 is `222`, never `0`.
+Encoding takes three successive remainders modulo 54, from low digit to
+high, retaining leading `'2'` digits. Capacity is 54^3 = 157,464, of which
+only the first 65,536 values are legal. Verified examples:
+
+| Numeric slot | Token | Numeric slot | Token |
+| ---: | :--- | ---: | :--- |
+| 0 | `222` | 1 | `223` |
+| 53 | `22z` | 54 | `232` |
+| 130 | `24R` | 259 | `26p` |
+| 32767 | `DEp` | 32768 | `DEq` |
+| 65535 | `RUc` | | |
+
+Slot 259 is shown as a codec example near the historical v1 upper bound;
+it is not a Preview.3 limit.
+
+Digits rank before uppercase, and uppercase before lowercase: `A < a` and
+`Z < a`. These are ASCII byte/codepoint and codec-rank rules, not
+locale-sensitive language rules. The codec emits fixed ASCII constants; it is
+byte-oriented and case-sensitive (`A != a`) with no locale comparison or
+Unicode normalization. The permitted alphabet is in ASCII byte order, so
+numeric slot order matches bytewise lexical order **for three-character slot
+tokens only**; the exhaustive test checks all 65,536 tokens. It omits
+`0/O/o` and `1/I/i/L/l` to reduce visual confusion. Punctuation is
+deliberately absent from slot tokens, easing copying through shells, URLs,
+configuration, and logs while leaving `/` for structure. This restriction is
+a format choice, not a technical impossibility.
+
+## Path ordering
+
+`lks_path_compare()` defines Path order. It returns negative, zero, or positive
+through `out_result` for left before, equal to, or after right. Directions
+sort **negative < ZERO < positive**. Within either nonzero direction, compare
+steps from the root. At the first differing step, compare the explicit
+`size_t` **level first**: the larger numeric level sorts **earlier**. Only
+when levels match, compare numeric slots. Slots normally ascend, except at
+the **negative root** (step 0), where the larger slot sorts earlier. Negative
+descendant slots ascend normally. If all common steps match, the shorter Path
+(parent) sorts before its descendant. Skipped levels participate through
+their explicit level values; they are not inferred from `/` counts.
+
+For example, `1223 < 1222` (negative root slots 1 and 0);
+`1222/223 < 1222/224` (negative descendant slots ascend);
+`0222/5223 < 0222/223` (at the first different child step, level 5 sorts
+before level 1); and `0222 < 0222/223` (parent before descendant).
+ZERO lies after every negative and before every positive Path. These examples
+follow the comparison code and the current formatter grammar below.
+
+**Complete formatted Path text is not an ordering key.** Direction digits,
+optional decimal level metadata, separators, and omitted default deltas mean
+ordinary string sorting, including `strcmp`, is not the public ordering
+contract. The slot-token lexical property above does not extend to full Path
+strings. Use `lks_path_compare()`.
+
+## Current Path text grammar
+
+For a valid Path, the formatter emits the following deterministic,
+NUL-terminated ASCII text (the grammar describes **output**, not input
+accepted by any parser):
+
+```text
+ZERO     = "000"
+NONZERO  = DIRECTION FIRST_SEGMENT ("/" NEXT_SEGMENT)*
+DIRECTION = "0" for positive, "1" for negative
+FIRST_SEGMENT = [absolute_level_decimal_if_nonzero] SLOT_TOKEN
+NEXT_SEGMENT  = [positive_delta_decimal_if_greater_than_one] SLOT_TOKEN
+SLOT_TOKEN    = exactly three characters from the ordered slot alphabet
+```
+
+ZERO has direction `LKS_DIRECTION_ZERO` (numeric value 0) and depth 0. It
+is a Path value distinct from the Tree's virtual root. Every nonzero Path
+has at least one step and at least four text characters, so `000` cannot
+collide with it. For a nonzero Path, the first step's absolute level is
+omitted when zero; later levels must strictly increase, and their delta from
+the previous level is omitted when one. Otherwise the nonzero absolute level
+or delta is written as minimal unsigned decimal without leading zeroes.
+The final three characters of each segment are always its slot token.
+Exactly one `/` separates adjacent steps; `/` is **only** a separator, not a
+unary level count. No repeated separators or whitespace are emitted.
+
+The slot-token exclusions do not apply to other text fields: `0` and `1`
+occur as direction/ZERO characters and may occur in decimal level metadata;
+decimal metadata uses `0..9`, whereas slot tokens use the exact alphabet
+above. Uppercase and lowercase letters occur only inside slot tokens.
+
+Verified formatter examples:
+
+| Path construction | Text |
+| --- | --- |
+| ZERO, depth 0 | `000` |
+| Positive, first slot 0 at level 0 | `0222` |
+| Positive, first slot 65535 at level 0 | `0RUc` |
+| Positive, first slot 32768 at level 0 | `0DEq` |
+| Positive `0222`, then slot 1 at level 1 | `0222/223` |
+| Positive `0222`, then slot 1 at level 5, slot 53 at level 6 | `0222/5223/22z` |
+| Negative, first slot 54 at level 12 | `112232` |
+
+The table's first, minimum, maximum, skipped-level, and nonzero-first-level
+cases are asserted by the focused Preview.3 tests; consecutive-step output
+also follows their depth/length test and the same formatter. Formatting
+retains all three slot digits, omits default level metadata, and emits no
+decimal leading zeroes. Thus each valid Path has one formatter-produced
+current text. There is **no public parser**, so this does not define what a
+future parser might accept. It is also not a long-term persistence or wire
+format, and should not be used as a permanent item ID.
+
+`lks_path_text_length(path)` returns the character count excluding `\0`
+(and returns 0 for a null or internally invalid Path). Allocate at least
+that count plus one byte for `lks_path_format(path, buffer, buffer_size)`.
+The formatter writes a trailing `\0` on success; an undersized buffer
+returns `LKS_STATUS_BUFFER_TOO_SMALL` without writing output. Consecutive
+levels starting at zero use exactly `4 * depth` characters. In general,
+length is one direction character plus three per step, one separator per
+additional step, and the decimal digits of any emitted level metadata.
 
 ## Types
 
@@ -548,7 +680,13 @@ replace all internal nodes: every borrowed Tree node, Path, and navigation
 result must be reacquired afterward. Explicit-Path `lks_tree_insert` preserves
 the supplied coordinate; comparator-driven `lks_tree_insert_item` may rebuild
 and re-encode a bounded subtree or, as a final fallback, the entire Tree.
+A failed operation with a documented strong guarantee commits no Tree
+mutation. Comparator equality concerns item ordering and stable source order;
+it does not mean two items share an equal Path. Public Group merge places
+comparator-equal Base items before Incoming items, while Batch merge preserves
+source chunk order for equals. Each successful merge result has its own Path
+coordinate space, independent of unchanged source Groups.
 
-The v2.0.0-preview.2 public header contains **9 types** and **46 functions**,
+The v2.0.0-preview.3 public header contains **9 types** and **46 functions**,
 including `lks_sort`. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

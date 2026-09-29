@@ -2,7 +2,44 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [2.0.0-preview.2] - Unreleased
+## [2.0.0-preview.3] - Unreleased
+
+Preview.3 is the current development snapshot; it has not been tagged or
+released.
+
+### Added
+
+- A private fixed-width radix-54 slot codec covering every legal 16-bit slot,
+  with the exact ordered alphabet specified in `docs/API.md`.
+- Focused exhaustive slot-codec, Path-text, boundary, bulk-distribution,
+  local-repair, and fault-injection coverage for the changed representation.
+
+### Changed
+
+- Path slots now cover the full 16-bit range `0..65535`; bulk roots spread
+  sparsely over that range while the Preview.2 repair heuristics remain.
+- Path text uses fixed three-character slot tokens, decimal nonzero first
+  levels, and decimal later level deltas; `/` now only separates steps.
+  Skipped levels no longer use repeated slash counts.
+- README, API, usage, and development documentation now specify current slot
+  rank, Path comparison, formatter grammar, coordinate lifetime, and
+  provisional policy separately from historical v1 behavior.
+
+### Internal
+
+- Historical v1 owned-base merge helpers remain available to diagnostic
+  regression builds through `LKS_ENABLE_V1_REGRESSION_HELPERS` and are excluded
+  from the ordinary production library. Public V2 merge still creates a fresh
+  result Group and leaves its inputs unchanged.
+
+### Validation
+
+- For ascending online N=1024, measured maximum depth changed from 4 to 1,
+  repair attempts from 563 to 0, and peak live bytes from 210176 to 90200.
+  These representative results do not imply a worst-case bound or production
+  readiness. See `docs/DEVELOPMENT.md` for the complete measured comparison.
+
+## [2.0.0-preview.2] - 2026-09-29
 
 ### Changed
 
