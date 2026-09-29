@@ -61,7 +61,8 @@ const char *lks_status_string(LksStatus status);
 
 /* Stable-sort the caller's pointer array in place. Items remain caller-owned.
  * Equal items retain input order. On allocation failure the array is unchanged.
- * COUNT may be zero with ITEMS == NULL. */
+ * COUNT may be zero with ITEMS == NULL; COMPARE must still be non-NULL.
+ * COUNT below two needs no allocation. */
 LksStatus lks_sort(void **items, size_t count, LksCompareFn compare,
     void *context);
 
@@ -157,7 +158,9 @@ LksStatus lks_path_after(
 );
 
 /* Opaque public Tree and read-only node view. Tree owns its nodes and cloned
- * Paths; item pointers remain borrowed. */
+ * Paths; item pointers remain borrowed. All borrowed Tree nodes, Paths, and
+ * navigation results expire on any successful Tree mutation. In particular,
+ * comparator-driven insertion may replace every internal node. */
 typedef struct LksTree LksTree;
 typedef struct LksTreeNode LksTreeNode;
 /* Opaque sorted collection. Group owns its structural storage, not its items. */
@@ -174,7 +177,9 @@ LksStatus lks_group_build(
     const LksComparator *comparator,
     LksGroup **out_group
 );
-/* Merge two sorted Groups into a new independent Group. Result Paths may be
+/* Merge two sorted Groups into a new independent Group. Both inputs must have
+ * been ordered under comparison semantics compatible with COMPARATOR,
+ * including relevant context. Result Paths may be
  * reassigned, including Base Paths. Equal items from BASE
  * precede equal items from INCOMING; order within each source is preserved.
  * Inputs/items are borrowed and unchanged; caller owns the result. On failure
@@ -218,7 +223,9 @@ const LksGroup *lks_group_batch_group_at(
     const LksGroupBatch *batch,
     size_t index
 );
-/* Merge all Batch Groups into a new independent Group. Caller owns the result;
+/* Merge all Batch Groups into a new independent Group. COMPARATOR must order
+ * the constituent Groups compatibly with their build comparison semantics.
+ * Caller owns the result;
  * Batch and its Groups remain unchanged. Equal items preserve source order.
  * On failure output is NULL and the Batch remains usable. */
 LksStatus lks_group_batch_merge_all(
@@ -234,9 +241,10 @@ LksTree *lks_tree_create(void);
 void lks_tree_destroy(LksTree *tree);
 /* Return node count; NULL is treated as empty. */
 size_t lks_tree_size(const LksTree *tree);
-/* Insert a unique explicit Path and borrowed item pointer. Tree clones PATH.
- * On success optional OUT_NODE borrows the inserted node. Failure leaves the
- * logical Tree unchanged and OUT_NODE NULL. */
+/* Insert a unique explicit Path and borrowed item pointer. Tree clones PATH
+ * without re-encoding it. On success optional OUT_NODE borrows the inserted
+ * node; earlier borrowed Tree observations must be reacquired. Failure leaves
+ * the logical Tree unchanged and OUT_NODE NULL. */
 LksStatus lks_tree_insert(
     LksTree *tree,
     const LksPath *path,
@@ -245,7 +253,9 @@ LksStatus lks_tree_insert(
 );
 /* Insert ITEM at a position determined by COMPARATOR. Equal items are inserted
  * stably after existing comparator-equal items. Item remains borrowed; failure
- * leaves the logical Tree unchanged and OUT_NODE NULL. */
+ * leaves the logical Tree unchanged and OUT_NODE NULL. Success may rebuild the
+ * entire Tree; discard every previously borrowed Tree node/Path/navigation
+ * result and use OUT_NODE as the new inserted node if requested. */
 LksStatus lks_tree_insert_item(
     LksTree *tree,
     void *item,

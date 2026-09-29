@@ -70,6 +70,7 @@ For inspectable Path coordinates and explicit Group merging, see the
 
 - A comparator result below zero places the left item first; zero means equal under that comparator; above zero places it after the right item.
 - Comparator-equal items retain their input/source order. In a public two-Group merge, equal Base items precede equal Incoming items; Batch merging preserves chunk order.
+- Group and Batch merge inputs must have ordering semantics compatible with the supplied merge comparator and context.
 - Item pointers are borrowed. LayerKeySort does not clone or free caller-owned items; callers manage their lifetime.
 
 ## Public API overview
@@ -97,13 +98,13 @@ The existing `LayerKeySort.slnx` / `.vcxproj` remain available for MSVC C17 vali
 
 ## Validation
 
-The repository includes deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and a public API smoke test. CI checks MSVC, GCC, and Clang. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
+The repository includes deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured to check MSVC, GCC, and Clang when this branch is pushed. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
 
 ## Current limitations
 
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result's path space.
-- Published Groups are immutable; their borrowed Paths stay stable until Group destruction. Successful Tree mutation may re-encode and invalidate borrowed Tree node/Path views.
+- Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After any successful Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results.
 - Serialization, a Path text parser, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
 
 ## Project layout

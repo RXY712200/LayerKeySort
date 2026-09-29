@@ -541,6 +541,14 @@ const char *lks_status_string(LksStatus status);
 
 `LksCompareFn` returns a negative value when the left item sorts first, zero when the values compare equal, and a positive value when the left item sorts after the right. The `context` pointer is passed through unchanged and is not interpreted by LayerKeySort.
 
+Linear Group and Batch merges require every input Group to have been built
+under ordering semantics compatible with the merge comparator and context.
+Comparator identity is not checked at runtime. A successful Tree mutation may
+replace all internal nodes: every borrowed Tree node, Path, and navigation
+result must be reacquired afterward. Explicit-Path `lks_tree_insert` preserves
+the supplied coordinate; comparator-driven `lks_tree_insert_item` may rebuild
+and re-encode the Tree.
+
 The v2.0.0-preview.1 public header contains **9 types** and **46 functions**,
 including `lks_sort`. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

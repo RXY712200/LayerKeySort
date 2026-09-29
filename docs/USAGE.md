@@ -94,6 +94,11 @@ the same contract as `lks_sort`.
 
 `lks_group_batch_build` partitions the input sequence into consecutive chunks of at most `group_size` items and sorts each chunk into a Group. It does not randomize or reorder the chunks before building them. `lks_group_batch_merge_all` merges all constituent Groups into a new independent result Group; the Batch remains readable until it is destroyed.
 
+Groups supplied to `lks_group_merge`, and constituent Groups supplied to
+`lks_group_batch_merge_all`, must have been ordered under comparison semantics
+compatible with the merge comparator and its context. The library does not
+infer comparator equivalence from function pointers or context addresses.
+
 ```c
 LksGroupBatch *batch = NULL;
 LksGroup *result = NULL;
@@ -144,7 +149,8 @@ A Path describes order within the Group or Tree that created it, not a stable
 application identity. Paths from independent Groups are local coordinates.
 Merge creates a new coordinate space and may reassign every result Path, while
 leaving both source Groups unchanged. Mutable Tree operations may re-encode
-Paths and invalidate previously borrowed Tree nodes/Paths. Do not persist or
+Paths and invalidate **all** previously borrowed Tree nodes, Paths, and
+navigation results after any successful mutation. Do not persist or
 serialize generated Paths for later reuse. Path-allocation heuristics and exact
 generated strings may change before final v2.0.0.
 

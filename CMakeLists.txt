@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
+# CMake accepts a numeric project version; the public header carries preview.1.
 project(LayerKeySort VERSION 2.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
@@ -14,6 +15,7 @@ set(LKS_SOURCES
     src/sort.c src/bulk.c)
 
 function(lks_configure_target target)
+    target_compile_features(${target} PUBLIC c_std_17)
     target_include_directories(${target} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>)

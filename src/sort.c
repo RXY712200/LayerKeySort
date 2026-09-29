@@ -60,6 +60,7 @@ LksStatus lks_sort(void **items, size_t count, LksCompareFn compare, void *conte
     LksStatus status;
     if (compare == NULL || (count != 0 && items == NULL))
         return LKS_STATUS_INVALID_ARGUMENT;
+    if (count < 2) return LKS_STATUS_OK;
     comparator.compare = compare;
     comparator.context = context;
     status = lks_stable_sort_copy(items, count, &comparator, &sorted);
