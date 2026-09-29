@@ -145,6 +145,12 @@ Comparator-equal input items retain their input order. For the public two-Group 
 
 ## Path locality
 
+Comparator-driven online Tree insertion first uses a direct Path when it fits.
+When a Path becomes deep, it may re-encode a bounded complete subtree using
+sparse slots. It can accept a deeper Path if local repair is too costly, or
+rebuild the whole Tree as a final fallback. These are preview heuristics, not
+stable Path identities or a promise of fixed memory use.
+
 A Path describes order within the Group or Tree that created it, not a stable
 application identity. Paths from independent Groups are local coordinates.
 Merge creates a new coordinate space and may reassign every result Path, while

@@ -27,6 +27,30 @@ struct LksTree {
     size_t size;
 };
 
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+static LksTreeRepairStats repair_stats;
+#define REPAIR_COUNT(field) (++repair_stats.field)
+#else
+#define REPAIR_COUNT(field) ((void)0)
+#endif
+
+void lks_tree_repair_stats_reset(void)
+{
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+    memset(&repair_stats, 0, sizeof(repair_stats));
+#endif
+}
+
+LksTreeRepairStats lks_tree_repair_stats_get(void)
+{
+    LksTreeRepairStats result;
+    memset(&result, 0, sizeof(result));
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+    result = repair_stats;
+#endif
+    return result;
+}
+
 static size_t tree_node_child_count(const LksTreeNode *node)
 { return node == NULL || node->child_block == NULL ? 0 : node->child_block->count; }
 
@@ -499,6 +523,132 @@ static const LksTreeNode *node_at_preorder(const LksTreeNode *node,
     return NULL;
 }
 
+static size_t bounded_subtree_size(const LksTreeNode *node, size_t limit)
+{
+    size_t count = 1, child;
+    for (child = 0; child < tree_node_child_count(node) && count <= limit; ++child) {
+        size_t remaining = limit - count;
+        size_t descendants = bounded_subtree_size(tree_node_children(node)[child],
+            remaining);
+        count += descendants;
+    }
+    return count;
+}
+
+static size_t subtree_max_depth(const LksTreeNode *node)
+{
+    size_t depth = lks_path_depth(node->path), child;
+    for (child = 0; child < tree_node_child_count(node); ++child) {
+        size_t child_depth = subtree_max_depth(tree_node_children(node)[child]);
+        if (child_depth > depth) depth = child_depth;
+    }
+    return depth;
+}
+
+/* A complete positive subtree is closed under Path prefixes. Its root Path
+ * stays fixed, so every external sibling and ancestor keeps its coordinate;
+ * replacing the one parent link leaves all external preorder relations intact. */
+static LksStatus try_local_subtree(LksTree *tree, const LksTreeNode *predecessor,
+    void *item, const LksComparator *comparator, size_t candidate_depth,
+    int topology_problem, const LksTreeNode **out_node, int *out_repaired)
+{
+    const LksTreeNode *anchor = predecessor;
+    size_t window = LKS_POLICY_LOCAL_INITIAL_NODES;
+    void *items[LKS_POLICY_LOCAL_MAX_NODES + 1];
+    *out_repaired = 0;
+    REPAIR_COUNT(attempts);
+    while (anchor != NULL && anchor->path != NULL &&
+        lks_path_direction(anchor->path) == LKS_DIRECTION_POSITIVE) {
+        /* Even a one-item branch must place the new item below its root.
+         * Skip ancestors that cannot meet the depth-gain policy. */
+        if (!topology_problem &&
+            (candidate_depth <= LKS_POLICY_LOCAL_MIN_DEPTH_GAIN ||
+             lks_path_depth(anchor->path) >=
+                candidate_depth - LKS_POLICY_LOCAL_MIN_DEPTH_GAIN)) {
+            anchor = anchor->parent;
+            continue;
+        }
+        size_t count = bounded_subtree_size(anchor, LKS_POLICY_LOCAL_MAX_NODES);
+        while (count > window && window < LKS_POLICY_LOCAL_MAX_NODES) {
+            size_t next = window * LKS_POLICY_LOCAL_EXPANSION_FACTOR;
+            window = next > LKS_POLICY_LOCAL_MAX_NODES ?
+                LKS_POLICY_LOCAL_MAX_NODES : next;
+            REPAIR_COUNT(region_expansions);
+        }
+        if (count <= window) {
+            size_t write_index = 0, position = 0, cursor = 0, new_depth;
+            const LksTreeNode *new_anchor = NULL, *inserted;
+            LksTree *temporary = NULL;
+            LksTreeNode *parent;
+            size_t child_index;
+            int found;
+            LksStatus status;
+            collect_subtree_items(anchor, items, &write_index);
+            if (write_index != count) return LKS_STATUS_INTERNAL_ERROR;
+            while (position < count && comparator->compare(items[position], item,
+                comparator->context) <= 0) ++position;
+            if (position == 0) return LKS_STATUS_INTERNAL_ERROR;
+            memmove(items + position + 1, items + position,
+                (count - position) * sizeof(*items));
+            items[position] = item;
+            status = lks_bulk_build_branch(anchor->path, items, count + 1,
+                &temporary);
+            if (status == LKS_STATUS_LEVEL_LIMIT) {
+                anchor = anchor->parent;
+                continue;
+            }
+            if (status != LKS_STATUS_OK) return status;
+            status = lks_tree_find_path(temporary, anchor->path, &new_anchor);
+            if (status != LKS_STATUS_OK || new_anchor == NULL) {
+                lks_tree_destroy(temporary);
+                return status == LKS_STATUS_OK ? LKS_STATUS_INTERNAL_ERROR : status;
+            }
+            inserted = node_at_preorder(new_anchor, position, &cursor);
+            if (inserted == NULL) {
+                lks_tree_destroy(temporary);
+                return LKS_STATUS_INTERNAL_ERROR;
+            }
+            new_depth = subtree_max_depth(new_anchor);
+            if (new_depth <= LKS_POLICY_HARD_ONLINE_DEPTH &&
+                (topology_problem ||
+                 (candidate_depth >= new_depth &&
+                  candidate_depth - new_depth >= LKS_POLICY_LOCAL_MIN_DEPTH_GAIN))) {
+                parent = (LksTreeNode *)anchor->parent;
+                status = child_lower_bound(parent, anchor->path,
+                    &child_index, &found);
+                if (status != LKS_STATUS_OK || !found ||
+                    tree_node_children(parent)[child_index] != anchor ||
+                    tree_node_child_count(new_anchor->parent) != 1) {
+                    lks_tree_destroy(temporary);
+                    return LKS_STATUS_INTERNAL_ERROR;
+                }
+                /* All validation and allocation precede this pointer swap.
+                 * Detach the prepared branch so its temporary ancestors can
+                 * be destroyed without touching the committed replacement. */
+                ((LksTreeNode *)new_anchor->parent)->child_block->count = 0;
+                ((LksTreeNode *)new_anchor)->parent = parent;
+                tree_node_children_mutable(parent)[child_index] = (LksTreeNode *)new_anchor;
+                ++tree->size;
+                destroy_node((LksTreeNode *)anchor);
+                lks_tree_destroy(temporary);
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+                repair_stats.nodes_relabelled += count;
+                if (count > repair_stats.max_region_nodes)
+                    repair_stats.max_region_nodes = count;
+#endif
+                REPAIR_COUNT(successes);
+                if (out_node != NULL) *out_node = inserted;
+                *out_repaired = 1;
+                return LKS_STATUS_OK;
+            }
+            lks_tree_destroy(temporary);
+        }
+        anchor = anchor->parent;
+    }
+    REPAIR_COUNT(fallbacks);
+    return LKS_STATUS_OK;
+}
+
 static LksStatus rebuild_with_item(LksTree *tree, void *item,
     const LksComparator *comparator, const LksTreeNode **out_node)
 {
@@ -544,6 +694,7 @@ static LksStatus rebuild_with_item(LksTree *tree, void *item,
     for (child = 0; child < tree_node_child_count(&tree->root); ++child)
         tree_node_children_mutable(&tree->root)[child]->parent = &tree->root;
     lks_tree_destroy(replacement);
+    REPAIR_COUNT(full_rebuilds);
     if (out_node != NULL) *out_node = inserted;
     return LKS_STATUS_OK;
 }
@@ -559,8 +710,11 @@ LksStatus lks_tree_insert_item(
     const LksTreeNode *equal;
     const LksTreeNode *right;
     const LksTreeNode *successor;
+    const LksTreeNode *predecessor = NULL;
     LksPath *new_path;
     LksStatus status;
+    size_t candidate_depth;
+    int repaired = 0, topology_problem = 0;
 
     if (out_node != NULL) {
         *out_node = NULL;
@@ -595,6 +749,7 @@ LksStatus lks_tree_insert_item(
                 equal = successor;
                 successor = tree_node_successor(tree, equal);
             }
+            predecessor = equal;
             if (successor != NULL) {
                 status = lks_path_between(lks_tree_node_path(equal),
                     lks_tree_node_path(successor), &new_path);
@@ -604,8 +759,10 @@ LksStatus lks_tree_insert_item(
         } else if (left == NULL && right != NULL) {
             status = lks_path_before(lks_tree_node_path(right), &new_path);
         } else if (left != NULL && right == NULL) {
+            predecessor = left;
             status = lks_path_after(lks_tree_node_path(left), &new_path);
         } else if (left != NULL && right != NULL) {
+            predecessor = left;
             status = lks_path_between(lks_tree_node_path(left),
                 lks_tree_node_path(right), &new_path);
         } else {
@@ -613,11 +770,36 @@ LksStatus lks_tree_insert_item(
         }
         if (status != LKS_STATUS_OK) {
             lks_path_destroy(new_path);
+            if (status == LKS_STATUS_LEVEL_LIMIT)
+                return rebuild_with_item(tree, item, comparator, out_node);
             return status;
         }
     }
 
-    if (lks_path_depth(new_path) > LKS_POLICY_MAX_ONLINE_DEPTH) {
+    candidate_depth = lks_path_depth(new_path);
+    if (candidate_depth <= LKS_POLICY_PREFERRED_ONLINE_DEPTH) {
+        status = lks_tree_insert(tree, new_path, item, out_node);
+        if (status == LKS_STATUS_OK ||
+            (status != LKS_STATUS_ALREADY_EXISTS && status != LKS_STATUS_NOT_FOUND)) {
+            lks_path_destroy(new_path);
+            return status;
+        }
+        topology_problem = 1;
+    }
+    if (predecessor != NULL) {
+        status = try_local_subtree(tree, predecessor, item, comparator,
+            candidate_depth, topology_problem, out_node, &repaired);
+        if (status != LKS_STATUS_OK || repaired) {
+            lks_path_destroy(new_path);
+            return status;
+        }
+    }
+    if (candidate_depth > LKS_POLICY_HARD_ONLINE_DEPTH) {
+        lks_path_destroy(new_path);
+        return rebuild_with_item(tree, item, comparator, out_node);
+    }
+    if (topology_problem) {
+        /* The same candidate already failed without mutating the Tree. */
         lks_path_destroy(new_path);
         return rebuild_with_item(tree, item, comparator, out_node);
     }
@@ -628,6 +810,8 @@ LksStatus lks_tree_insert_item(
          * Both statuses leave the Tree untouched, so rebuild from item order. */
         return rebuild_with_item(tree, item, comparator, out_node);
     }
+    if (status == LKS_STATUS_OK && candidate_depth > LKS_POLICY_PREFERRED_ONLINE_DEPTH)
+        REPAIR_COUNT(deeper_accepts);
     return status;
 }
 LksStatus lks_tree_find_path(

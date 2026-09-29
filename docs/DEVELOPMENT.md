@@ -75,6 +75,14 @@ The repository contains public API smoke coverage, deterministic property tests,
 
 ## Coding constraints
 
+Preview.2 online repair policy lives in `src/lks_policy_internal.h`. The
+smallest eligible complete positive subtree is rebuilt off-Tree with the same
+sparse bulk layout; enclosing ancestors are considered within a fixed node
+limit. The root Path of the selected subtree remains fixed. All new Paths,
+nodes, and child storage are ready before an allocation-free pointer splice.
+The full rebuild remains the final fallback. Repair counters are process-wide
+only in diagnostic builds; normal production builds do not update them.
+
 - Keep implementation in portable C17 under both build systems.
 - Preserve public ownership and ordering semantics; generated Path coordinates
   can change when the preview allocator policy changes.

@@ -69,3 +69,45 @@ LksStatus lks_bulk_build_tree(void *const *sorted, size_t count,
     *out_tree = tree;
     return LKS_STATUS_OK;
 }
+
+LksStatus lks_bulk_build_branch(const LksPath *anchor_path,
+    void *const *sorted, size_t count, LksTree **out_tree)
+{
+    LksTree *tree;
+    LksPath *prefix = NULL;
+    size_t depth, step, level = 0;
+    unsigned int slot;
+    LksStatus status = LKS_STATUS_OK;
+    if (out_tree == NULL) return LKS_STATUS_INVALID_ARGUMENT;
+    *out_tree = NULL;
+    if (anchor_path == NULL || sorted == NULL || count == 0 ||
+        lks_path_direction(anchor_path) != LKS_DIRECTION_POSITIVE ||
+        (depth = lks_path_depth(anchor_path)) == 0)
+        return LKS_STATUS_INVALID_ARGUMENT;
+    tree = lks_tree_create();
+    if (tree == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+    for (step = 0; step < depth; ++step) {
+        if (lks_path_get_slot(anchor_path, step, &slot) != LKS_STATUS_OK ||
+            lks_path_get_level(anchor_path, step, &level) != LKS_STATUS_OK) {
+            status = LKS_STATUS_INTERNAL_ERROR;
+            break;
+        }
+        if (step == 0) prefix = lks_path_create_at_level(
+            LKS_DIRECTION_POSITIVE, slot, level);
+        else status = lks_path_append_at_level(prefix, slot, level);
+        if (prefix == NULL) status = LKS_STATUS_OUT_OF_MEMORY;
+        if (status != LKS_STATUS_OK) break;
+        status = lks_tree_insert(tree, prefix,
+            step + 1 == depth ? sorted[0] : NULL, NULL);
+        if (status != LKS_STATUS_OK) break;
+    }
+    if (status == LKS_STATUS_OK && count > 1) {
+        if (level == (size_t)-1) status = LKS_STATUS_LEVEL_LIMIT;
+        else status = bulk_subtree(tree, sorted + 1, count - 1,
+            anchor_path, level + 1);
+    }
+    lks_path_destroy(prefix);
+    if (status != LKS_STATUS_OK) { lks_tree_destroy(tree); return status; }
+    *out_tree = tree;
+    return LKS_STATUS_OK;
+}

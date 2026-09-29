@@ -9,8 +9,8 @@
 - `LKS_VERSION_MAJOR` is `2`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.1"`.
-- `LKS_VERSION_STRING` is `"2.0.0-preview.1"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.2"`.
+- `LKS_VERSION_STRING` is `"2.0.0-preview.2"`.
 
 Path values are ordering coordinates, not persistent application IDs. Exact
 generated Path strings can change with the allocation policy; serializing them
@@ -547,8 +547,8 @@ Comparator identity is not checked at runtime. A successful Tree mutation may
 replace all internal nodes: every borrowed Tree node, Path, and navigation
 result must be reacquired afterward. Explicit-Path `lks_tree_insert` preserves
 the supplied coordinate; comparator-driven `lks_tree_insert_item` may rebuild
-and re-encode the Tree.
+and re-encode a bounded subtree or, as a final fallback, the entire Tree.
 
-The v2.0.0-preview.1 public header contains **9 types** and **46 functions**,
+The v2.0.0-preview.2 public header contains **9 types** and **46 functions**,
 including `lks_sort`. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

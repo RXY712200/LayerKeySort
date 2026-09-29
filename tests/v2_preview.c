@@ -7,8 +7,19 @@
 #include "../src/lks_bulk_internal.h"
 #include "../src/lks_group_internal.h"
 #include "../src/lks_policy_internal.h"
+#include "../src/lks_tree_internal.h"
 
 typedef struct V2Item { int key; size_t order; } V2Item;
+
+typedef struct WideItem { int64_t key; size_t order; } WideItem;
+
+static int compare_wide(const void *left, const void *right, void *context)
+{
+    const WideItem *a = (const WideItem *)left;
+    const WideItem *b = (const WideItem *)right;
+    (void)context;
+    return a->key < b->key ? -1 : a->key > b->key ? 1 : 0;
+}
 
 static int compare_item(const void *left, const void *right, void *context)
 {
@@ -374,6 +385,109 @@ static void audit_bulk_node(BulkAudit *audit, const LksTreeNode *node,
         audit_bulk_node(audit, lks_tree_node_child_at(node, child), node);
 }
 
+static int audit_tree_order(const LksTree *tree, void **items, size_t count,
+    size_t *out_max_depth)
+{
+    BulkAudit audit;
+    size_t root;
+    audit.tree = tree; audit.items = items; audit.count = count;
+    audit.seen = 0; audit.max_depth = 0; audit.previous = NULL;
+    audit.valid = lks_tree_size(tree) == count;
+    for (root = 0; audit.valid && root < lks_tree_root_child_count(tree); ++root)
+        audit_bulk_node(&audit, lks_tree_root_child_at(tree, root), NULL);
+    if (out_max_depth != NULL) *out_max_depth = audit.max_depth;
+    return audit.valid && audit.seen == count;
+}
+
+typedef struct TreeSnapshot {
+    size_t count;
+    void *items[256];
+    const LksTreeNode *nodes[256];
+    size_t subtree_end[256];
+    char paths[256][96];
+} TreeSnapshot;
+
+static int snapshot_node(TreeSnapshot *snapshot, const LksTreeNode *node)
+{
+    size_t i, position = snapshot->count;
+    if (position >= 256 || lks_path_format(lks_tree_node_path(node),
+            snapshot->paths[position], sizeof(snapshot->paths[position])) !=
+            LKS_STATUS_OK) return 0;
+    snapshot->items[position] = lks_tree_node_item(node);
+    snapshot->nodes[position] = node;
+    ++snapshot->count;
+    for (i = 0; i < lks_tree_node_child_count(node); ++i)
+        if (!snapshot_node(snapshot, lks_tree_node_child_at(node, i))) return 0;
+    snapshot->subtree_end[position] = snapshot->count;
+    return 1;
+}
+
+static int snapshot_tree(const LksTree *tree, TreeSnapshot *snapshot)
+{
+    size_t i;
+    memset(snapshot, 0, sizeof(*snapshot));
+    for (i = 0; i < lks_tree_root_child_count(tree); ++i)
+        if (!snapshot_node(snapshot, lks_tree_root_child_at(tree, i))) return 0;
+    return snapshot->count == lks_tree_size(tree);
+}
+
+static int snapshots_equal(const TreeSnapshot *a, const TreeSnapshot *b)
+{
+    size_t i;
+    if (a->count != b->count) return 0;
+    for (i = 0; i < a->count; ++i)
+        if (a->items[i] != b->items[i] || a->nodes[i] != b->nodes[i] ||
+            a->subtree_end[i] != b->subtree_end[i] ||
+            strcmp(a->paths[i], b->paths[i]) != 0) return 0;
+    return 1;
+}
+
+static size_t snapshot_find_node(const TreeSnapshot *snapshot,
+    const LksTreeNode *node)
+{
+    size_t i;
+    for (i = 0; i < snapshot->count; ++i)
+        if (snapshot->nodes[i] == node) return i;
+    return snapshot->count;
+}
+
+/* A local repair replaces exactly one complete old subtree. Every old node
+ * outside that interval must survive with its item and exact Path text. */
+static int snapshot_local_repair_preserves_outside(
+    const TreeSnapshot *before, const TreeSnapshot *after, size_t old_region_nodes)
+{
+    size_t first = before->count, end, i, new_root = after->count, missing = 0;
+    if (after->count != before->count + 1 || old_region_nodes == 0) return 0;
+    for (i = 0; i < before->count; ++i) {
+        if (snapshot_find_node(after, before->nodes[i]) == after->count) {
+            first = i;
+            break;
+        }
+    }
+    if (first == before->count) return 0;
+    end = before->subtree_end[first];
+    if (end - first != old_region_nodes) return 0;
+    for (i = 0; i < after->count; ++i)
+        if (after->items[i] == before->items[first]) {
+            new_root = i;
+            break;
+        }
+    if (new_root == after->count ||
+        strcmp(before->paths[first], after->paths[new_root]) != 0 ||
+        after->subtree_end[new_root] - new_root != old_region_nodes + 1)
+        return 0;
+    for (i = 0; i < before->count; ++i) {
+        size_t found = snapshot_find_node(after, before->nodes[i]);
+        if (i >= first && i < end) {
+            if (found != after->count) return 0;
+            ++missing;
+        } else if (found == after->count ||
+            before->items[i] != after->items[found] ||
+            strcmp(before->paths[i], after->paths[found]) != 0) return 0;
+    }
+    return missing == old_region_nodes;
+}
+
 static int check_bulk_boundaries(void)
 {
     static const size_t sizes[] = {0, 1, 2, 25, 26, 27, 675, 676, 677, 1024, 10000};
@@ -461,6 +575,7 @@ static int check_tree_sequence(size_t count, int descending)
     size_t index, maximum_depth = 0;
     int valid = 1;
     if (lks_alloc_stats_reset() != 0) return 0;
+    lks_tree_repair_stats_reset();
     tree = lks_tree_create();
     values = (V2Item *)malloc(count * sizeof(*values));
     if (tree == NULL || values == NULL) { valid = 0; goto cleanup; }
@@ -510,10 +625,17 @@ static int check_tree_sequence(size_t count, int descending)
                 } else --depth;
             }
         }
-        if (visited != count || maximum_depth > LKS_POLICY_MAX_ONLINE_DEPTH) valid = 0;
+        if (visited != count || maximum_depth > LKS_POLICY_HARD_ONLINE_DEPTH) valid = 0;
     }
-    printf("V2 Tree %s N=%zu MaxDepth=%zu\n",
-        descending ? "descending" : "ascending", count, maximum_depth);
+    { LksTreeRepairStats stats = lks_tree_repair_stats_get();
+      printf("V2 Tree %s N=%zu MaxDepth=%zu Attempts=%zu Local=%zu Fallbacks=%zu Nodes=%zu MaxRegion=%zu Full=%zu Deeper=%zu PeakBytes=%zu\n",
+        descending ? "descending" : "ascending", count, maximum_depth,
+        stats.attempts, stats.successes, stats.fallbacks,
+        stats.nodes_relabelled, stats.max_region_nodes,
+        stats.full_rebuilds, stats.deeper_accepts,
+        lks_alloc_stats_get().peak_live_bytes);
+      if (!descending && (stats.successes == 0 || stats.deeper_accepts == 0 ||
+          stats.max_region_nodes > LKS_POLICY_LOCAL_MAX_NODES)) valid = 0; }
 cleanup:
     lks_tree_destroy(tree);
     free(values);
@@ -522,36 +644,250 @@ cleanup:
 
 static int check_narrow_gap(void)
 {
-    V2Item values[22];
+    WideItem values[62];
+    void *expected[62];
     LksTree *tree;
-    LksComparator comparator = {compare_item, NULL};
-    size_t i;
+    LksComparator comparator = {compare_wide, NULL};
+    LksTreeRepairStats stats;
+    size_t i, max_depth = 0;
     int valid = 1;
     if (lks_alloc_stats_reset() != 0) return 0;
+    lks_tree_repair_stats_reset();
     tree = lks_tree_create();
     if (tree == NULL) return 0;
     values[0].key = 0;
-    values[1].key = 1 << 20;
-    for (i = 0; i < 22; ++i) {
-        if (i >= 2) values[i].key = 1 << (21 - i);
+    values[1].key = INT64_C(1) << 60;
+    for (i = 0; i < 62; ++i) {
+        if (i >= 2) values[i].key = INT64_C(1) << (61 - i);
         values[i].order = i;
         if (lks_tree_insert_item(tree, &values[i], &comparator, NULL) != LKS_STATUS_OK)
             { valid = 0; break; }
     }
-    if (lks_tree_size(tree) != 22) valid = 0;
+    expected[0] = &values[0];
+    for (i = 1; i < 62; ++i) expected[i] = &values[62 - i];
+    if (valid) valid = audit_tree_order(tree, expected, 62, &max_depth);
+    stats = lks_tree_repair_stats_get();
+    printf("V2 NarrowGap N=62 Local=%zu Expanded=%zu Full=%zu Deeper=%zu MaxDepth=%zu PeakBytes=%zu Status=%s\n",
+        stats.successes, stats.region_expansions, stats.full_rebuilds,
+        stats.deeper_accepts, max_depth, lks_alloc_stats_get().peak_live_bytes,
+        valid ? "PASS" : "FAIL");
+    lks_tree_destroy(tree);
+    return valid && max_depth <=
+        LKS_POLICY_HARD_ONLINE_DEPTH && clean_allocator();
+}
+
+static int check_local_relabel(void)
+{
+    V2Item values[256];
+    void *expected[256];
+    LksComparator comparator = {compare_item, NULL};
+    LksTree *tree;
+    LksTreeRepairStats stats;
+    TreeSnapshot before, after;
+    size_t i, count = 0, max_depth = 0;
+    int valid, repaired = 0;
+    if (lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    valid = tree != NULL;
+    if (!valid) return 0;
+    lks_tree_repair_stats_reset();
+    for (i = 0; i < 256 && valid && !repaired; ++i) {
+        if (!snapshot_tree(tree, &before)) { valid = 0; break; }
+        values[i].key = (int)i; values[i].order = i;
+        expected[i] = &values[i];
+        if (lks_tree_insert_item(tree, &values[i], &comparator, NULL) !=
+                LKS_STATUS_OK) valid = 0;
+        count = i + 1;
+        repaired = lks_tree_repair_stats_get().successes != 0;
+    }
+    stats = lks_tree_repair_stats_get();
+    if (valid && repaired && !snapshot_tree(tree, &after)) valid = 0;
+    if (valid && repaired) valid = snapshot_local_repair_preserves_outside(&before, &after,
+        stats.nodes_relabelled);
+    if (valid) valid = audit_tree_order(tree, expected, count, &max_depth);
+    valid = valid && repaired && stats.successes == 1 && stats.region_expansions > 0 &&
+        stats.full_rebuilds == 0 && stats.max_region_nodes <=
+            LKS_POLICY_LOCAL_MAX_NODES && max_depth <= LKS_POLICY_HARD_ONLINE_DEPTH;
+    printf("V2 LocalRelabel N=%zu Attempts=%zu Success=%zu Expanded=%zu Nodes=%zu MaxRegion=%zu Full=%zu MaxDepth=%zu Status=%s\n",
+        count, stats.attempts, stats.successes, stats.region_expansions,
+        stats.nodes_relabelled, stats.max_region_nodes, stats.full_rebuilds,
+        max_depth, valid ? "PASS" : "FAIL");
     lks_tree_destroy(tree);
     return valid && clean_allocator();
 }
 
-static int check_tree_rebuild_oom(void)
+static int check_parent_first_descendant_repair(void)
+{
+    V2Item values[6];
+    void *expected[6];
+    LksComparator comparator = {compare_item, NULL};
+    LksTree *tree;
+    LksPath *path;
+    TreeSnapshot before, after;
+    LksTreeRepairStats stats;
+    const LksTreeNode *inserted = NULL;
+    size_t i, max_depth = 0;
+    int valid = 1;
+    if (lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE,
+        LKS_POLICY_INITIAL_SLOT, 0);
+    if (tree == NULL || path == NULL) valid = 0;
+    for (i = 0; i < 5 && valid; ++i) {
+        if (i > 0 && lks_path_append_at_level(path,
+                LKS_POLICY_INITIAL_SLOT, i) != LKS_STATUS_OK) valid = 0;
+        values[i].key = i == 4 ? 5 : (int)i;
+        values[i].order = i;
+        if (valid && lks_tree_insert(tree, path, &values[i], NULL) !=
+                LKS_STATUS_OK) valid = 0;
+    }
+    values[5].key = 4; values[5].order = 5;
+    for (i = 0; i < 4; ++i) expected[i] = &values[i];
+    expected[4] = &values[5]; expected[5] = &values[4];
+    if (valid && !snapshot_tree(tree, &before)) valid = 0;
+    lks_tree_repair_stats_reset();
+    if (valid && lks_tree_insert_item(tree, &values[5], &comparator,
+            &inserted) != LKS_STATUS_OK) valid = 0;
+    stats = lks_tree_repair_stats_get();
+    if (valid && !snapshot_tree(tree, &after)) valid = 0;
+    if (valid) valid = inserted != NULL &&
+        lks_tree_node_item(inserted) == &values[5] &&
+        snapshot_local_repair_preserves_outside(&before, &after,
+            stats.nodes_relabelled) &&
+        audit_tree_order(tree, expected, 6, &max_depth);
+    valid = valid && stats.successes == 1 && stats.full_rebuilds == 0;
+    printf("V2 ParentFirstDescendant Local=%zu Region=%zu MaxDepth=%zu Status=%s\n",
+        stats.successes, stats.nodes_relabelled, max_depth,
+        valid ? "PASS" : "FAIL");
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
+    return valid && clean_allocator();
+}
+
+static int check_positive_boundary_repair(int between_siblings)
+{
+    V2Item values[7];
+    void *expected[7];
+    LksComparator comparator = {compare_item, NULL};
+    LksTree *tree;
+    LksPath *base, *left = NULL, *first = NULL, *right = NULL;
+    TreeSnapshot before, after;
+    LksTreeRepairStats stats;
+    size_t i, max_depth = 0;
+    int valid = 1;
+    if (lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    base = lks_path_create_at_level(LKS_DIRECTION_POSITIVE,
+        LKS_POLICY_INITIAL_SLOT, 0);
+    if (tree == NULL || base == NULL) valid = 0;
+    for (i = 0; i < 3 && valid; ++i) {
+        if (i > 0 && lks_path_append_at_level(base,
+                LKS_POLICY_INITIAL_SLOT, i) != LKS_STATUS_OK) valid = 0;
+        values[i].key = (int)i; values[i].order = i;
+        if (valid && lks_tree_insert(tree, base, &values[i], NULL) !=
+                LKS_STATUS_OK) valid = 0;
+    }
+    if (valid) left = lks_path_clone(base);
+    if (left == NULL || lks_path_append_at_level(left,
+            LKS_POLICY_INITIAL_SLOT, 3) != LKS_STATUS_OK) valid = 0;
+    values[3].key = 3; values[3].order = 3;
+    if (valid && lks_tree_insert(tree, left, &values[3], NULL) != LKS_STATUS_OK)
+        valid = 0;
+    if (valid) first = lks_path_clone(left);
+    if (first == NULL || lks_path_append_at_level(first,
+            LKS_POLICY_INITIAL_SLOT, 4) != LKS_STATUS_OK) valid = 0;
+    values[4].key = 4; values[4].order = 4;
+    if (valid && lks_tree_insert(tree, first, &values[4], NULL) != LKS_STATUS_OK)
+        valid = 0;
+    if (valid) right = lks_path_clone(between_siblings ? base : left);
+    if (right == NULL || lks_path_append_at_level(right,
+            LKS_POLICY_INITIAL_SLOT + 1u,
+            between_siblings ? 3u : 4u) != LKS_STATUS_OK) valid = 0;
+    values[5].key = 6; values[5].order = 5;
+    if (valid && lks_tree_insert(tree, right, &values[5], NULL) != LKS_STATUS_OK)
+        valid = 0;
+    values[6].key = 5; values[6].order = 6;
+    for (i = 0; i < 5; ++i) expected[i] = &values[i];
+    expected[5] = &values[6]; expected[6] = &values[5];
+    if (valid && !snapshot_tree(tree, &before)) valid = 0;
+    lks_tree_repair_stats_reset();
+    if (valid && lks_tree_insert_item(tree, &values[6], &comparator, NULL) !=
+            LKS_STATUS_OK) valid = 0;
+    stats = lks_tree_repair_stats_get();
+    if (valid && !snapshot_tree(tree, &after)) valid = 0;
+    if (valid) valid = snapshot_local_repair_preserves_outside(&before, &after,
+            stats.nodes_relabelled) &&
+        audit_tree_order(tree, expected, 7, &max_depth);
+    valid = valid && stats.successes == 1 && stats.full_rebuilds == 0;
+    printf("V2 PositiveBoundary Kind=%s Local=%zu Region=%zu MaxDepth=%zu Status=%s\n",
+        between_siblings ? "sibling-subtrees" : "descendants",
+        stats.successes, stats.nodes_relabelled, max_depth,
+        valid ? "PASS" : "FAIL");
+    lks_path_destroy(base); lks_path_destroy(left);
+    lks_path_destroy(first); lks_path_destroy(right);
+    lks_tree_destroy(tree);
+    return valid && clean_allocator();
+}
+
+static int check_online_pattern(size_t count, int mode)
+{
+    V2Item values[160];
+    void *expected[160];
+    LksTree *tree;
+    LksComparator comparator = {compare_item, NULL};
+    LksTreeRepairStats stats;
+    TreeSnapshot before, after;
+    size_t i, j, max_depth = 0;
+    int valid;
+    if (count > 160 || lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    valid = tree != NULL;
+    if (!valid) return 0;
+    lks_tree_repair_stats_reset();
+    for (i = 0; i < count && valid; ++i) {
+        LksTreeRepairStats prior = lks_tree_repair_stats_get();
+        if (!snapshot_tree(tree, &before)) { valid = 0; break; }
+        if (mode == 0) values[i].key = (i & 1u) == 0 ?
+            -(int)(i / 2) : (int)(i / 2 + 1);
+        else if (mode == 1) values[i].key = (int)(i % 9);
+        else if (mode == 2) values[i].key = 7;
+        else values[i].key = (int)((i * 73u) % count) - (int)(count / 2);
+        values[i].order = i;
+        if (lks_tree_insert_item(tree, &values[i], &comparator, NULL) !=
+                LKS_STATUS_OK) valid = 0;
+        if (valid && lks_tree_repair_stats_get().successes > prior.successes) {
+            LksTreeRepairStats now = lks_tree_repair_stats_get();
+            if (!snapshot_tree(tree, &after) ||
+                !snapshot_local_repair_preserves_outside(&before, &after,
+                    now.nodes_relabelled - prior.nodes_relabelled)) valid = 0;
+        }
+        j = i;
+        while (j > 0 && compare_item(expected[j - 1], &values[i], NULL) > 0) {
+            expected[j] = expected[j - 1]; --j;
+        }
+        expected[j] = &values[i];
+    }
+    if (valid) valid = audit_tree_order(tree, expected, count, &max_depth);
+    stats = lks_tree_repair_stats_get();
+    valid = valid && max_depth <= LKS_POLICY_HARD_ONLINE_DEPTH;
+    printf("V2 OnlinePattern Mode=%d N=%zu Local=%zu Full=%zu MaxDepth=%zu PeakBytes=%zu Status=%s\n",
+        mode, count, stats.successes, stats.full_rebuilds, max_depth,
+        lks_alloc_stats_get().peak_live_bytes, valid ? "PASS" : "FAIL");
+    lks_tree_destroy(tree);
+    return valid && clean_allocator();
+}
+
+static int check_local_repair_oom(void)
 {
     V2Item values[256];
     LksTree *tree;
     LksComparator comparator = {compare_item, NULL};
     const LksTreeNode *last = NULL;
+    TreeSnapshot before_snapshot, after_snapshot;
     size_t i, fail_index, failure_points = 0;
     int found_congestion = 0, success = 0, valid = 1;
     if (lks_alloc_stats_reset() != 0) return 0;
+    lks_tree_repair_stats_reset();
     tree = lks_tree_create();
     if (tree == NULL) return 0;
     for (i = 0; i < 256; ++i) {
@@ -561,7 +897,7 @@ static int check_tree_rebuild_oom(void)
         if (last != NULL) {
             if (lks_path_after(lks_tree_node_path(last), &candidate) != LKS_STATUS_OK)
                 { valid = 0; break; }
-            found_congestion = lks_path_depth(candidate) > LKS_POLICY_MAX_ONLINE_DEPTH;
+            found_congestion = lks_path_depth(candidate) > LKS_POLICY_PREFERRED_ONLINE_DEPTH;
             lks_path_destroy(candidate);
         }
         if (found_congestion) break;
@@ -569,6 +905,7 @@ static int check_tree_rebuild_oom(void)
             { valid = 0; break; }
     }
     if (!found_congestion) valid = 0;
+    if (valid && !snapshot_tree(tree, &before_snapshot)) valid = 0;
     if (valid) {
         LksPath *snapshot = lks_path_clone(lks_tree_node_path(last));
         if (snapshot == NULL) valid = 0;
@@ -578,10 +915,8 @@ static int check_tree_rebuild_oom(void)
             LksStatus status;
             lks_alloc_test_fail_on_attempt(fail_index);
             status = lks_tree_insert_item(tree, &values[i], &comparator, &inserted);
+            lks_alloc_test_disable_failure();
             if (status == LKS_STATUS_OK) {
-                /* The assertion itself calls find_path and allocates; stop
-                 * injection before validating the successful operation. */
-                lks_alloc_test_disable_failure();
                 success = inserted != NULL &&
                     lks_tree_node_item(inserted) == &values[i] &&
                     lks_tree_find_path(tree, lks_tree_node_path(inserted),
@@ -591,6 +926,8 @@ static int check_tree_rebuild_oom(void)
             }
             if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
                 lks_tree_size(tree) != i ||
+                !snapshot_tree(tree, &after_snapshot) ||
+                !snapshots_equal(&before_snapshot, &after_snapshot) ||
                 lks_tree_find_path(tree, snapshot, &found) != LKS_STATUS_OK ||
                 found != last || lks_alloc_stats_get().live_bytes != before.live_bytes ||
                 lks_alloc_stats_get().live_blocks != before.live_blocks) valid = 0;
@@ -599,10 +936,105 @@ static int check_tree_rebuild_oom(void)
         lks_alloc_test_disable_failure();
         lks_path_destroy(snapshot);
     }
-    printf("V2 Tree rebuild OOM N=%zu FailPoints=%zu Success=%d\n",
-        i, failure_points, success);
+    { LksTreeRepairStats stats = lks_tree_repair_stats_get();
+      printf("V2 Tree congestion OOM N=%zu FailPoints=%zu Success=%d Local=%zu Expanded=%zu Nodes=%zu Full=%zu\n",
+          i, failure_points, success, stats.successes,
+          stats.region_expansions, stats.nodes_relabelled, stats.full_rebuilds); }
+    { LksTreeRepairStats stats = lks_tree_repair_stats_get();
+      valid = valid && stats.successes == 1 && stats.full_rebuilds == 0; }
     lks_tree_destroy(tree);
     return valid && success && failure_points > 0 && clean_allocator();
+}
+
+static int check_full_fallback_oom(void)
+{
+    V2Item values[8];
+    void *expected[8];
+    LksComparator comparator = {compare_item, NULL};
+    LksTree *tree;
+    LksPath *path;
+    TreeSnapshot before, after;
+    LksTreeRepairStats stats;
+    size_t i, fail_index, failures = 0, max_depth = 0;
+    int valid = 1, success = 0;
+    if (lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    path = lks_path_create_at_level(LKS_DIRECTION_NEGATIVE,
+        LKS_POLICY_INITIAL_SLOT, 0);
+    if (tree == NULL || path == NULL) valid = 0;
+    for (i = 0; i < 7 && valid; ++i) {
+        if (i > 0 && lks_path_append_at_level(path,
+                LKS_POLICY_INITIAL_SLOT, i) != LKS_STATUS_OK) valid = 0;
+        values[i].key = (int)i; values[i].order = i;
+        expected[i] = &values[i];
+        if (valid && lks_tree_insert(tree, path, &values[i], NULL) !=
+                LKS_STATUS_OK) valid = 0;
+    }
+    values[7].key = 7; values[7].order = 7;
+    expected[7] = &values[7];
+    if (valid && !snapshot_tree(tree, &before)) valid = 0;
+    lks_tree_repair_stats_reset();
+    for (fail_index = 1; valid && fail_index <= 10000; ++fail_index) {
+        LksAllocStats live = lks_alloc_stats_get();
+        const LksTreeNode *inserted = NULL;
+        LksStatus status;
+        lks_alloc_test_fail_on_attempt(fail_index);
+        status = lks_tree_insert_item(tree, &values[7], &comparator, &inserted);
+        lks_alloc_test_disable_failure();
+        if (status == LKS_STATUS_OK) {
+            success = inserted != NULL &&
+                lks_tree_node_item(inserted) == &values[7] &&
+                audit_tree_order(tree, expected, 8, &max_depth);
+            break;
+        }
+        if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
+            !snapshot_tree(tree, &after) || !snapshots_equal(&before, &after) ||
+            lks_alloc_stats_get().live_bytes != live.live_bytes ||
+            lks_alloc_stats_get().live_blocks != live.live_blocks) valid = 0;
+        ++failures;
+    }
+    lks_alloc_test_disable_failure();
+    stats = lks_tree_repair_stats_get();
+    valid = valid && success && failures > 0 && stats.full_rebuilds == 1 &&
+        stats.successes == 0;
+    printf("V2 FullFallbackOOM FailPoints=%zu Full=%zu MaxDepth=%zu Status=%s\n",
+        failures, stats.full_rebuilds, max_depth, valid ? "PASS" : "FAIL");
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
+    return valid && clean_allocator();
+}
+
+static int check_level_limit_full_fallback(void)
+{
+    V2Item values[2] = {{0, 0}, {1, 1}};
+    void *expected[2] = {&values[0], &values[1]};
+    LksComparator comparator = {compare_item, NULL};
+    LksTree *tree;
+    LksPath *path;
+    LksTreeRepairStats stats;
+    const LksTreeNode *inserted = NULL;
+    size_t max_depth = 0;
+    int valid;
+    if (lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    path = lks_path_create_at_level(LKS_DIRECTION_POSITIVE,
+        LKS_PATH_SLOT_MAX, (size_t)-1);
+    valid = tree != NULL && path != NULL;
+    if (valid && lks_tree_insert(tree, path, &values[0], NULL) != LKS_STATUS_OK)
+        valid = 0;
+    lks_tree_repair_stats_reset();
+    if (valid && lks_tree_insert_item(tree, &values[1], &comparator,
+            &inserted) != LKS_STATUS_OK) valid = 0;
+    stats = lks_tree_repair_stats_get();
+    if (valid) valid = inserted != NULL &&
+        lks_tree_node_item(inserted) == &values[1] &&
+        audit_tree_order(tree, expected, 2, &max_depth);
+    valid = valid && stats.full_rebuilds == 1;
+    printf("V2 LevelLimitFallback Full=%zu Status=%s\n",
+        stats.full_rebuilds, valid ? "PASS" : "FAIL");
+    lks_path_destroy(path);
+    lks_tree_destroy(tree);
+    return valid && clean_allocator();
 }
 
 int lks_run_v2_preview_tests(void)
@@ -618,7 +1050,14 @@ int lks_run_v2_preview_tests(void)
         !check_group_case("random-duplicates", 1024, 5, 4) ||
         !check_group_case("random-unique", 1024, 4, 4) ||
         !check_tree_sequence(1024, 0) || !check_tree_sequence(256, 1) ||
-        !check_narrow_gap() || !check_tree_rebuild_oom()) {
+        !check_narrow_gap() || !check_local_relabel() ||
+        !check_parent_first_descendant_repair() ||
+        !check_positive_boundary_repair(0) ||
+        !check_positive_boundary_repair(1) ||
+        !check_online_pattern(128, 0) || !check_online_pattern(128, 1) ||
+        !check_online_pattern(128, 2) || !check_online_pattern(160, 3) ||
+        !check_local_repair_oom() || !check_full_fallback_oom() ||
+        !check_level_limit_full_fallback()) {
         puts("LayerKeySort v2 preview test FAILED");
         return 1;
     }

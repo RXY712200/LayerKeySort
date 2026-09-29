@@ -11,8 +11,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 2
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.1"
-#define LKS_VERSION_STRING "2.0.0-preview.1"
+#define LKS_VERSION_PRERELEASE "preview.2"
+#define LKS_VERSION_STRING "2.0.0-preview.2"
 
 /* Public Path slot range: A0..Z9 maps to values 0..259. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -253,8 +253,8 @@ LksStatus lks_tree_insert(
 );
 /* Insert ITEM at a position determined by COMPARATOR. Equal items are inserted
  * stably after existing comparator-equal items. Item remains borrowed; failure
- * leaves the logical Tree unchanged and OUT_NODE NULL. Success may rebuild the
- * entire Tree; discard every previously borrowed Tree node/Path/navigation
+ * leaves the logical Tree unchanged and OUT_NODE NULL. Success may replace a
+ * local subtree or the entire Tree; discard every borrowed Tree node/Path/navigation
  * result and use OUT_NODE as the new inserted node if requested. */
 LksStatus lks_tree_insert_item(
     LksTree *tree,

@@ -1,8 +1,30 @@
 # LayerKeySort
 
-*A stable C17 ordering library based on hierarchical path keys. v2.0.0-preview.1.*
+*A C17 library for stable ordering with hierarchical Path positions. v2.0.0-preview.2.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
+
+> [!WARNING]
+> **V2 is currently in Preview.** Preview releases are public development snapshots, not production-ready releases. Each validates part of the V2 design; known or unknown defects and deliberately simple behavior may remain. Algorithms, heuristics, internal structures, exact generated Path layouts, and performance may change.
+>
+> Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
+
+## Quick start
+
+```c
+#include "layerkeysort.h"
+
+lks_sort(items, count, compare_items, NULL);
+```
+
+`items` is a caller-owned pointer array; `compare_items` defines the order. Sorting is stable, and the pointed-to objects remain caller-owned. `lks_sort` returns `LksStatus`, which production code should check. See the complete, compilable example with error handling in [`examples/basic.c`](examples/basic.c). For Path, Tree, and Group operations, see the [usage guide](docs/USAGE.md).
+
+## V2 development status
+
+| Version | Main purpose | Still provisional or deferred |
+| --- | --- | --- |
+| v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
+| v2.0.0-preview.2 (in preparation) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -46,25 +68,6 @@ B         0A4
 ```
 
 The Path comparison and gap APIs implement this ordering.
-
-## Quick start
-
-Include the public header and stable-sort a pointer array in one call.
-The pointed-to objects remain caller-owned; equal keys keep input order.
-
-```c
-#include "layerkeysort.h"
-
-/* compare_items has signature: int (const void *, const void *, void *) */
-LksStatus status = lks_sort(items, item_count, compare_items, NULL);
-if (status != LKS_STATUS_OK) {
-    /* Handle allocation or argument failure. */
-}
-```
-
-The complete compilable example is [`examples/basic.c`](examples/basic.c).
-For inspectable Path coordinates and explicit Group merging, see the
-[usage guide](docs/USAGE.md).
 
 ## Ordering and stability guarantees
 

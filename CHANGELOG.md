@@ -2,7 +2,23 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [2.0.0-preview.1] - Unreleased
+## [2.0.0-preview.2] - Unreleased
+
+### Changed
+
+- Comparator-driven Tree insertion can sparsely rebuild a bounded, complete
+  local subtree when a Path becomes too deep or its prefix topology is absent.
+  It may accept a deeper Path when local repair costs too much, retaining the
+  atomic full-Tree rebuild as the final fallback.
+- Local replacement prepares and validates an independent branch before an
+  allocation-free splice. Allocation failure preserves the original Tree.
+- Internal diagnostic builds count local attempts, successes, fallbacks,
+  affected nodes, region growth, deeper-Path accepts, and full rebuilds.
+
+The public API and caller ownership rules are unchanged. Preview window sizes,
+depth thresholds, and sparse slot spacing remain provisional policy.
+
+## [2.0.0-preview.1]
 
 ### Added
 

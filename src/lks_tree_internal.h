@@ -29,6 +29,21 @@ typedef struct LksTreeInternalProfile {
     LksTreeInternalDegreeCapacity degree_capacity[8];
 } LksTreeInternalProfile;
 
+/* Diagnostic-build process counters. Production builds return zero stats. */
+typedef struct LksTreeRepairStats {
+    size_t attempts;
+    size_t successes;
+    size_t fallbacks;
+    size_t region_expansions;
+    size_t nodes_relabelled;
+    size_t max_region_nodes;
+    size_t full_rebuilds;
+    size_t deeper_accepts;
+} LksTreeRepairStats;
+
+void lks_tree_repair_stats_reset(void);
+LksTreeRepairStats lks_tree_repair_stats_get(void);
+
 /* Read-only implementation details for tests and diagnostics. */
 LksStatus lks_tree_internal_profile(
     const LksTree *tree,
