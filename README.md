@@ -5,7 +5,7 @@
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
 > [!WARNING]
-> **V2 is currently in Preview.** Preview releases are public development snapshots, not production-ready releases. Each validates part of the V2 design; known or unknown defects and deliberately simple behavior may remain. Algorithms, heuristics, internal structures, exact generated Path layouts, and performance may change.
+> **V2 is still a prerelease.** Preview.5 is the latest published version; RC.1 is being prepared as the feature/API/format freeze candidate. Neither is stable, production-ready 2.0. Exact automatically generated Path layouts and performance may change.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
@@ -28,13 +28,13 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 | v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
 | v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
+| v2.0.0-rc.1 (candidate) | Freeze and validate the V2 public contract and documented source integration. | Not published yet; release blockers must be resolved before tagging. |
 
-The released Preview.4 decouples mutable
-Tree indexing from Path prefixes and adds Path-addressed Tree removal and
-rekey, strict display parsing, and versioned sortable Path keys. The final
-performance pass added an optional reproducible benchmark harness and
-reduced repeated open-end repair. Preview.4 remains a Preview, not stable 2.0
-or a production-ready release.
+The published Preview.5 retains Preview.4's Path-keyed Tree, remove/rekey,
+canonical display parsing, and LK1 sortable keys, and adds usage guidance,
+integration documentation, the mutation soak, and macOS validation. RC.1 now
+checks these public contracts for the intended 2.x freeze without changing
+the production algorithm. See the [compatibility contract](docs/COMPATIBILITY.md).
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -177,6 +177,7 @@ CHANGELOG.md
 
 - [Usage guide](docs/USAGE.md)
 - [Integration guide](docs/INTEGRATION.md)
+- [2.x compatibility contract](docs/COMPATIBILITY.md)
 - [API reference](docs/API.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Benchmark report](docs/BENCHMARKS.md)

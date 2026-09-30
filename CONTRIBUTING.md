@@ -16,7 +16,7 @@ Add or update relevant regression tests and run them before opening a change. Re
 
 ## Public API changes
 
-Public API changes should be deliberate and documented. Describe behavior and compatibility impact in the change.
+Public API changes should be deliberate and documented. Describe behavior and compatibility impact in the change. Review the intended 2.x compatibility boundary in [docs/COMPATIBILITY.md](docs/COMPATIBILITY.md) before proposing one.
 
 ## Pull requests
 
