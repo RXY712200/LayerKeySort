@@ -23,15 +23,20 @@ changes; a persisted coordinate is not a permanent item identity.
 
 ## Simple stable sort
 
+### `lks_sort`
+
 `lks_sort(items, count, compare, context)` sorts the caller's pointer array in
 place. It borrows the pointed-to objects and preserves the array on allocation
-failure. Comparator-equal pointers keep their input order. A zero or one item
-array needs no allocation. See the public header for the full argument contract.
+failure. Comparator-equal items keep their input order. `compare` is required;
+`items` may be NULL only when `count` is zero. A zero or one item array needs no
+allocation. Invalid arguments return `LKS_STATUS_INVALID_ARGUMENT`; an
+allocation failure returns `LKS_STATUS_OUT_OF_MEMORY`.
 
 ```c
 LksStatus lks_sort(void **items, size_t count,
     LksCompareFn compare, void *context);
 ```
+
 ## Path slots and codec
 
 `LKS_PATH_SLOT_MIN` is `0u` and `LKS_PATH_SLOT_MAX` is `65535u`: 65,536 legal
@@ -433,6 +438,56 @@ LksStatus lks_path_format(
     char *buffer,
     size_t buffer_size
 );
+```
+
+### `lks_path_parse`
+
+Parse only canonical display text as specified above. `text` is borrowed and
+`out_path` is required. On success, `*out_path` is a new caller-owned Path to
+destroy with `lks_path_destroy()`. Failure leaves `*out_path` NULL. NULL,
+malformed, noncanonical, or overflowing input returns
+`LKS_STATUS_INVALID_ARGUMENT`; allocation failure returns
+`LKS_STATUS_OUT_OF_MEMORY`.
+
+```c
+LksStatus lks_path_parse(const char *text, LksPath **out_path);
+```
+
+### `lks_path_order_key_length`
+
+Return the number of canonical `LK1:` key characters excluding the terminating
+NUL. This function allocates nothing. Zero means NULL or invalid Path input,
+or an unrepresentable output length.
+
+```c
+size_t lks_path_order_key_length(const LksPath *path);
+```
+
+### `lks_path_order_key_format`
+
+Write the canonical `LK1:` key and terminating NUL into the caller-owned
+buffer. The Path is unchanged and formatting allocates nothing. NULL Path or
+buffer returns `LKS_STATUS_INVALID_ARGUMENT`. An undersized buffer returns
+`LKS_STATUS_BUFFER_TOO_SMALL` without writing partial output. For canonical
+keys of the same LK1 version, bytewise `strcmp()` order matches Path order;
+database collation must preserve that byte order.
+
+```c
+LksStatus lks_path_order_key_format(const LksPath *path,
+    char *buffer, size_t buffer_size);
+```
+
+### `lks_path_order_key_parse`
+
+Parse only the supported canonical `LK1:` representation described above.
+`key` is borrowed and `out_path` is required. On success, `*out_path` is a new
+caller-owned Path to destroy with `lks_path_destroy()`. Every failure leaves
+`*out_path` NULL. NULL, malformed, unsupported-version, noncanonical, or
+platform-overflow input returns `LKS_STATUS_INVALID_ARGUMENT`; allocation
+failure returns `LKS_STATUS_OUT_OF_MEMORY`.
+
+```c
+LksStatus lks_path_order_key_parse(const char *key, LksPath **out_path);
 ```
 
 ### `lks_path_compare`
