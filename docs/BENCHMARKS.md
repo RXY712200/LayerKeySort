@@ -1,12 +1,12 @@
 # V2 performance and benchmark evidence (Preview.4)
 
-The latest published Preview is **v2.0.0-preview.4**. The Stage 4 and Stage 5
+The latest published Preview is **v2.0.0-preview.5**. The Stage 4 and Stage 5
 columns below are historical development snapshots. These numbers describe
 one machine and the stated workloads; they are not universal performance
 rankings. Generated
 Path coordinates and private policy values remain implementation details.
 
-Preview.5 development adds usability and correctness-endurance coverage; it
+Preview.5 adds usability and correctness-endurance coverage; it
 does not rerun or replace the captured Stage 5 timing matrix. The new mutation
 soak is a correctness test, not a performance ranking.
 

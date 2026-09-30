@@ -1,6 +1,6 @@
 # Current benchmark harness (Preview.4)
 
-Preview.5 development leaves the captured Preview.4/Stage 5 timing data
+Preview.5 leaves the captured Preview.4/Stage 5 timing data
 unchanged. Its new mutation soak is a separate correctness test.
 
 `current_benchmark.c` exercises public APIs and prints one CSV row:

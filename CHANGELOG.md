@@ -2,12 +2,11 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [2.0.0-preview.5] - Unreleased
+## [2.0.0-preview.5] - 2026-09-30
 
-Preview.5 development concentrates on usability, integration, long-run
-validation, platform coverage, and preparation for a V2 public-contract freeze.
-Preview.4 remains the latest published Preview; no Preview.5 tag or Release
-exists during this development stage.
+Preview.5 is a released Preview snapshot, not stable 2.0 or a production-ready
+release. It concentrates on usability, integration, long-run validation,
+platform coverage, and preparation for a V2 public-contract freeze.
 
 - Added a compilable dynamic layer-list example using existing public Path and
   Tree APIs for between placement, rekey, removal, display text, and LK1

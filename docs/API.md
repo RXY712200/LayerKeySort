@@ -9,11 +9,11 @@
 - `LKS_VERSION_MAJOR` is `2`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.5"` on the development branch.
-- `LKS_VERSION_STRING` is `"2.0.0-preview.5"` on the development branch.
+- `LKS_VERSION_PRERELEASE` is `"preview.5"`.
+- `LKS_VERSION_STRING` is `"2.0.0-preview.5"`.
 
-Preview.4 remains the latest published release. Preview.5 development keeps
-the 52-function public API and LK1 version-1 grammar unchanged.
+Preview.5 is the latest published Preview. It keeps the 52-function public API
+and LK1 version-1 grammar unchanged.
 
 Path values are ordering coordinates, not permanent application item IDs.
 Preview.3 specified the current formatter output but had no public
@@ -896,6 +896,6 @@ coordinate space, independent of unchanged source Groups.
 
 The released v2.0.0-preview.3 public header contained **9 types** and **46 functions**,
 including `lks_sort`; Preview.4 added two Tree mutation and four Path
-representation functions. The current Preview.5 development header still has
+representation functions. The Preview.5 header still has
 **52 functions**. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

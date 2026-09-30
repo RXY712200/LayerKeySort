@@ -60,7 +60,7 @@ cmake --build build
 The executable path can differ with multi-configuration generators such as
 Visual Studio (for example, `build/Debug/layerkeysort_example.exe`).
 
-## Dynamic layer-list example (Preview.5 development)
+## Dynamic layer-list example (Preview.5)
 
 [`examples/layer_list.c`](../examples/layer_list.c) models Background, Player,
 HUD, and Effects as caller-owned objects with stable application IDs. It uses

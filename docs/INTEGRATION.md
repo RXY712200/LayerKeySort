@@ -1,8 +1,8 @@
 # Integrating LayerKeySort
 
-Preview.5 development uses the same 52-function public C API as the published
-`v2.0.0-preview.4`. Preview.5 has no published tag yet. Treat Preview APIs,
-generated Path layouts, and performance policy as provisional.
+The published `v2.0.0-preview.5` uses the same 52-function public C API as
+Preview.4. Treat Preview APIs, generated Path layouts, and performance policy
+as provisional.
 
 ## Requirements and tested configurations
 
@@ -11,7 +11,7 @@ generated Path layouts, and performance policy as provisional.
 - CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
   with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
   and compiler versions, not every version of those operating systems or
-  compilers. The Preview.5 macOS job is new and must pass before release.
+  compilers. The Preview.5 macOS job passed for its recorded CI runner.
 
 The public header has `extern "C"` guards for inclusion by C++ applications;
 the library implementation remains C17. Callers own item objects. Tree and
@@ -47,8 +47,7 @@ parent project.
 
 ## CMake `FetchContent`
 
-Pin a real published tag. Preview.4 is the current published example ref;
-replace it only after a later Preview is released and reviewed:
+Pin the published Preview.5 tag for a reproducible build:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -61,15 +60,14 @@ set(LKS_BUILD_TESTS OFF)
 set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v2.0.0-preview.4)
+    GIT_TAG v2.0.0-preview.5)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app src/main.c)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-Do not reference an unpublished `v2.0.0-preview.5` tag in a reproducible
-consumer build. `FetchContent_MakeAvailable` also adds the repository's example
+`FetchContent_MakeAvailable` also adds the repository's example
 targets; `cmake --build build --target my_app` builds only the application and
 its library dependency when that distinction matters.
 
