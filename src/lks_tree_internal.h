@@ -22,6 +22,9 @@ typedef struct LksTreeRepairStats {
     size_t nodes_relabelled;
     size_t max_region_nodes;
     size_t full_rebuilds;
+    size_t full_rebuilt_nodes;
+    size_t gap_limit_rebuild_attempts;
+    size_t depth_limit_rebuild_attempts;
     size_t deeper_accepts;
     size_t comparator_search_steps;
     size_t rotations;

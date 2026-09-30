@@ -1513,6 +1513,43 @@ static int check_stage12_bulk_oom(void)
     return valid && success && failures > 0 && clean_allocator();
 }
 
+/* Endpoint insertion within the hard depth allowance should not repeatedly
+ * prepare almost identical repair windows. This is a private policy guard,
+ * while the Tree profile and stable item order remain semantic checks. */
+static int check_endpoint_repair_pressure(void)
+{
+    enum { COUNT = 20000 };
+    V2Item *values = (V2Item *)malloc(COUNT * sizeof(*values));
+    LksComparator comparator = {compare_item, NULL};
+    LksTree *tree = NULL;
+    LksTreeRepairStats stats;
+    LksTreeInternalProfile profile;
+    size_t i;
+    int valid = values != NULL && lks_alloc_stats_reset() == 0;
+    if (valid) tree = lks_tree_create();
+    valid = valid && tree != NULL;
+    if (valid) lks_tree_repair_stats_reset();
+    for (i = 0; valid && i < COUNT; ++i) {
+        values[i].key = (int)i;
+        values[i].order = i;
+        valid = lks_tree_insert_item(tree, &values[i], &comparator, NULL) ==
+            LKS_STATUS_OK;
+    }
+    if (valid) {
+        stats = lks_tree_repair_stats_get();
+        valid = lks_tree_internal_profile(tree, &profile) == LKS_STATUS_OK &&
+            profile.balance_valid && profile.real_node_count == COUNT &&
+            profile.max_path_depth <= LKS_POLICY_HARD_ONLINE_DEPTH &&
+            stats.attempts < COUNT / 50 && stats.full_rebuilds <= 2;
+        printf("V2 EndpointPressure N=%u Attempts=%zu Full=%zu MaxDepth=%zu Status=%s\n",
+            COUNT, stats.attempts, stats.full_rebuilds, profile.max_path_depth,
+            valid ? "PASS" : "FAIL");
+    }
+    lks_tree_destroy(tree);
+    free(values);
+    return valid && clean_allocator();
+}
+
 int lks_run_v2_preview_tests(void)
 {
     if (!check_slot_codec() || !check_slot_domain() || !check_level_text() ||
@@ -1534,6 +1571,7 @@ int lks_run_v2_preview_tests(void)
         !check_positive_boundary_repair(1) ||
         !check_online_pattern(128, 0) || !check_online_pattern(128, 1) ||
         !check_online_pattern(128, 2) || !check_online_pattern(160, 3) ||
+        !check_endpoint_repair_pressure() ||
         !check_local_repair_oom() || !check_full_fallback_oom() ||
         !check_level_limit_full_fallback() ||
         !check_stage12_explicit_and_deep() ||

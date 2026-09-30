@@ -7,6 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 option(LKS_BUILD_TESTS "Build diagnostic tests" ON)
+option(LKS_BUILD_BENCHMARKS "Build the public-API benchmark harness" OFF)
 option(LKS_ENABLE_SANITIZERS "Enable AddressSanitizer and UBSan where supported" OFF)
 
 set(LKS_SOURCES
@@ -31,6 +32,11 @@ lks_configure_target(layerkeysort)
 add_executable(layerkeysort_example examples/basic.c)
 target_link_libraries(layerkeysort_example PRIVATE layerkeysort)
 
+if(LKS_BUILD_BENCHMARKS)
+    add_executable(layerkeysort_benchmark benchmarks/current_benchmark.c)
+    target_link_libraries(layerkeysort_benchmark PRIVATE layerkeysort)
+endif()
+
 if(LKS_BUILD_TESTS)
     include(CTest)
     # Instrumentation and historical v1 owned-base merge are test-only.
@@ -46,4 +52,12 @@ if(LKS_BUILD_TESTS)
     target_include_directories(layerkeysort_tests PRIVATE src tests)
     target_link_libraries(layerkeysort_tests PRIVATE layerkeysort_diagnostics)
     add_test(NAME layerkeysort_v2_preview COMMAND layerkeysort_tests)
+    if(LKS_BUILD_BENCHMARKS)
+        add_test(NAME layerkeysort_benchmark_tree_smoke
+            COMMAND layerkeysort_benchmark tree equal 200 0 1)
+        add_test(NAME layerkeysort_benchmark_mutation_smoke
+            COMMAND layerkeysort_benchmark mut_mixed random 200 0 1)
+        add_test(NAME layerkeysort_benchmark_sort_smoke
+            COMMAND layerkeysort_benchmark sort duplicates 200 0 1)
+    endif()
 endif()

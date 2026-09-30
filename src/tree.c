@@ -281,6 +281,28 @@ LksStatus lks_tree_insert(LksTree *tree, const LksPath *path, void *item,
     return LKS_STATUS_OK;
 }
 
+/* Comparator insertion already owns its generated candidate. On success the
+ * node takes it; on failure the caller keeps and destroys it. This avoids a
+ * short-lived Path clone while retaining the public explicit-insert contract. */
+static LksStatus insert_owned_path(LksTree *tree, LksPath *path, void *item,
+    const LksTreeNode **out_node)
+{
+    LksTreeNode *found, *parent, *node;
+    int order;
+    LksStatus status;
+    if (tree->size == (size_t)-1) return LKS_STATUS_OUT_OF_MEMORY;
+    status = search_path(tree, path, &found, &parent, &order);
+    if (status != LKS_STATUS_OK) return status;
+    if (found != NULL) return LKS_STATUS_ALREADY_EXISTS;
+    node = (LksTreeNode *)lks_alloc_tagged(sizeof(*node), LKS_ALLOC_TAG_TREE_NODE);
+    if (node == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+    node->path = path; node->item = item;
+    node->left = NULL; node->right = NULL; node->parent = NULL; node->height = 1;
+    link_prepared(tree, node, parent, order);
+    if (out_node != NULL) *out_node = node;
+    return LKS_STATUS_OK;
+}
+
 LksStatus lks_tree_find_path(const LksTree *tree, const LksPath *path,
     const LksTreeNode **out_node)
 {
@@ -604,6 +626,11 @@ static LksStatus rebuild_with_item(LksTree *tree, void *item,
       replacement->root = old_root; replacement->size = old_size; }
     lks_tree_destroy(replacement);
     REPAIR_COUNT(full_rebuilds);
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+    if (repair_stats.full_rebuilt_nodes <= (size_t)-1 - tree->size)
+        repair_stats.full_rebuilt_nodes += tree->size;
+    else repair_stats.full_rebuilt_nodes = (size_t)-1;
+#endif
     if (out_node != NULL) *out_node = cursor;
     return LKS_STATUS_OK;
 }
@@ -628,17 +655,24 @@ LksStatus lks_tree_insert_item(LksTree *tree, void *item,
             status = lks_path_between(before->path, after->path, &candidate);
         else if (before != NULL) status = lks_path_after(before->path, &candidate);
         else status = lks_path_before(after->path, &candidate);
-        if (status == LKS_STATUS_LEVEL_LIMIT)
+        if (status == LKS_STATUS_LEVEL_LIMIT) {
+            REPAIR_COUNT(gap_limit_rebuild_attempts);
             return rebuild_with_item(tree, item, after, out_node);
+        }
         if (status != LKS_STATUS_OK) return status;
     }
     depth = lks_path_depth(candidate);
     if (depth <= LKS_POLICY_PREFERRED_ONLINE_DEPTH) {
-        status = lks_tree_insert(tree, candidate, item, out_node);
-        lks_path_destroy(candidate);
+        status = insert_owned_path(tree, candidate, item, out_node);
+        if (status != LKS_STATUS_OK) lks_path_destroy(candidate);
         return status;
     }
-    if (tree->size != 0) {
+    /* At an open end, a candidate within the hard depth allowance can be
+     * inserted directly. Repair there is useful when it can avert a rebuild;
+     * otherwise repeated appends can regenerate overlapping windows without
+     * improving depth. Interior gaps still get the usual repair attempt. */
+    if (tree->size != 0 && ((before != NULL && after != NULL) ||
+        depth > LKS_POLICY_HARD_ONLINE_DEPTH)) {
         status = try_range_repair(tree, before, after, item, depth,
             out_node, &repaired);
         if (status != LKS_STATUS_OK || repaired) {
@@ -648,10 +682,11 @@ LksStatus lks_tree_insert_item(LksTree *tree, void *item,
     }
     if (depth > LKS_POLICY_HARD_ONLINE_DEPTH) {
         lks_path_destroy(candidate);
+        REPAIR_COUNT(depth_limit_rebuild_attempts);
         return rebuild_with_item(tree, item, after, out_node);
     }
-    status = lks_tree_insert(tree, candidate, item, out_node);
-    lks_path_destroy(candidate);
+    status = insert_owned_path(tree, candidate, item, out_node);
+    if (status != LKS_STATUS_OK) lks_path_destroy(candidate);
     if (status == LKS_STATUS_OK) REPAIR_COUNT(deeper_accepts);
     return status;
 }

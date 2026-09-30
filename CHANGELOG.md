@@ -22,6 +22,12 @@ Notable changes to LayerKeySort are documented here.
 - Converged logical coordinate policy names, removed a redundant repair
   threshold, and added fixed version-1 key vectors, gap boundaries, and
   mixed Tree mutation/Path representation regression coverage.
+- Added an optional deterministic public-API benchmark harness and documented
+  Preview.3/Stage 4/Stage 5 timing, memory, Path size, and complexity limits.
+  Comparator insertion now adopts its generated Path instead of cloning it;
+  open-end insertion skips repeatedly ineffective local repair while within
+  the hard depth allowance. Interior repair and full rebuild remain available.
+  The benchmark report records workloads that regress as well as improve.
 - Whole-Tree serialization and distributed semantics remain optional future
   work. Path-coordinate persistence does not provide permanent item IDs. This
   development state is not production-ready and is not part of released Preview.3.

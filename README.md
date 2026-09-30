@@ -29,7 +29,9 @@ lks_sort(items, count, compare_items, NULL);
 
 Unreleased V2 stabilization work on the development branch decouples mutable
 Tree indexing from Path prefixes and adds Path-addressed Tree removal and
-rekey, strict display parsing, and versioned sortable Path keys. The released Preview.3 tag remains unchanged;
+rekey, strict display parsing, and versioned sortable Path keys. The final
+local performance pass adds an optional reproducible benchmark harness and
+reduces repeated open-end repair. The released Preview.3 tag remains unchanged;
 the development branch is not a production release.
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
@@ -109,6 +111,16 @@ The existing `LayerKeySort.slnx` / `.vcxproj` remain available for MSVC C17 vali
 
 The repository includes deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured to check MSVC, GCC, and Clang when this branch is pushed. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
 
+## Performance evidence
+
+The [unreleased benchmark report](docs/BENCHMARKS.md) gives reproducible
+Preview.3, Stage 4, and Stage 5 measurements, including regressions and
+memory tradeoffs. The [benchmark harness](benchmarks/README.md) is optional
+in CMake. The Path-keyed Tree is much faster on several equal-key and
+open-end insertion workloads, but alternating and small random cases do not
+improve across the board. Full rebuild remains a correctness fallback, so
+online insertion has no claimed worst-case `O(log n)` time bound.
+
 ## Current limitations
 
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
@@ -137,6 +149,7 @@ CHANGELOG.md
 - [Usage guide](docs/USAGE.md)
 - [API reference](docs/API.md)
 - [Development guide](docs/DEVELOPMENT.md)
+- [Benchmark report](docs/BENCHMARKS.md)
 - [Contributing](CONTRIBUTING.md)
 - [Interactive visualizer source](docs/demo/index.html)
 

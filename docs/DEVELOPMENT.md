@@ -5,6 +5,7 @@
 - `include/` — public header.
 - `src/` — production C implementation and private headers.
 - `tests/` — property, stress, benchmark, and public API validation code.
+- `benchmarks/` — optional current public-API benchmark harness and matrix runner.
 - `examples/` — standalone public API example.
 - `demo/` — executable validation/demo entry point.
 - `docs/` — user documentation, visualizer, and site assets.
@@ -30,6 +31,9 @@ ctest --test-dir build --output-on-failure
 that library. `layerkeysort_tests` links a separately compiled diagnostic
 variant so allocation counters and single-shot fault injection remain usable
 without shared mutable instrumentation in ordinary production allocations.
+`-DLKS_BUILD_BENCHMARKS=ON` adds a production-linked public-API harness and
+three small CTest smoke cases. See [BENCHMARKS.md](BENCHMARKS.md) for timed
+results and limits; diagnostic counter builds are separate from timed builds.
 For a supported GCC or Clang toolchain, `-DLKS_ENABLE_SANITIZERS=ON` enables
 AddressSanitizer and UndefinedBehaviorSanitizer. Diagnostic fault injection is
 process-global test state and carries no concurrent-test guarantee.
@@ -134,7 +138,9 @@ Endpoint target spacing 10, preferred/hard depths 4/6, and local windows
 The minimum midpoint span of 2 is the arithmetic requirement for an integer
 slot strictly between two existing slots. Stage 4 removed a redundant repair
 gain threshold and renamed the logical block and midpoint concepts without
-changing generated Path layouts. Final policy tuning belongs to Stage 5.
+changing generated Path layouts. Stage 5 evaluated depth/window variants and
+retained these values after cross-workload and memory checks; they remain
+provisional rather than formally optimal.
 
 ### Observed Preview.3 effect
 
@@ -192,7 +198,16 @@ rebuild remains the correctness fallback and swaps an independently built
 Tree. No ChildBlock is used by the mutable index. This also makes physical
 height depend on node count rather than caller-supplied Path depth. Repair
 counters are process-wide only in diagnostic builds. The unreleased development
-branch now supports exact Path removal with allocation-free AVL successor
+policy now inserts an open-end candidate directly while its depth is at most
+six: repeatedly regenerating overlapping endpoint repair windows was costly
+without improving the accepted coordinate. Interior gaps retain repair, and
+an open-end candidate deeper than six still attempts repair before fallback.
+Comparator insertion transfers its already-owned candidate Path into the node
+after successful allocation. This removes a transient clone but may retain
+spare Path capacity, a small measured peak-memory tradeoff. Detailed counts,
+candidate trials, and limitations are in [BENCHMARKS.md](BENCHMARKS.md).
+The unreleased development branch now supports exact Path removal with
+allocation-free AVL successor
 transplant. Rekey first allocates a replacement Path and node, then links the
 replacement and detaches the old node without any further allocation. Delete
 does not compact Path coordinates; AVL rotations only change physical links.
@@ -216,7 +231,9 @@ Path coordinates. It does not serialize a whole Tree, its physical AVL shape,
 caller item payloads, or application item IDs. A Tree mutation may change
 coordinates, so persistence of a coordinate does not make it an immutable
 item identity. Full rebuild remains a failure-atomic correctness fallback;
-whether its frequency and cost need tuning is Stage 5 work.
+Stage 5 measured and reduced a repeated endpoint repair pattern, while
+adversarial workloads can still trigger costly rebuilds. No amortized bound
+is asserted.
 
 The V2 core targets single-process ordering. Concurrent independent gap
 insertion, replica convergence, and CRDT semantics are optional future
@@ -225,7 +242,28 @@ also optional integration work: no present public correctness contract needs
 one, and diagnostic fault injection remains private. CMake, Visual Studio,
 and direct C17 source integration are supported; package-manager recipes and
 whole-Tree serialization are separate optional integrations. `lks_sort()` is
-a stable convenience operation; any performance changes await Stage 5.
+a stable convenience operation; Stage 5 retained it after comparison with
+platform `qsort`, which does not promise stable ordering.
+
+### Local stabilization disposition after Stage 5
+
+This table is for the unreleased development branch and a later roadmap review;
+it does not claim that Preview.3 contains these changes.
+
+| Area | Disposition |
+| --- | --- |
+| Physical Tree/Path coupling, ChildBlock movement, equal-run scan, physical-subtree repair restriction, deep physical Tree recursion | Solved by the Path-keyed AVL and logical-range repair. |
+| Exact removal, rekey, display parser, portable sortable Path key | Solved for their documented public contracts. |
+| Online heuristics | Evaluated on multiple workload families; current values retained provisionally, with a targeted endpoint repair rule. |
+| Full-tree rebuild | Retained failure-atomic correctness fallback. Reduced endpoint repair waste, but duplicate-heavy and alternating inputs still incur measurable rebuild cost. |
+| Formal amortized online-insertion bound and fixed memory ceiling | Not established; no such public guarantee is claimed. |
+| Public custom allocator, package recipes, whole-Tree serialization, distributed/CRDT semantics | Optional future integrations or distinct architecture. |
+| Specialized `lks_sort()` optimization | Deferred; the stable convenience implementation passed correctness and contextual `qsort` comparison. |
+
+Benchmark evidence and complexity qualifications are in
+[BENCHMARKS.md](BENCHMARKS.md). A presentation graphic may later use the
+measured all-equal comparator-call reduction and its exact workload label;
+the mixed results do not support a broad speed claim or a winner graphic.
 
 ### Core engineering constraints
 
