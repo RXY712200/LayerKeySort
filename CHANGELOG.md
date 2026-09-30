@@ -2,6 +2,22 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [2.0.0-rc.1] - Unreleased
+
+RC.1 is the V2 feature, public API, Path display, and LK1 format freeze
+candidate. Preview.5 remains the latest published prerelease while this
+candidate is validated. No new public function, production algorithm, or
+external-key version is introduced.
+
+- Defined the intended 2.x source and semantic compatibility boundary in
+  `docs/COMPATIBILITY.md`, distinguishing public contracts from generated
+  Path values and private implementation details.
+- Rechecked the 52-function public surface, canonical Path display grammar,
+  LK1 v1 golden vectors, and documented consumer integration paths.
+- Retained Preview.5's five-platform CI, deterministic mutation soak, and
+  benchmark correctness smoke coverage. RC.1 does not resolve the documented
+  full-rebuild cost or establish a formal insertion bound.
+
 ## [2.0.0-preview.5] - 2026-09-30
 
 Preview.5 is a released Preview snapshot, not stable 2.0 or a production-ready
