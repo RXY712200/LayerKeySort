@@ -1,4 +1,4 @@
-# Current benchmark harness (Preview.4 release candidate)
+# Current benchmark harness (Preview.4)
 
 `current_benchmark.c` exercises public APIs and prints one CSV row:
 

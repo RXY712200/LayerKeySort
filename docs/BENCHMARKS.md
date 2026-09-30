@@ -1,9 +1,9 @@
-# V2 performance and benchmark evidence (Preview.4 release candidate)
+# V2 performance and benchmark evidence (Preview.4)
 
-The published release is **v2.0.0-preview.3**; **v2.0.0-preview.4** is a
-release candidate on the development branch. The Stage 4 and Stage 5 columns
-below are historical development snapshots. These numbers describe one machine and
-the stated workloads; they are not universal performance rankings. Generated
+The latest published Preview is **v2.0.0-preview.4**. The Stage 4 and Stage 5
+columns below are historical development snapshots. These numbers describe
+one machine and the stated workloads; they are not universal performance
+rankings. Generated
 Path coordinates and private policy values remain implementation details.
 
 ## Reproduction and measurement boundary

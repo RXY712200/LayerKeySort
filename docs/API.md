@@ -13,8 +13,8 @@
 - `LKS_VERSION_STRING` is `"2.0.0-preview.4"`.
 
 Path values are ordering coordinates, not permanent application item IDs.
-Released Preview.3 specifies the current formatter output but has no public
-parser or durable key. The Preview.4 release candidate adds both below.
+Preview.3 specified the current formatter output but had no public
+parser or durable key. Preview.4 adds both below.
 Exact coordinates can change when a Tree is re-encoded or Preview policy
 changes; a persisted coordinate is not a permanent item identity.
 
@@ -106,7 +106,7 @@ strings. Use `lks_path_compare()`.
 ## Current Path text grammar
 
 For a valid Path, the formatter emits the following deterministic,
-NUL-terminated ASCII text. The Preview.4 candidate parser accepts exactly this grammar:
+NUL-terminated ASCII text. The Preview.4 parser accepts exactly this grammar:
 
 ```text
 ZERO     = "000"
@@ -162,7 +162,7 @@ levels starting at zero use exactly `4 * depth` characters. In general,
 length is one direction character plus three per step, one separator per
 additional step, and the decimal digits of any emitted level metadata.
 
-### Strict display parser (Preview.4 release candidate)
+### Strict display parser (Preview.4)
 
 ```c
 LksStatus lks_path_parse(const char *text, LksPath **out_path);
@@ -181,7 +181,7 @@ and arithmetic overflow return `LKS_STATUS_INVALID_ARGUMENT`; allocation
 failure returns `LKS_STATUS_OUT_OF_MEMORY`. Parsing is iterative and no
 partially built Path escapes.
 
-## Durable Path order key v1 (Preview.4 release candidate)
+## Durable Path order key v1 (Preview.4)
 
 ```c
 size_t lks_path_order_key_length(const LksPath *path);
@@ -626,7 +626,7 @@ const LksTreeNode *lks_tree_root_child_at(
 );
 ```
 
-### `lks_tree_remove_path` (Preview.4 release candidate)
+### `lks_tree_remove_path` (Preview.4)
 
 Remove exactly one Path-keyed Tree node without allocating or relabeling other
 Paths. The Tree destroys its node and owned Path, but never frees the borrowed
@@ -641,7 +641,7 @@ LksStatus lks_tree_remove_path(
 );
 ```
 
-### `lks_tree_rekey` (Preview.4 release candidate)
+### `lks_tree_rekey` (Preview.4)
 
 Move one caller-owned item from `old_path` to an unoccupied `new_path` without
 changing its item pointer or Tree size. The Tree clones the new Path. Missing
@@ -836,7 +836,7 @@ comparator-equal Base items before Incoming items, while Batch merge preserves
 source chunk order for equals. Each successful merge result has its own Path
 coordinate space, independent of unchanged source Groups.
 
-The released v2.0.0-preview.3 public header contains **9 types** and **46 functions**,
-including `lks_sort`; the Preview.4 candidate header has **52 functions**
+The released v2.0.0-preview.3 public header contained **9 types** and **46 functions**,
+including `lks_sort`; the Preview.4 header has **52 functions**
 after adding two Tree mutation and four Path representation functions. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.
