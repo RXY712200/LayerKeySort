@@ -2,7 +2,10 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## Unreleased V2 stabilization
+## [2.0.0-preview.4] - Unreleased
+
+Preview.4 is a release candidate, not a production-ready release. Preview.3
+remains the published release until Preview.4 is separately released.
 
 - Decoupled mutable Tree topology from Path hierarchy with a Path-keyed
   balanced index. Explicit unique Paths no longer require physical prefixes.
@@ -30,7 +33,8 @@ Notable changes to LayerKeySort are documented here.
   The benchmark report records workloads that regress as well as improve.
 - Whole-Tree serialization and distributed semantics remain optional future
   work. Path-coordinate persistence does not provide permanent item IDs. This
-  development state is not production-ready and is not part of released Preview.3.
+  candidate is not production-ready. The documented benchmark results include
+  alternating and small-random insertion regressions against Preview.3.
 
 ## [2.0.0-preview.3] - 2026-09-29
 

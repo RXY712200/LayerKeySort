@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure
-        run: cmake -S . -B build -A x64
+        run: cmake -S . -B build -A x64 -DLKS_BUILD_BENCHMARKS=ON
       - name: Build
         run: cmake --build build --config Debug --parallel
       - name: Test
@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_ENABLE_SANITIZERS=${{ matrix.sanitizer }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_ENABLE_SANITIZERS=${{ matrix.sanitizer }} -DLKS_BUILD_BENCHMARKS=ON
       - name: Build
         run: cmake --build build --parallel
       - name: Test

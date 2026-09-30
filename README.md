@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. v2.0.0-preview.3 released Preview snapshot.*
+*A C17 library for stable ordering with hierarchical Path positions. Published release: v2.0.0-preview.3; development branch: v2.0.0-preview.4 release candidate.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -26,13 +26,14 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
 | v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
+| v2.0.0-preview.4 (release candidate) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
 
-Unreleased V2 stabilization work on the development branch decouples mutable
+The Preview.4 release candidate on the development branch decouples mutable
 Tree indexing from Path prefixes and adds Path-addressed Tree removal and
 rekey, strict display parsing, and versioned sortable Path keys. The final
 local performance pass adds an optional reproducible benchmark harness and
 reduces repeated open-end repair. The released Preview.3 tag remains unchanged;
-the development branch is not a production release.
+the candidate has not been released and is not stable 2.0.
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -75,7 +76,7 @@ X         0DEq/2222
 B         0DEr
 ```
 
-The Path comparison and gap APIs implement this ordering. Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths after an actual mutation. The unreleased branch can parse canonical display text and persist a coordinate as a separate `LK1:` order key. For example, display `0222` has key `LK1:201FF0000!`. A persisted coordinate is not a permanent item identity. Preview.3 is a released Preview snapshot and does not contain these new APIs.
+The Path comparison and gap APIs implement this ordering. Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths after an actual mutation. The Preview.4 candidate can parse canonical display text and persist a coordinate as a separate `LK1:` order key. For example, display `0222` has key `LK1:201FF0000!`. A persisted coordinate is not a permanent item identity. Published Preview.3 does not contain these new APIs.
 
 ## Ordering and stability guarantees
 
@@ -113,7 +114,7 @@ The repository includes deterministic property tests, stress tests, allocation-f
 
 ## Performance evidence
 
-The [unreleased benchmark report](docs/BENCHMARKS.md) gives reproducible
+The [Preview.4 candidate benchmark report](docs/BENCHMARKS.md) gives reproducible
 Preview.3, Stage 4, and Stage 5 measurements, including regressions and
 memory tradeoffs. The [benchmark harness](benchmarks/README.md) is optional
 in CMake. The Path-keyed Tree is much faster on several equal-key and
@@ -126,9 +127,9 @@ online insertion has no claimed worst-case `O(log n)` time bound.
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result's path space.
 - Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After an actual Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results. Equal-Path rekey is a no-op and preserves them.
-- Unreleased Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
-- No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The unreleased `LK1:` key requires bytewise ASCII database collation for ordering.
-- The unreleased key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
+- Preview.4 candidate Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
+- No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The Preview.4 candidate `LK1:` key requires bytewise ASCII database collation for ordering.
+- The Preview.4 candidate key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
 
 ## Project layout
 

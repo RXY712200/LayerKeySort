@@ -124,7 +124,7 @@ Appending slot 0 at level five gives `0DEq/5222`, where `5` is the level
 delta. Ordinary next-level steps omit the numeric prefix. Each slot is three
 radix-54 characters from the case-sensitive ASCII alphabet documented in
 [`API.md`](API.md); `/` separates steps and never counts levels. The
-formatter writes canonical current output. The unreleased
+formatter writes canonical current output. The Preview.4 candidate
 `lks_path_parse()` accepts exactly that text and returns a caller-owned Path.
 For storage and bytewise ordering, use the separate versioned
 `lks_path_order_key_*()` API. **Use `lks_path_compare()` to order Paths; do not
@@ -137,8 +137,8 @@ under `strcmp()` or a database collation preserving bytewise ASCII order.
 The parsed Path belongs to the caller and must be destroyed with
 `lks_path_destroy()`. Invalid or noncanonical inputs fail with NULL output;
 allocator failure also leaves output NULL. The exact key grammar and
-cross-platform overflow rule are in [API.md](API.md). These APIs are local
-unreleased development after Preview.3.
+cross-platform overflow rule are in [API.md](API.md). These APIs are in the
+Preview.4 release candidate; published Preview.3 does not contain them.
 
 The key persists a Path coordinate and can order canonical same-version keys
 under bytewise ASCII collation. It does not save a Tree, reconstruct its AVL
@@ -193,7 +193,7 @@ physical preorder does not define logical order. The virtual root has one
 physical child when nonempty. Compare Paths with `lks_path_compare()` and
 reacquire borrowed navigation results after each actual mutation.
 
-On the unreleased development branch, `lks_tree_remove_path()` removes one
+In the Preview.4 release candidate, `lks_tree_remove_path()` removes one
 exact Path without freeing its caller-owned item or compacting any other Path.
 `lks_tree_rekey()` moves the same item pointer to a caller-selected unoccupied
 Path. It prepares all allocations before the structural commit, so failure

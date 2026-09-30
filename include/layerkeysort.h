@@ -11,8 +11,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 2
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.3"
-#define LKS_VERSION_STRING "2.0.0-preview.3"
+#define LKS_VERSION_PRERELEASE "preview.4"
+#define LKS_VERSION_STRING "2.0.0-preview.4"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u

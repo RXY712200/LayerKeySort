@@ -1,7 +1,8 @@
-# V2 performance and benchmark evidence (unreleased development)
+# V2 performance and benchmark evidence (Preview.4 release candidate)
 
-The published release is **v2.0.0-preview.3**. The Stage 4 and Stage 5 columns
-below are local development commits. These numbers describe one machine and
+The published release is **v2.0.0-preview.3**; **v2.0.0-preview.4** is a
+release candidate on the development branch. The Stage 4 and Stage 5 columns
+below are historical development snapshots. These numbers describe one machine and
 the stated workloads; they are not universal performance rankings. Generated
 Path coordinates and private policy values remain implementation details.
 
@@ -27,7 +28,7 @@ timings. Inputs use deterministic seed `0x91A30D47`. Repeat runs used
 | --- | --- |
 | Preview.3 | `9fa2eadcca422be9483a050505f0c332558c5908` |
 | Stage 4 | `4ef9e240ab08edbb7875c0b2934313c126307e73` |
-| Stage 5 | this unreleased Stage 5 commit |
+| Stage 5 | `99f84ae5228ea67ade74eaf206b17dc5e6304ffe` |
 
 The `Common` matrix has 30 rows usable by Preview.3; `Current` has 61 rows.
 The exact captured rows are committed as

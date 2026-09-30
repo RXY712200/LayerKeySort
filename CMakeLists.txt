@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-# CMake accepts a numeric project version; the public header carries preview.3.
+# CMake accepts a numeric project version; the public header carries preview.4.
 project(LayerKeySort VERSION 2.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)

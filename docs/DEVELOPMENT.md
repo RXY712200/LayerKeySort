@@ -102,7 +102,7 @@ the complete character order and public text contract.
 three codec characters per step, one `/` between steps, and minimal decimal
 metadata for a nonzero first absolute level or later level delta greater than
 one. `/` is a separator, never the old unary level count. The formatter has
-one canonical output per valid Path. Unreleased `lks_path_parse()` accepts
+one canonical output per valid Path. Preview.4 candidate `lks_path_parse()` accepts
 exactly that output; `src/path_order_key.c` owns a separate versioned durable
 key. Cross-Preview display-text compatibility is not promised. A zero-based chain
 with consecutive levels uses exactly `4 * depth` text characters. In the
@@ -197,7 +197,7 @@ the new node is then linked and rebalanced without allocation. The full
 rebuild remains the correctness fallback and swaps an independently built
 Tree. No ChildBlock is used by the mutable index. This also makes physical
 height depend on node count rather than caller-supplied Path depth. Repair
-counters are process-wide only in diagnostic builds. The unreleased development
+counters are process-wide only in diagnostic builds. The Preview.4 candidate
 policy now inserts an open-end candidate directly while its depth is at most
 six: repeatedly regenerating overlapping endpoint repair windows was costly
 without improving the accepted coordinate. Interior gaps retain repair, and
@@ -206,13 +206,13 @@ Comparator insertion transfers its already-owned candidate Path into the node
 after successful allocation. This removes a transient clone but may retain
 spare Path capacity, a small measured peak-memory tradeoff. Detailed counts,
 candidate trials, and limitations are in [BENCHMARKS.md](BENCHMARKS.md).
-The unreleased development branch now supports exact Path removal with
+The Preview.4 candidate supports exact Path removal with
 allocation-free AVL successor
 transplant. Rekey first allocates a replacement Path and node, then links the
 replacement and detaches the old node without any further allocation. Delete
 does not compact Path coordinates; AVL rotations only change physical links.
 Item ownership remains with callers. Published Groups remain immutable.
-Unreleased Stage 3 adds strict canonical display parsing and a portable,
+The Preview.4 candidate includes Stage 3's strict canonical display parser and a portable,
 bytewise-sortable `LK1:` persistence key. Its levels use minimal base-256
 big-endian bytes with descending-order complement and a unary byte-count
 prefix; it does not serialize `size_t` or structs. `src/slot_codec.c` remains
@@ -247,7 +247,7 @@ platform `qsort`, which does not promise stable ordering.
 
 ### Local stabilization disposition after Stage 5
 
-This table is for the unreleased development branch and a later roadmap review;
+This table is for the Preview.4 release candidate and a later roadmap review;
 it does not claim that Preview.3 contains these changes.
 
 | Area | Disposition |
