@@ -4,20 +4,21 @@
 
 - `include/` — public header.
 - `src/` — production C implementation and private headers.
-- `tests/` — property, stress, benchmark, and public API validation code.
+- `tests/` — property, stress, deterministic soak, and public API validation code.
 - `benchmarks/` — optional current public-API benchmark harness and matrix runner.
-- `examples/` — standalone public API example.
+- `examples/` — basic sort and dynamic layer-list public API examples.
 - `demo/` — executable validation/demo entry point.
 - `docs/` — user documentation, visualizer, and site assets.
 - `LayerKeySort.slnx` — Visual Studio solution.
 - `LayerKeySort.vcxproj` — Visual Studio project and build configurations.
 - `CMakeLists.txt` — reusable production library, example, and test targets.
-- `.github/workflows/ci.yml` — MSVC, GCC, and Clang validation.
+- `.github/workflows/ci.yml` — MSVC, GCC, Clang, and AppleClang validation.
 
 ## Toolchain
 
 Both Visual Studio and CMake compile as C17. The CMake matrix also targets
-GCC and Clang on Ubuntu. New production C source belongs in both build systems.
+GCC and Clang on Ubuntu and AppleClang on macOS. New production C source
+belongs in both build systems. Consumer setup is in [INTEGRATION.md](INTEGRATION.md).
 
 ## CMake build and tests
 
@@ -27,16 +28,37 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-`layerkeysort` contains production source only. `layerkeysort_example` links
-that library. `layerkeysort_tests` links a separately compiled diagnostic
-variant so allocation counters and single-shot fault injection remain usable
-without shared mutable instrumentation in ordinary production allocations.
+`layerkeysort` contains production source only. Both example targets link
+that library. `layerkeysort_tests` and `layerkeysort_soak` link a separately
+compiled diagnostic variant so allocation counters and single-shot fault
+injection remain usable without shared mutable instrumentation in ordinary
+production allocations.
 `-DLKS_BUILD_BENCHMARKS=ON` adds a production-linked public-API harness and
 three small CTest smoke cases. See [BENCHMARKS.md](BENCHMARKS.md) for timed
 results and limits; diagnostic counter builds are separate from timed builds.
 For a supported GCC or Clang toolchain, `-DLKS_ENABLE_SANITIZERS=ON` enables
 AddressSanitizer and UndefinedBehaviorSanitizer. Diagnostic fault injection is
 process-global test state and carries no concurrent-test guarantee.
+
+The `layerkeysort_mutation_soak` CTest case runs 30,000 deterministic mixed
+operations: 22,500 explicit-Path operations with seed `0x6B47C291`, followed
+by 7,500 comparator-ordered operations with seed `0xA9172E63`. The two phases
+keep comparator invariants explicit. The flat reference model checks item/Path
+associations, strict Path order, Tree size, returned item pointers, AVL
+balance, and compatible comparator order. The test exercises gap generation,
+insert/remove/rekey/find, same-Path rekey, canonical display/LK1 round trips,
+and absent-Path failures; it checks diagnostic live allocations after each
+phase. Every 4,096 steps it drains the active set to avoid making the soak a
+Path-depth stress test (the existing deep-Path tests cover that separately).
+Run a larger manual correctness soak with:
+
+```sh
+./build/layerkeysort_soak --operations 100000
+./build/layerkeysort_soak --operations 500000
+```
+
+For multi-configuration generators, include the configuration directory, such
+as `build/Release/`. Operation counts are validation scale, not speed claims.
 
 ## Build configurations
 

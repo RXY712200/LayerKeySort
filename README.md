@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Latest published Preview: v2.0.0-preview.4.*
+*A C17 library for stable ordering with hierarchical Path positions. Latest published Preview: v2.0.0-preview.4. Preview.5 is in development.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -17,7 +17,7 @@ LayerKeySort orders caller-owned item pointers with a comparator and gives each 
 lks_sort(items, count, compare_items, NULL);
 ```
 
-`items` is a caller-owned pointer array; `compare_items` defines the order. Sorting is stable, and the pointed-to objects remain caller-owned. `lks_sort` returns `LksStatus`, which production code should check. See the complete, compilable example with error handling in [`examples/basic.c`](examples/basic.c). For Path, Tree, and Group operations, see the [usage guide](docs/USAGE.md).
+`items` is a caller-owned pointer array; `compare_items` defines the order. Sorting is stable, and the pointed-to objects remain caller-owned. `lks_sort` returns `LksStatus`, which production code should check. See the complete, compilable [basic example](examples/basic.c). The Preview.5 development [layer-list example](examples/layer_list.c) shows dynamic Path ordering. For Path, Tree, and Group operations, see the [usage guide](docs/USAGE.md).
 
 ## V2 development status
 
@@ -27,6 +27,7 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 | v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
+| v2.0.0-preview.5 (development candidate) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Not published; Preview.4 remains the latest release. Core complexity and persistence limits remain. |
 
 The released Preview.4 decouples mutable
 Tree indexing from Path prefixes and adds Path-addressed Tree removal and
@@ -62,6 +63,32 @@ Paths in separate Groups are local positions. A merge leaves both inputs unchang
 - Explicit Group and GroupBatch construction and merge operations.
 - Base-first ordering for equal items from a public two-Group merge.
 - A C17 public API that borrows caller-owned item pointers.
+
+### When to use it
+
+Use the Path and Tree APIs when an application keeps a mutable order over time,
+needs explicit hierarchical coordinates and before/after/between placement,
+and can update coordinates when items move or a Tree is rebuilt. UI layers,
+playlists, workflow editors, timelines, dynamic task lists, and scene ordering
+are possible application categories; this list does not imply that those
+projects use LayerKeySort. The library also provides stable handling of
+comparator-equal items, remove/rekey, and optional versioned `LK1:` keys for
+persisting one sortable coordinate. The [layer-list example](examples/layer_list.c)
+shows this workflow with application IDs separate from Paths.
+
+### When not to use it
+
+- For one-time array sorting, an ordinary sorting routine may be simpler.
+  `lks_sort()` is available when a stable pointer-array sort is useful, but
+  dynamic Path machinery is unnecessary.
+- If only occasional database reorder operations need a compact lexical rank
+  string, a simpler fractional-ranking scheme may have lower conceptual and
+  storage overhead.
+- The current mutable Path model does not provide distributed/CRDT replica
+  convergence or immutable permanent rank or item-identity values.
+- Complete comparator-driven insertion has no claimed worst-case `O(log n)`
+  bound or formal amortized bound. Choose a different design if a proven
+  operation bound is required.
 
 ## Core idea
 
@@ -110,7 +137,7 @@ The existing `LayerKeySort.slnx` / `.vcxproj` remain available for MSVC C17 vali
 
 ## Validation
 
-The repository includes deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured to check MSVC, GCC, and Clang when this branch is pushed. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
+The repository includes deterministic property tests, stress tests, a Preview.5 development mutation soak, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured for Windows/MSVC, Ubuntu/GCC and Clang (including sanitizer validation), and macOS/AppleClang. A passing runner does not guarantee every platform version. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
 
 ## Performance evidence
 
@@ -137,6 +164,7 @@ online insertion has no claimed worst-case `O(log n)` time bound.
 include/layerkeysort.h
 src/
 examples/basic.c
+examples/layer_list.c
 tests/
 demo/main.c
 LayerKeySort.slnx
@@ -148,6 +176,7 @@ CHANGELOG.md
 ## Documentation
 
 - [Usage guide](docs/USAGE.md)
+- [Integration guide](docs/INTEGRATION.md)
 - [API reference](docs/API.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Benchmark report](docs/BENCHMARKS.md)

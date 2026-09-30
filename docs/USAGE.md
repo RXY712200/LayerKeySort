@@ -60,6 +60,21 @@ cmake --build build
 The executable path can differ with multi-configuration generators such as
 Visual Studio (for example, `build/Debug/layerkeysort_example.exe`).
 
+## Dynamic layer-list example (Preview.5 development)
+
+[`examples/layer_list.c`](../examples/layer_list.c) models Background, Player,
+HUD, and Effects as caller-owned objects with stable application IDs. It uses
+explicit Path coordinates to insert Effects between Background and Player,
+rekeys HUD between Effects and Player, removes Effects, then formats and
+round-trips HUD's `LK1:` coordinate. The Tree borrows item pointers; the
+application owns its Path copies and destroys them after the Tree.
+
+Build target `layerkeysort_layer_list_example` and run it after the normal
+CMake build. The example orders its application-side Path associations with
+`lks_path_compare()`; physical AVL navigation is not logical item order.
+The simple [`basic.c`](../examples/basic.c) remains the first-use `lks_sort()`
+example. The [integration guide](INTEGRATION.md) covers consuming the library.
+
 ## Comparator
 
 Provide an `LksComparator` whose `compare` callback follows this convention:

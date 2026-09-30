@@ -6,6 +6,10 @@ one machine and the stated workloads; they are not universal performance
 rankings. Generated
 Path coordinates and private policy values remain implementation details.
 
+Preview.5 development adds usability and correctness-endurance coverage; it
+does not rerun or replace the captured Stage 5 timing matrix. The new mutation
+soak is a correctness test, not a performance ranking.
+
 ## Reproduction and measurement boundary
 
 The public-API harness is in [`benchmarks/current_benchmark.c`](../benchmarks/current_benchmark.c),

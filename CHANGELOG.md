@@ -2,6 +2,24 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [2.0.0-preview.5] - Unreleased
+
+Preview.5 development concentrates on usability, integration, long-run
+validation, platform coverage, and preparation for a V2 public-contract freeze.
+Preview.4 remains the latest published Preview; no Preview.5 tag or Release
+exists during this development stage.
+
+- Added a compilable dynamic layer-list example using existing public Path and
+  Tree APIs for between placement, rekey, removal, display text, and LK1
+  round trip. Application item IDs remain separate from Path coordinates.
+- Added use-case guidance and a source/CMake integration guide, including
+  `add_subdirectory`, `FetchContent`, and direct C17 source integration.
+- Added deterministic long-run mixed Tree mutation soak coverage, with a
+  bounded CI run and larger manual mode. Existing focused property, OOM, and
+  deep-Path tests remain in place.
+- Extended CI to macOS/AppleClang and runs both examples. The public C API
+  remains 52 functions; LK1 version 1 is unchanged.
+
 ## [2.0.0-preview.4] - 2026-09-30
 
 Preview.4 is a released Preview snapshot, not a production-ready release.
