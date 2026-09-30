@@ -202,10 +202,12 @@
     <ClInclude Include="src\lks_bulk_internal.h" />
     <ClInclude Include="src\lks_policy_internal.h" />
     <ClCompile Include="tests\property.c" />
+    <ClCompile Include="tests\mutation.c" />
     <ClCompile Include="tests\public_api_usage.c" />
     <ClCompile Include="tests\v2_preview.c" />
     <None Include="examples\basic.c" />
     <ClInclude Include="tests\property.h" />
+    <ClInclude Include="tests\mutation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

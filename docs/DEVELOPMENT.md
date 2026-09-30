@@ -188,10 +188,13 @@ the new node is then linked and rebalanced without allocation. The full
 rebuild remains the correctness fallback and swaps an independently built
 Tree. No ChildBlock is used by the mutable index. This also makes physical
 height depend on node count rather than caller-supplied Path depth. Repair
-counters are process-wide only in diagnostic builds. Future private
-detach/reinsert can use parent/left/right links and rotations, but public
-delete/move semantics require separate design; persistence/parser/distributed
-semantics remain deferred.
+counters are process-wide only in diagnostic builds. The unreleased development
+branch now supports exact Path removal with allocation-free AVL successor
+transplant. Rekey first allocates a replacement Path and node, then links the
+replacement and detaches the old node without any further allocation. Delete
+does not compact Path coordinates; AVL rotations only change physical links.
+Item ownership remains with callers. Published Groups remain immutable.
+Persistence/parser/distributed semantics remain deferred.
 
 - Keep implementation in portable C17 under both build systems.
 - Preserve public ownership and ordering semantics; generated Path coordinates

@@ -283,6 +283,27 @@ LksStatus lks_tree_find_path(
     const LksPath *path,
     const LksTreeNode **out_node
 );
+/* Remove one exact Path. TREE and PATH are borrowed; the Tree frees its node
+ * and owned Path but never the caller-owned item. OUT_ITEM is optional and is
+ * set to NULL on failure. No allocation or unrelated Path relabel occurs.
+ * On success all earlier borrowed Tree observations must be reacquired. */
+LksStatus lks_tree_remove_path(
+    LksTree *tree,
+    const LksPath *path,
+    void **out_item
+);
+/* Move the same borrowed item from OLD_PATH to an unoccupied NEW_PATH.
+ * Both inputs are borrowed. Failure, including allocation failure, leaves the
+ * Tree unchanged and OUT_NODE NULL. Equal Paths succeed without mutation.
+ * A changed Path keeps Tree size fixed, normally changes only this item's
+ * coordinate, and invalidates earlier borrowed Tree observations. Caller is
+ * responsible for comparator compatibility with any later item operation. */
+LksStatus lks_tree_rekey(
+    LksTree *tree,
+    const LksPath *old_path,
+    const LksPath *new_path,
+    const LksTreeNode **out_node
+);
 /* Return a node-owned Path borrowed until the Tree changes or is destroyed.
  * A successful Tree mutation may re-encode existing Paths. */
 const LksPath *lks_tree_node_path(const LksTreeNode *node);

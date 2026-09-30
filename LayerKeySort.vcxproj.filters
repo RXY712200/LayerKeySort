@@ -82,7 +82,13 @@
     <ClCompile Include="tests\property.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="tests\mutation.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClInclude Include="tests\property.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\mutation.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClCompile Include="tests\public_api_usage.c">

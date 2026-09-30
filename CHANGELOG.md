@@ -11,8 +11,13 @@ Notable changes to LayerKeySort are documented here.
   remains a failure-atomic fallback.
 - Deep Path values no longer impose equivalent physical Tree depth. Physical
   navigation is implementation-defined; ownership and failure atomicity remain.
-- Public delete/move, persistence, parsing, and distributed semantics remain
-  deferred. This development state is not production-ready.
+- Added Path-addressed Tree removal without allocation or Path compaction,
+  and failure-atomic rekey of one caller-owned item's coordinate. Published
+  Groups remain immutable; comparator compatibility remains the caller's
+  responsibility for subsequent comparator-driven operations.
+- Persistence, parsing, and distributed semantics remain deferred. This
+  development state is not production-ready and is not part of released
+  Preview.3.
 
 ## [2.0.0-preview.3] - 2026-09-29
 

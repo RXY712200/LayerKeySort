@@ -65,6 +65,17 @@ static void replace_parent_link(LksTree *tree, LksTreeNode *old_node,
     new_node->parent = parent;
 }
 
+/* Unlike rotation replacement, removal may replace a node with NULL. */
+static void splice_parent_link(LksTree *tree, LksTreeNode *old_node,
+    LksTreeNode *new_node)
+{
+    LksTreeNode *parent = old_node->parent;
+    if (parent == NULL) tree->root = new_node;
+    else if (parent->left == old_node) parent->left = new_node;
+    else parent->right = new_node;
+    if (new_node != NULL) new_node->parent = parent;
+}
+
 static LksTreeNode *rotate_left(LksTree *tree, LksTreeNode *node)
 {
     LksTreeNode *pivot = node->right;
@@ -181,6 +192,41 @@ static LksTreeNode *predecessor(const LksTreeNode *node)
     return current;
 }
 
+/* Detach exactly NODE, preserving every other node's Path/item association.
+ * The successor is transplanted structurally; no allocation or Path relabel
+ * occurs. Rebalance from the lowest changed ancestor to the new root. */
+static void detach_node(LksTree *tree, LksTreeNode *node)
+{
+    LksTreeNode *start;
+    if (node->left == NULL || node->right == NULL) {
+        start = node->parent;
+        splice_parent_link(tree, node,
+            node->left != NULL ? node->left : node->right);
+        if (start == NULL) start = tree->root;
+    } else {
+        LksTreeNode *replacement = first_node(node->right);
+        if (replacement->parent == node) {
+            splice_parent_link(tree, node, replacement);
+            replacement->left = node->left;
+            replacement->left->parent = replacement;
+            start = replacement;
+        } else {
+            start = replacement->parent;
+            splice_parent_link(tree, replacement, replacement->right);
+            splice_parent_link(tree, node, replacement);
+            replacement->left = node->left;
+            replacement->right = node->right;
+            replacement->left->parent = replacement;
+            replacement->right->parent = replacement;
+        }
+        replacement->height = node->height;
+    }
+    --tree->size;
+    node->left = NULL; node->right = NULL; node->parent = NULL;
+    node->height = 1;
+    rebalance_up(tree, start);
+}
+
 LksTree *lks_tree_create(void)
 {
     LksTree *tree = (LksTree *)lks_alloc_tagged(sizeof(*tree),
@@ -248,6 +294,66 @@ LksStatus lks_tree_find_path(const LksTree *tree, const LksPath *path,
     if (status != LKS_STATUS_OK) return status;
     if (found == NULL) return LKS_STATUS_NOT_FOUND;
     *out_node = found;
+    return LKS_STATUS_OK;
+}
+
+LksStatus lks_tree_remove_path(LksTree *tree, const LksPath *path,
+    void **out_item)
+{
+    LksTreeNode *found, *parent;
+    LksStatus status;
+    int order;
+    if (out_item != NULL) *out_item = NULL;
+    if (tree == NULL || path == NULL) return LKS_STATUS_INVALID_ARGUMENT;
+    status = search_path(tree, path, &found, &parent, &order);
+    if (status != LKS_STATUS_OK) return status;
+    if (found == NULL) return LKS_STATUS_NOT_FOUND;
+    if (out_item != NULL) *out_item = found->item;
+    detach_node(tree, found);
+    lks_path_destroy(found->path);
+    lks_free(found);
+    return LKS_STATUS_OK;
+}
+
+LksStatus lks_tree_rekey(LksTree *tree, const LksPath *old_path,
+    const LksPath *new_path, const LksTreeNode **out_node)
+{
+    LksTreeNode *old_node, *new_found, *parent, *prepared;
+    LksPath *new_copy;
+    LksStatus status;
+    int order;
+    if (out_node != NULL) *out_node = NULL;
+    if (tree == NULL || old_path == NULL || new_path == NULL)
+        return LKS_STATUS_INVALID_ARGUMENT;
+    status = search_path(tree, old_path, &old_node, &parent, &order);
+    if (status != LKS_STATUS_OK) return status;
+    if (old_node == NULL) return LKS_STATUS_NOT_FOUND;
+    status = search_path(tree, new_path, &new_found, &parent, &order);
+    if (status != LKS_STATUS_OK) return status;
+    if (new_found == old_node) {
+        /* Same coordinate: no structural mutation or allocation. */
+        if (out_node != NULL) *out_node = old_node;
+        return LKS_STATUS_OK;
+    }
+    if (new_found != NULL) return LKS_STATUS_ALREADY_EXISTS;
+    new_copy = lks_path_clone(new_path);
+    if (new_copy == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+    prepared = (LksTreeNode *)lks_alloc_tagged(sizeof(*prepared),
+        LKS_ALLOC_TAG_TREE_NODE);
+    if (prepared == NULL) {
+        lks_path_destroy(new_copy);
+        return LKS_STATUS_OUT_OF_MEMORY;
+    }
+    prepared->path = new_copy; prepared->item = old_node->item;
+    prepared->left = NULL; prepared->right = NULL;
+    prepared->parent = NULL; prepared->height = 1;
+    /* Both positions are already validated. From here through removal every
+     * operation is allocation-free and cannot return a recoverable failure. */
+    link_prepared(tree, prepared, parent, order);
+    detach_node(tree, old_node);
+    lks_path_destroy(old_node->path);
+    lks_free(old_node);
+    if (out_node != NULL) *out_node = prepared;
     return LKS_STATUS_OK;
 }
 

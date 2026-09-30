@@ -175,6 +175,19 @@ physical preorder does not define logical order. The virtual root has one
 physical child when nonempty. Compare Paths with `lks_path_compare()` and
 reacquire borrowed navigation results after each successful mutation.
 
+On the unreleased development branch, `lks_tree_remove_path()` removes one
+exact Path without freeing its caller-owned item or compacting any other Path.
+`lks_tree_rekey()` moves the same item pointer to a caller-selected unoccupied
+Path. It prepares all allocations before the structural commit, so failure
+leaves the old association intact. Equal old/new Paths succeed as a no-op.
+Physical AVL rebalancing may change parent/child links, but does not re-encode
+Paths. To move an item, callers can change their own payload if appropriate,
+choose a target with `lks_path_before()`, `lks_path_after()`, or
+`lks_path_between()`, then rekey. Arbitrary external payload changes are not
+detected: before later comparator-driven Tree operations, Path order must
+remain compatible with that comparator. Published Groups remain immutable;
+build a new Group if a different Group order is needed.
+
 A Path describes order within the Group or Tree that created it, not a stable
 application identity. Paths from independent Groups are local coordinates.
 Merge creates a new coordinate space and may reassign every result Path, while

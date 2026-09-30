@@ -40,7 +40,7 @@ if(LKS_BUILD_TESTS)
         LKS_ENABLE_ALLOC_DIAGNOSTICS LKS_ENABLE_V1_REGRESSION_HELPERS)
     lks_configure_target(layerkeysort_diagnostics)
     add_executable(layerkeysort_tests tests/v2_main.c tests/v2_preview.c
-        tests/property.c tests/public_api_usage.c)
+        tests/property.c tests/mutation.c tests/public_api_usage.c)
     target_compile_definitions(layerkeysort_tests PRIVATE
         LKS_V2_PREVIEW LKS_ENABLE_V1_REGRESSION_HELPERS)
     target_include_directories(layerkeysort_tests PRIVATE src tests)

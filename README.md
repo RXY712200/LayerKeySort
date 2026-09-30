@@ -28,7 +28,8 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 
 Unreleased V2 stabilization work on the development branch decouples mutable
-Tree indexing from Path prefixes. The released Preview.3 tag remains unchanged;
+Tree indexing from Path prefixes and adds Path-addressed Tree removal and
+rekey. The released Preview.3 tag remains unchanged;
 the development branch is not a production release.
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
@@ -87,7 +88,7 @@ The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
 
 - **Path:** create, clone, append, format, compare, and find positions before, after, or between other Paths.
 - **Simple sort:** `lks_sort()` stable-sorts the caller's pointer array.
-- **Tree:** insert items or explicit Paths, locate entries, and navigate nodes.
+- **Tree:** insert, remove by Path, rekey an item's Path, locate entries, and navigate nodes.
 - **Group:** build a sorted Group and access its items and Paths.
 - **GroupBatch / merge:** build Groups from consecutive input chunks and merge Groups or a Batch.
 - **Status / comparator:** report operation status and supply a comparison callback with caller-owned context.
@@ -113,6 +114,7 @@ The repository includes deterministic property tests, stress tests, allocation-f
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result's path space.
 - Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After any successful Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results.
+- Unreleased Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
 - Serialization, a Path text parser, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
 
 ## Project layout

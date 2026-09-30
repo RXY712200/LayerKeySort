@@ -532,6 +532,47 @@ const LksTreeNode *lks_tree_root_child_at(
 );
 ```
 
+### `lks_tree_remove_path` (unreleased development branch)
+
+Remove exactly one Path-keyed Tree node without allocating or relabeling other
+Paths. The Tree destroys its node and owned Path, but never frees the borrowed
+item. Optional `out_item` receives that same item pointer on success and NULL
+on failure. Missing Paths return `LKS_STATUS_NOT_FOUND`; invalid inputs return
+`LKS_STATUS_INVALID_ARGUMENT`. Tree size decreases by one. ZERO is an ordinary
+key, distinct from the virtual root.
+
+```c
+LksStatus lks_tree_remove_path(
+    LksTree *tree, const LksPath *path, void **out_item
+);
+```
+
+### `lks_tree_rekey` (unreleased development branch)
+
+Move one caller-owned item from `old_path` to an unoccupied `new_path` without
+changing its item pointer or Tree size. The Tree clones the new Path. Missing
+old Paths return `LKS_STATUS_NOT_FOUND`; an occupied new Path returns
+`LKS_STATUS_ALREADY_EXISTS`. Equal Paths succeed without mutation. Invalid
+inputs return `LKS_STATUS_INVALID_ARGUMENT`. On failure, including allocation
+failure, the Tree remains unchanged and optional `out_node` is NULL. On a
+changed-Path success it borrows the resulting node.
+
+The transaction validates both positions, allocates the replacement Path and
+node, then links the new node and removes the old node with no further
+allocation or recoverable failure. Only the selected item's Path changes;
+AVL rotations may change physical links but never re-encode unrelated Paths.
+All earlier borrowed Tree nodes, Paths, and navigation results expire on a
+changed-Path success. Callers selecting arbitrary Paths must keep item order
+compatible with any comparator used by later comparator-driven operations;
+the Tree does not scan and validate all items during rekey.
+
+```c
+LksStatus lks_tree_rekey(
+    LksTree *tree, const LksPath *old_path, const LksPath *new_path,
+    const LksTreeNode **out_node
+);
+```
+
 The physical Tree index shape is implementation-defined and is not a stable
 API contract. Physical parents need not be Path prefixes, physical children
 need not be logical Path descendants, and physical preorder is not logical
@@ -700,6 +741,7 @@ comparator-equal Base items before Incoming items, while Batch merge preserves
 source chunk order for equals. Each successful merge result has its own Path
 coordinate space, independent of unchanged source Groups.
 
-The v2.0.0-preview.3 public header contains **9 types** and **46 functions**,
-including `lks_sort`. Private allocator, profile, benchmark, and test entry
+The released v2.0.0-preview.3 public header contains **9 types** and **46 functions**,
+including `lks_sort`; the unreleased development header adds the two Tree
+mutation functions above. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.
