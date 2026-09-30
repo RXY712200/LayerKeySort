@@ -507,7 +507,7 @@ static LksStatus try_range_repair(LksTree *tree, LksTreeNode *before,
             }
             if (status == LKS_STATUS_OK &&
                 (max_depth > LKS_POLICY_HARD_ONLINE_DEPTH ||
-                (candidate_depth < max_depth + LKS_POLICY_LOCAL_MIN_DEPTH_GAIN &&
+                (candidate_depth <= max_depth &&
                  candidate_depth <= LKS_POLICY_HARD_ONLINE_DEPTH)))
                 status = LKS_STATUS_LEVEL_LIMIT;
         }

@@ -252,7 +252,11 @@ on success, and leaves an undersized buffer untouched with
 `LKS_STATUS_BUFFER_TOO_SMALL`. For database ordering, use a collation that
 preserves **bytewise ASCII** order; locale-aware, case-insensitive, Unicode
 linguistic, and normalization-aware collations are outside this guarantee.
-Only same-version canonical keys have the ordering guarantee.
+Only same-version canonical keys have the ordering guarantee. Format version
+1 is independent of the LayerKeySort release version. Once published, its
+bytes must not be reinterpreted; an incompatible format needs a new version.
+The key persists one ordering coordinate, not caller item data or a whole
+Tree, and does not create a permanent item identity.
 
 ## Types
 
@@ -274,9 +278,9 @@ Only same-version canonical keys have the ordering guarantee.
 | `LKS_STATUS_INVALID_ARGUMENT` | An argument is invalid. |
 | `LKS_STATUS_OUT_OF_MEMORY` | Allocation failed. |
 | `LKS_STATUS_BUFFER_TOO_SMALL` | Formatting storage is insufficient. |
-| `LKS_STATUS_LEVEL_LIMIT` | A Path level limit was reached. |
+| `LKS_STATUS_LEVEL_LIMIT` | A requested or generated Path step cannot advance its level within `SIZE_MAX`; for gap generation this does not assert that every possible coordinate is exhausted. |
 | `LKS_STATUS_NOT_FOUND` | Requested entry was not found. |
-| `LKS_STATUS_NOT_IMPLEMENTED` | Operation is not implemented. |
+| `LKS_STATUS_NOT_IMPLEMENTED` | Reserved published status; current public operations do not return it. |
 | `LKS_STATUS_INTERNAL_ERROR` | An internal error occurred. |
 | `LKS_STATUS_ALREADY_EXISTS` | The explicit Path already exists. |
 

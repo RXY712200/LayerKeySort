@@ -455,14 +455,14 @@ static LksStatus between_same_direction(
     if (left_level == right_level) {
         if (reverse_root_slot) {
             if (left_slot > right_slot &&
-                left_slot - right_slot >= LKS_POLICY_MIN_USEFUL_SPACING) {
+                left_slot - right_slot >= LKS_POLICY_MIN_MIDPOINT_SPAN) {
                 candidate_slot = lks_policy_midpoint(right_slot, left_slot);
                 return build_prefix_and_step(
                     left, common_depth, candidate_slot, left_level, out_path
                 );
             }
         } else if (left_slot < right_slot &&
-                   right_slot - left_slot >= LKS_POLICY_MIN_USEFUL_SPACING) {
+                   right_slot - left_slot >= LKS_POLICY_MIN_MIDPOINT_SPAN) {
             candidate_slot = lks_policy_midpoint(left_slot, right_slot);
             return build_prefix_and_step(
                 left, common_depth, candidate_slot, left_level, out_path

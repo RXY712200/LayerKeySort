@@ -17,7 +17,7 @@ typedef struct LksTreeInternalProfile {
 typedef struct LksTreeRepairStats {
     size_t attempts;
     size_t successes;
-    size_t fallbacks;
+    size_t fallbacks; /* exhausted local windows; later path may still be accepted */
     size_t region_expansions;
     size_t nodes_relabelled;
     size_t max_region_nodes;

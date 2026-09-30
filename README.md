@@ -116,6 +116,7 @@ The repository includes deterministic property tests, stress tests, allocation-f
 - Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After an actual Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results. Equal-Path rekey is a no-op and preserves them.
 - Unreleased Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
 - No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The unreleased `LK1:` key requires bytewise ASCII database collation for ordering.
+- The unreleased key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
 
 ## Project layout
 

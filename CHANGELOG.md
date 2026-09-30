@@ -19,7 +19,11 @@ Notable changes to LayerKeySort are documented here.
   durable Path keys whose bytewise lexical order matches Path order. Parsing
   checks malformed input, integer overflow, and allocation failure; deep
   Paths use iterative processing. Equal-Path rekey preserves borrowed views.
-- Binary serialization and distributed semantics remain deferred. This
+- Converged logical coordinate policy names, removed a redundant repair
+  threshold, and added fixed version-1 key vectors, gap boundaries, and
+  mixed Tree mutation/Path representation regression coverage.
+- Whole-Tree serialization and distributed semantics remain optional future
+  work. Path-coordinate persistence does not provide permanent item IDs. This
   development state is not production-ready and is not part of released Preview.3.
 
 ## [2.0.0-preview.3] - 2026-09-29

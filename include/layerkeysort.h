@@ -93,7 +93,7 @@ LksStatus lks_path_append(
     unsigned int slot
 );
 /* Append a step at a strictly greater explicit level. On failure the Path is
- * unchanged; may return INVALID_ARGUMENT, LEVEL_LIMIT, or OUT_OF_MEMORY. */
+ * unchanged; returns INVALID_ARGUMENT or OUT_OF_MEMORY. */
 LksStatus lks_path_append_at_level(
     LksPath *path,
     unsigned int slot,
@@ -307,7 +307,8 @@ LksStatus lks_tree_remove_path(
 );
 /* Move the same borrowed item from OLD_PATH to an unoccupied NEW_PATH.
  * Both inputs are borrowed. Failure, including allocation failure, leaves the
- * Tree unchanged and OUT_NODE NULL. Equal Paths succeed without mutation.
+ * Tree unchanged and OUT_NODE NULL. Equal Paths succeed without mutation and
+ * preserve earlier borrowed Tree observations.
  * A changed Path keeps Tree size fixed, normally changes only this item's
  * coordinate, and invalidates earlier borrowed Tree observations. Caller is
  * responsible for comparator compatibility with any later item operation. */
@@ -322,8 +323,8 @@ LksStatus lks_tree_rekey(
 const LksPath *lks_tree_node_path(const LksTreeNode *node);
 /* Return the borrowed item pointer stored in a node; NULL node returns NULL. */
 void *lks_tree_node_item(const LksTreeNode *node);
-/* Physical index navigation is implementation-defined and may change on any
- * successful mutation. A physical parent need not be a Path prefix; children
+/* Physical index navigation is implementation-defined and may change on an
+ * actual mutation. A physical parent need not be a Path prefix; children
  * need not be logical Path descendants. Physical preorder is not Path order.
  * Compare Paths with lks_path_compare() for logical ordering. */
 /* Return borrowed physical parent; the virtual root is reported as NULL. */

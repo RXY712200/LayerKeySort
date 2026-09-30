@@ -404,6 +404,166 @@ static int check_random(uint32_t seed)
     return ok && clean();
 }
 
+static int check_external_round_trip(const LksPath *path)
+{
+    size_t display_length = lks_path_text_length(path);
+    size_t key_length = lks_path_order_key_length(path);
+    char *display = NULL, *key = NULL;
+    LksPath *from_display = NULL, *from_key = NULL;
+    int good = 0;
+    if (display_length == 0 || key_length == 0 ||
+        display_length == SIZE_MAX || key_length == SIZE_MAX) return 0;
+    display = (char *)malloc(display_length + 1);
+    key = (char *)malloc(key_length + 1);
+    if (display != NULL && key != NULL &&
+        lks_path_format(path, display, display_length + 1) == LKS_STATUS_OK &&
+        lks_path_order_key_format(path, key, key_length + 1) == LKS_STATUS_OK &&
+        lks_path_parse(display, &from_display) == LKS_STATUS_OK &&
+        lks_path_order_key_parse(key, &from_key) == LKS_STATUS_OK &&
+        same_path(path, from_display) && same_path(path, from_key)) good = 1;
+    lks_path_destroy(from_display); lks_path_destroy(from_key);
+    free(display); free(key);
+    return good;
+}
+
+/* A flat Path-sorted model deliberately ignores physical AVL topology. Item
+ * values are reset to sorted ranks after arbitrary explicit insert/rekey, so
+ * each later comparator insertion starts with a compatible Tree ordering. */
+static int check_mixed_interaction(uint32_t seed)
+{
+    enum { STEPS = 600, CAP = 96 };
+    ModelEntry model[CAP];
+    int items[STEPS];
+    LksComparator comparator = {compare_int, NULL};
+    LksTree *tree;
+    size_t count = 0, step, i;
+    uint32_t original_seed = seed;
+    int ok = 1;
+    if (lks_alloc_stats_reset() != 0) return 0;
+    tree = lks_tree_create();
+    if (tree == NULL) return 0;
+    for (step = 0; step < STEPS && ok; ++step) {
+        unsigned int operation = random_next(&seed) % 5u;
+        unsigned int code = random_next(&seed) % 513u;
+        LksPath *candidate;
+        size_t index;
+        if (count == CAP) operation = 0;
+        if ((operation == 0 || operation == 2) && count != 0 &&
+            random_next(&seed) % 4u != 0)
+            code = 513u;
+        candidate = code == 513u ? NULL : key_path(code);
+        if (code == 513u) {
+            index = random_next(&seed) % count;
+            candidate = lks_path_clone(model[index].path);
+        }
+        if (candidate == NULL) { ok = 0; break; }
+        index = model_find(model, count, candidate);
+        if (operation == 0) {
+            void *removed = (void *)(uintptr_t)1;
+            LksStatus expected = index == count ? LKS_STATUS_NOT_FOUND : LKS_STATUS_OK;
+            LksStatus actual = lks_tree_remove_path(tree, candidate, &removed);
+            if (actual != expected || (actual == LKS_STATUS_OK &&
+                removed != model[index].item) ||
+                (actual != LKS_STATUS_OK && removed != NULL)) ok = 0;
+            if (actual == LKS_STATUS_OK) {
+                lks_path_destroy(model[index].path);
+                model[index] = model[--count];
+            }
+        } else if (operation == 1) {
+            const LksTreeNode *node = NULL;
+            LksStatus expected = index == count ? LKS_STATUS_OK :
+                LKS_STATUS_ALREADY_EXISTS;
+            LksStatus actual = lks_tree_insert(tree, candidate, &items[step], &node);
+            if (actual != expected || (actual == LKS_STATUS_OK &&
+                (node == NULL || lks_tree_node_item(node) != &items[step])) ||
+                (actual != LKS_STATUS_OK && node != NULL)) ok = 0;
+            if (actual == LKS_STATUS_OK) {
+                model[count].path = lks_path_clone(candidate);
+                model[count++].item = &items[step];
+                if (model[count - 1].path == NULL) ok = 0;
+            }
+        } else if (operation == 2) {
+            LksPath *target = key_path(random_next(&seed) % 513u);
+            const LksTreeNode *node = NULL;
+            size_t target_index;
+            LksStatus expected, actual;
+            if (target == NULL) { ok = 0; lks_path_destroy(candidate); break; }
+            target_index = model_find(model, count, target);
+            expected = index == count ? LKS_STATUS_NOT_FOUND :
+                (target_index != count && target_index != index ?
+                LKS_STATUS_ALREADY_EXISTS : LKS_STATUS_OK);
+            actual = lks_tree_rekey(tree, candidate, target, &node);
+            if (actual != expected || (actual == LKS_STATUS_OK &&
+                (node == NULL || lks_tree_node_item(node) != model[index].item)) ||
+                (actual != LKS_STATUS_OK && node != NULL)) ok = 0;
+            if (actual == LKS_STATUS_OK && index != target_index) {
+                LksPath *copy = lks_path_clone(target);
+                if (copy == NULL) ok = 0;
+                else { lks_path_destroy(model[index].path); model[index].path = copy; }
+            }
+            lks_path_destroy(target);
+        } else if (operation == 3) {
+            const LksTreeNode *node = NULL;
+            const LksTreeNode *ordered_nodes[CAP];
+            LksPath *replacement_paths[CAP] = {0};
+            void *expected_items[CAP];
+            size_t expected_position = 0;
+            LksStatus actual;
+            items[step] = (int)(random_next(&seed) % (count / 3u + 2u));
+            while (expected_position < count &&
+                *(int *)model[expected_position].item <= items[step])
+                ++expected_position;
+            actual = lks_tree_insert_item(tree, &items[step], &comparator, &node);
+            if (actual != LKS_STATUS_OK || node == NULL ||
+                lks_tree_node_item(node) != &items[step] ||
+                lks_tree_internal_fill_ordered(tree, ordered_nodes, count + 1) !=
+                    LKS_STATUS_OK) ok = 0;
+            if (ok) {
+                for (i = 0; i <= count; ++i) {
+                    expected_items[i] = i < expected_position ? model[i].item :
+                        i == expected_position ? &items[step] : model[i - 1].item;
+                    if (lks_tree_node_item(ordered_nodes[i]) != expected_items[i])
+                        ok = 0;
+                }
+                for (i = 0; i <= count && ok; ++i) {
+                    replacement_paths[i] = lks_path_clone(
+                        lks_tree_node_path(ordered_nodes[i]));
+                    if (replacement_paths[i] == NULL) ok = 0;
+                }
+                if (ok) {
+                    for (i = 0; i < count; ++i) lks_path_destroy(model[i].path);
+                    for (i = 0; i <= count; ++i) {
+                        model[i].path = replacement_paths[i];
+                        model[i].item = expected_items[i];
+                    }
+                    ++count;
+                } else for (i = 0; i <= count; ++i)
+                    lks_path_destroy(replacement_paths[i]);
+            }
+        } else {
+            const LksTreeNode *node = NULL;
+            LksStatus expected = index == count ? LKS_STATUS_NOT_FOUND : LKS_STATUS_OK;
+            LksStatus actual = lks_tree_find_path(tree, candidate, &node);
+            if (actual != expected || (actual == LKS_STATUS_OK &&
+                (node == NULL || lks_tree_node_item(node) != model[index].item)) ||
+                (actual != LKS_STATUS_OK && node != NULL)) ok = 0;
+        }
+        lks_path_destroy(candidate);
+        model_sort(model, count);
+        for (i = 0; i < count; ++i) *(int *)model[i].item = (int)(i / 3u);
+        if (ok && !verify(tree, model, count)) ok = 0;
+        if (ok && count != 0 &&
+            !check_external_round_trip(model[step % count].path)) ok = 0;
+        if (!ok) fprintf(stderr, "MixedInteraction failure step=%zu operation=%u count=%zu seed=%08X\n",
+            step, operation, count, (unsigned int)original_seed);
+    }
+    for (i = 0; i < count; ++i) lks_path_destroy(model[i].path);
+    lks_tree_destroy(tree);
+    printf("V2 MixedInteraction Seed=%08X Steps=%zu %s\n",
+        (unsigned int)original_seed, step, ok ? "PASS" : "FAIL");
+    return ok && clean();
+}
+
 static int check_rekey_oom(void)
 {
     LksTree *tree;
@@ -483,6 +643,8 @@ int lks_run_mutation_tests(void)
         !check_random(UINT32_C(0xC0FFEE12)) ||
         !check_random(UINT32_C(0x12345678)) ||
         !check_random(UINT32_C(0xDEADBEEF)) ||
+        !check_mixed_interaction(UINT32_C(0x41786321)) ||
+        !check_mixed_interaction(UINT32_C(0xA76509DE)) ||
         !check_deep(1000) || !check_deep(10000) || !check_deep(100000)) {
         puts("V2 mutation tests FAILED");
         return 1;

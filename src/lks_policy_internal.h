@@ -4,27 +4,26 @@
 #include "layerkeysort.h"
 #include <stdint.h>
 
-/* Preview policy lives here, separate from Path storage and text encoding.
- * Local windows expand 8 -> 16 -> 32 -> 64 nodes; depth 4 is preferred and
- * depth 6 is the last direct-Path allowance. Endpoint spacing remains 10 so
- * Preview.3 measures the wider slot domain before any heuristic retuning. */
+/* Provisional coordinate-placement policy, separate from Path storage and
+ * text encoding. Bulk blocks are logical Path subdivisions, not Tree child
+ * arrays. Local windows expand 8 -> 16 -> 32 -> 64 in Path order. Depth 4
+ * is preferred and depth 6 is the last direct-Path allowance. */
 enum {
     LKS_POLICY_INITIAL_SLOT = 32768,
     LKS_POLICY_TARGET_SPACING = 10,
-    LKS_POLICY_MIN_USEFUL_SPACING = 2,
-    LKS_POLICY_BULK_CHILDREN = 26,
+    LKS_POLICY_MIN_MIDPOINT_SPAN = 2,
+    LKS_POLICY_BULK_BLOCK_LIMIT = 26,
     LKS_POLICY_PREFERRED_ONLINE_DEPTH = 4,
     LKS_POLICY_HARD_ONLINE_DEPTH = 6,
     LKS_POLICY_LOCAL_INITIAL_NODES = 8,
     LKS_POLICY_LOCAL_EXPANSION_FACTOR = 2,
-    LKS_POLICY_LOCAL_MAX_NODES = 64,
-    LKS_POLICY_LOCAL_MIN_DEPTH_GAIN = 1
+    LKS_POLICY_LOCAL_MAX_NODES = 64
 };
 
 /* Spread roots across the full 16-bit domain, leaving space at both ends;
  * the old low-end first/stride layout would waste the newly available gaps.
  * With at most 26 blocks the numerator fits uint_least32_t. */
-_Static_assert(LKS_POLICY_BULK_CHILDREN <=
+_Static_assert(LKS_POLICY_BULK_BLOCK_LIMIT <=
     UINT_LEAST32_MAX / ((uint_least32_t)LKS_PATH_SLOT_MAX + UINT32_C(1)),
     "bulk slot numerator must fit the intermediate type");
 static inline unsigned int lks_policy_bulk_slot(size_t block_index, size_t blocks)

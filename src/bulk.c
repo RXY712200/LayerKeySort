@@ -6,12 +6,13 @@
 
 /* Generate the Preview.3 sparse Path sequence independently of Tree shape.
  * Its recursive blocks are logical Path subdivisions, never physical nodes. */
-static LksStatus generate_subtree(LksPath **paths, size_t count,
+static LksStatus generate_coordinate_blocks(LksPath **paths, size_t count,
     const LksPath *parent, size_t level)
 {
     size_t blocks, common, extra, block, offset = 0;
     if (count == 0) return LKS_STATUS_OK;
-    blocks = count < LKS_POLICY_BULK_CHILDREN ? count : LKS_POLICY_BULK_CHILDREN;
+    blocks = count < LKS_POLICY_BULK_BLOCK_LIMIT ? count :
+        LKS_POLICY_BULK_BLOCK_LIMIT;
     common = count / blocks;
     extra = count % blocks;
     for (block = 0; block < blocks; ++block) {
@@ -31,7 +32,7 @@ static LksStatus generate_subtree(LksPath **paths, size_t count,
         if (paths[offset] == NULL) return LKS_STATUS_OUT_OF_MEMORY;
         if (block_size > 1) {
             if (level == (size_t)-1) return LKS_STATUS_LEVEL_LIMIT;
-            status = generate_subtree(paths + offset + 1, block_size - 1,
+            status = generate_coordinate_blocks(paths + offset + 1, block_size - 1,
                 paths[offset], level + 1);
             if (status != LKS_STATUS_OK) return status;
         }
@@ -57,7 +58,7 @@ LksStatus lks_bulk_build_tree(void *const *sorted, size_t count,
         for (i = 0; i < count; ++i) paths[i] = NULL;
         paths[0] = lks_path_create_zero();
         status = paths[0] == NULL ? LKS_STATUS_OUT_OF_MEMORY :
-            generate_subtree(paths + 1, count - 1, NULL, 0);
+            generate_coordinate_blocks(paths + 1, count - 1, NULL, 0);
         if (status != LKS_STATUS_OK) goto cleanup;
     }
     status = lks_tree_internal_build_ordered(paths, sorted, count, out_tree);

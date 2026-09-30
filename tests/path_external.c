@@ -335,6 +335,136 @@ static int example_test(void)
     return 1;
 }
 
+static int golden_key_test(void)
+{
+    static const struct GoldenKey {
+        LksDirection direction;
+        size_t first_level;
+        unsigned int first_slot;
+        int has_child;
+        size_t child_level;
+        unsigned int child_slot;
+        const char *key;
+    } vectors[] = {
+        {LKS_DIRECTION_POSITIVE, 0, 0, 0, 0, 0, "LK1:201FF0000!"},
+        {LKS_DIRECTION_POSITIVE, 0, 65535, 0, 0, 0, "LK1:201FFFFFF!"},
+        {LKS_DIRECTION_POSITIVE, 1, 0, 0, 0, 0, "LK1:201FE0000!"},
+        {LKS_DIRECTION_POSITIVE, 254, 0, 0, 0, 0, "LK1:201010000!"},
+        {LKS_DIRECTION_POSITIVE, 255, 0, 0, 0, 0, "LK1:201000000!"},
+        {LKS_DIRECTION_POSITIVE, 256, 0, 0, 0, 0, "LK1:2001FEFF0000!"},
+        {LKS_DIRECTION_POSITIVE, 65535, 0, 0, 0, 0, "LK1:200100000000!"},
+        {LKS_DIRECTION_POSITIVE, 65536, 0, 0, 0, 0, "LK1:20001FEFFFF0000!"},
+        {LKS_DIRECTION_POSITIVE, 0, 0, 1, 1, 1,
+            "LK1:201FF000001FE0001!"},
+        {LKS_DIRECTION_POSITIVE, 0, 0, 1, 5, 1,
+            "LK1:201FF000001FA0001!"},
+        {LKS_DIRECTION_NEGATIVE, 0, 0, 0, 0, 0, "LK1:001FFFFFF!"},
+        {LKS_DIRECTION_NEGATIVE, 0, 65535, 0, 0, 0, "LK1:001FF0000!"},
+        {LKS_DIRECTION_NEGATIVE, 0, 0, 1, 1, 0,
+            "LK1:001FFFFFF01FE0000!"},
+        {LKS_DIRECTION_NEGATIVE, 0, 0, 1, 1, 1,
+            "LK1:001FFFFFF01FE0001!"},
+        {LKS_DIRECTION_NEGATIVE, 12, 54, 0, 0, 0, "LK1:001F3FFC9!"},
+        {LKS_DIRECTION_NEGATIVE, 12, 54, 1, 15, 65535,
+            "LK1:001F3FFC901F0FFFF!"}
+    };
+    size_t i;
+    LksPath *zero = lks_path_create_zero();
+    char *zero_key = format_key(zero);
+    CHECK(zero != NULL && zero_key != NULL && strcmp(zero_key, "LK1:1!") == 0);
+    free(zero_key); lks_path_destroy(zero);
+    for (i = 0; i < sizeof(vectors) / sizeof(vectors[0]); ++i) {
+        const struct GoldenKey *v = &vectors[i];
+        LksPath *path = lks_path_create_at_level(v->direction,
+            v->first_slot, v->first_level);
+        LksPath *decoded = NULL;
+        char *key;
+        CHECK(path != NULL);
+        if (v->has_child)
+            CHECK(lks_path_append_at_level(path, v->child_slot,
+                v->child_level) == LKS_STATUS_OK);
+        key = format_key(path);
+        if (key == NULL || strcmp(key, v->key) != 0) {
+            fprintf(stderr, "golden key mismatch %zu: expected %s, got %s\n",
+                i, v->key, key == NULL ? "(null)" : key);
+            return 0;
+        }
+        CHECK(lks_path_order_key_parse(v->key, &decoded) == LKS_STATUS_OK &&
+            same_path(path, decoded));
+        free(key); lks_path_destroy(decoded); lks_path_destroy(path);
+    }
+    if (sizeof(size_t) == 4 || sizeof(size_t) == 8) {
+        const char *max_key = sizeof(size_t) == 8 ?
+            "LK1:2" "000000001" "0000000000000000" "0000!" :
+            "LK1:2" "00001" "00000000" "0000!";
+        const char *near_key = sizeof(size_t) == 8 ?
+            "LK1:2" "000000001" "0000000000000001" "0000!" :
+            "LK1:2" "00001" "00000001" "0000!";
+        LksPath *maximum = lks_path_create_at_level(
+            LKS_DIRECTION_POSITIVE, 0, SIZE_MAX);
+        LksPath *near = lks_path_create_at_level(
+            LKS_DIRECTION_POSITIVE, 0, SIZE_MAX - 1);
+        char *a = format_key(maximum), *b = format_key(near);
+        CHECK(maximum != NULL && near != NULL && a != NULL && b != NULL &&
+            strcmp(a, max_key) == 0 && strcmp(b, near_key) == 0);
+        free(a); free(b); lks_path_destroy(maximum); lks_path_destroy(near);
+    }
+    printf("Path key v1 golden vectors: %zu fixed plus ZERO and SIZE_MAX edges PASS\n",
+        sizeof(vectors) / sizeof(vectors[0]));
+    return 1;
+}
+
+static int gap_boundary_test(void)
+{
+    LksPath *negative = lks_path_create(LKS_DIRECTION_NEGATIVE, 65535);
+    LksPath *negative_next = lks_path_create(LKS_DIRECTION_NEGATIVE, 65534);
+    LksPath *zero = lks_path_create_zero();
+    LksPath *positive = lks_path_create(LKS_DIRECTION_POSITIVE, 0);
+    LksPath *positive_next = lks_path_create(LKS_DIRECTION_POSITIVE, 1);
+    LksPath *positive_edge = lks_path_create_at_level(
+        LKS_DIRECTION_POSITIVE, 0, SIZE_MAX);
+    LksPath *candidate = NULL, *descendant;
+    int left_order, right_order;
+    CHECK(negative != NULL && negative_next != NULL && zero != NULL &&
+        positive != NULL && positive_next != NULL && positive_edge != NULL);
+    CHECK(lks_path_between(negative, negative_next, &candidate) == LKS_STATUS_OK &&
+        lks_path_compare(negative, candidate, &left_order) == LKS_STATUS_OK &&
+        lks_path_compare(candidate, negative_next, &right_order) == LKS_STATUS_OK &&
+        left_order < 0 && right_order < 0);
+    lks_path_destroy(candidate); candidate = NULL;
+    CHECK(lks_path_between(positive, positive_next, &candidate) == LKS_STATUS_OK &&
+        lks_path_compare(positive, candidate, &left_order) == LKS_STATUS_OK &&
+        lks_path_compare(candidate, positive_next, &right_order) == LKS_STATUS_OK &&
+        left_order < 0 && right_order < 0);
+    lks_path_destroy(candidate); candidate = NULL;
+    descendant = lks_path_clone(positive);
+    CHECK(descendant != NULL &&
+        lks_path_append(descendant, 0) == LKS_STATUS_OK &&
+        lks_path_between(positive, descendant, &candidate) == LKS_STATUS_OK &&
+        lks_path_compare(positive, candidate, &left_order) == LKS_STATUS_OK &&
+        lks_path_compare(candidate, descendant, &right_order) == LKS_STATUS_OK &&
+        left_order < 0 && right_order < 0);
+    lks_path_destroy(candidate); candidate = NULL;
+    CHECK(lks_path_between(negative, positive, &candidate) == LKS_STATUS_OK &&
+        lks_path_direction(candidate) == LKS_DIRECTION_ZERO);
+    lks_path_destroy(candidate); candidate = NULL;
+    CHECK(lks_path_before(zero, &candidate) == LKS_STATUS_OK &&
+        lks_path_direction(candidate) == LKS_DIRECTION_NEGATIVE);
+    lks_path_destroy(candidate); candidate = NULL;
+    CHECK(lks_path_after(zero, &candidate) == LKS_STATUS_OK &&
+        lks_path_direction(candidate) == LKS_DIRECTION_POSITIVE);
+    lks_path_destroy(candidate); candidate = NULL;
+    CHECK(lks_path_between(zero, positive_edge, &candidate) ==
+        LKS_STATUS_LEVEL_LIMIT && candidate == NULL);
+    CHECK(lks_path_append(positive_edge, 0) == LKS_STATUS_INVALID_ARGUMENT);
+    lks_path_destroy(negative); lks_path_destroy(negative_next);
+    lks_path_destroy(zero); lks_path_destroy(positive);
+    lks_path_destroy(positive_next); lks_path_destroy(positive_edge);
+    lks_path_destroy(descendant);
+    puts("Path gap boundary cases PASS");
+    return 1;
+}
+
 int lks_run_path_external_tests(void)
 {
     LksPath *p = NULL;
@@ -357,7 +487,8 @@ int lks_run_path_external_tests(void)
         !lks_alloc_test_failure_triggered());
     lks_alloc_test_disable_failure();
     lks_path_destroy(p);
-    CHECK(example_test() && corpus_test() && malformed_test() && rekey_noop_test());
+    CHECK(example_test() && golden_key_test() && gap_boundary_test() && corpus_test() &&
+        malformed_test() && rekey_noop_test());
     CHECK(oom_test_one("01222/223/2RUc", lks_path_parse));
     CHECK(oom_test_one("LK1:201FE000001FD000101FCFFFF!", lks_path_order_key_parse));
     CHECK(deep_test(1000) && deep_test(10000) && deep_test(100000));

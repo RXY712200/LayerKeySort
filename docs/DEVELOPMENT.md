@@ -127,12 +127,14 @@ and text encoding. Its sparse bulk rule is integer division
 `((index + 1) * 65536) / (blocks + 1)` for block indexes `0..blocks-1`.
 It distributes roots through the full coordinate space and leaves both
 endpoints unused. With one block, the slot is 32768. Bulk recursion uses at
-most 26 logical Path blocks, independent of physical index shape and codec radix 54;
-the goal is insertion room, not slot exhaustion. The initial online slot is
-also 32768. Endpoint target spacing stays 10. Preferred/hard depths 4/6,
-local windows 8/16/32/64, minimum repair gain 1, and minimum useful spacing
-2 remain the Preview.2 values. This isolates the widened coordinate domain
-before any heuristic retuning; these constants are provisional.
+most 26 logical Path blocks, independent of physical index shape and codec
+radix 54; the goal is insertion room. The initial online slot is 32768.
+Endpoint target spacing 10, preferred/hard depths 4/6, and local windows
+8/16/32/64 are provisional placement heuristics, not correctness limits.
+The minimum midpoint span of 2 is the arithmetic requirement for an integer
+slot strictly between two existing slots. Stage 4 removed a redundant repair
+gain threshold and renamed the logical block and midpoint concepts without
+changing generated Path layouts. Final policy tuning belongs to Stage 5.
 
 ### Observed Preview.3 effect
 
@@ -203,7 +205,29 @@ the only production owner of the display slot alphabet and now decodes it.
 The parser rejects larger-than-`SIZE_MAX` levels on a receiving platform.
 Both parsers iterate over steps and abandon partial Paths on failure. The
 exact normative v1 grammar and ordering proof are in [API.md](API.md).
-Distributed/CRDT semantics remain deferred.
+Golden vectors lock the v1 bytes before publication. After publication, an
+incompatible representation requires a new key version. The key version is
+independent of the library's Preview version.
+
+### Stage 4 scope disposition
+
+The current core supports serialization and bytewise ordering of individual
+Path coordinates. It does not serialize a whole Tree, its physical AVL shape,
+caller item payloads, or application item IDs. A Tree mutation may change
+coordinates, so persistence of a coordinate does not make it an immutable
+item identity. Full rebuild remains a failure-atomic correctness fallback;
+whether its frequency and cost need tuning is Stage 5 work.
+
+The V2 core targets single-process ordering. Concurrent independent gap
+insertion, replica convergence, and CRDT semantics are optional future
+architecture, not a prerequisite for this core. A public custom allocator is
+also optional integration work: no present public correctness contract needs
+one, and diagnostic fault injection remains private. CMake, Visual Studio,
+and direct C17 source integration are supported; package-manager recipes and
+whole-Tree serialization are separate optional integrations. `lks_sort()` is
+a stable convenience operation; any performance changes await Stage 5.
+
+### Core engineering constraints
 
 - Keep implementation in portable C17 under both build systems.
 - Preserve public ownership and ordering semantics; generated Path coordinates

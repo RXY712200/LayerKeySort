@@ -24,6 +24,7 @@ Set the compiler include search path to the repository’s `include/` directory.
 - `src/lks_base.c`
 - `src/path.c`
 - `src/path_text.c`
+- `src/path_order_key.c`
 - `src/slot_codec.c`
 - `src/path_compare.c`
 - `src/gap.c`
@@ -139,6 +140,12 @@ allocator failure also leaves output NULL. The exact key grammar and
 cross-platform overflow rule are in [API.md](API.md). These APIs are local
 unreleased development after Preview.3.
 
+The key persists a Path coordinate and can order canonical same-version keys
+under bytewise ASCII collation. It does not save a Tree, reconstruct its AVL
+shape, save caller item payloads, or assign permanent item IDs. The application
+must associate its own item identity with the stored coordinate and account
+for Path changes after Tree mutation.
+
 ## Reading results
 
 Use the Group accessors to inspect items in comparator order and their assigned Paths:
@@ -220,4 +227,4 @@ Functions that return `LksStatus` report their outcome with values such as `LKS_
 
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result’s path space.
-- Binary serialization, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
+- Whole-Tree serialization, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
