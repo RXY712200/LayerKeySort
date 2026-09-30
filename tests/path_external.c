@@ -248,6 +248,28 @@ static int oom_test_one(const char *text,
     return 0;
 }
 
+static int path_growth_oom_test(void)
+{
+    LksPath *path = lks_path_create(LKS_DIRECTION_POSITIVE, 7);
+    LksAllocStats before, after;
+    unsigned int slot = 0;
+    CHECK(path != NULL);
+    before = lks_alloc_stats_get();
+    lks_alloc_test_reset_attempt_counter();
+    lks_alloc_test_fail_on_attempt(1);
+    CHECK(lks_path_append(path, 8) == LKS_STATUS_OUT_OF_MEMORY);
+    CHECK(lks_alloc_test_failure_triggered());
+    lks_alloc_test_disable_failure();
+    after = lks_alloc_stats_get();
+    CHECK(before.live_blocks == after.live_blocks &&
+        before.live_bytes == after.live_bytes &&
+        lks_path_depth(path) == 1 &&
+        lks_path_get_slot(path, 0, &slot) == LKS_STATUS_OK && slot == 7);
+    CHECK(lks_path_append(path, 8) == LKS_STATUS_OK && lks_path_depth(path) == 2);
+    lks_path_destroy(path);
+    return 1;
+}
+
 static int deep_test(size_t depth)
 {
     LksPath *path = lks_path_create(LKS_DIRECTION_POSITIVE, 0);
@@ -489,6 +511,7 @@ int lks_run_path_external_tests(void)
     lks_path_destroy(p);
     CHECK(example_test() && golden_key_test() && gap_boundary_test() && corpus_test() &&
         malformed_test() && rekey_noop_test());
+    CHECK(path_growth_oom_test());
     CHECK(oom_test_one("01222/223/2RUc", lks_path_parse));
     CHECK(oom_test_one("LK1:201FE000001FD000101FCFFFF!", lks_path_order_key_parse));
     CHECK(deep_test(1000) && deep_test(10000) && deep_test(100000));

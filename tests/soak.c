@@ -349,19 +349,35 @@ static int run_comparator(size_t steps, uint32_t initial_seed)
 int main(int argc, char **argv)
 {
     size_t total = 30000, explicit_steps;
-    if (argc == 3 && strcmp(argv[1], "--operations") == 0) {
+    uint32_t explicit_seed = UINT32_C(0x6B47C291);
+    uint32_t comparator_seed = UINT32_C(0xA9172E63);
+    int i, seen_operations = 0, seen_seed = 0;
+    for (i = 1; i < argc; i += 2) {
         char *end = NULL;
         unsigned long long parsed;
+        if (i + 1 >= argc) break;
         errno = 0;
-        parsed = strtoull(argv[2], &end, 10);
-        if (errno == ERANGE || argv[2][0] == '-' || end == argv[2] ||
-            *end != '\0' || parsed < 4 || parsed > SIZE_MAX) {
-            fputs("Invalid operation count\n", stderr);
-            return 2;
+        parsed = strtoull(argv[i + 1], &end,
+            strcmp(argv[i], "--operations") == 0 ? 10 : 0);
+        if (errno == ERANGE || argv[i + 1][0] == '-' ||
+            end == argv[i + 1] || *end != '\0') break;
+        if (strcmp(argv[i], "--operations") == 0 && !seen_operations &&
+            parsed >= 4 && parsed <= SIZE_MAX) {
+            total = (size_t)parsed;
+            seen_operations = 1;
+        } else if (strcmp(argv[i], "--seed") == 0 && !seen_seed &&
+            parsed <= UINT32_MAX) {
+            uint32_t seed = (uint32_t)parsed;
+            explicit_seed = seed == 0 ? UINT32_C(0x9E3779B9) : seed;
+            comparator_seed = explicit_seed ^ UINT32_C(0xC250ECF2);
+            if (comparator_seed == 0) comparator_seed = UINT32_C(0xA9172E63);
+            seen_seed = 1;
+        } else {
+            break;
         }
-        total = (size_t)parsed;
-    } else if (argc != 1) {
-        fputs("Usage: layerkeysort_soak [--operations N]\n", stderr);
+    }
+    if (i != argc) {
+        fputs("Usage: layerkeysort_soak [--operations N] [--seed S]\n", stderr);
         return 2;
     }
     explicit_steps = total - total / 4u;
@@ -369,8 +385,8 @@ int main(int argc, char **argv)
         fputs("Operation count exceeds allocation range\n", stderr);
         return 2;
     }
-    if (!run_explicit(explicit_steps, UINT32_C(0x6B47C291)) ||
-        !run_comparator(total - explicit_steps, UINT32_C(0xA9172E63)))
+    if (!run_explicit(explicit_steps, explicit_seed) ||
+        !run_comparator(total - explicit_steps, comparator_seed))
         return 1;
     printf("Mutation soak total operations=%zu PASS\n", total);
     return 0;
