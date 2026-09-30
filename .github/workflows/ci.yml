@@ -15,8 +15,10 @@ jobs:
         run: cmake --build build --config Debug --parallel
       - name: Test
         run: ctest --test-dir build -C Debug --output-on-failure
-      - name: Example
+      - name: Basic example
         run: .\build\Debug\layerkeysort_example.exe
+      - name: Layer-list example
+        run: .\build\Debug\layerkeysort_layer_list_example.exe
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -38,5 +40,26 @@ jobs:
         run: cmake --build build --parallel
       - name: Test
         run: ctest --test-dir build --output-on-failure
-      - name: Example
+      - name: Basic example
         run: ./build/layerkeysort_example
+      - name: Layer-list example
+        run: ./build/layerkeysort_layer_list_example
+
+  macos-appleclang:
+    runs-on: macos-latest
+    env:
+      CC: clang
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compiler
+        run: clang --version
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_BUILD_BENCHMARKS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
+      - name: Basic example
+        run: ./build/layerkeysort_example
+      - name: Layer-list example
+        run: ./build/layerkeysort_layer_list_example
