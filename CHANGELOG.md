@@ -2,12 +2,12 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [2.0.0-rc.1] - Unreleased
+## [2.0.0-rc.1] - 2026-09-30
 
-RC.1 is the V2 feature, public API, Path display, and LK1 format freeze
-candidate. Preview.5 remains the latest published prerelease while this
-candidate is validated. No new public function, production algorithm, or
-external-key version is introduced.
+RC.1 is the published V2 feature, public API, Path display, and LK1 format
+freeze candidate. It remains a prerelease, not stable or production-ready
+2.0.0. No new public function, production algorithm, or external-key version
+is introduced.
 
 - Defined the intended 2.x source and semantic compatibility boundary in
   `docs/COMPATIBILITY.md`, distinguishing public contracts from generated

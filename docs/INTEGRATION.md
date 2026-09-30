@@ -1,8 +1,8 @@
 # Integrating LayerKeySort
 
-The published `v2.0.0-preview.5` uses the same 52-function public C API as
-Preview.4. Treat Preview APIs, generated Path layouts, and performance policy
-as provisional.
+The published `v2.0.0-rc.1` retains Preview.5's 52-function public C API.
+RC.1 is the 2.x source and format freeze candidate; generated Path layouts and
+performance policy remain implementation details.
 
 ## Requirements and tested configurations
 
@@ -11,7 +11,7 @@ as provisional.
 - CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
   with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
   and compiler versions, not every version of those operating systems or
-  compilers. The Preview.5 macOS job passed for its recorded CI runner.
+  compilers. The RC.1 macOS job passed for its recorded CI runner.
 
 The public header has `extern "C"` guards for inclusion by C++ applications;
 the library implementation remains C17. Callers own item objects. Tree and
@@ -47,7 +47,7 @@ parent project.
 
 ## CMake `FetchContent`
 
-Pin the published Preview.5 tag for a reproducible build:
+Pin the published RC.1 tag for a reproducible build:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -60,7 +60,7 @@ set(LKS_BUILD_TESTS OFF)
 set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v2.0.0-preview.5)
+    GIT_TAG v2.0.0-rc.1)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app src/main.c)

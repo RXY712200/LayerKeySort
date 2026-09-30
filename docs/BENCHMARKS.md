@@ -1,6 +1,6 @@
 # V2 performance and benchmark evidence (Preview.4)
 
-The latest published Preview is **v2.0.0-preview.5**. The Stage 4 and Stage 5
+The latest published prerelease is **v2.0.0-rc.1**. The Stage 4 and Stage 5
 columns below are historical development snapshots. These numbers describe
 one machine and the stated workloads; they are not universal performance
 rankings. Generated

@@ -1,11 +1,11 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Latest published Preview: v2.0.0-preview.5.*
+*A C17 library for stable ordering with hierarchical Path positions. Latest prerelease: v2.0.0-rc.1.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
 > [!WARNING]
-> **V2 is still a prerelease.** Preview.5 is the latest published version; RC.1 is being prepared as the feature/API/format freeze candidate. Neither is stable, production-ready 2.0. Exact automatically generated Path layouts and performance may change.
+> **V2 is at Release Candidate stage.** RC.1 freezes the feature, public API, Path display, and LK1 format contract for final validation. It is still a prerelease, not stable or production-ready 2.0. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
@@ -28,13 +28,12 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 | v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
 | v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
-| v2.0.0-rc.1 (candidate) | Freeze and validate the V2 public contract and documented source integration. | Not published yet; release blockers must be resolved before tagging. |
+| v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Still a prerelease; release blockers, if found, require an RC fix before stable 2.0.0. |
 
-The published Preview.5 retains Preview.4's Path-keyed Tree, remove/rekey,
-canonical display parsing, and LK1 sortable keys, and adds usage guidance,
-integration documentation, the mutation soak, and macOS validation. RC.1 now
-checks these public contracts for the intended 2.x freeze without changing
-the production algorithm. See the [compatibility contract](docs/COMPATIBILITY.md).
+RC.1 retains Preview.5's Path-keyed Tree, remove/rekey, canonical display
+parsing, LK1 sortable keys, usage guidance, mutation soak, and macOS validation.
+It freezes the intended public 2.x contract without changing the production
+algorithm. See the [compatibility contract](docs/COMPATIBILITY.md).
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -137,7 +136,7 @@ The existing `LayerKeySort.slnx` / `.vcxproj` remain available for MSVC C17 vali
 
 ## Validation
 
-The repository includes deterministic property tests, stress tests, a Preview.5 mutation soak, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured for Windows/MSVC, Ubuntu/GCC and Clang (including sanitizer validation), and macOS/AppleClang. A passing runner does not guarantee every platform version. Preview Path heuristics are provisional and may change before v2.0.0; no optimal complexity claim is made.
+The repository includes deterministic property tests, stress tests, a Preview.5 mutation soak, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured for Windows/MSVC, Ubuntu/GCC and Clang (including sanitizer validation), and macOS/AppleClang. A passing runner does not guarantee every platform version. Path heuristics are internal and may change; no optimal complexity claim is made.
 
 ## Performance evidence
 
