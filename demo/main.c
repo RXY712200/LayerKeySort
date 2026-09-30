@@ -5,6 +5,7 @@
 #include "../src/lks_alloc_internal.h"
 #include "../tests/property.h"
 #include "../tests/mutation.h"
+#include "../tests/path_external.h"
 
 static int compare_int(const void *left, const void *right, void *context)
 {
@@ -3479,6 +3480,7 @@ int main(int argc, char **argv)
     v2_result = lks_run_v2_preview_tests();
     if (v2_result != 0 || run_public_api_usage_smoke() != 0 ||
         lks_run_mutation_tests() != 0 ||
+        lks_run_path_external_tests() != 0 ||
         lks_run_stage14_1_property_tests() != 0 ||
         lks_run_stage14_2_stress_tests() != 0 ||
         lks_run_stage14_2_oom_tests() != 0) return 1;

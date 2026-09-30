@@ -1,5 +1,6 @@
 #include "layerkeysort.h"
 #include "lks_slot_codec_internal.h"
+#include <stdint.h>
 #include <string.h>
 
 static const char zero_path_text[] = "000";
@@ -110,4 +111,66 @@ LksStatus lks_path_format(const LksPath *path, char *buffer, size_t buffer_size)
     buffer[output_index] = '\0';
     return output_index == required_length ? LKS_STATUS_OK :
         LKS_STATUS_INTERNAL_ERROR;
+}
+
+LksStatus lks_path_parse(const char *text, LksPath **out_path)
+{
+    LksPath *path = NULL;
+    LksDirection direction;
+    size_t length, start, previous = 0, depth = 0;
+    LksStatus status = LKS_STATUS_INVALID_ARGUMENT;
+    if (out_path == NULL) return LKS_STATUS_INVALID_ARGUMENT;
+    *out_path = NULL;
+    if (text == NULL) return LKS_STATUS_INVALID_ARGUMENT;
+    if (strcmp(text, zero_path_text) == 0) {
+        path = lks_path_create_zero();
+        if (path == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+        *out_path = path;
+        return LKS_STATUS_OK;
+    }
+    length = strlen(text);
+    if (length < 4 || (text[0] != '0' && text[0] != '1'))
+        return LKS_STATUS_INVALID_ARGUMENT;
+    direction = text[0] == '0' ? LKS_DIRECTION_POSITIVE : LKS_DIRECTION_NEGATIVE;
+    start = 1;
+    while (start < length) {
+        size_t end = start, prefix_end, value = 0, level;
+        unsigned int slot;
+        while (end < length && text[end] != '/') ++end;
+        if (end - start < LKS_SLOT_TEXT_WIDTH) goto fail;
+        prefix_end = end - LKS_SLOT_TEXT_WIDTH;
+        if (prefix_end != start && text[start] == '0') goto fail;
+        for (size_t i = start; i < prefix_end; ++i) {
+            unsigned int digit;
+            if (text[i] < '0' || text[i] > '9') goto fail;
+            digit = (unsigned int)(text[i] - '0');
+            if (value > (SIZE_MAX - digit) / 10) goto fail;
+            value = value * 10 + digit;
+        }
+        if (!lks_slot_decode(text + prefix_end, &slot)) goto fail;
+        if (depth == 0) {
+            if (prefix_end != start && value == 0) goto fail;
+            level = value;
+            path = lks_path_create_at_level(direction, slot, level);
+            if (path == NULL) { status = LKS_STATUS_OUT_OF_MEMORY; goto fail; }
+        } else {
+            if (prefix_end == start) value = 1;
+            else if (value <= 1) goto fail;
+            if (value > SIZE_MAX - previous) goto fail;
+            level = previous + value;
+            status = lks_path_append_at_level(path, slot, level);
+            if (status != LKS_STATUS_OK) goto fail;
+        }
+        previous = level;
+        ++depth;
+        status = LKS_STATUS_INVALID_ARGUMENT;
+        if (end == length) break;
+        start = end + 1;
+        if (start == length) goto fail;
+    }
+    *out_path = path;
+    return LKS_STATUS_OK;
+fail:
+    lks_path_destroy(path);
+    return status;
 }

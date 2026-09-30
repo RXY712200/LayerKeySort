@@ -15,9 +15,12 @@ Notable changes to LayerKeySort are documented here.
   and failure-atomic rekey of one caller-owned item's coordinate. Published
   Groups remain immutable; comparator compatibility remains the caller's
   responsibility for subsequent comparator-driven operations.
-- Persistence, parsing, and distributed semantics remain deferred. This
-  development state is not production-ready and is not part of released
-  Preview.3.
+- Added strict canonical display parsing and independent, versioned `LK1:`
+  durable Path keys whose bytewise lexical order matches Path order. Parsing
+  checks malformed input, integer overflow, and allocation failure; deep
+  Paths use iterative processing. Equal-Path rekey preserves borrowed views.
+- Binary serialization and distributed semantics remain deferred. This
+  development state is not production-ready and is not part of released Preview.3.
 
 ## [2.0.0-preview.3] - 2026-09-29
 

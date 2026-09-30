@@ -34,6 +34,9 @@
     <ClCompile Include="src\path_text.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\path_order_key.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\slot_codec.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -85,10 +88,16 @@
     <ClCompile Include="tests\mutation.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="tests\path_external.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClInclude Include="tests\property.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="tests\mutation.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tests\path_external.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClCompile Include="tests\public_api_usage.c">

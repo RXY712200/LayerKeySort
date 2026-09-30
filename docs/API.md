@@ -13,10 +13,10 @@
 - `LKS_VERSION_STRING` is `"2.0.0-preview.3"`.
 
 Path values are ordering coordinates, not permanent application item IDs.
-Preview.3 specifies the current formatter output, but provides no public
-parser, stable persistence format, binary serialization protocol, or
-cross-Preview compatibility for stored Path strings. Exact coordinates and
-their text can change when a Tree is re-encoded or Preview policy changes.
+Released Preview.3 specifies the current formatter output but has no public
+parser or durable key. The unreleased development branch adds both below.
+Exact coordinates can change when a Tree is re-encoded or Preview policy
+changes; a persisted coordinate is not a permanent item identity.
 
 ## Simple stable sort
 
@@ -106,8 +106,7 @@ strings. Use `lks_path_compare()`.
 ## Current Path text grammar
 
 For a valid Path, the formatter emits the following deterministic,
-NUL-terminated ASCII text (the grammar describes **output**, not input
-accepted by any parser):
+NUL-terminated ASCII text. The unreleased parser accepts exactly this grammar:
 
 ```text
 ZERO     = "000"
@@ -151,9 +150,8 @@ cases are asserted by the focused Preview.3 tests; consecutive-step output
 also follows their depth/length test and the same formatter. Formatting
 retains all three slot digits, omits default level metadata, and emits no
 decimal leading zeroes. Thus each valid Path has one formatter-produced
-current text. There is **no public parser**, so this does not define what a
-future parser might accept. It is also not a long-term persistence or wire
-format, and should not be used as a permanent item ID.
+current text. The display text is not the durable sortable key below and
+must not be used as a permanent item ID.
 
 `lks_path_text_length(path)` returns the character count excluding `\0`
 (and returns 0 for a null or internally invalid Path). Allocate at least
@@ -163,6 +161,98 @@ returns `LKS_STATUS_BUFFER_TOO_SMALL` without writing output. Consecutive
 levels starting at zero use exactly `4 * depth` characters. In general,
 length is one direction character plus three per step, one separator per
 additional step, and the decimal digits of any emitted level metadata.
+
+### Strict display parser (unreleased development branch)
+
+```c
+LksStatus lks_path_parse(const char *text, LksPath **out_path);
+```
+
+`text` is borrowed. On success `*out_path` is a new caller-owned Path; destroy
+it with `lks_path_destroy()`. The required output is set to NULL before
+fallible work. The parser accepts `000` or a nonzero direction followed by
+one or more slash-separated segments. Each segment ends in exactly three
+production-alphabet slot characters, decoding to `0..65535`; any preceding
+characters are minimal unsigned decimal level metadata. First-level zero
+and subsequent delta one must be omitted. Explicit later deltas must exceed
+one. Levels increase strictly and must fit `size_t`. Empty segments,
+noncanonical spellings, whitespace, trailing characters, invalid tokens,
+and arithmetic overflow return `LKS_STATUS_INVALID_ARGUMENT`; allocation
+failure returns `LKS_STATUS_OUT_OF_MEMORY`. Parsing is iterative and no
+partially built Path escapes.
+
+## Durable Path order key v1 (unreleased development branch)
+
+```c
+size_t lks_path_order_key_length(const LksPath *path);
+LksStatus lks_path_order_key_format(const LksPath *path,
+    char *buffer, size_t buffer_size);
+LksStatus lks_path_order_key_parse(const char *key, LksPath **out_path);
+```
+
+The following is the complete version-1 ASCII wire/storage grammar. All
+characters are literal ASCII bytes. There is no whitespace or embedded NUL.
+
+```text
+KEY         = "LK1:" DIRECTION STEPS "!"
+DIRECTION   = "0" (NEGATIVE) | "1" (ZERO) | "2" (POSITIVE)
+ZERO        = "LK1:1!"                 (no steps)
+NONZERO     = "LK1:" ("0" | "2") STEP+ "!"
+STEP        = "0" repeated N times, then "1", then 2*N uppercase hex
+              characters encoding N complemented level bytes, then 4
+              uppercase hex characters encoding the slot field
+N           = minimal positive number of base-256 bytes needed for the
+              absolute level (zero uses N=1)
+HEX         = one of 0123456789ABCDEF
+```
+
+To encode a step's absolute numeric level, express it in **minimal**
+big-endian base-256 bytes; zero is one zero byte. Complement each byte as
+`255 - byte`, render each result as two uppercase hex characters, and prefix
+the result with `N` zero characters followed by `1`. `N` is a count, not a
+native integer field. Slots use four uppercase hexadecimal characters for
+the unsigned 16-bit value, most significant digit first. Only the NEGATIVE
+root slot is transformed to `65535 - slot` before hex rendering. Every other
+slot is rendered unchanged. The next step begins immediately after the
+previous slot's four digits; `!` terminates the Path. The length prefix and
+fixed-width fields make decoding unambiguous. Steps carry **absolute** levels,
+not display-format deltas. Levels after the first must strictly increase.
+
+Examples:
+
+| Path | Display text | Durable v1 key |
+| --- | --- | --- |
+| ZERO | `000` | `LK1:1!` |
+| Positive root, level 0, slot 0 | `0222` | `LK1:201FF0000!` |
+| Positive root slot 0, child level 5 slot 1 | `0222/5223` | `LK1:201FF000001FA0001!` |
+| Negative root, level 12, slot 54 | `112232` | `LK1:001F3FFC9!` |
+
+For canonical keys of this **same version**, the sign of bytewise `strcmp`
+equals the sign of `lks_path_compare()`. The constant `LK1:` prefix has no
+ordering effect. Direction bytes put NEGATIVE before ZERO before POSITIVE.
+At a first differing level, an integer with more bytes has one more leading
+`0` and sorts earlier than a shorter integer whose next character is `1`;
+with equal byte count, complemented big-endian bytes put the larger level
+earlier. At equal levels, the four slot digits follow numeric order; the
+negative root complement reverses just that slot order. If all shared steps
+match, `!` sorts before the continuation's `0`, so a parent precedes every
+descendant. Uppercase hex has ASCII digit order. No native byte order,
+`sizeof(size_t)` field, raw struct, or locale transform enters the format.
+
+The parser requires the exact family/version, direction, fields, one final
+terminator, uppercase hex, minimal integer byte count, legal strictly
+increasing levels, and no trailing data. Unknown versions, malformed or
+noncanonical fields, and values exceeding the receiving platform's
+`SIZE_MAX` return `LKS_STATUS_INVALID_ARGUMENT` without truncation. It
+returns `LKS_STATUS_OUT_OF_MEMORY` on allocation failure and otherwise owns
+the newly allocated Path exactly like `lks_path_parse()`. The length excludes
+NUL and returns zero for invalid input or unrepresentable output size.
+Formatting needs a buffer of length plus one, allocates nothing, terminates
+on success, and leaves an undersized buffer untouched with
+`LKS_STATUS_BUFFER_TOO_SMALL`. For database ordering, use a collation that
+preserves **bytewise ASCII** order; locale-aware, case-insensitive, Unicode
+linguistic, and normalization-aware collations are outside this guarantee.
+Only same-version canonical keys have the ordering guarantee.
 
 ## Types
 
@@ -562,7 +652,8 @@ node, then links the new node and removes the old node with no further
 allocation or recoverable failure. Only the selected item's Path changes;
 AVL rotations may change physical links but never re-encode unrelated Paths.
 All earlier borrowed Tree nodes, Paths, and navigation results expire on a
-changed-Path success. Callers selecting arbitrary Paths must keep item order
+changed-Path success. An equal-Path no-op preserves those observations and
+returns the original node. Callers selecting arbitrary Paths must keep item order
 compatible with any comparator used by later comparator-driven operations;
 the Tree does not scan and validate all items during rekey.
 
@@ -577,7 +668,7 @@ The physical Tree index shape is implementation-defined and is not a stable
 API contract. Physical parents need not be Path prefixes, physical children
 need not be logical Path descendants, and physical preorder is not logical
 Path order. Shape may change after mutation. Use `lks_path_compare()` to
-compare positions; reacquire all borrowed navigation results after success.
+compare positions; reacquire all borrowed navigation results after mutations.
 
 ## Group API
 
@@ -742,6 +833,6 @@ source chunk order for equals. Each successful merge result has its own Path
 coordinate space, independent of unchanged source Groups.
 
 The released v2.0.0-preview.3 public header contains **9 types** and **46 functions**,
-including `lks_sort`; the unreleased development header adds the two Tree
-mutation functions above. Private allocator, profile, benchmark, and test entry
+including `lks_sort`; the unreleased development header has **52 functions**
+after adding two Tree mutation and four Path representation functions. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

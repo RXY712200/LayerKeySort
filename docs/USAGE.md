@@ -123,10 +123,21 @@ Appending slot 0 at level five gives `0DEq/5222`, where `5` is the level
 delta. Ordinary next-level steps omit the numeric prefix. Each slot is three
 radix-54 characters from the case-sensitive ASCII alphabet documented in
 [`API.md`](API.md); `/` separates steps and never counts levels. The
-formatter writes canonical current output, but there is no public parser or
-stable serialized format. **Use `lks_path_compare()` to order Paths; do not
+formatter writes canonical current output. The unreleased
+`lks_path_parse()` accepts exactly that text and returns a caller-owned Path.
+For storage and bytewise ordering, use the separate versioned
+`lks_path_order_key_*()` API. **Use `lks_path_compare()` to order Paths; do not
 use `strcmp` on complete formatted text.** Text and generated coordinates may
 change in later previews. Do not persist Path text as an item ID.
+
+For example, the positive level-zero, slot-zero Path has display text `0222`
+and durable key `LK1:201FF0000!`. Canonical keys of the same version sort
+under `strcmp()` or a database collation preserving bytewise ASCII order.
+The parsed Path belongs to the caller and must be destroyed with
+`lks_path_destroy()`. Invalid or noncanonical inputs fail with NULL output;
+allocator failure also leaves output NULL. The exact key grammar and
+cross-platform overflow rule are in [API.md](API.md). These APIs are local
+unreleased development after Preview.3.
 
 ## Reading results
 
@@ -173,13 +184,14 @@ Tree navigation exposes an implementation-defined physical index. A parent
 need not be a Path prefix, children need not be logical descendants, and
 physical preorder does not define logical order. The virtual root has one
 physical child when nonempty. Compare Paths with `lks_path_compare()` and
-reacquire borrowed navigation results after each successful mutation.
+reacquire borrowed navigation results after each actual mutation.
 
 On the unreleased development branch, `lks_tree_remove_path()` removes one
 exact Path without freeing its caller-owned item or compacting any other Path.
 `lks_tree_rekey()` moves the same item pointer to a caller-selected unoccupied
 Path. It prepares all allocations before the structural commit, so failure
 leaves the old association intact. Equal old/new Paths succeed as a no-op.
+That no-op preserves existing borrowed Tree nodes, Paths, and navigation views.
 Physical AVL rebalancing may change parent/child links, but does not re-encode
 Paths. To move an item, callers can change their own payload if appropriate,
 choose a target with `lks_path_before()`, `lks_path_after()`, or
@@ -194,9 +206,10 @@ Merge creates a new coordinate space and may reassign every result Path, while
 leaving both source Groups unchanged. The source Groups' published Paths stay
 valid for their respective Group lifetimes. A successful mutable Tree operation
 may locally relabel or fully rebuild; **reacquire all** borrowed Tree nodes,
-Paths, and navigation results after success. A failed operation with the
+Paths, and navigation results after mutation. A failed operation with the
 documented strong guarantee does not commit a mutation. Do not persist or
-serialize generated Paths for later reuse. Path-allocation heuristics and exact
+serialize generated Paths as item identities; versioned keys may persist their
+current coordinates for external ordering. Path-allocation heuristics and exact
 generated strings may change before final v2.0.0.
 
 ## Error handling
@@ -207,4 +220,4 @@ Functions that return `LksStatus` report their outcome with values such as `LKS_
 
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result’s path space.
-- Serialization, a Path text parser, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.
+- Binary serialization, a fixed memory ceiling, and a public allocator or fault-injection API are not provided.

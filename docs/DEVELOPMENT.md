@@ -98,8 +98,9 @@ the complete character order and public text contract.
 three codec characters per step, one `/` between steps, and minimal decimal
 metadata for a nonzero first absolute level or later level delta greater than
 one. `/` is a separator, never the old unary level count. The formatter has
-one canonical output per valid Path, but no public parser, stable persistence
-format, or cross-Preview text compatibility is defined. A zero-based chain
+one canonical output per valid Path. Unreleased `lks_path_parse()` accepts
+exactly that output; `src/path_order_key.c` owns a separate versioned durable
+key. Cross-Preview display-text compatibility is not promised. A zero-based chain
 with consecutive levels uses exactly `4 * depth` text characters. In the
 general case, add the decimal digits of emitted level metadata to that
 per-step cost. This is separate from internal numeric Path storage.
@@ -194,7 +195,15 @@ transplant. Rekey first allocates a replacement Path and node, then links the
 replacement and detaches the old node without any further allocation. Delete
 does not compact Path coordinates; AVL rotations only change physical links.
 Item ownership remains with callers. Published Groups remain immutable.
-Persistence/parser/distributed semantics remain deferred.
+Unreleased Stage 3 adds strict canonical display parsing and a portable,
+bytewise-sortable `LK1:` persistence key. Its levels use minimal base-256
+big-endian bytes with descending-order complement and a unary byte-count
+prefix; it does not serialize `size_t` or structs. `src/slot_codec.c` remains
+the only production owner of the display slot alphabet and now decodes it.
+The parser rejects larger-than-`SIZE_MAX` levels on a receiving platform.
+Both parsers iterate over steps and abandon partial Paths on failure. The
+exact normative v1 grammar and ordering proof are in [API.md](API.md).
+Distributed/CRDT semantics remain deferred.
 
 - Keep implementation in portable C17 under both build systems.
 - Preserve public ownership and ordering semantics; generated Path coordinates

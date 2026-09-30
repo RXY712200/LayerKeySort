@@ -138,6 +138,18 @@ LksStatus lks_path_format(
     char *buffer,
     size_t buffer_size
 );
+/* Parse exactly the canonical current display grammar. TEXT is borrowed;
+ * success allocates a caller-owned Path. Failure leaves *OUT_PATH NULL. */
+LksStatus lks_path_parse(const char *text, LksPath **out_path);
+/* Versioned ASCII persistence key (LK1). Length excludes NUL; zero means
+ * invalid input or unrepresentable length. Formatting allocates nothing.
+ * Same-version canonical keys sort in Path order under bytewise strcmp. */
+size_t lks_path_order_key_length(const LksPath *path);
+LksStatus lks_path_order_key_format(const LksPath *path,
+    char *buffer, size_t buffer_size);
+/* KEY is borrowed. Success allocates a caller-owned Path; every failure sets
+ * *OUT_PATH to NULL. Unsupported versions and noncanonical keys are invalid. */
+LksStatus lks_path_order_key_parse(const char *key, LksPath **out_path);
 /* Compare two positions and write a negative/zero/positive result on success.
  * Inputs are borrowed; output is unchanged on failure. */
 LksStatus lks_path_compare(
@@ -160,7 +172,8 @@ LksStatus lks_path_after(
 
 /* Opaque public Tree and read-only node view. Tree owns its nodes and cloned
  * Paths; item pointers remain borrowed. All borrowed Tree nodes, Paths, and
- * navigation results expire on any successful Tree mutation. In particular,
+ * navigation results expire when the Tree actually mutates. An equal-Path
+ * rekey succeeds without mutation and preserves borrowed observations. In particular,
  * comparator-driven insertion may replace every internal node. */
 typedef struct LksTree LksTree;
 typedef struct LksTreeNode LksTreeNode;

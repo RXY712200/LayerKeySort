@@ -25,3 +25,20 @@ int lks_slot_encode(unsigned int slot, char output[LKS_SLOT_TEXT_WIDTH])
     }
     return 1;
 }
+
+int lks_slot_decode(const char input[LKS_SLOT_TEXT_WIDTH], unsigned int *out_slot)
+{
+    unsigned int value = 0;
+    int i;
+    if (input == NULL || out_slot == NULL) return 0;
+    for (i = 0; i < LKS_SLOT_TEXT_WIDTH; ++i) {
+        unsigned int rank;
+        for (rank = 0; rank < LKS_SLOT_TEXT_RADIX; ++rank)
+            if (input[i] == slot_alphabet[rank]) break;
+        if (rank == LKS_SLOT_TEXT_RADIX) return 0;
+        value = value * LKS_SLOT_TEXT_RADIX + rank;
+    }
+    if (value > LKS_PATH_SLOT_MAX) return 0;
+    *out_slot = value;
+    return 1;
+}

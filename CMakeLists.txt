@@ -10,7 +10,7 @@ option(LKS_BUILD_TESTS "Build diagnostic tests" ON)
 option(LKS_ENABLE_SANITIZERS "Enable AddressSanitizer and UBSan where supported" OFF)
 
 set(LKS_SOURCES
-    src/lks_alloc.c src/lks_base.c src/path.c src/path_text.c src/slot_codec.c
+    src/lks_alloc.c src/lks_base.c src/path.c src/path_text.c src/path_order_key.c src/slot_codec.c
     src/path_compare.c src/gap.c src/tree.c src/group.c
     src/sort.c src/bulk.c)
 
@@ -40,7 +40,7 @@ if(LKS_BUILD_TESTS)
         LKS_ENABLE_ALLOC_DIAGNOSTICS LKS_ENABLE_V1_REGRESSION_HELPERS)
     lks_configure_target(layerkeysort_diagnostics)
     add_executable(layerkeysort_tests tests/v2_main.c tests/v2_preview.c
-        tests/property.c tests/mutation.c tests/public_api_usage.c)
+        tests/property.c tests/mutation.c tests/path_external.c tests/public_api_usage.c)
     target_compile_definitions(layerkeysort_tests PRIVATE
         LKS_V2_PREVIEW LKS_ENABLE_V1_REGRESSION_HELPERS)
     target_include_directories(layerkeysort_tests PRIVATE src tests)

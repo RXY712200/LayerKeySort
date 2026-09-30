@@ -30,6 +30,19 @@ int lks_public_api_usage_smoke(void)
     static const int expected_input_order[] = { 5, 1, 3, 0, 2, 4 };
     size_t index;
     int valid = 1;
+    LksPath *parsed_display = NULL, *parsed_key = NULL;
+    char key[32];
+
+    if (lks_path_parse("0222", &parsed_display) != LKS_STATUS_OK ||
+        parsed_display == NULL ||
+        lks_path_order_key_length(parsed_display) != 14 ||
+        lks_path_order_key_format(parsed_display, key, sizeof(key)) != LKS_STATUS_OK ||
+        lks_path_order_key_parse(key, &parsed_key) != LKS_STATUS_OK ||
+        parsed_key == NULL ||
+        lks_path_depth(parsed_key) != 1) valid = 0;
+    lks_path_destroy(parsed_display);
+    lks_path_destroy(parsed_key);
+    if (!valid) return 0;
 
     for (index = 0; index < sizeof(values) / sizeof(values[0]); ++index) {
         items[index] = &values[index];
