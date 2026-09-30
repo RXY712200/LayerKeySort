@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-# CMake accepts a numeric project version; the public header carries preview.4.
+# CMake accepts a numeric project version; the public header carries preview.5.
 project(LayerKeySort VERSION 2.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
@@ -31,6 +31,8 @@ lks_configure_target(layerkeysort)
 
 add_executable(layerkeysort_example examples/basic.c)
 target_link_libraries(layerkeysort_example PRIVATE layerkeysort)
+add_executable(layerkeysort_layer_list_example examples/layer_list.c)
+target_link_libraries(layerkeysort_layer_list_example PRIVATE layerkeysort)
 
 if(LKS_BUILD_BENCHMARKS)
     add_executable(layerkeysort_benchmark benchmarks/current_benchmark.c)
@@ -52,6 +54,10 @@ if(LKS_BUILD_TESTS)
     target_include_directories(layerkeysort_tests PRIVATE src tests)
     target_link_libraries(layerkeysort_tests PRIVATE layerkeysort_diagnostics)
     add_test(NAME layerkeysort_v2_preview COMMAND layerkeysort_tests)
+    add_executable(layerkeysort_soak tests/soak.c)
+    target_include_directories(layerkeysort_soak PRIVATE src)
+    target_link_libraries(layerkeysort_soak PRIVATE layerkeysort_diagnostics)
+    add_test(NAME layerkeysort_mutation_soak COMMAND layerkeysort_soak)
     if(LKS_BUILD_BENCHMARKS)
         add_test(NAME layerkeysort_benchmark_tree_smoke
             COMMAND layerkeysort_benchmark tree equal 200 0 1)

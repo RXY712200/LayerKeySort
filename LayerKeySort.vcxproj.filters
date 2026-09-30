@@ -109,5 +109,11 @@
     <None Include="examples\basic.c">
       <Filter>示例</Filter>
     </None>
+    <None Include="examples\layer_list.c">
+      <Filter>示例</Filter>
+    </None>
+    <None Include="tests\soak.c">
+      <Filter>源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

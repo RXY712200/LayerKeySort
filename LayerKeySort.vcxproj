@@ -208,6 +208,8 @@
     <ClCompile Include="tests\public_api_usage.c" />
     <ClCompile Include="tests\v2_preview.c" />
     <None Include="examples\basic.c" />
+    <None Include="examples\layer_list.c" />
+    <None Include="tests\soak.c" />
     <ClInclude Include="tests\property.h" />
     <ClInclude Include="tests\mutation.h" />
     <ClInclude Include="tests\path_external.h" />
