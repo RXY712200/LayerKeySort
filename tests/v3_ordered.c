@@ -111,9 +111,186 @@ static int check_bound_context(void)
     return valid;
 }
 
+static int check_endpoint_runs(void)
+{
+    enum { COUNT = 512 };
+    OrderedItem items[COUNT];
+    LksComparator comparator = { compare_ordered, NULL };
+    int mode, valid = 1;
+    for (mode = 0; mode < 3 && valid; ++mode) {
+        LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+        size_t i;
+        if (tree == NULL) return 0;
+        lks_tree_repair_stats_reset();
+        for (i = 0; i < COUNT && valid; ++i) {
+            items[i].key = mode == 0 ? (int64_t)i :
+                mode == 1 ? 0 : (int64_t)(COUNT - i);
+            items[i].serial = i;
+            if (lks_ordered_tree_insert(tree, &items[i], NULL) != LKS_STATUS_OK)
+                valid = 0;
+        }
+        if (valid) {
+            LksTreeRepairStats stats = lks_tree_repair_stats_get();
+            valid = verify_ordered(tree, 1) && stats.attempts == 0 &&
+                stats.burst_endpoint_inserts >= COUNT - 65 &&
+                stats.direct_endpoint_inserts >= COUNT - 1;
+        }
+        lks_ordered_tree_destroy(tree);
+    }
+    printf("V3 ordered append/equal/prepend runs=%u each %s\n", COUNT,
+        valid ? "PASS" : "FAIL");
+    return valid;
+}
+
+static int check_endpoint_carry_oom(void)
+{
+    OrderedItem items[2] = {{0, 0}, {1, 1}};
+    LksComparator comparator = { compare_ordered, NULL };
+    LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+    LksPath *original = lks_path_create(LKS_DIRECTION_POSITIVE, 1234u);
+    size_t failure = 1, failures = 0;
+    int valid = tree != NULL && original != NULL, success = 0;
+    if (valid && lks_path_append(original, LKS_PATH_SLOT_MAX) != LKS_STATUS_OK)
+        valid = 0;
+    if (valid && lks_ordered_tree_test_seed_path(tree, original, &items[0]) !=
+            LKS_STATUS_OK) valid = 0;
+    while (valid && failure < 100) {
+        LksAllocStats before = lks_alloc_stats_get();
+        const LksTreeNode *inserted = NULL, *old = NULL;
+        LksStatus status;
+        lks_alloc_test_fail_on_attempt(failure);
+        status = lks_ordered_tree_insert(tree, &items[1], &inserted);
+        lks_alloc_test_disable_failure();
+        if (status == LKS_STATUS_OK) {
+            unsigned int slot = 0;
+            success = inserted != NULL && verify_ordered(tree, 1) &&
+                lks_path_depth(lks_tree_node_path(inserted)) == 1 &&
+                lks_path_get_slot(lks_tree_node_path(inserted), 0, &slot) ==
+                    LKS_STATUS_OK && slot == 1244u;
+            break;
+        }
+        if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
+            lks_ordered_tree_size(tree) != 1 ||
+            lks_ordered_tree_find_path(tree, original, &old) != LKS_STATUS_OK ||
+            old == NULL || lks_tree_node_item(old) != &items[0] ||
+            lks_alloc_stats_get().live_bytes != before.live_bytes ||
+            lks_alloc_stats_get().live_blocks != before.live_blocks)
+            valid = 0;
+        ++failure; ++failures;
+    }
+    printf("V3 ordered endpoint carry OOM failures=%zu %s\n", failures,
+        valid && success && failures > 0 ? "PASS" : "FAIL");
+    lks_path_destroy(original);
+    lks_ordered_tree_destroy(tree);
+    return valid && success && failures > 0;
+}
+
+static int check_prepend_level_carry(void)
+{
+    OrderedItem items[2] = {{1, 0}, {0, 1}};
+    LksComparator comparator = { compare_ordered, NULL };
+    LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+    LksPath *original = lks_path_create(LKS_DIRECTION_NEGATIVE,
+        LKS_PATH_SLOT_MAX);
+    const LksTreeNode *inserted = NULL;
+    size_t level = SIZE_MAX;
+    unsigned int slot = LKS_PATH_SLOT_MAX;
+    size_t failure = 1, failures = 0;
+    int valid = tree != NULL && original != NULL, success = 0;
+    if (valid && lks_ordered_tree_test_seed_path(tree, original, &items[0]) !=
+            LKS_STATUS_OK) valid = 0;
+    while (valid && failure < 100) {
+        LksAllocStats before = lks_alloc_stats_get();
+        const LksTreeNode *old = NULL;
+        LksStatus status;
+        lks_alloc_test_fail_on_attempt(failure);
+        status = lks_ordered_tree_insert(tree, &items[1], &inserted);
+        lks_alloc_test_disable_failure();
+        if (status == LKS_STATUS_OK) {
+            success = inserted != NULL && verify_ordered(tree, 1) &&
+                lks_path_depth(lks_tree_node_path(inserted)) == 1 &&
+                lks_path_get_level(lks_tree_node_path(inserted), 0, &level) ==
+                    LKS_STATUS_OK && level == 1 &&
+                lks_path_get_slot(lks_tree_node_path(inserted), 0, &slot) ==
+                    LKS_STATUS_OK && slot == 0;
+            break;
+        }
+        if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
+            lks_ordered_tree_size(tree) != 1 ||
+            lks_ordered_tree_find_path(tree, original, &old) != LKS_STATUS_OK ||
+            old == NULL || lks_tree_node_item(old) != &items[0] ||
+            lks_alloc_stats_get().live_bytes != before.live_bytes ||
+            lks_alloc_stats_get().live_blocks != before.live_blocks)
+            valid = 0;
+        ++failure; ++failures;
+    }
+    printf("V3 ordered prepend level carry OOM failures=%zu %s\n",
+        failures, valid && success && failures > 0 ? "PASS" : "FAIL");
+    lks_path_destroy(original);
+    lks_ordered_tree_destroy(tree);
+    return valid && success && failures > 0;
+}
+
+static int check_burst_transition_oom(void)
+{
+    enum { EXISTING = 65 };
+    OrderedItem items[EXISTING + 1];
+    LksComparator comparator = { compare_ordered, NULL };
+    LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+    LksPath *last_path = NULL;
+    size_t i, failure = 1, failures = 0;
+    unsigned int old_slot = 0, new_slot = 0;
+    int valid = tree != NULL, success = 0;
+    for (i = 0; i < EXISTING && valid; ++i) {
+        const LksTreeNode *node = NULL;
+        items[i].key = (int64_t)i; items[i].serial = i;
+        if (lks_ordered_tree_insert(tree, &items[i], &node) != LKS_STATUS_OK ||
+            node == NULL) valid = 0;
+        if (valid && i == EXISTING - 1)
+            last_path = lks_path_clone(lks_tree_node_path(node));
+    }
+    items[EXISTING].key = EXISTING;
+    items[EXISTING].serial = EXISTING;
+    if (valid && (last_path == NULL ||
+        lks_path_get_slot(last_path, 0, &old_slot) != LKS_STATUS_OK))
+        valid = 0;
+    lks_tree_repair_stats_reset();
+    while (valid && failure < 100) {
+        LksAllocStats before = lks_alloc_stats_get();
+        const LksTreeNode *inserted = NULL, *old = NULL;
+        LksStatus status;
+        lks_alloc_test_fail_on_attempt(failure);
+        status = lks_ordered_tree_insert(tree, &items[EXISTING], &inserted);
+        lks_alloc_test_disable_failure();
+        if (status == LKS_STATUS_OK) {
+            LksTreeRepairStats stats = lks_tree_repair_stats_get();
+            success = inserted != NULL && verify_ordered(tree, 1) &&
+                lks_path_get_slot(lks_tree_node_path(inserted), 0,
+                    &new_slot) == LKS_STATUS_OK &&
+                new_slot == old_slot + 1 &&
+                stats.burst_endpoint_inserts == 1;
+            break;
+        }
+        if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
+            lks_ordered_tree_size(tree) != EXISTING ||
+            lks_ordered_tree_find_path(tree, last_path, &old) != LKS_STATUS_OK ||
+            old == NULL || lks_tree_node_item(old) != &items[EXISTING - 1] ||
+            lks_alloc_stats_get().live_bytes != before.live_bytes ||
+            lks_alloc_stats_get().live_blocks != before.live_blocks)
+            valid = 0;
+        ++failure; ++failures;
+    }
+    printf("V3 ordered burst transition OOM failures=%zu %s\n", failures,
+        valid && success && failures > 0 ? "PASS" : "FAIL");
+    lks_path_destroy(last_path);
+    lks_ordered_tree_destroy(tree);
+    return valid && success && failures > 0;
+}
+
 static int check_local_relabel_oom(void)
 {
-    enum { CHAIN = 7, CHILDREN = 12, EXISTING = CHAIN + CHILDREN };
+    enum { CHAIN = 7, CHILDREN = 12, SENTINEL = CHAIN + CHILDREN,
+        EXISTING = SENTINEL + 1 };
     OrderedItem items[EXISTING + 1];
     LksPath *original[EXISTING] = {NULL};
     LksComparator comparator = { compare_ordered, NULL };
@@ -140,7 +317,13 @@ static int check_local_relabel_oom(void)
             lks_ordered_tree_test_seed_path(tree, original[index],
                 &items[index]) != LKS_STATUS_OK) valid = 0;
     }
-    items[EXISTING].key = EXISTING;
+    items[SENTINEL].key = EXISTING;
+    items[SENTINEL].serial = SENTINEL;
+    original[SENTINEL] = lks_path_create(LKS_DIRECTION_POSITIVE, 32769u);
+    if (valid && (original[SENTINEL] == NULL ||
+        lks_ordered_tree_test_seed_path(tree, original[SENTINEL],
+            &items[SENTINEL]) != LKS_STATUS_OK)) valid = 0;
+    items[EXISTING].key = SENTINEL;
     items[EXISTING].serial = EXISTING;
     lks_tree_repair_stats_reset();
     while (valid && failure < 10000) {
@@ -244,6 +427,8 @@ int lks_run_v3_ordered_tests(void)
 {
     if (lks_ordered_tree_create(NULL) != NULL) return 1;
     if (!check_public_order() || !check_bound_context() ||
+        !check_endpoint_runs() || !check_endpoint_carry_oom() ||
+        !check_prepend_level_carry() || !check_burst_transition_oom() ||
         !check_local_relabel_oom() ||
         !check_full_range_oom()) return 1;
     return 0;

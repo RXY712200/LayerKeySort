@@ -207,6 +207,15 @@ static void diagnose_tree(const LksTree *tree, const char *distribution,
         repair.successes, repair.region_expansions,
         repair.nodes_relabelled, repair.max_region_nodes,
         repair.full_range_relabels, repair.full_range_relabelled_nodes);
+    printf("placement,%s,%zu", distribution, count);
+    printf(",%zu,%zu,%zu,%zu,%zu,%zu",
+        repair.direct_endpoint_inserts, repair.direct_interior_inserts,
+        repair.burst_endpoint_inserts, repair.endpoint_attempts,
+        repair.interior_attempts, repair.endpoint_successes);
+    printf(",%zu,%zu,%zu,%zu,%zu,%zu\n",
+        repair.interior_successes, repair.attempted_region_nodes,
+        repair.generated_relabel_paths, repair.max_attempted_region,
+        repair.candidate_depth_sum, repair.candidate_depth_max);
 #ifdef LKS_BENCH_STAGE5_DIAGNOSTICS
     printf("rebuild_reasons,%s,%zu,%zu,%zu,%zu\n", distribution, count,
         repair.gap_limit_rebuild_attempts,

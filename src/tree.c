@@ -23,13 +23,21 @@ struct LksTree {
 struct LksOrderedTree {
     LksTree *index;
     LksComparator comparator;
+    size_t append_run;
+    size_t prepend_run;
 };
 
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
 static LksTreeRepairStats repair_stats;
 #define REPAIR_COUNT(member) (++repair_stats.member)
+#define REPAIR_ADD(member, amount) do { \
+    size_t add_ = (amount); \
+    repair_stats.member = repair_stats.member > (size_t)-1 - add_ ? \
+        (size_t)-1 : repair_stats.member + add_; \
+} while (0)
 #else
 #define REPAIR_COUNT(member) ((void)0)
+#define REPAIR_ADD(member, amount) ((void)0)
 #endif
 
 void lks_tree_repair_stats_reset(void)
@@ -472,6 +480,8 @@ LksOrderedTree *lks_ordered_tree_create(const LksComparator *comparator)
     ordered->index = lks_tree_create();
     if (ordered->index == NULL) { lks_free(ordered); return NULL; }
     ordered->comparator = *comparator;
+    ordered->append_run = 0;
+    ordered->prepend_run = 0;
     return ordered;
 }
 
@@ -491,7 +501,15 @@ const LksTree *lks_ordered_tree_internal_index(const LksOrderedTree *tree)
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
 LksStatus lks_ordered_tree_test_seed_path(LksOrderedTree *tree,
     const LksPath *path, void *item)
-{ return lks_tree_insert(tree == NULL ? NULL : tree->index, path, item, NULL); }
+{
+    LksStatus status = lks_tree_insert(tree == NULL ? NULL : tree->index,
+        path, item, NULL);
+    if (status == LKS_STATUS_OK) {
+        tree->append_run = 0;
+        tree->prepend_run = 0;
+    }
+    return status;
+}
 #endif
 
 LksStatus lks_ordered_tree_find_path(const LksOrderedTree *tree,
@@ -500,7 +518,15 @@ LksStatus lks_ordered_tree_find_path(const LksOrderedTree *tree,
 
 LksStatus lks_ordered_tree_remove_path(LksOrderedTree *tree,
     const LksPath *path, void **out_item)
-{ return lks_tree_remove_path(tree == NULL ? NULL : tree->index, path, out_item); }
+{
+    LksStatus status = lks_tree_remove_path(tree == NULL ? NULL : tree->index,
+        path, out_item);
+    if (status == LKS_STATUS_OK) {
+        tree->append_run = 0;
+        tree->prepend_run = 0;
+    }
+    return status;
+}
 
 size_t lks_ordered_tree_root_child_count(const LksOrderedTree *tree)
 { return lks_tree_root_child_count(tree == NULL ? NULL : tree->index); }
@@ -542,6 +568,111 @@ static void destroy_path_array(LksPath **paths, size_t count)
     for (i = 0; i < count; ++i) lks_path_destroy(paths[i]);
 }
 
+/* At an open end there is no exterior Path to collide with. Carrying a full
+ * slot into an ancestor keeps a long append run shallow; a small stride
+ * reserves interior gaps while using most of the 16-bit endpoint capacity.
+ * This policy is private to comparator-managed insertion. */
+static LksStatus ordered_after(const LksPath *left, unsigned int step,
+    LksPath **out_path)
+{
+    LksDirection direction = lks_path_direction(left);
+    size_t depth = lks_path_depth(left), index, j;
+    LksPath *path;
+    LksStatus status;
+    int order;
+    if (direction == LKS_DIRECTION_ZERO)
+        return lks_path_after(left, out_path);
+    for (index = depth; index != 0; --index) {
+        unsigned int slot;
+        size_t level;
+        if (lks_path_get_slot(left, index - 1, &slot) != LKS_STATUS_OK ||
+            lks_path_get_level(left, index - 1, &level) != LKS_STATUS_OK)
+            return LKS_STATUS_INTERNAL_ERROR;
+        if (index == 1 && direction == LKS_DIRECTION_NEGATIVE) {
+            if (slot == 0) continue;
+            slot -= slot < step ? slot : step;
+        } else {
+            if (slot == LKS_PATH_SLOT_MAX) continue;
+            slot += LKS_PATH_SLOT_MAX - slot < step ?
+                LKS_PATH_SLOT_MAX - slot : step;
+        }
+        if (index == 1) path = lks_path_create_at_level(direction, slot, level);
+        else {
+            unsigned int root_slot;
+            size_t root_level;
+            if (lks_path_get_slot(left, 0, &root_slot) != LKS_STATUS_OK ||
+                lks_path_get_level(left, 0, &root_level) != LKS_STATUS_OK)
+                return LKS_STATUS_INTERNAL_ERROR;
+            path = lks_path_create_at_level(direction, root_slot, root_level);
+            if (path != NULL) {
+                for (j = 1; j < index; ++j) {
+                    unsigned int next_slot = slot;
+                    size_t next_level = level;
+                    if (j != index - 1 &&
+                        (lks_path_get_slot(left, j, &next_slot) != LKS_STATUS_OK ||
+                         lks_path_get_level(left, j, &next_level) != LKS_STATUS_OK)) {
+                        lks_path_destroy(path);
+                        return LKS_STATUS_INTERNAL_ERROR;
+                    }
+                    status = lks_path_append_at_level(path, next_slot, next_level);
+                    if (status != LKS_STATUS_OK) {
+                        lks_path_destroy(path);
+                        return status;
+                    }
+                }
+            }
+        }
+        if (path == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+        if (lks_path_compare(left, path, &order) != LKS_STATUS_OK || order >= 0) {
+            lks_path_destroy(path);
+            return LKS_STATUS_INTERNAL_ERROR;
+        }
+        *out_path = path;
+        return LKS_STATUS_OK;
+    }
+    if (direction == LKS_DIRECTION_NEGATIVE) {
+        path = lks_path_create_zero();
+        if (path == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+        *out_path = path;
+        return LKS_STATUS_OK;
+    }
+    return lks_path_after(left, out_path);
+}
+
+/* A new minimum can always use a fresh negative root coordinate. Negative
+ * root slots run in reverse order; after slot 65535 the next level sorts
+ * earlier. The public gap generator remains unchanged. */
+static LksStatus ordered_before(const LksPath *right, unsigned int step,
+    LksPath **out_path)
+{
+    LksDirection direction = lks_path_direction(right);
+    unsigned int slot = 0;
+    size_t level = 0;
+    LksPath *path;
+    int order;
+    if (direction == LKS_DIRECTION_NEGATIVE) {
+        if (lks_path_get_slot(right, 0, &slot) != LKS_STATUS_OK ||
+            lks_path_get_level(right, 0, &level) != LKS_STATUS_OK)
+            return LKS_STATUS_INTERNAL_ERROR;
+        if (slot < LKS_PATH_SLOT_MAX)
+            slot += LKS_PATH_SLOT_MAX - slot < step ?
+                LKS_PATH_SLOT_MAX - slot : step;
+        else {
+            if (level == (size_t)-1) return LKS_STATUS_LEVEL_LIMIT;
+            ++level;
+            slot = 0;
+        }
+    }
+    path = lks_path_create_at_level(LKS_DIRECTION_NEGATIVE, slot, level);
+    if (path == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+    if (lks_path_compare(path, right, &order) != LKS_STATUS_OK || order >= 0) {
+        lks_path_destroy(path);
+        return LKS_STATUS_INTERNAL_ERROR;
+    }
+    *out_path = path;
+    return LKS_STATUS_OK;
+}
+
 /* The affected nodes are a contiguous in-order range. Replacing their Paths
  * by a strictly increasing sequence inside unchanged exterior bounds keeps
  * every physical AVL edge ordered. The insertion gap determines a vacant
@@ -554,6 +685,7 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         tree->size : LKS_POLICY_LOCAL_INITIAL_NODES;
     LksTreeNode *parent;
     int order;
+    int endpoint = before == NULL || after == NULL;
     *out_relabelled = 0;
     if (before != NULL && before->right == NULL) {
         parent = before; order = 1;
@@ -561,6 +693,8 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         parent = after; order = -1;
     } else return LKS_STATUS_INTERNAL_ERROR;
     REPAIR_COUNT(attempts);
+    if (endpoint) REPAIR_COUNT(endpoint_attempts);
+    else REPAIR_COUNT(interior_attempts);
     for (;;) {
         LksTreeNode *local_nodes[LKS_POLICY_STACK_REGION_NODES];
         LksPath *local_paths[LKS_POLICY_STACK_REGION_NODES + 1];
@@ -605,6 +739,11 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
             if (heap_scratch) { lks_free(paths); lks_free(nodes); }
             return LKS_STATUS_INTERNAL_ERROR;
         }
+        REPAIR_ADD(attempted_region_nodes, count);
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+        if (count > repair_stats.max_attempted_region)
+            repair_stats.max_attempted_region = count;
+#endif
         cursor = start;
         for (i = 0; i < count; ++i) {
             nodes[i] = cursor;
@@ -626,6 +765,10 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         status = window == tree->size ?
             lks_bulk_generate_paths(paths, count + 1) :
             generate_range(paths, 0, count + 1, outer_left, outer_right);
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+        for (i = 0; i <= count; ++i)
+            if (paths[i] != NULL) REPAIR_ADD(generated_relabel_paths, 1);
+#endif
         if (status == LKS_STATUS_OK) {
             for (i = 0; i <= count; ++i) {
                 int cmp;
@@ -663,6 +806,8 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
             new_node->parent = NULL; new_node->height = 1;
             link_prepared(tree, new_node, parent, order);
             REPAIR_COUNT(successes);
+            if (endpoint) REPAIR_COUNT(endpoint_successes);
+            else REPAIR_COUNT(interior_successes);
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
             repair_stats.nodes_relabelled += count;
             if (count > repair_stats.max_region_nodes)
@@ -687,13 +832,33 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
     }
 }
 
+/* Only a successful mutation updates the placement hint. Remove resets it,
+ * so a failed insertion or changed endpoint never predicts a false run. */
+static void record_ordered_position(LksOrderedTree *ordered, int position)
+{
+    if (ordered == NULL) return;
+    if (position > 0) {
+        if (ordered->append_run != (size_t)-1) ++ordered->append_run;
+        ordered->prepend_run = 0;
+    } else if (position < 0) {
+        if (ordered->prepend_run != (size_t)-1) ++ordered->prepend_run;
+        ordered->append_run = 0;
+    } else {
+        ordered->append_run = 0;
+        ordered->prepend_run = 0;
+    }
+}
+
 static LksStatus insert_by_comparator(LksTree *tree, void *item,
-    const LksComparator *comparator, const LksTreeNode **out_node)
+    const LksComparator *comparator, const LksTreeNode **out_node,
+    LksOrderedTree *ordered)
 {
     LksTreeNode *before = NULL, *after = NULL;
     LksPath *candidate = NULL;
     LksStatus status = LKS_STATUS_OK;
     size_t depth = (size_t)-1;
+    unsigned int end_step = LKS_POLICY_TARGET_SPACING;
+    int position = 0;
     int relabelled = 0;
     if (out_node != NULL) *out_node = NULL;
     if (tree == NULL || comparator == NULL || comparator->compare == NULL)
@@ -704,14 +869,27 @@ static LksStatus insert_by_comparator(LksTree *tree, void *item,
         if (candidate == NULL) return LKS_STATUS_OUT_OF_MEMORY;
     } else {
         item_upper_bound(tree, item, comparator, &before, &after);
+        position = before == NULL ? -1 : after == NULL ? 1 : 0;
+        if (ordered != NULL &&
+            (position > 0 ? ordered->append_run : ordered->prepend_run) >=
+                LKS_POLICY_ORDERED_BURST_THRESHOLD)
+            end_step = LKS_POLICY_ORDERED_BURST_STEP;
         if (before != NULL && after != NULL)
             status = lks_path_between(before->path, after->path, &candidate);
-        else if (before != NULL) status = lks_path_after(before->path, &candidate);
-        else status = lks_path_before(after->path, &candidate);
+        else if (before != NULL)
+            status = ordered_after(before->path, end_step, &candidate);
+        else status = ordered_before(after->path, end_step, &candidate);
         if (status != LKS_STATUS_OK && status != LKS_STATUS_LEVEL_LIMIT)
             return status;
     }
     if (candidate != NULL) depth = lks_path_depth(candidate);
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+    if (candidate != NULL) {
+        REPAIR_ADD(candidate_depth_sum, depth);
+        if (depth > repair_stats.candidate_depth_max)
+            repair_stats.candidate_depth_max = depth;
+    }
+#endif
     if (tree->size != 0 && (candidate == NULL ||
         (depth > LKS_POLICY_PREFERRED_ONLINE_DEPTH &&
          ((before != NULL && after != NULL) ||
@@ -720,6 +898,8 @@ static LksStatus insert_by_comparator(LksTree *tree, void *item,
             out_node, &relabelled);
         if (status != LKS_STATUS_OK || relabelled) {
             lks_path_destroy(candidate);
+            if (status == LKS_STATUS_OK && relabelled)
+                record_ordered_position(ordered, position);
             return status;
         }
     }
@@ -727,7 +907,14 @@ static LksStatus insert_by_comparator(LksTree *tree, void *item,
     status = insert_owned_path(tree, candidate, item, out_node);
     if (status != LKS_STATUS_OK) lks_path_destroy(candidate);
     if (status == LKS_STATUS_OK) {
+        record_ordered_position(ordered, position);
         REPAIR_COUNT(direct_inserts);
+        if (position == 0) REPAIR_COUNT(direct_interior_inserts);
+        else {
+            REPAIR_COUNT(direct_endpoint_inserts);
+            if (end_step == LKS_POLICY_ORDERED_BURST_STEP)
+                REPAIR_COUNT(burst_endpoint_inserts);
+        }
         if (depth > LKS_POLICY_PREFERRED_ONLINE_DEPTH)
             REPAIR_COUNT(deeper_accepts);
     }
@@ -737,14 +924,14 @@ static LksStatus insert_by_comparator(LksTree *tree, void *item,
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
 LksStatus lks_tree_internal_insert_item(LksTree *tree, void *item,
     const LksComparator *comparator, const LksTreeNode **out_node)
-{ return insert_by_comparator(tree, item, comparator, out_node); }
+{ return insert_by_comparator(tree, item, comparator, out_node, NULL); }
 #endif
 
 LksStatus lks_ordered_tree_insert(LksOrderedTree *tree, void *item,
     const LksTreeNode **out_node)
 {
     return insert_by_comparator(tree == NULL ? NULL : tree->index,
-        item, tree == NULL ? NULL : &tree->comparator, out_node);
+        item, tree == NULL ? NULL : &tree->comparator, out_node, tree);
 }
 
 const LksPath *lks_tree_node_path(const LksTreeNode *node)

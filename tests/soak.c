@@ -350,6 +350,83 @@ static int run_comparator(size_t steps, uint32_t initial_seed)
     return ok && allocations_clean();
 }
 
+/* The bounded random model above rarely reaches a 64-item endpoint run.
+ * Exercise longer ordered sequences with an independent flat item order. */
+static int run_endpoint_phases(uint32_t seed)
+{
+    enum { FIRST = 256, REMOVED = 64, SECOND = 64, CAPACITY = 320 };
+    SoakItem items[CAPACITY];
+    const LksTreeNode *nodes[CAPACITY];
+    LksComparator comparator = {compare_item, NULL};
+    int mode, ok = 1;
+    for (mode = 0; mode < 3 && ok; ++mode) {
+        LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+        size_t count = 0, i;
+        if (tree == NULL) return 0;
+        for (i = 0; i < FIRST && ok; ++i) {
+            items[i].id = i;
+            items[i].value = mode == 0 ? (int)i :
+                mode == 1 ? -(int)i : (int)(seed % 17u);
+            if (lks_ordered_tree_insert(tree, &items[i], NULL) != LKS_STATUS_OK)
+                ok = 0;
+            else ++count;
+        }
+        if (ok && lks_tree_internal_fill_ordered(
+                lks_ordered_tree_internal_index(tree), nodes, count) !=
+                LKS_STATUS_OK) ok = 0;
+        for (i = 0; i < REMOVED && ok; ++i) {
+            void *removed = NULL;
+            size_t which = mode == 1 ? 0 : count - 1;
+            if (lks_tree_internal_fill_ordered(
+                    lks_ordered_tree_internal_index(tree), nodes, count) !=
+                    LKS_STATUS_OK) { ok = 0; break; }
+            if (lks_ordered_tree_remove_path(tree,
+                    lks_tree_node_path(nodes[which]), &removed) !=
+                    LKS_STATUS_OK || removed != &items[FIRST - 1 - i]) ok = 0;
+            else --count;
+        }
+        for (i = 0; i < SECOND && ok; ++i) {
+            size_t index = FIRST + i;
+            items[index].id = index;
+            items[index].value = mode == 0 ? (int)(FIRST + i) :
+                mode == 1 ? -(int)(FIRST + i) : (int)(seed % 17u);
+            if (lks_ordered_tree_insert(tree, &items[index], NULL) !=
+                LKS_STATUS_OK) ok = 0;
+        }
+        count = FIRST - REMOVED + SECOND;
+        if (ok && (lks_ordered_tree_size(tree) != count ||
+            lks_tree_internal_fill_ordered(
+                lks_ordered_tree_internal_index(tree), nodes, count) !=
+                LKS_STATUS_OK)) ok = 0;
+        for (i = 1; i < count && ok; ++i) {
+            const SoakItem *left = (const SoakItem *)lks_tree_node_item(nodes[i-1]);
+            const SoakItem *right = (const SoakItem *)lks_tree_node_item(nodes[i]);
+            if (left->value > right->value ||
+                (left->value == right->value && left->id >= right->id) ||
+                path_order(lks_tree_node_path(nodes[i-1]),
+                    lks_tree_node_path(nodes[i])) >= 0) ok = 0;
+        }
+        for (i = 0; i < count && ok; ++i) {
+            size_t expected = mode == 1 ?
+                (i < SECOND ? CAPACITY - 1 - i :
+                    FIRST - REMOVED - 1 - (i - SECOND)) :
+                (i < FIRST - REMOVED ? i : FIRST + i - (FIRST - REMOVED));
+            if (lks_tree_node_item(nodes[i]) != &items[expected]) ok = 0;
+        }
+        if (ok) {
+            LksTreeInternalProfile profile;
+            if (lks_tree_internal_profile(
+                    lks_ordered_tree_internal_index(tree), &profile) !=
+                    LKS_STATUS_OK || !profile.balance_valid ||
+                profile.real_node_count != count) ok = 0;
+        }
+        lks_ordered_tree_destroy(tree);
+    }
+    printf("Soak endpoint phases Seed=%08X modes=3 %s\n",
+        (unsigned int)seed, ok ? "PASS" : "FAIL");
+    return ok && allocations_clean();
+}
+
 int main(int argc, char **argv)
 {
     size_t total = 30000, explicit_steps;
@@ -390,7 +467,8 @@ int main(int argc, char **argv)
         return 2;
     }
     if (!run_explicit(explicit_steps, explicit_seed) ||
-        !run_comparator(total, comparator_seed))
+        !run_comparator(total, comparator_seed) ||
+        !run_endpoint_phases(comparator_seed))
         return 1;
     printf("Mutation soak manual=%zu ordered=%zu PASS\n",
         explicit_steps, total);

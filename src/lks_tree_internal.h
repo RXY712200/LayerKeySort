@@ -16,10 +16,22 @@ typedef struct LksTreeInternalProfile {
 
 typedef struct LksTreeRepairStats {
     size_t direct_inserts;
+    size_t direct_endpoint_inserts;
+    size_t direct_interior_inserts;
+    size_t burst_endpoint_inserts;
     size_t attempts;
+    size_t endpoint_attempts;
+    size_t interior_attempts;
     size_t successes;
+    size_t endpoint_successes;
+    size_t interior_successes;
     size_t fallbacks; /* legacy V2 diagnostic: zero in V3 */
     size_t region_expansions;
+    size_t attempted_region_nodes;
+    size_t generated_relabel_paths;
+    size_t max_attempted_region;
+    size_t candidate_depth_sum;
+    size_t candidate_depth_max;
     size_t nodes_relabelled;
     size_t max_region_nodes;
     size_t full_range_relabels;
