@@ -1,8 +1,9 @@
 # Integrating LayerKeySort
 
-The published `v2.0.0-rc.1` retains Preview.5's 52-function public C API.
-RC.1 is the 2.x source and format freeze candidate; generated Path layouts and
-performance policy remain implementation details.
+The v2.0.0 stable candidate retains RC.1's 52-function public C API and
+production implementation. Until the stable tag is published, pin the exact
+candidate commit for validation. Generated Path layouts and performance
+policy remain implementation details.
 
 ## Requirements and tested configurations
 
@@ -47,7 +48,8 @@ parent project.
 
 ## CMake `FetchContent`
 
-Pin the published RC.1 tag for a reproducible build:
+Pin the exact stable candidate commit for pre-publication validation; the
+public example will use `v2.0.0` once that tag exists:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -60,7 +62,7 @@ set(LKS_BUILD_TESTS OFF)
 set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v2.0.0-rc.1)
+    GIT_TAG <exact-stable-candidate-commit>)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app src/main.c)

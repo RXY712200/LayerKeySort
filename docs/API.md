@@ -9,17 +9,17 @@
 - `LKS_VERSION_MAJOR` is `2`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"rc.1"`.
-- `LKS_VERSION_STRING` is `"2.0.0-rc.1"`.
+- `LKS_VERSION_PRERELEASE` is `""`.
+- `LKS_VERSION_STRING` is `"2.0.0"`.
 
-RC.1 is the latest published prerelease. It keeps the 52-function public API
-and LK1 version-1 grammar unchanged. The intended stable-2.x boundary is in
+The v2.0.0 stable candidate keeps RC.1's 52-function public API and LK1
+version-1 grammar unchanged. The 2.x compatibility boundary is in
 [COMPATIBILITY.md](COMPATIBILITY.md).
 
 Path values are ordering coordinates, not permanent application item IDs.
 Preview.3 specified the current formatter output but had no public
 parser or durable key. Preview.4 adds both below.
-Exact coordinates can change when a Tree is re-encoded or Preview policy
+Exact coordinates can change when a Tree is re-encoded or internal policy
 changes; a persisted coordinate is not a permanent item identity.
 
 ## Simple stable sort
@@ -897,6 +897,6 @@ coordinate space, independent of unchanged source Groups.
 
 The released v2.0.0-preview.3 public header contained **9 types** and **46 functions**,
 including `lks_sort`; Preview.4 added two Tree mutation and four Path
-representation functions. The RC.1 header still has
+representation functions. The v2.0.0 header has
 **52 functions**. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

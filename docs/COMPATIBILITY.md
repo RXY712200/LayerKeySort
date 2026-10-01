@@ -1,14 +1,13 @@
 # LayerKeySort 2.x compatibility contract
 
-RC.1 is the feature, public API, Path display, and LK1 format freeze candidate
-for stable 2.0.0. This document records the intended 2.x source and semantic
-compatibility boundary. RC.1 remains a prerelease; the stable 2.x promise
-begins with 2.0.0, subject to documented bug fixes and backward-compatible
-additions.
+Beginning with v2.0.0, LayerKeySort 2.x preserves the documented public
+source/API and semantic compatibility contract below, subject to documented
+bug fixes and backward-compatible additions. RC.1 was the prerelease freeze
+candidate for this contract.
 
-## Intended stable public contract
+## Stable public contract
 
-LayerKeySort 2.x intends to preserve:
+LayerKeySort 2.x preserves:
 
 1. The public C function names and signatures present at 2.0.0, the meanings
    of public types, and existing enum and status numeric semantics.

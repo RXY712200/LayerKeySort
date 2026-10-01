@@ -2,6 +2,26 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [2.0.0] - Unreleased
+
+The first stable V2 release establishes the documented 2.x source/API and
+semantic compatibility contract. It retains RC.1's production implementation:
+
+- Hierarchical Path coordinates, a mutable Path-keyed Tree, stable ordering of
+  comparator-equal items, and before/after/between coordinate generation.
+- Exact-Path removal and failure-atomic rekey; canonical Path display and
+  parsing; versioned LK1 sortable, durable coordinate keys.
+- Immutable Group and Batch results, stable merge behavior, and `lks_sort()`.
+- C17 source integration through CMake or direct sources, validated on Windows,
+  Linux, and macOS.
+- Permanent regression coverage from RC observation for business ID versus
+  LK1 persistence, parser torture, multi-seed soak, and Path-growth OOM rollback.
+
+Full rebuild can still be costly; complete comparator-driven insertion has no
+formal worst-case or amortized bound. Comparator compatibility remains the
+caller's responsibility. Paths and LK1 keys are ordering coordinates, not
+permanent application item identities.
+
 ## [2.0.0-rc.1] - 2026-09-30
 
 RC.1 is the published V2 feature, public API, Path display, and LK1 format

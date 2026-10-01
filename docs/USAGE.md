@@ -143,8 +143,9 @@ formatter writes canonical current output. In Preview.4,
 `lks_path_parse()` accepts exactly that text and returns a caller-owned Path.
 For storage and bytewise ordering, use the separate versioned
 `lks_path_order_key_*()` API. **Use `lks_path_compare()` to order Paths; do not
-use `strcmp` on complete formatted text.** Text and generated coordinates may
-change in later previews. Do not persist Path text as an item ID.
+use `strcmp` on complete formatted text.** The canonical display grammar is
+part of the 2.x contract; generated coordinates may change. Do not persist
+Path text as an item ID.
 
 For example, the positive level-zero, slot-zero Path has display text `0222`
 and durable key `LK1:201FF0000!`. Canonical keys of the same version sort
@@ -196,7 +197,7 @@ Comparator-equal input items retain their input order. For the public two-Group 
 Comparator-driven online Tree insertion first uses a direct Path when it fits.
 When a Path becomes deep, it may re-encode a bounded contiguous logical-order
 range. It can accept a deeper Path if local repair is unsuitable, or
-rebuild the whole Tree as a final fallback. These are preview heuristics, not
+rebuild the whole Tree as a final fallback. These are internal heuristics, not
 stable Path identities or a promise of fixed memory use. Comparator-driven
 Tree operations require existing items to be sorted compatibly with the
 supplied comparator and context in Path order; explicit Path insertion does

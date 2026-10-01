@@ -1,11 +1,11 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Latest prerelease: v2.0.0-rc.1.*
+*A C17 library for stable ordering with hierarchical Path positions. Stable v2.0.0 candidate; latest published prerelease: v2.0.0-rc.1.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
 > [!WARNING]
-> **V2 is at Release Candidate stage.** RC.1 freezes the feature, public API, Path display, and LK1 format contract for final validation. It is still a prerelease, not stable or production-ready 2.0. Exact automatically generated Path layouts and performance remain implementation details.
+> **Stable v2.0.0 is being finalized.** This candidate retains RC.1's production behavior and adds observation regression tests. It has not yet been tagged or published. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
@@ -28,12 +28,13 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
 | v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
 | v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
-| v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Still a prerelease; release blockers, if found, require an RC fix before stable 2.0.0. |
+| v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
+| v2.0.0 (candidate, unreleased) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
 
-RC.1 retains Preview.5's Path-keyed Tree, remove/rekey, canonical display
-parsing, LK1 sortable keys, usage guidance, mutation soak, and macOS validation.
-It freezes the intended public 2.x contract without changing the production
-algorithm. See the [compatibility contract](docs/COMPATIBILITY.md).
+The stable candidate retains RC.1's Path-keyed Tree, remove/rekey, canonical
+display parsing, LK1 sortable keys, and production algorithm. Observation tests
+add consumer persistence and adversarial input coverage. See the
+[compatibility contract](docs/COMPATIBILITY.md).
 
 **[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
 
@@ -102,7 +103,7 @@ X         0DEq/2222
 B         0DEr
 ```
 
-The Path comparison and gap APIs implement this ordering. Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths after an actual mutation. Preview.4 can parse canonical display text and persist a coordinate as a separate `LK1:` order key. For example, display `0222` has key `LK1:201FF0000!`. A persisted coordinate is not a permanent item identity. Preview.3 did not contain these APIs.
+The Path comparison and gap APIs implement this ordering. Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths after an actual mutation. Canonical display text can be parsed, and a coordinate can be persisted as a separate `LK1:` order key. For example, display `0222` has key `LK1:201FF0000!`. A persisted coordinate is not a permanent item identity. Preview.3 did not contain these APIs.
 
 ## Ordering and stability guarantees
 
@@ -153,9 +154,9 @@ online insertion has no claimed worst-case `O(log n)` time bound.
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result's path space.
 - Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After an actual Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results. Equal-Path rekey is a no-op and preserves them.
-- Preview.4 Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
-- No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The Preview.4 `LK1:` key requires bytewise ASCII database collation for ordering.
-- The Preview.4 key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
+- Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
+- No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The `LK1:` key requires bytewise ASCII database collation for ordering.
+- The `LK1:` key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
 
 ## Project layout
 
