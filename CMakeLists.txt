@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
-# CMake accepts a numeric project version; the public header carries 2.0.0.
-project(LayerKeySort VERSION 2.0.0 LANGUAGES C)
+# CMake accepts a numeric project version; the public header carries the Preview suffix.
+project(LayerKeySort VERSION 3.0.0 LANGUAGES C)
 
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -48,12 +48,13 @@ if(LKS_BUILD_TESTS)
         LKS_ENABLE_ALLOC_DIAGNOSTICS LKS_ENABLE_V1_REGRESSION_HELPERS)
     lks_configure_target(layerkeysort_diagnostics)
     add_executable(layerkeysort_tests tests/v2_main.c tests/v2_preview.c
-        tests/property.c tests/mutation.c tests/path_external.c tests/public_api_usage.c)
+        tests/property.c tests/mutation.c tests/path_external.c tests/public_api_usage.c
+        tests/v3_ordered.c)
     target_compile_definitions(layerkeysort_tests PRIVATE
         LKS_V2_PREVIEW LKS_ENABLE_V1_REGRESSION_HELPERS)
     target_include_directories(layerkeysort_tests PRIVATE src tests)
     target_link_libraries(layerkeysort_tests PRIVATE layerkeysort_diagnostics)
-    add_test(NAME layerkeysort_v2_preview COMMAND layerkeysort_tests)
+    add_test(NAME layerkeysort_v3_core COMMAND layerkeysort_tests)
     add_executable(layerkeysort_soak tests/soak.c)
     target_include_directories(layerkeysort_soak PRIVATE src)
     target_link_libraries(layerkeysort_soak PRIVATE layerkeysort_diagnostics)

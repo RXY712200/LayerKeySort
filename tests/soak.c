@@ -283,14 +283,14 @@ static int run_comparator(size_t steps, uint32_t initial_seed)
     SoakEntry model[MODEL_CAPACITY] = {{0}};
     SoakItem *items = NULL;
     LksComparator comparator = {compare_item, NULL};
-    LksTree *tree = NULL;
+    LksOrderedTree *tree = NULL;
     uint32_t seed = initial_seed;
     size_t count = 0, next_item = 0, step = 0, i;
     int ok = 1;
     if (steps > SIZE_MAX / sizeof *items || lks_alloc_stats_reset() != 0)
         return 0;
     items = (SoakItem *)calloc(steps ? steps : 1, sizeof *items);
-    tree = lks_tree_create();
+    tree = lks_ordered_tree_create(&comparator);
     if (items == NULL || tree == NULL) ok = 0;
     for (step = 0; step < steps && ok; ++step) {
         unsigned int action = next_random(&seed) % 100u;
@@ -305,7 +305,7 @@ static int run_comparator(size_t steps, uint32_t initial_seed)
             item->value = (int)(next_random(&seed) % 8u);
             while (position < count && model[position].item->value <=
                 item->value) ++position;
-            if (lks_tree_insert_item(tree, item, &comparator, &node) !=
+            if (lks_ordered_tree_insert(tree, item, &node) !=
                 LKS_STATUS_OK || node == NULL ||
                 lks_tree_node_item(node) != item) ok = 0;
             if (ok) {
@@ -314,32 +314,36 @@ static int run_comparator(size_t steps, uint32_t initial_seed)
                 model[position].path = NULL;
                 ++count;
                 ++next_item;
-                if (!refresh_comparator_paths(tree, model, count)) ok = 0;
+                if (!refresh_comparator_paths(
+                    lks_ordered_tree_internal_index(tree), model, count)) ok = 0;
             }
         } else if (action < 85) {
             size_t index = next_random(&seed) % count;
             void *removed = NULL;
-            if (lks_tree_remove_path(tree, model[index].path, &removed) !=
+            if (lks_ordered_tree_remove_path(tree, model[index].path, &removed) !=
                 LKS_STATUS_OK || removed != model[index].item) ok = 0;
             else remove_model(model, &count, index);
         } else {
             size_t index = next_random(&seed) % count;
-            const LksTreeNode *before = NULL, *after = NULL;
-            if (lks_tree_find_path(tree, model[index].path, &before) !=
-                LKS_STATUS_OK || before == NULL ||
-                lks_tree_rekey(tree, model[index].path, model[index].path,
-                    &after) != LKS_STATUS_OK || after != before ||
-                lks_tree_node_item(after) != model[index].item) ok = 0;
+            const LksTreeNode *before = NULL, *equal = NULL, *after = NULL;
+            const LksTreeNode *found = NULL;
+            if (lks_ordered_tree_find_path(tree, model[index].path,
+                    &found) != LKS_STATUS_OK || found == NULL ||
+                lks_ordered_tree_locate(tree, model[index].item,
+                    &before, &equal, &after) != LKS_STATUS_OK ||
+                equal == NULL || ((SoakItem *)lks_tree_node_item(equal))->value !=
+                    model[index].item->value) ok = 0;
         }
         if (ok && (step % 97u == 0 || step + 1 == steps) &&
-            !verify_tree(tree, model, count, 1)) ok = 0;
+            !verify_tree(lks_ordered_tree_internal_index(tree),
+                model, count, 1)) ok = 0;
         if (ok && count != 0 && step % 113u == 0 &&
             !round_trip(model[next_random(&seed) % count].path)) ok = 0;
     }
     if (!ok) fprintf(stderr, "Soak comparator failed step=%zu seed=%08X count=%zu\n",
         step, (unsigned int)initial_seed, count);
     for (i = 0; i < count; ++i) lks_path_destroy(model[i].path);
-    lks_tree_destroy(tree);
+    lks_ordered_tree_destroy(tree);
     free(items);
     printf("Soak comparator Seed=%08X Steps=%zu %s\n",
         (unsigned int)initial_seed, step, ok ? "PASS" : "FAIL");
@@ -386,8 +390,9 @@ int main(int argc, char **argv)
         return 2;
     }
     if (!run_explicit(explicit_steps, explicit_seed) ||
-        !run_comparator(total - explicit_steps, comparator_seed))
+        !run_comparator(total, comparator_seed))
         return 1;
-    printf("Mutation soak total operations=%zu PASS\n", total);
+    printf("Mutation soak manual=%zu ordered=%zu PASS\n",
+        explicit_steps, total);
     return 0;
 }

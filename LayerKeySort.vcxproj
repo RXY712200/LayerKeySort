@@ -207,6 +207,8 @@
     <ClCompile Include="tests\path_external.c" />
     <ClCompile Include="tests\public_api_usage.c" />
     <ClCompile Include="tests\v2_preview.c" />
+    <ClCompile Include="tests\v3_ordered.c" />
+    <ClInclude Include="tests\v2_tree_regression_bridge.h" />
     <None Include="examples\basic.c" />
     <None Include="examples\layer_list.c" />
     <None Include="tests\soak.c" />

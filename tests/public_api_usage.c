@@ -44,6 +44,34 @@ int lks_public_api_usage_smoke(void)
     lks_path_destroy(parsed_key);
     if (!valid) return 0;
 
+    {
+        LksOrderedTree *ordered = lks_ordered_tree_create(&comparator);
+        const LksTreeNode *node = NULL, *left = NULL, *equal = NULL;
+        const LksTreeNode *right = NULL, *found = NULL;
+        void *removed = NULL;
+        LksPath *owned = NULL;
+        if (ordered == NULL ||
+            lks_ordered_tree_insert(ordered, &values[0], &node) !=
+                LKS_STATUS_OK || node == NULL ||
+            lks_ordered_tree_size(ordered) != 1 ||
+            lks_ordered_tree_root_child_count(ordered) != 1 ||
+            lks_ordered_tree_root_child_at(ordered, 0) == NULL ||
+            lks_ordered_tree_locate(ordered, &values[0],
+                &left, &equal, &right) != LKS_STATUS_OK || equal == NULL)
+            valid = 0;
+        if (valid) {
+            owned = lks_path_clone(lks_tree_node_path(node));
+            if (owned == NULL || lks_ordered_tree_find_path(ordered, owned,
+                    &found) != LKS_STATUS_OK || found != node ||
+                lks_ordered_tree_remove_path(ordered, owned, &removed) !=
+                    LKS_STATUS_OK || removed != &values[0] ||
+                lks_ordered_tree_size(ordered) != 0) valid = 0;
+        }
+        lks_path_destroy(owned);
+        lks_ordered_tree_destroy(ordered);
+        if (!valid) return 0;
+    }
+
     for (index = 0; index < sizeof(values) / sizeof(values[0]); ++index) {
         items[index] = &values[index];
     }

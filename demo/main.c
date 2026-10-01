@@ -6,6 +6,7 @@
 #include "../tests/property.h"
 #include "../tests/mutation.h"
 #include "../tests/path_external.h"
+#include "../tests/v2_tree_regression_bridge.h"
 
 static int compare_int(const void *left, const void *right, void *context)
 {
@@ -3434,6 +3435,7 @@ cleanup:
 
 
 int lks_run_v2_preview_tests(void);
+int lks_run_v3_ordered_tests(void);
 int lks_public_api_usage_smoke(void);
 
 static int run_public_api_usage_smoke(void)
@@ -3478,7 +3480,8 @@ int main(int argc, char **argv)
     }
 
     v2_result = lks_run_v2_preview_tests();
-    if (v2_result != 0 || run_public_api_usage_smoke() != 0 ||
+    if (v2_result != 0 || lks_run_v3_ordered_tests() != 0 ||
+        run_public_api_usage_smoke() != 0 ||
         lks_run_mutation_tests() != 0 ||
         lks_run_path_external_tests() != 0 ||
         lks_run_stage14_1_property_tests() != 0 ||

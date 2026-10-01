@@ -7,6 +7,7 @@
 #include "../src/lks_alloc_internal.h"
 #include "../src/lks_group_internal.h"
 #include "../src/lks_tree_internal.h"
+#include "v2_tree_regression_bridge.h"
 #include "benchmark.h"
 #include "property.h"
 

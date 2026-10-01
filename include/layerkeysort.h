@@ -8,11 +8,11 @@
 extern "C" {
 #endif
 
-#define LKS_VERSION_MAJOR 2
+#define LKS_VERSION_MAJOR 3
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE ""
-#define LKS_VERSION_STRING "2.0.0"
+#define LKS_VERSION_PRERELEASE "preview.1"
+#define LKS_VERSION_STRING "3.0.0-preview.1"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -40,7 +40,8 @@ typedef int (*LksCompareFn)(
     void *context
 );
 
-/* Comparator callback and caller-owned context used for one operation. */
+/* Comparator callback and caller-owned context. Ordered Tree copies this
+ * descriptor at creation; other APIs borrow it for one operation. */
 typedef struct LksComparator {
     LksCompareFn compare;
     void *context;
@@ -173,10 +174,12 @@ LksStatus lks_path_after(
 /* Opaque public Tree and read-only node view. Tree owns its nodes and cloned
  * Paths; item pointers remain borrowed. All borrowed Tree nodes, Paths, and
  * navigation results expire when the Tree actually mutates. An equal-Path
- * rekey succeeds without mutation and preserves borrowed observations. In particular,
- * comparator-driven insertion may replace every internal node. */
+ * rekey succeeds without mutation and preserves borrowed observations. */
 typedef struct LksTree LksTree;
 typedef struct LksTreeNode LksTreeNode;
+/* Comparator-bound online ordering container. Owns its Path-keyed AVL nodes
+ * and Paths, but borrows items and the comparator context. */
+typedef struct LksOrderedTree LksOrderedTree;
 /* Opaque sorted collection. Group owns its structural storage, not its items. */
 typedef struct LksGroup LksGroup;
 /* Opaque collection of Groups. Batch owns its Groups, not the input items. */
@@ -266,30 +269,6 @@ LksStatus lks_tree_insert(
     void *item,
     const LksTreeNode **out_node
 );
-/* Insert ITEM at a position determined by COMPARATOR. Existing items must be
- * ordered compatibly with COMPARATOR and its context in Path order. Explicit
- * Path insertion does not validate this condition. Equal items are inserted
- * stably after existing comparator-equal items. Item remains borrowed; failure
- * leaves the logical Tree unchanged and OUT_NODE NULL. Success may replace a
- * bounded logical range or the entire Tree; discard every borrowed Tree node/Path/navigation
- * result and use OUT_NODE as the new inserted node if requested. */
-LksStatus lks_tree_insert_item(
-    LksTree *tree,
-    void *item,
-    const LksComparator *comparator,
-    const LksTreeNode **out_node
-);
-/* Locate the neighboring/equal nodes for ITEM under COMPARATOR. Existing item
- * order must be compatible with COMPARATOR and its context in Path order. Returned nodes
- * are borrowed from TREE and remain valid until mutation/destruction. */
-LksStatus lks_tree_locate_item(
-    const LksTree *tree,
-    const void *item,
-    const LksComparator *comparator,
-    const LksTreeNode **out_left,
-    const LksTreeNode **out_equal,
-    const LksTreeNode **out_right
-);
 /* Find a node by Path; OUT_NODE borrows from TREE and is NULL on failure. */
 LksStatus lks_tree_find_path(
     const LksTree *tree,
@@ -310,8 +289,7 @@ LksStatus lks_tree_remove_path(
  * Tree unchanged and OUT_NODE NULL. Equal Paths succeed without mutation and
  * preserve earlier borrowed Tree observations.
  * A changed Path keeps Tree size fixed, normally changes only this item's
- * coordinate, and invalidates earlier borrowed Tree observations. Caller is
- * responsible for comparator compatibility with any later item operation. */
+ * coordinate, and invalidates earlier borrowed Tree observations. */
 LksStatus lks_tree_rekey(
     LksTree *tree,
     const LksPath *old_path,
@@ -345,6 +323,31 @@ const LksTreeNode *lks_tree_root_child_at(
     const LksTree *tree,
     size_t index
 );
+/* Create an empty comparator-managed Tree. The descriptor is copied; its
+ * context and comparison semantics must remain valid and ordering-compatible
+ * until this container is destroyed. Returns NULL on invalid input or OOM. */
+LksOrderedTree *lks_ordered_tree_create(const LksComparator *comparator);
+void lks_ordered_tree_destroy(LksOrderedTree *tree);
+size_t lks_ordered_tree_size(const LksOrderedTree *tree);
+/* Stable upper-bound insertion: equal items follow earlier equal items.
+ * Failure leaves all nodes and Paths unchanged and OUT_NODE NULL. Success
+ * invalidates earlier borrowed node/Path/navigation observations. */
+LksStatus lks_ordered_tree_insert(LksOrderedTree *tree, void *item,
+    const LksTreeNode **out_node);
+/* Locate first equal or the immediate neighbors under the bound comparator.
+ * All three outputs are required and reset to NULL before searching. */
+LksStatus lks_ordered_tree_locate(const LksOrderedTree *tree,
+    const void *item, const LksTreeNode **out_left,
+    const LksTreeNode **out_equal, const LksTreeNode **out_right);
+/* Exact coordinate operations cannot change comparator order. Removal never
+ * frees the caller item and does not re-encode other Paths. */
+LksStatus lks_ordered_tree_find_path(const LksOrderedTree *tree,
+    const LksPath *path, const LksTreeNode **out_node);
+LksStatus lks_ordered_tree_remove_path(LksOrderedTree *tree,
+    const LksPath *path, void **out_item);
+size_t lks_ordered_tree_root_child_count(const LksOrderedTree *tree);
+const LksTreeNode *lks_ordered_tree_root_child_at(
+    const LksOrderedTree *tree, size_t index);
 /* Allocate a Path strictly between ordered LEFT and RIGHT. Caller owns the
  * result; output is NULL on failure and both inputs remain unchanged. */
 LksStatus lks_path_between(

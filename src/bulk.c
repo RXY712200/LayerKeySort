@@ -41,6 +41,15 @@ static LksStatus generate_coordinate_blocks(LksPath **paths, size_t count,
     return LKS_STATUS_OK;
 }
 
+LksStatus lks_bulk_generate_paths(LksPath **paths, size_t count)
+{
+    if (count == 0) return LKS_STATUS_OK;
+    if (paths == NULL) return LKS_STATUS_INVALID_ARGUMENT;
+    paths[0] = lks_path_create_zero();
+    if (paths[0] == NULL) return LKS_STATUS_OUT_OF_MEMORY;
+    return generate_coordinate_blocks(paths + 1, count - 1, NULL, 0);
+}
+
 LksStatus lks_bulk_build_tree(void *const *sorted, size_t count,
     LksTree **out_tree)
 {
@@ -56,9 +65,7 @@ LksStatus lks_bulk_build_tree(void *const *sorted, size_t count,
             LKS_ALLOC_TAG_MERGE_SCRATCH);
         if (paths == NULL) return LKS_STATUS_OUT_OF_MEMORY;
         for (i = 0; i < count; ++i) paths[i] = NULL;
-        paths[0] = lks_path_create_zero();
-        status = paths[0] == NULL ? LKS_STATUS_OUT_OF_MEMORY :
-            generate_coordinate_blocks(paths + 1, count - 1, NULL, 0);
+        status = lks_bulk_generate_paths(paths, count);
         if (status != LKS_STATUS_OK) goto cleanup;
     }
     status = lks_tree_internal_build_ordered(paths, sorted, count, out_tree);

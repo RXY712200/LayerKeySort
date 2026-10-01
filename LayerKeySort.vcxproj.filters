@@ -106,6 +106,12 @@
     <ClCompile Include="tests\v2_preview.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="tests\v3_ordered.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClInclude Include="tests\v2_tree_regression_bridge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <None Include="examples\basic.c">
       <Filter>示例</Filter>
     </None>

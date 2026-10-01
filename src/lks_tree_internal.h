@@ -15,12 +15,17 @@ typedef struct LksTreeInternalProfile {
 } LksTreeInternalProfile;
 
 typedef struct LksTreeRepairStats {
+    size_t direct_inserts;
     size_t attempts;
     size_t successes;
-    size_t fallbacks; /* exhausted local windows; later path may still be accepted */
+    size_t fallbacks; /* legacy V2 diagnostic: zero in V3 */
     size_t region_expansions;
     size_t nodes_relabelled;
     size_t max_region_nodes;
+    size_t full_range_relabels;
+    size_t full_range_relabelled_nodes;
+    /* Retained only for frozen V2 regression/benchmark readers. Managed V3
+     * insertion does no physical replacement-Tree rebuild, so these are zero. */
     size_t full_rebuilds;
     size_t full_rebuilt_nodes;
     size_t gap_limit_rebuild_attempts;
@@ -32,6 +37,19 @@ typedef struct LksTreeRepairStats {
 
 void lks_tree_repair_stats_reset(void);
 LksTreeRepairStats lks_tree_repair_stats_get(void);
+/* Test-only bridge for frozen V2 regression cases. Not a V3 public operation. */
+LksStatus lks_tree_internal_insert_item(LksTree *tree, void *item,
+    const LksComparator *comparator, const LksTreeNode **out_node);
+LksStatus lks_tree_internal_locate_item(const LksTree *tree,
+    const void *item, const LksComparator *comparator,
+    const LksTreeNode **out_left, const LksTreeNode **out_equal,
+    const LksTreeNode **out_right);
+/* Read-only diagnostic view; never hand it to a public manual mutator. */
+const LksTree *lks_ordered_tree_internal_index(const LksOrderedTree *tree);
+/* Diagnostic fixture only: seed a coordinate while the test itself proves
+ * the bound comparator order remains valid. Absent from the public API. */
+LksStatus lks_ordered_tree_test_seed_path(LksOrderedTree *tree,
+    const LksPath *path, void *item);
 LksStatus lks_tree_internal_profile(const LksTree *tree,
     LksTreeInternalProfile *out_profile);
 /* Both arrays have COUNT entries. Successful build transfers ownership of Paths.
