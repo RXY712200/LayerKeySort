@@ -17,6 +17,10 @@ version for normal use.
   interior strategy and full-range correctness fallback.
 - Add endpoint/OOM and long-run mixed-operation coverage, placement/relabel
   diagnostics, and direct stable V2 / Preview.1 / Preview.2 benchmark evidence.
+- Defer endpoint compaction until a valid candidate exceeds depth 16, avoiding
+  the measured depth-nine full-range relabel while bounding Path growth.
+- Adopt real-use clarity and first-use experience as V3 design principles;
+  Preview.2 does not complete the planned integration and distribution work.
 - Complete insertion can still relabel all nodes. No worst-case `O(log n)`
   complete insertion or formal amortized bound is claimed.
 

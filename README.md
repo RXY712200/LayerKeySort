@@ -71,6 +71,21 @@ Paths in separate Groups are local positions. A merge leaves both inputs unchang
 - Base-first ordering for equal items from a public two-Group merge.
 - A C17 public API that borrows caller-owned item pointers.
 
+## Designed for how people actually use it
+
+American families reused flour and feed sacks for clothing and household
+textiles in the early and mid-20th century. Manufacturers responded to that
+second use with colorful printed fabric, sometimes commissioning textile
+designers for the packaging ([Smithsonian National Museum of American
+History](https://americanhistory.si.edu/collections/object/nmah_1105750),
+[Textile Society of America](https://digitalcommons.unl.edu/tsaconf/732/)).
+
+Software deserves the same attention to its real use. V3 development treats
+API clarity, integration, distribution, examples, migration, and a new user's
+first few minutes as product work alongside correct algorithms, failure
+guarantees, and measured performance. This work is still in progress; later
+Previews will improve these user-facing parts.
+
 ### When to use it
 
 Use the Path and Tree APIs when an application keeps a mutable order over time,
