@@ -1,5 +1,8 @@
 # Developing LayerKeySort
 
+The current branch is experimental `v3.0.0-preview.1` development. Stable
+`v2.0.0` remains available; its 2.x compatibility policy is unchanged.
+
 ## Repository layout
 
 - `include/` — public header.
@@ -99,7 +102,57 @@ This does not change the persistent system PATH. Do not obtain runtime DLLs from
 
 The repository contains public API smoke coverage, deterministic property tests, stress tests, allocation-failure and out-of-memory tests, and frozen regression checks. The Visual Studio project provides Debug, Release, and AddressSanitizer builds. The committed project also contains older development entry points and benchmark code; their presence does not make them public API.
 
-## Coding constraints
+## V3 manual and managed architecture
+
+`LksTree` is the manual coordinate container. `LksOrderedTree` binds a
+comparator descriptor at creation and contains one private `LksTree` index;
+both use the same Path-keyed AVL mechanics. The ordered wrapper does not expose
+the manual index, arbitrary Path insert, or rekey. Removing an exact Path
+cannot disturb the relative comparator order of remaining items. Caller item
+objects and comparator context remain borrowed.
+
+Managed insertion finds the comparator upper bound in AVL-height work. It
+first generates a direct Path. The provisional policy prefers direct depth at
+most six, and accepts open-end depth up to eight. When a candidate is deeper
+or a gap operation reports `LEVEL_LIMIT`, relabel planning starts with eight
+logical neighbors and doubles the region until it succeeds or reaches every
+existing node. There is no 64-node architectural ceiling. The small-region
+arrays use stack scratch; larger regions allocate checked-size scratch arrays.
+
+For a bounded region, balanced recursive gap generation prepares a Path for
+each old node and the new rank. If the region reaches the entire container,
+the existing sparse bulk Path generator prepares only new coordinates, not a
+replacement Tree. This avoids expensive repeated gap splitting across the
+whole collection. Existing AVL nodes retain their in-order ranks. Validation
+checks strict Path increase and unchanged exterior bounds before mutation.
+The insertion gap also determines a vacant physical child link before commit.
+Commit swaps Path pointers, links the already allocated new node, performs
+allocation-free AVL rotations, and destroys old Paths. Thus an OOM during
+scratch allocation, Path generation, or node allocation exposes no mutation.
+
+The Tree has no physical `rebuild_with_item()` fallback in V3 managed online
+insertion. A full-range Path relabel can still cost `O(n)` nodes and substantial
+Path construction; there is no claimed worst-case `O(log n)` complete insert
+or formal amortized bound. Comparator search itself is `O(log n)` AVL height,
+ignoring callback and Path costs. A successful regional relabel touches
+`O(k)` old nodes, plus the costs of planning and validating Paths; geometric
+failed attempts sum to the order of the last attempted region in node count.
+
+We evaluated a bounded block/indirection label strategy against geometric
+in-place relabeling. Blocks might reduce large relabels but add a second order
+representation, block split invariants, and lookup synchronization. The
+measured geometric design removes physical reconstruction and performs well
+on duplicate-heavy and alternating workloads without that complexity. It is
+the one retained V3 design. The preferred/open-end depths are private policy
+hints, not validity limits or a compatibility contract.
+
+The V2-era regression suite still uses a diagnostic-only private bridge to
+exercise the shared AVL against frozen fixtures. Public V3 tests and the soak
+use `LksOrderedTree` directly. Normal production builds omit the bridge.
+
+## Preserved Path contracts and stable V2 design notes
+
+### Coding constraints
 
 Preview.3 uses the full public slot domain `0..65535` (65,536 values) while
 retaining the compact numeric `uint16_t` slot array and aligned `size_t` level
@@ -201,10 +254,13 @@ configurations enable it. The frozen `tests/benchmark.c` source is retained
 for historical tag analysis but excluded from the current Visual Studio build:
 its ChildBlock measurements are not meaningful for the new representation.
 The former `--stage14.3-frozen-smoke` runner belongs to that historical
-benchmark; current validation uses the active V2 tests and
+benchmark; current validation uses the retained V2 regression fixtures, new
+V3 ordered-container tests, and
 `--public-api-usage-smoke`. The helper is not public API.
 
-The online repair policy lives in `src/lks_policy_internal.h`. Tree stores a
+The following online-repair description records the **stable V2.0.0 baseline**,
+not current V3 managed insertion. In stable V2 the online repair policy lives
+in `src/lks_policy_internal.h`. Tree stores a
 single Path-keyed AVL index; its physical shape is implementation-defined,
 independent of Path hierarchy. Bulk generation first assigns sparse ordered
 Paths, then builds a balanced index. Group order comes from in-order traversal.

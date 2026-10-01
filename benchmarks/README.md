@@ -1,7 +1,10 @@
-# Current benchmark harness (Preview.4)
+# Current benchmark harness (V3 Preview.1 development)
 
-Stable v2.0.0 leaves the captured Preview.4/Stage 5 timing data
-unchanged. Mutation soak is a separate correctness test.
+Stable v2.0.0 leaves captured Preview.4/Stage 5 timing data unchanged. The
+current harness times V3 comparator-managed `LksOrderedTree` insertion for
+`tree` cases. `v3-preview1-comparison.csv` records a clean stable V2 versus
+V3 development comparison; neither V3 nor these measurements are a release.
+Mutation soak is a separate correctness test.
 
 `current_benchmark.c` exercises public APIs and prints one CSV row:
 
@@ -63,9 +66,13 @@ LK1 length, peak live bytes, live Tree-node bytes, live Path-object bytes,
 live Path-step bytes, and Tree-node `sizeof`. With
 `LKS_BENCH_STAGE5_DIAGNOSTICS`, an additional `rebuild_reasons` record gives
 gap-limit attempts, depth-limit attempts, and nodes rebuilt by successful
-full rebuilds. These counters are private and are not a public ABI.
+full rebuilds. Those rebuild fields describe the stable V2 baseline and are
+zero in V3 managed insertion. V3 additionally emits `relabel` with:
+distribution, count, direct inserts, attempts, successes, expansions, total
+old nodes relabelled, maximum region, full-range relabel count, and full-range
+old nodes relabelled. These counters are private and are not a public ABI.
 
-For a comparable comparator-call count on Preview.3, Stage 4, and current,
+For a comparable comparator-call count on Preview.3, Stage 4, and stable V2,
 compile each version with `LKS_BENCH_COUNT_COMPARISONS` and run the same `tree`
 case. This counter build is never used for the published timing table.
 

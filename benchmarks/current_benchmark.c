@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 #include "layerkeysort.h"
+#include "../src/lks_tree_internal.h"
 #ifdef LKS_BENCH_DIAGNOSTICS
 #include "lks_alloc_internal.h"
 #include "lks_tree_internal.h"
@@ -201,6 +202,11 @@ static void diagnose_tree(const LksTree *tree, const char *distribution,
         allocations.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes,
         allocations.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes,
         lks_tree_internal_sizeof_node());
+    printf("relabel,%s,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu\n",
+        distribution, count, repair.direct_inserts, repair.attempts,
+        repair.successes, repair.region_expansions,
+        repair.nodes_relabelled, repair.max_region_nodes,
+        repair.full_range_relabels, repair.full_range_relabelled_nodes);
 #ifdef LKS_BENCH_STAGE5_DIAGNOSTICS
     printf("rebuild_reasons,%s,%zu,%zu,%zu,%zu\n", distribution, count,
         repair.gap_limit_rebuild_attempts,
@@ -319,6 +325,7 @@ static int run_once(const char *operation, const char *distribution,
     void **pointers = NULL;
     LksComparator comparator = {compare_item, NULL};
     LksTree *tree = NULL;
+    LksOrderedTree *ordered = NULL;
     LksGroup *group = NULL, *result = NULL;
     LksGroupBatch *batch = NULL;
     size_t i;
@@ -348,11 +355,11 @@ static int run_once(const char *operation, const char *distribution,
         if (lks_alloc_stats_reset() != 0) { good = 0; goto done; }
         lks_tree_repair_stats_reset();
 #endif
-        tree = lks_tree_create();
-        if (tree == NULL) { good = 0; goto done; }
+        ordered = lks_ordered_tree_create(&comparator);
+        if (ordered == NULL) { good = 0; goto done; }
         start = now_ms();
         for (i = 0; i < count; ++i) {
-            if (lks_tree_insert_item(tree, pointers[i], &comparator, NULL) != LKS_STATUS_OK) {
+            if (lks_ordered_tree_insert(ordered, pointers[i], NULL) != LKS_STATUS_OK) {
                 good = 0; break;
             }
         }
@@ -362,10 +369,10 @@ static int run_once(const char *operation, const char *distribution,
             count, comparator_calls);
 #endif
 #ifdef LKS_BENCH_DIAGNOSTICS
-        if (good) diagnose_tree(tree, distribution, count,
+        if (good) diagnose_tree(lks_ordered_tree_internal_index(ordered), distribution, count,
             lks_alloc_stats_get(), lks_tree_repair_stats_get());
 #endif
-        if (good) good = validate_tree(tree, count);
+        if (good) good = validate_tree(lks_ordered_tree_internal_index(ordered), count);
     } else if (strcmp(operation, "group") == 0) {
         start = now_ms();
         good = lks_group_build(pointers, count, &comparator, &group) == LKS_STATUS_OK;
@@ -488,6 +495,7 @@ static int run_once(const char *operation, const char *distribution,
 done:
     lks_group_destroy(group); lks_group_destroy(result);
     lks_group_batch_destroy(batch); lks_tree_destroy(tree);
+    lks_ordered_tree_destroy(ordered);
     free(pointers); free(items);
     return good;
 }

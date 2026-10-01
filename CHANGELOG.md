@@ -2,6 +2,25 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [3.0.0-preview.1] - Unreleased
+
+Experimental V3 development is based on stable `v2.0.0`; stable V2 remains
+available and its published history is unchanged.
+
+- Split manual coordinate `LksTree` from comparator-bound `LksOrderedTree`.
+  The V2 per-operation-comparator Tree insert/locate functions are removed from
+  the V3 public API. Managed ordering binds one comparator and borrowed context
+  for the container lifetime; arbitrary rekey remains manual-only.
+- Kept the Path-keyed AVL index. Managed insertion now prepares and commits
+  adaptive logical-range Path relabeling, expanding geometrically to a
+  full-range relabel if necessary. It does not replace physical Tree nodes via
+  `rebuild_with_item()`. Bulk Tree construction remains available internally.
+- Preserved Path order, canonical display text, LK1 v1, item ownership,
+  immutable Group/Batch behavior, and stable `lks_sort()` semantics.
+- Added managed-container invariant/OOM tests and a direct stable V2 benchmark
+  comparison. The current data includes slower 100k ascending/all-equal cases;
+  no complete-insertion worst-case or formal amortized bound is claimed.
+
 ## [2.0.0] - 2026-10-01
 
 The first stable V2 release establishes the documented 2.x source/API and

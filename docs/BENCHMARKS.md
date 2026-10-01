@@ -1,4 +1,64 @@
-# V2 performance and benchmark evidence (Preview.4)
+# Performance and benchmark evidence
+
+## V3 Preview.1 development versus stable V2.0.0
+
+The current V3 branch has **not been released**. The new
+[`v3-preview1-comparison.csv`](../benchmarks/results/v3-preview1-comparison.csv)
+compares its public managed insertion API against stable `v2.0.0` in a clean
+detached checkout. Both binaries used MSYS2 UCRT64 GCC 16.2.0, C17,
+`-O2 -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17` (the latter
+`-O3` comes from CMake Release), on the
+same Windows 11 / Ryzen 9 9955HX machine. Input seed was `0x91A30D47`;
+each row used one warmup and three measured runs. Times below are medians in
+milliseconds. Compiler, thermal state, and OS scheduling limit generality.
+The [metadata sidecar](../benchmarks/results/v3-preview1-metadata.md) records
+the source checkouts, flags, and measurement boundaries.
+
+| Managed insert workload | N | Stable V2 | V3 development |
+| --- | ---: | ---: | ---: |
+| Ascending | 100,000 | 327.913 | 421.662 |
+| All equal | 100,000 | 331.146 | 419.852 |
+| 32-value duplicates | 100,000 | 477.263 | 126.797 |
+| Random unique | 100,000 | 112.053 | 112.892 |
+| Alternating | 10,000 | 216.716 | 85.698 |
+| Two values | 10,000 | 16.918 | 7.562 |
+| Eight values | 10,000 | 14.393 | 8.593 |
+| 64 values | 10,000 | 12.501 | 9.041 |
+| Descending | 10,000 | 3.528 | 3.517 |
+| Middle hotspot | 10,000 | 3.816 | 3.733 |
+| Ascending | 4,000 | 1.433 | 1.444 |
+| Random unique | 4,000 | 4.980 | 3.609 |
+
+Ascending and all-equal 100k regress measurably. Duplicates and alternating
+improve strongly; random 100k is effectively close at this scale. The design
+removes physical replacement-Tree rebuilding, but that does not make every
+insertion distribution faster. The large-workload comparisons are engineering
+evidence for this machine, not an asymptotic proof.
+
+A separate diagnostic build (`LKS_ENABLE_ALLOC_DIAGNOSTICS` and
+`LKS_BENCH_DIAGNOSTICS`, same GCC flags) reports the mechanism:
+
+| Workload | V2 physical rebuilds / nodes rebuilt | V3 full-range relabels / old nodes relabelled | V3 all relabelled nodes | V2 / V3 comparator calls | V2 / V3 peak live bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Ascending 100k | 9 / 522,876 | 5 / 292,764 | 293,524 | 1,639,288 / 1,568,929 | 28,341,744 / 22,181,704 |
+| Duplicates 100k | 10 / 556,781 | 0 / 0 | 97,256 | 1,634,918 / 1,588,203 | 29,648,128 / 10,798,784 |
+| Alternating 10k | 26 / 134,148 | 1 / 189 | 119,789 | 132,835 / 146,639 | 2,601,016 / 1,296,120 |
+| All equal 100k | 9 / 522,876 | 5 / 292,764 | 293,524 | 1,639,288 / 1,568,929 | 28,341,744 / 22,181,704 |
+
+V3 physical replacement-Tree rebuild count is zero by architecture; a
+full-range relabel still allocates a new Path per rank and can be expensive.
+For 100k ascending, V3's mean/P95/P99 Path depth was approximately
+3.987/6/7, versus V2's 3.881/5/6. For duplicates, V3 was
+2.146/4/5 versus V2's 3.796/4/4. These tradeoffs are why exact generated
+Paths and private policy thresholds are not stable contracts.
+
+AVL lookup takes index-height work, ignoring comparator cost. A direct insert
+adds Path generation and AVL link/rebalance. Relabel planning touches a
+geometrically expanded logical region; a successful relabel changes `k`
+existing Paths and may have `k=n`. No worst-case `O(log n)` complete insertion
+or formal amortized bound is claimed.
+
+## Stable V2 historical evidence (Preview.4 and Stage 5)
 
 Stable v2.0.0 retains the published RC.1 production code. The
 Stage 4 and Stage 5

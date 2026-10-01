@@ -57,3 +57,14 @@ Backward-compatible API additions and documented bug fixes may occur in 2.x.
 An intentional breaking change to the frozen public contract requires the
 next major version. An optimization that preserves the contract does not, by
 itself, require 3.0.
+
+## V3 Preview.1 development boundary
+
+The experimental V3 development branch is outside the 2.x compatibility
+promise above. Stable users can continue using the published `v2.0.0` tag.
+V3 intentionally removes the two per-operation-comparator `LksTree`
+functions and introduces a comparator-bound `LksOrderedTree`; see
+[V3_MIGRATION.md](V3_MIGRATION.md). Further Preview API changes may occur
+before a stable V3 release. Path comparison, display text, and LK1 v1 bytes
+are preserved in Preview.1, but this does not freeze every future V3 API or
+generated Path coordinate.

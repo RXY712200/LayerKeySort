@@ -6,15 +6,16 @@
 
 ## Version macros
 
-- `LKS_VERSION_MAJOR` is `2`.
+- `LKS_VERSION_MAJOR` is `3`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `""`.
-- `LKS_VERSION_STRING` is `"2.0.0"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.1"`.
+- `LKS_VERSION_STRING` is `"3.0.0-preview.1"`.
 
-Stable v2.0.0 keeps RC.1's 52-function public API and LK1
-version-1 grammar unchanged. The 2.x compatibility boundary is in
-[COMPATIBILITY.md](COMPATIBILITY.md).
+This page describes the experimental V3 development header, currently 59
+public functions. Stable v2.0.0 remains available with its frozen 52-function
+API. The [migration guide](V3_MIGRATION.md) lists the Tree changes; the
+[2.x compatibility contract](COMPATIBILITY.md) applies to stable V2.
 
 Path values are ordering coordinates, not permanent application item IDs.
 Preview.3 specified the current formatter output but had no public
@@ -537,7 +538,11 @@ LksStatus lks_path_between(
 );
 ```
 
-## Tree API
+## Manual coordinate Tree API
+
+`LksTree` accepts explicit Path coordinates. It has no public
+comparator-driven insertion or lookup operation in V3. It owns cloned Paths
+and structural AVL nodes, but borrows item pointers.
 
 ### `lks_tree_create`
 
@@ -576,37 +581,6 @@ LksStatus lks_tree_insert(
     const LksPath *path,
     void *item,
     const LksTreeNode **out_node
-);
-```
-
-### `lks_tree_insert_item`
-
-Insert an item at a position selected by the comparator. Existing items must
-already be ordered compatibly with that comparator and context in Path order.
-
-```c
-LksStatus lks_tree_insert_item(
-    LksTree *tree,
-    void *item,
-    const LksComparator *comparator,
-    const LksTreeNode **out_node
-);
-```
-
-### `lks_tree_locate_item`
-
-Locate neighboring and equal nodes for an item under a comparator. Existing
-items must already be ordered compatibly with that comparator and context in
-Path order. Explicit-Path insertion does not check this condition.
-
-```c
-LksStatus lks_tree_locate_item(
-    const LksTree *tree,
-    const void *item,
-    const LksComparator *comparator,
-    const LksTreeNode **out_left,
-    const LksTreeNode **out_equal,
-    const LksTreeNode **out_right
 );
 ```
 
@@ -716,9 +690,8 @@ allocation or recoverable failure. Only the selected item's Path changes;
 AVL rotations may change physical links but never re-encode unrelated Paths.
 All earlier borrowed Tree nodes, Paths, and navigation results expire on a
 changed-Path success. An equal-Path no-op preserves those observations and
-returns the original node. Callers selecting arbitrary Paths must keep item order
-compatible with any comparator used by later comparator-driven operations;
-the Tree does not scan and validate all items during rekey.
+returns the original node. Manual rekey is intentionally absent from the
+comparator-managed container below.
 
 ```c
 LksStatus lks_tree_rekey(
@@ -732,6 +705,44 @@ API contract. Physical parents need not be Path prefixes, physical children
 need not be logical Path descendants, and physical preorder is not logical
 Path order. Shape may change after mutation. Use `lks_path_compare()` to
 compare positions; reacquire all borrowed navigation results after mutations.
+
+## Comparator-managed ordered Tree API
+
+`LksOrderedTree` copies one comparator descriptor at creation. The callback,
+its caller-owned context, and comparator-relevant item values must remain
+valid and ordering-compatible for the container lifetime. Change an item's
+sort key by removing it and inserting its updated value; there is no arbitrary
+managed rekey and no per-operation comparator parameter.
+
+```c
+LksOrderedTree *lks_ordered_tree_create(const LksComparator *comparator);
+void lks_ordered_tree_destroy(LksOrderedTree *tree);
+size_t lks_ordered_tree_size(const LksOrderedTree *tree);
+LksStatus lks_ordered_tree_insert(LksOrderedTree *tree, void *item,
+    const LksTreeNode **out_node);
+LksStatus lks_ordered_tree_locate(const LksOrderedTree *tree,
+    const void *item, const LksTreeNode **out_left,
+    const LksTreeNode **out_equal, const LksTreeNode **out_right);
+LksStatus lks_ordered_tree_find_path(const LksOrderedTree *tree,
+    const LksPath *path, const LksTreeNode **out_node);
+LksStatus lks_ordered_tree_remove_path(LksOrderedTree *tree,
+    const LksPath *path, void **out_item);
+size_t lks_ordered_tree_root_child_count(const LksOrderedTree *tree);
+const LksTreeNode *lks_ordered_tree_root_child_at(
+    const LksOrderedTree *tree, size_t index);
+```
+
+Create returns NULL for invalid comparator or OOM. Destroy accepts NULL and
+never frees caller items. Size treats NULL as empty. Insert uses upper-bound
+placement, so new comparator-equal items follow existing equals. All
+fallible Path planning and node allocation occur before any mutation; on
+failure the container is unchanged and optional `out_node` is NULL. On
+success, reacquire prior borrowed observations. Locate requires all three
+outputs, resets them to NULL, and returns the first equal node or immediate
+neighbors. Find returns `NOT_FOUND` for an absent Path. Exact removal has the
+same allocation-free ownership behavior as manual Tree removal. Physical
+node access uses the shared `lks_tree_node_*()` functions; virtual-root
+access uses the ordered-specific functions above.
 
 ## Group API
 
@@ -883,11 +894,12 @@ const char *lks_status_string(LksStatus status);
 
 Linear Group and Batch merges require every input Group to have been built
 under ordering semantics compatible with the merge comparator and context.
-Comparator identity is not checked at runtime. A successful Tree mutation may
-replace all internal nodes: every borrowed Tree node, Path, and navigation
-result must be reacquired afterward. Explicit-Path `lks_tree_insert` preserves
-the supplied coordinate; comparator-driven `lks_tree_insert_item` may rebuild
-and re-encode a bounded logical-order range or, as a final fallback, the entire Tree.
+Comparator identity is not checked at runtime for Group/Batch merges. A
+successful Tree mutation can invalidate borrowed node, Path, and navigation
+results; reacquire them. Manual `lks_tree_insert` preserves the supplied
+coordinate. Managed insertion can relabel a logical range, up to all nodes,
+while retaining their physical AVL nodes. It never constructs a replacement
+Tree as its online congestion fallback.
 A failed operation with a documented strong guarantee commits no Tree
 mutation. Comparator equality concerns item ordering and stable source order;
 it does not mean two items share an equal Path. Public Group merge places
@@ -895,8 +907,7 @@ comparator-equal Base items before Incoming items, while Batch merge preserves
 source chunk order for equals. Each successful merge result has its own Path
 coordinate space, independent of unchanged source Groups.
 
-The released v2.0.0-preview.3 public header contained **9 types** and **46 functions**,
-including `lks_sort`; Preview.4 added two Tree mutation and four Path
-representation functions. The v2.0.0 header has
-**52 functions**. Private allocator, profile, benchmark, and test entry
+Stable v2.0.0 has **52 functions**. The V3 development header has **59**:
+two V2 comparator Tree functions were removed and nine ordered-container
+functions were added. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

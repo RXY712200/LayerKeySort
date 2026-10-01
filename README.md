@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Latest stable release: v2.0.0.*
+*A C17 library for stable ordering with hierarchical Path positions. Latest stable: v2.0.0. Development: v3.0.0-preview.1.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -8,6 +8,10 @@ LayerKeySort orders caller-owned item pointers with a comparator and gives each 
 > **V2 is stable as of v2.0.0.** It retains RC.1's production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
+
+**V3 Preview.1 is experimental and has not been released.** Normal users
+should pin stable `v2.0.0`. V3 development separates the manual Path Tree from
+a comparator-bound `LksOrderedTree`; see the [migration guide](docs/V3_MIGRATION.md).
 
 ## Quick start
 
@@ -19,7 +23,7 @@ lks_sort(items, count, compare_items, NULL);
 
 `items` is a caller-owned pointer array; `compare_items` defines the order. Sorting is stable, and the pointed-to objects remain caller-owned. `lks_sort` returns `LksStatus`, which production code should check. See the complete, compilable [basic example](examples/basic.c). The Preview.5 [layer-list example](examples/layer_list.c) shows dynamic Path ordering. For Path, Tree, and Group operations, see the [usage guide](docs/USAGE.md).
 
-## V2 development status
+## Release history and V3 development
 
 | Version | Main purpose | Still provisional or deferred |
 | --- | --- | --- |
@@ -30,6 +34,7 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
 | v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
 | v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
+| v3.0.0-preview.1 (in development) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
 
 Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests
@@ -74,7 +79,10 @@ are possible application categories; this list does not imply that those
 projects use LayerKeySort. The library also provides stable handling of
 comparator-equal items, remove/rekey, and optional versioned `LK1:` keys for
 persisting one sortable coordinate. The [layer-list example](examples/layer_list.c)
-shows this workflow with application IDs separate from Paths.
+shows this manual-coordinate workflow with application IDs separate from Paths.
+For comparator-managed online ordering in V3 development, create an
+`LksOrderedTree` with a comparator and borrowed context. Its API does not allow
+arbitrary rekey or a different comparator on each operation.
 
 ### When not to use it
 
@@ -118,7 +126,9 @@ The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
 
 - **Path:** create, clone, append, format/parse display text, format/parse durable keys, compare, and find positions before, after, or between other Paths.
 - **Simple sort:** `lks_sort()` stable-sorts the caller's pointer array.
-- **Tree:** insert, remove by Path, rekey an item's Path, locate entries, and navigate nodes.
+- **Manual Tree:** insert, find, remove, and rekey explicit Path coordinates.
+- **Ordered Tree (V3 development):** bind a comparator at creation, insert and
+  locate items in stable comparator order, remove by exact Path, and read nodes.
 - **Group:** build a sorted Group and access its items and Paths.
 - **GroupBatch / merge:** build Groups from consecutive input chunks and merge Groups or a Batch.
 - **Status / comparator:** report operation status and supply a comparison callback with caller-owned context.
@@ -141,20 +151,19 @@ The repository includes deterministic property tests, stress tests, a Preview.5 
 
 ## Performance evidence
 
-The [Preview.4 benchmark report](docs/BENCHMARKS.md) gives reproducible
-Preview.3, Stage 4, and Stage 5 measurements, including regressions and
-memory tradeoffs. The [benchmark harness](benchmarks/README.md) is optional
-in CMake. The Path-keyed Tree is much faster on several equal-key and
-open-end insertion workloads, but alternating and small random cases do not
-improve across the board. Full rebuild remains a correctness fallback, so
-online insertion has no claimed worst-case `O(log n)` time bound.
+The [benchmark report](docs/BENCHMARKS.md) includes stable V2 and V3
+development measurements, including regressions and memory tradeoffs. The
+[benchmark harness](benchmarks/README.md) is optional in CMake. V3 managed
+insertion keeps physical AVL nodes during a full-range coordinate relabel,
+but the relabel can still touch every item. Complete insertion has no claimed
+worst-case `O(log n)` or formal amortized bound.
 
 ## Current limitations
 
 - Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
 - Paths from separate Groups are local coordinates until a merge establishes the result's path space.
 - Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After an actual Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results. Equal-Path rekey is a no-op and preserves them.
-- Tree remove does not compact Paths; rekey changes the selected item's coordinate. AVL rotations change physical links, not Path encodings. Caller-selected rekeys must preserve comparator order before later comparator-driven operations.
+- Manual Tree removal does not compact Paths; manual rekey changes the selected item's coordinate. The V3 ordered container does not expose arbitrary rekey.
 - No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The `LK1:` key requires bytewise ASCII database collation for ordering.
 - The `LK1:` key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
 
@@ -178,6 +187,7 @@ CHANGELOG.md
 - [Usage guide](docs/USAGE.md)
 - [Integration guide](docs/INTEGRATION.md)
 - [2.x compatibility contract](docs/COMPATIBILITY.md)
+- [V3 migration guide](docs/V3_MIGRATION.md)
 - [API reference](docs/API.md)
 - [Development guide](docs/DEVELOPMENT.md)
 - [Benchmark report](docs/BENCHMARKS.md)

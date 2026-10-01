@@ -1,5 +1,8 @@
 # Using LayerKeySort
 
+This guide describes the experimental V3 development header. For stable
+applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
+
 ## Requirements
 
 - C17.
@@ -192,48 +195,44 @@ its Paths remain stable until that Group is destroyed.
 
 Comparator-equal input items retain their input order. For the public two-Group merge, equal items from the Base Group precede equal items from the Incoming Group, while order within each source is preserved. GroupBatch merging preserves source chunk order for equal items.
 
-## Path locality
+## Choose the Tree model
 
-Comparator-driven online Tree insertion first uses a direct Path when it fits.
-When a Path becomes deep, it may re-encode a bounded contiguous logical-order
-range. It can accept a deeper Path if local repair is unsuitable, or
-rebuild the whole Tree as a final fallback. These are internal heuristics, not
-stable Path identities or a promise of fixed memory use. Comparator-driven
-Tree operations require existing items to be sorted compatibly with the
-supplied comparator and context in Path order; explicit Path insertion does
-not check item ordering.
+Use `LksTree` when the caller intentionally owns coordinates. Explicit insert,
+exact find/removal, and rekey accept Paths selected by the caller. A parsed LK1
+coordinate can be restored through explicit insert. The Tree does not check a
+comparator invariant and exposes no comparator-based insert/locate operation.
 
-Tree navigation exposes an implementation-defined physical index. A parent
-need not be a Path prefix, children need not be logical descendants, and
-physical preorder does not define logical order. The virtual root has one
-physical child when nonempty. Compare Paths with `lks_path_compare()` and
-reacquire borrowed navigation results after each actual mutation.
+Use `LksOrderedTree` for online comparator order. Supply one comparator and a
+caller-owned context at creation. Insertions are stable for equal values and
+may relabel a contiguous logical range to make coordinate space. The region
+can grow geometrically to the entire collection. Existing AVL nodes remain;
+only Paths and the new node are prepared before an allocation-free commit.
+The comparator callback, context, and comparator-relevant item values must
+remain valid and compatible for the container's lifetime. To change a sort
+key, remove the item and insert its updated value. There is no arbitrary
+managed rekey or per-call comparator replacement.
 
-In Preview.4, `lks_tree_remove_path()` removes one
-exact Path without freeing its caller-owned item or compacting any other Path.
-`lks_tree_rekey()` moves the same item pointer to a caller-selected unoccupied
-Path. It prepares all allocations before the structural commit, so failure
-leaves the old association intact. Equal old/new Paths succeed as a no-op.
-That no-op preserves existing borrowed Tree nodes, Paths, and navigation views.
-Physical AVL rebalancing may change parent/child links, but does not re-encode
-Paths. To move an item, callers can change their own payload if appropriate,
-choose a target with `lks_path_before()`, `lks_path_after()`, or
-`lks_path_between()`, then rekey. Arbitrary external payload changes are not
-detected: before later comparator-driven Tree operations, Path order must
-remain compatible with that comparator. Published Groups remain immutable;
-build a new Group if a different Group order is needed.
+```c
+LksComparator order = { compare_items, context };
+LksOrderedTree *ordered = lks_ordered_tree_create(&order);
+if (ordered == NULL) { /* handle invalid comparator or OOM */ }
+LksStatus status = lks_ordered_tree_insert(ordered, item, NULL);
+/* Check status, use ordered, then release it. Caller still owns item. */
+lks_ordered_tree_destroy(ordered);
+```
 
-A Path describes order within the Group or Tree that created it, not a stable
-application identity. Paths from independent Groups are local coordinates.
-Merge creates a new coordinate space and may reassign every result Path, while
-leaving both source Groups unchanged. The source Groups' published Paths stay
-valid for their respective Group lifetimes. A successful mutable Tree operation
-may locally relabel or fully rebuild; **reacquire all** borrowed Tree nodes,
-Paths, and navigation results after mutation. A failed operation with the
-documented strong guarantee does not commit a mutation. Do not persist or
-serialize generated Paths as item identities; versioned keys may persist their
-current coordinates for external ordering. Path-allocation heuristics and exact
-generated strings may change in compatible 2.x releases.
+Both containers borrow items and own Paths/nodes. Reacquire borrowed nodes,
+Paths, and navigation observations after an actual successful mutation.
+Manual equal-Path rekey is a no-op and preserves borrowed observations.
+Physical navigation exposes implementation-defined AVL links, not Path
+hierarchy. Compare Paths using `lks_path_compare()`.
+
+A Path is an ordering coordinate rather than a stable application identity.
+Canonical display text is readable; versioned LK1 keys can persist and
+bytewise-sort one coordinate. Neither saves caller payloads or a whole Tree.
+Exact generated Path strings and private relabel thresholds may change in V3
+Preview development. Complete managed insertion can relabel all `n` nodes;
+no worst-case `O(log n)` or formal amortized bound is claimed.
 
 ## Error handling
 
