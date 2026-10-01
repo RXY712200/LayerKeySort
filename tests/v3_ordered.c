@@ -185,6 +185,98 @@ static int check_endpoint_carry_oom(void)
     return valid && success && failures > 0;
 }
 
+/* A valid depth-nine append coordinate must not trigger a full-range relabel.
+ * Fault injection also checks that failure preserves the seeded coordinate. */
+static int check_deep_endpoint_direct_oom(void)
+{
+    OrderedItem items[2] = {{0, 0}, {1, 1}};
+    LksComparator comparator = { compare_ordered, NULL };
+    LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+    LksPath *original = lks_path_create(LKS_DIRECTION_POSITIVE,
+        LKS_PATH_SLOT_MAX);
+    size_t i, failure = 1, failures = 0;
+    int valid = tree != NULL && original != NULL, success = 0;
+    for (i = 1; i < 8 && valid; ++i)
+        valid = lks_path_append(original, LKS_PATH_SLOT_MAX) == LKS_STATUS_OK;
+    if (valid && lks_ordered_tree_test_seed_path(tree, original, &items[0]) !=
+            LKS_STATUS_OK) valid = 0;
+    lks_tree_repair_stats_reset();
+    while (valid && failure < 100) {
+        LksAllocStats before = lks_alloc_stats_get();
+        const LksTreeNode *inserted = NULL, *old = NULL;
+        LksStatus status;
+        lks_alloc_test_fail_on_attempt(failure);
+        status = lks_ordered_tree_insert(tree, &items[1], &inserted);
+        lks_alloc_test_disable_failure();
+        if (status == LKS_STATUS_OK) {
+            LksTreeRepairStats stats = lks_tree_repair_stats_get();
+            success = inserted != NULL && verify_ordered(tree, 1) &&
+                lks_path_depth(lks_tree_node_path(inserted)) == 9 &&
+                stats.attempts == 0 && stats.direct_endpoint_inserts == 1;
+            break;
+        }
+        if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
+            lks_ordered_tree_size(tree) != 1 ||
+            lks_ordered_tree_find_path(tree, original, &old) != LKS_STATUS_OK ||
+            old == NULL || lks_tree_node_item(old) != &items[0] ||
+            lks_alloc_stats_get().live_bytes != before.live_bytes ||
+            lks_alloc_stats_get().live_blocks != before.live_blocks)
+            valid = 0;
+        ++failure; ++failures;
+    }
+    printf("V3 ordered depth-nine direct OOM failures=%zu %s\n", failures,
+        valid && success && failures > 0 ? "PASS" : "FAIL");
+    lks_path_destroy(original);
+    lks_ordered_tree_destroy(tree);
+    return valid && success && failures > 0;
+}
+
+static int check_endpoint_depth_limit_oom(void)
+{
+    OrderedItem items[2] = {{0, 0}, {1, 1}};
+    LksComparator comparator = { compare_ordered, NULL };
+    LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+    LksPath *original = lks_path_create(LKS_DIRECTION_POSITIVE,
+        LKS_PATH_SLOT_MAX);
+    size_t i, failure = 1, failures = 0;
+    int valid = tree != NULL && original != NULL, success = 0;
+    for (i = 1; i < 16 && valid; ++i)
+        valid = lks_path_append(original, LKS_PATH_SLOT_MAX) == LKS_STATUS_OK;
+    if (valid && lks_ordered_tree_test_seed_path(tree, original, &items[0]) !=
+            LKS_STATUS_OK) valid = 0;
+    lks_tree_repair_stats_reset();
+    while (valid && failure < 100) {
+        LksAllocStats before = lks_alloc_stats_get();
+        const LksTreeNode *inserted = NULL, *old = NULL;
+        LksStatus status;
+        lks_tree_repair_stats_reset();
+        lks_alloc_test_fail_on_attempt(failure);
+        status = lks_ordered_tree_insert(tree, &items[1], &inserted);
+        lks_alloc_test_disable_failure();
+        if (status == LKS_STATUS_OK) {
+            LksTreeRepairStats stats = lks_tree_repair_stats_get();
+            success = inserted != NULL && verify_ordered(tree, 1) &&
+                stats.attempts == 1 && stats.successes == 1 &&
+                stats.full_range_relabels == 1 &&
+                stats.full_range_relabelled_nodes == 1;
+            break;
+        }
+        if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||
+            lks_ordered_tree_size(tree) != 1 ||
+            lks_ordered_tree_find_path(tree, original, &old) != LKS_STATUS_OK ||
+            old == NULL || lks_tree_node_item(old) != &items[0] ||
+            lks_alloc_stats_get().live_bytes != before.live_bytes ||
+            lks_alloc_stats_get().live_blocks != before.live_blocks)
+            valid = 0;
+        ++failure; ++failures;
+    }
+    printf("V3 ordered depth-seventeen relabel OOM failures=%zu %s\n", failures,
+        valid && success && failures > 0 ? "PASS" : "FAIL");
+    lks_path_destroy(original);
+    lks_ordered_tree_destroy(tree);
+    return valid && success && failures > 0;
+}
+
 static int check_prepend_level_carry(void)
 {
     OrderedItem items[2] = {{1, 0}, {0, 1}};
@@ -428,6 +520,8 @@ int lks_run_v3_ordered_tests(void)
     if (lks_ordered_tree_create(NULL) != NULL) return 1;
     if (!check_public_order() || !check_bound_context() ||
         !check_endpoint_runs() || !check_endpoint_carry_oom() ||
+        !check_deep_endpoint_direct_oom() ||
+        !check_endpoint_depth_limit_oom() ||
         !check_prepend_level_carry() || !check_burst_transition_oom() ||
         !check_local_relabel_oom() ||
         !check_full_range_oom()) return 1;

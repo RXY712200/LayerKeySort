@@ -1,0 +1,9 @@
+version,operation,distribution,n,warmups,repetitions,median_ms,min_ms,max_ms,output_bytes,seed
+stable-v2,tree,equal,300000,1,3,3273.642,3241.330,3301.697,0,0x91A30D47
+stable-v2,tree,ascending,500000,1,2,9689.246,9519.715,9858.777,0,0x91A30D47
+stable-v2,tree,descending,100000,1,3,35.823,35.740,36.052,0,0x91A30D47
+stable-v2,tree,descending,300000,1,3,111.815,111.444,111.856,0,0x91A30D47
+preview1,tree,equal,300000,1,3,3593.092,3562.446,3602.047,0,0x91A30D47
+preview1,tree,ascending,500000,1,2,9547.128,9502.842,9591.413,0,0x91A30D47
+preview1,tree,descending,100000,1,3,35.583,35.387,36.680,0,0x91A30D47
+preview1,tree,descending,300000,1,3,114.281,113.528,114.665,0,0x91A30D47

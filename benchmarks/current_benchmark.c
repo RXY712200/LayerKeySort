@@ -186,6 +186,8 @@ static void diagnose_tree(const LksTree *tree, const char *distribution,
     }
     if (used != count) abort();
     qsort(depths, count, sizeof(*depths), compare_size);
+    printf("path_max,%s,%zu,%zu\n", distribution, count,
+        count == 0 ? 0 : depths[count - 1]);
     printf("diag,%s,%zu", distribution, count);
     printf(",%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu",
         comparator_calls, repair.comparator_search_steps,

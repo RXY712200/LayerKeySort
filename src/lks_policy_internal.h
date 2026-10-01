@@ -7,8 +7,10 @@
 /* Provisional coordinate-placement policy, separate from Path storage and
  * text encoding. Bulk blocks are logical Path subdivisions, not Tree child
  * arrays. V3 relabel windows grow geometrically to the full logical range.
- * Depth 6 is preferred. At open ends, depth 8 is a provisional direct-key
- * allowance before adaptive relabel is tried. Neither value limits validity. */
+ * Depth 6 is preferred. At open ends, allow direct keys through depth 16
+ * before trying adaptive relabel. This bounds ordinary endpoint Path growth
+ * while deferring the measured depth-9 full-range relabel cliff. Neither
+ * value limits Path validity. */
 enum {
     LKS_POLICY_INITIAL_SLOT = 32768,
     LKS_POLICY_TARGET_SPACING = 10,
@@ -17,7 +19,7 @@ enum {
     LKS_POLICY_ORDERED_BURST_THRESHOLD = 64,
     LKS_POLICY_ORDERED_BURST_STEP = 1,
     LKS_POLICY_PREFERRED_ONLINE_DEPTH = 6,
-    LKS_POLICY_OPEN_END_DIRECT_DEPTH = 8,
+    LKS_POLICY_OPEN_END_DIRECT_DEPTH = 16,
     LKS_POLICY_LOCAL_INITIAL_NODES = 8,
     LKS_POLICY_LOCAL_EXPANSION_FACTOR = 2,
     LKS_POLICY_STACK_REGION_NODES = 64

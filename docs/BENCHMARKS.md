@@ -1,16 +1,32 @@
 # Performance and benchmark evidence
 
-## V3 Preview.2 development candidate versus released Preview.1 and stable V2
+## V3 Preview.2 final development candidate versus released Preview.1 and stable V2
 
 The unreleased Preview.2 candidate carries full endpoint slots into an
 available ancestor and uses a one-slot stride after a long successful endpoint
-run. The [direct three-version comparison](../benchmarks/results/v3-preview2-comparison.csv)
+run. The original `04cdd0c` candidate used an endpoint direct-depth allowance
+of eight. A valid depth-nine append candidate triggered a full-range relabel at
+insertion 261,579 solely because of that policy. The final candidate allows
+direct endpoint coordinates through depth 16, with adaptive relabel retained
+when the candidate is deeper or cannot be generated. This is a provisional
+bounded growth policy, not a Path validity limit or complexity guarantee.
+
+The [original three-version comparison](../benchmarks/results/v3-preview2-comparison.csv)
 uses clean exact stable V2 and Preview.1 baselines; a separate
 [holdout CSV](../benchmarks/results/v3-preview2-holdout.csv) changes the input
-seed. [Metadata](../benchmarks/results/v3-preview2-metadata.md) states the
+seed. The [final candidate timing rows](../benchmarks/results/v3-preview2-final-comparison.csv),
+[final diagnostics](../benchmarks/results/v3-preview2-final-diagnostics.txt),
+[policy experiment timings](../benchmarks/results/v3-preview2-policy-audit.csv),
+[policy experiment diagnostics](../benchmarks/results/v3-preview2-policy-diagnostics.txt),
+and [cross-workload holdout](../benchmarks/results/v3-preview2-policy-cross.csv)
+show the final decision and rejected alternatives. [Original metadata](../benchmarks/results/v3-preview2-metadata.md) states the
 machine, flags, timing interval, and diagnostic limits.
 
-| Managed insert | N | Stable V2 ms | Preview.1 ms | Preview.2 ms |
+The following table is the **original depth-eight candidate** at `04cdd0c`,
+retained as historical comparison evidence. Its Preview.2 column is not the
+final candidate.
+
+| Managed insert | N | Stable V2 ms | Preview.1 ms | Original Preview.2 ms |
 | --- | ---: | ---: | ---: | ---: |
 | Ascending | 100,000 | 303.922 | 362.676 | 54.104 |
 | All equal | 100,000 | 303.207 | 362.617 | 53.426 |
@@ -28,9 +44,66 @@ show that ascending 100k Preview.1 performed five full-range relabels and
 visited 719,468 region nodes; Preview.2 performed zero relabels. The
 [diagnostic log](../benchmarks/results/v3-preview2-diagnostics.txt) also
 records relabel work, allocations, Path depths, comparator calls, AVL
-rotations, and height for both versions and stable V2.
-At 300k ascending, Preview.2 still performs one 261,578-node full-range
-relabel. It reduces repeated work, but does not remove the expensive fallback.
+rotations, and height for both versions and stable V2. At 300k ascending, the
+original depth-eight candidate made one 261,578-node full-range relabel. The
+final depth-16 candidate avoids that event. At 500k it has a measurable
+tradeoff: its 889.976 ms median exceeds the original candidate's 749.108 ms
+in a separate matched policy experiment (where the depth-16 median was
+882.634 ms). At 1,000,000 ascending insertions the original candidate made
+four full-range relabels of 2,487,584 old nodes in total; depth 16 made one
+of 523,722. A no-depth-trigger variant made none, but final mean/P95/P99/max
+Path depth grew to 15.780/30/31/31 and peak live bytes to 288,763,760.
+Depth 16 ended at 6.173/14/15/16 and 165,980,120 peak live bytes.
+
+| Ascending endpoint policy | 300k full-range relabels | 500k median ms | 1m full-range relabels / old nodes | 1m cumulative requested bytes | 1m peak live bytes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Original depth 8 | 1 | 749.108 | 4 / 2,487,584 | 1,237,677,144 | 261,503,264 |
+| Fixed depth 12 | 0 | 1,113.694 | 2 / 1,156,008 | 843,087,256 | 210,582,904 |
+| Final depth 16 | 0 | 882.634 | 1 / 523,722 | 588,908,496 | 165,980,120 |
+| No depth trigger | 0 | 844.408 | 0 | 496,745,496 | 288,763,760 |
+| Adaptive log-size limit | 0 | 860.316 | 0 full-range; one regional relabel of 524,288 nodes | 766,487,448 | 224,656,312 |
+
+Rows use one machine. Timings are separate optimized runs (one warmup, three
+measurements at 500k); diagnostic memory counts come from instrumented builds.
+At 1m ascending, a separate matched run with one warmup and two measurements
+gave 3,580.605 ms (depth eight), 2,456.653 ms (depth 16), 3,189.265 ms
+(no depth trigger), and 3,098.101 ms (adaptive log-size limit).
+The log-size rule adds complexity and has worse 1m memory than depth 16. The
+unbounded variant's 1m Path growth is not an acceptable general tradeoff.
+Depth 12 still relabels repeatedly. Depth 16 avoids the specific 300k cliff
+while keeping deeper growth bounded enough for this measured range. The first
+depth-17 candidate causes a full-range relabel near insertion 523,723, so the
+cost has been deferred and reduced, not eliminated. Equal-item append follows
+the same structural pattern; descending/prepend stays at final Path depth one
+through 500k and does not relabel. Comparator calls, AVL rotations and height
+at a fixed scale are unchanged by these endpoint thresholds.
+
+The following selected rows put the final candidate beside stable V2 and
+released Preview.1. V2/Preview.1 100k and ascending 300k values come from the
+original direct comparison above. Their additional 300k equal, 500k ascending,
+and descending values are in [baseline extra rows](../benchmarks/results/v3-preview2-baseline-extra.csv).
+Original Preview.2 uses the matched policy experiment where available;
+final Preview.2 uses its independent final-source CMake build. These are
+observations across separate runs, not controlled paired speedup ratios.
+
+| Managed insert | N | Stable V2 ms | Preview.1 ms | Original Preview.2 ms | Final Preview.2 ms |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Ascending | 100,000 | 303.922 | 362.676 | 54.933 | 54.574 |
+| Ascending | 300,000 | 3,343.667 | 3,616.003 | 510.985 | 339.946 |
+| Ascending | 500,000 | 9,689.246 | 9,547.128 | 749.108 | 889.976 |
+| All equal | 100,000 | 303.207 | 362.617 | 55.500 | 55.956 |
+| All equal | 300,000 | 3,273.642 | 3,593.092 | 520.029 | 355.181 |
+| Descending | 100,000 | 35.823 | 35.583 | 36.456 | 35.760 |
+| Descending | 300,000 | 111.815 | 114.281 | 113.631 | 117.469 |
+| Random unique | 100,000 | 97.487 | 96.812 | 99.179 | 101.240 |
+| 32-value duplicates | 100,000 | 424.473 | 107.261 | 110.067 | 110.557 |
+| Alternating | 10,000 | 189.293 | 75.047 | 72.623 | 74.479 |
+
+The apparently slower final alternating row prompted a nine-repetition
+check: original/final medians were 72.991/73.080 ms with the primary seed
+and 71.409/71.845 ms with the holdout seed. No material alternating
+regression was established. The 500k ascending/all-equal cost increase is
+repeatable and remains a real tradeoff of the selected depth policy.
 
 Interior insertion still uses bounded logical-range relabel with geometric
 expansion and a full-range correctness fallback. Path generation and

@@ -58,6 +58,7 @@ runs. For example:
 The diagnostic build is separate from timed results. Compile the harness and
 library with `LKS_ENABLE_ALLOC_DIAGNOSTICS` and `LKS_BENCH_DIAGNOSTICS`, add
 `src/` to the include path, and run `tree` cases with one repetition. Its
+`path_max` records distribution, count, and maximum final Path depth. The
 `diag` record reports, in order: distribution, count, comparator calls,
 comparator search steps, rotations, AVL height, repair attempts, successes,
 fallbacks, expansions, maximum region nodes, relabelled nodes, deeper
