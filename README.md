@@ -1,11 +1,11 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Stable v2.0.0 candidate; latest published prerelease: v2.0.0-rc.1.*
+*A C17 library for stable ordering with hierarchical Path positions. Latest stable release: v2.0.0.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
 > [!WARNING]
-> **Stable v2.0.0 is being finalized.** This candidate retains RC.1's production behavior and adds observation regression tests. It has not yet been tagged or published. Exact automatically generated Path layouts and performance remain implementation details.
+> **V2 is stable as of v2.0.0.** It retains RC.1's production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
@@ -29,9 +29,9 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
 | v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
 | v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
-| v2.0.0 (candidate, unreleased) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
+| v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
 
-The stable candidate retains RC.1's Path-keyed Tree, remove/rekey, canonical
+Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests
 add consumer persistence and adversarial input coverage. See the
 [compatibility contract](docs/COMPATIBILITY.md).

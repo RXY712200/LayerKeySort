@@ -1,6 +1,6 @@
 # Current benchmark harness (Preview.4)
 
-The v2.0.0 stable candidate leaves the captured Preview.4/Stage 5 timing data
+Stable v2.0.0 leaves the captured Preview.4/Stage 5 timing data
 unchanged. Mutation soak is a separate correctness test.
 
 `current_benchmark.c` exercises public APIs and prints one CSV row:

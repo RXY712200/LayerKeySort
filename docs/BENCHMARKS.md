@@ -1,6 +1,6 @@
 # V2 performance and benchmark evidence (Preview.4)
 
-The v2.0.0 stable candidate retains the published RC.1 production code. The
+Stable v2.0.0 retains the published RC.1 production code. The
 Stage 4 and Stage 5
 columns below are historical development snapshots. These numbers describe
 one machine and the stated workloads; they are not universal performance

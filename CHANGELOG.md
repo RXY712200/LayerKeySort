@@ -2,7 +2,7 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [2.0.0] - Unreleased
+## [2.0.0] - 2026-10-01
 
 The first stable V2 release establishes the documented 2.x source/API and
 semantic compatibility contract. It retains RC.1's production implementation:

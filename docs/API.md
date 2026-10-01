@@ -12,7 +12,7 @@
 - `LKS_VERSION_PRERELEASE` is `""`.
 - `LKS_VERSION_STRING` is `"2.0.0"`.
 
-The v2.0.0 stable candidate keeps RC.1's 52-function public API and LK1
+Stable v2.0.0 keeps RC.1's 52-function public API and LK1
 version-1 grammar unchanged. The 2.x compatibility boundary is in
 [COMPATIBILITY.md](COMPATIBILITY.md).
 

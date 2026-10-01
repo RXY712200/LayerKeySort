@@ -233,7 +233,7 @@ Paths, and navigation results after mutation. A failed operation with the
 documented strong guarantee does not commit a mutation. Do not persist or
 serialize generated Paths as item identities; versioned keys may persist their
 current coordinates for external ordering. Path-allocation heuristics and exact
-generated strings may change before final v2.0.0.
+generated strings may change in compatible 2.x releases.
 
 ## Error handling
 
