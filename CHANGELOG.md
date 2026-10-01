@@ -2,6 +2,24 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [3.0.0-preview.2] - Unreleased
+
+This local V3 development candidate optimizes comparator-managed endpoint
+insertion after released Preview.1. Stable `v2.0.0` remains the recommended
+version for normal use.
+
+- Carry a saturated endpoint slot into the nearest available ancestor instead
+  of repeatedly extending the Path. Prepend uses negative-root slot and level
+  carry. Long successful endpoint runs switch to a one-slot stride; mixed
+  insertion retains ten-slot spacing.
+- Keep manual Path gap APIs, AVL topology, Path comparison, display text, and
+  LK1 v1 bytes unchanged. Existing logical-window relabel remains the bounded
+  interior strategy and full-range correctness fallback.
+- Add endpoint/OOM and long-run mixed-operation coverage, placement/relabel
+  diagnostics, and direct stable V2 / Preview.1 / Preview.2 benchmark evidence.
+- Complete insertion can still relabel all nodes. No worst-case `O(log n)`
+  complete insertion or formal amortized bound is claimed.
+
 ## [3.0.0-preview.1] - 2026-10-01
 
 This released experimental V3 Preview is based on stable `v2.0.0`. For normal

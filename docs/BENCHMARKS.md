@@ -1,5 +1,42 @@
 # Performance and benchmark evidence
 
+## V3 Preview.2 development candidate versus released Preview.1 and stable V2
+
+The unreleased Preview.2 candidate carries full endpoint slots into an
+available ancestor and uses a one-slot stride after a long successful endpoint
+run. The [direct three-version comparison](../benchmarks/results/v3-preview2-comparison.csv)
+uses clean exact stable V2 and Preview.1 baselines; a separate
+[holdout CSV](../benchmarks/results/v3-preview2-holdout.csv) changes the input
+seed. [Metadata](../benchmarks/results/v3-preview2-metadata.md) states the
+machine, flags, timing interval, and diagnostic limits.
+
+| Managed insert | N | Stable V2 ms | Preview.1 ms | Preview.2 ms |
+| --- | ---: | ---: | ---: | ---: |
+| Ascending | 100,000 | 303.922 | 362.676 | 54.104 |
+| All equal | 100,000 | 303.207 | 362.617 | 53.426 |
+| 32-value duplicates | 100,000 | 424.473 | 107.261 | 109.607 |
+| Random unique | 100,000 | 97.487 | 96.812 | 98.830 |
+| Alternating | 10,000 | 189.293 | 75.047 | 73.228 |
+| Descending | 10,000 | 2.984 | 2.982 | 3.080 |
+| Ascending | 300,000 | 3343.667 | 3616.003 | 505.805 |
+
+These are one-machine median timings with one warmup and three repetitions.
+The primary duplicate, random, and descending rows regress slightly against
+Preview.1; the holdout duplicate and random rows improve. Do not infer a
+general speed ranking or complexity bound from either seed. Diagnostic data
+show that ascending 100k Preview.1 performed five full-range relabels and
+visited 719,468 region nodes; Preview.2 performed zero relabels. The
+[diagnostic log](../benchmarks/results/v3-preview2-diagnostics.txt) also
+records relabel work, allocations, Path depths, comparator calls, AVL
+rotations, and height for both versions and stable V2.
+At 300k ascending, Preview.2 still performs one 261,578-node full-range
+relabel. It reduces repeated work, but does not remove the expensive fallback.
+
+Interior insertion still uses bounded logical-range relabel with geometric
+expansion and a full-range correctness fallback. Path generation and
+comparison costs depend on Path depth. Complete insertion has no claimed
+worst-case `O(log n)` or formal amortized bound.
+
 ## V3 Preview.1 versus stable V2.0.0
 
 The experimental V3 Preview.1 is released. The

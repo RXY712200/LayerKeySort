@@ -1,6 +1,6 @@
 # Developing LayerKeySort
 
-The current branch contains released experimental `v3.0.0-preview.1`. Stable
+The current branch contains unreleased experimental `v3.0.0-preview.2`. Stable
 `v2.0.0` remains available; its 2.x compatibility policy is unchanged.
 
 ## Repository layout
@@ -112,8 +112,19 @@ cannot disturb the relative comparator order of remaining items. Caller item
 objects and comparator context remain borrowed.
 
 Managed insertion finds the comparator upper bound in AVL-height work. It
-first generates a direct Path. The provisional policy prefers direct depth at
-most six, and accepts open-end depth up to eight. When a candidate is deeper
+first generates a direct Path. At an open end, Preview.2 scans the prior
+coordinate toward its root and carries a saturated slot into the nearest
+ancestor with capacity, truncating the suffix. Append advances an ordinary
+slot; the negative root moves in reverse slot order. Prepend allocates a new
+negative-root coordinate, carrying a full root slot to the next level. The
+first 64 successful consecutive endpoint inserts use spacing ten; subsequent
+inserts in the same run use spacing one. An interior insert or successful
+removal resets the run hint. Failed operations leave it unchanged. This
+preserves interior room for mixed workloads while allowing long endpoint
+runs to consume each root-level slot before requesting another level.
+
+The provisional policy prefers direct depth at most six and accepts open-end
+depth up to eight. When a candidate is deeper
 or a gap operation reports `LEVEL_LIMIT`, relabel planning starts with eight
 logical neighbors and doubles the region until it succeeds or reaches every
 existing node. There is no 64-node architectural ceiling. The small-region
@@ -131,20 +142,27 @@ allocation-free AVL rotations, and destroys old Paths. Thus an OOM during
 scratch allocation, Path generation, or node allocation exposes no mutation.
 
 The Tree has no physical `rebuild_with_item()` fallback in V3 managed online
-insertion. A full-range Path relabel can still cost `O(n)` nodes and substantial
-Path construction; there is no claimed worst-case `O(log n)` complete insert
-or formal amortized bound. Comparator search itself is `O(log n)` AVL height,
-ignoring callback and Path costs. A successful regional relabel touches
-`O(k)` old nodes, plus the costs of planning and validating Paths; geometric
-failed attempts sum to the order of the last attempted region in node count.
+insertion. A full-range Path relabel can still touch `n` old nodes and
+construct `n + 1` Paths. Comparator upper-bound search visits `O(log n)` AVL
+nodes, with comparator callback cost per visit. A direct endpoint carry scans
+at most Path depth `d`, copies at most `d` steps, then AVL insertion/search
+performs `O(log n)` Path comparisons (each may inspect `O(d)` steps). A
+single `k`-node relabel attempt traverses `O(k + log n)` index links, prepares
+`k + 1` Paths, and validates them; Path generation/compare/copy cost depends
+on their actual depths. Doubling windows bound the sum of **region-node
+visits** across failed attempts by a constant multiple of the final window,
+but this does not bound Path-generation cost by `O(k)` alone. Complete
+insertion has no claimed worst-case `O(log n)` time or formal amortized bound.
 
 We evaluated a bounded block/indirection label strategy against geometric
 in-place relabeling. Blocks might reduce large relabels but add a second order
 representation, block split invariants, and lookup synchronization. The
 measured geometric design removes physical reconstruction and performs well
 on duplicate-heavy and alternating workloads without that complexity. It is
-the one retained V3 design. The preferred/open-end depths are private policy
-hints, not validity limits or a compatibility contract.
+the one retained V3 design. Preview.2 adds endpoint carry to reduce how often
+this relabel policy is entered. The preferred/open-end depths, burst threshold,
+and stride are private policy hints, not validity limits or a compatibility
+contract.
 
 The V2-era regression suite still uses a diagnostic-only private bridge to
 exercise the shared AVL against frozen fixtures. Public V3 tests and the soak

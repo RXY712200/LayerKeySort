@@ -1,7 +1,7 @@
-# Migrating V2 Tree code to V3 Preview.1
+# Migrating V2 Tree code to V3 Preview.2 development
 
 Stable applications should continue to pin `v2.0.0`. This document describes
-the released experimental `v3.0.0-preview.1` API; its contracts may change
+the unreleased experimental `v3.0.0-preview.2` API; its contracts may change
 before a stable V3 release.
 
 V2 let one `LksTree` accept caller-selected Paths and per-operation comparators.

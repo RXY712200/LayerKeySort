@@ -1,9 +1,10 @@
-# Current benchmark harness (V3 Preview.1 development)
+# Current benchmark harness (V3 Preview.2 development)
 
 Stable v2.0.0 leaves captured Preview.4/Stage 5 timing data unchanged. The
 current harness times V3 comparator-managed `LksOrderedTree` insertion for
-`tree` cases. `v3-preview1-comparison.csv` records a clean stable V2 versus
-V3 development comparison; neither V3 nor these measurements are a release.
+`tree` cases. `v3-preview1-comparison.csv` records the earlier stable V2
+versus released Preview.1 comparison. `v3-preview2-comparison.csv` records a
+direct stable V2 / Preview.1 / unreleased Preview.2 comparison.
 Mutation soak is a separate correctness test.
 
 `current_benchmark.c` exercises public APIs and prints one CSV row:
@@ -71,6 +72,11 @@ zero in V3 managed insertion. V3 additionally emits `relabel` with:
 distribution, count, direct inserts, attempts, successes, expansions, total
 old nodes relabelled, maximum region, full-range relabel count, and full-range
 old nodes relabelled. These counters are private and are not a public ABI.
+Preview.2 adds a private `placement` record with endpoint/interior direct
+inserts, burst-mode inserts, endpoint/interior relabel attempts and successes,
+cumulative/max attempted region nodes, generated relabel Paths, and candidate
+depth sum/max. The diagnostic comparison also includes temporary Preview.1
+work counters; its instrumented baseline worktree was restored afterward.
 
 For a comparable comparator-call count on Preview.3, Stage 4, and stable V2,
 compile each version with `LKS_BENCH_COUNT_COMPARISONS` and run the same `tree`
