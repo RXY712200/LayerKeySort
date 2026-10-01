@@ -58,9 +58,9 @@ An intentional breaking change to the frozen public contract requires the
 next major version. An optimization that preserves the contract does not, by
 itself, require 3.0.
 
-## V3 Preview.1 development boundary
+## V3 Preview.1 prerelease boundary
 
-The experimental V3 development branch is outside the 2.x compatibility
+The released experimental V3 Preview is outside the 2.x compatibility
 promise above. Stable users can continue using the published `v2.0.0` tag.
 V3 intentionally removes the two per-operation-comparator `LksTree`
 functions and introduces a comparator-bound `LksOrderedTree`; see

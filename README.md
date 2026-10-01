@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Latest stable: v2.0.0. Development: v3.0.0-preview.1.*
+*A C17 library for stable ordering with hierarchical Path positions. Latest stable: v2.0.0. Experimental prerelease: v3.0.0-preview.1.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -9,8 +9,8 @@ LayerKeySort orders caller-owned item pointers with a comparator and gives each 
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
-**V3 Preview.1 is experimental and has not been released.** Normal users
-should pin stable `v2.0.0`. V3 development separates the manual Path Tree from
+**V3 Preview.1 is a released experimental prerelease.** Normal users
+should pin stable `v2.0.0`. V3 separates the manual Path Tree from
 a comparator-bound `LksOrderedTree`; see the [migration guide](docs/V3_MIGRATION.md).
 
 ## Quick start
@@ -23,7 +23,7 @@ lks_sort(items, count, compare_items, NULL);
 
 `items` is a caller-owned pointer array; `compare_items` defines the order. Sorting is stable, and the pointed-to objects remain caller-owned. `lks_sort` returns `LksStatus`, which production code should check. See the complete, compilable [basic example](examples/basic.c). The Preview.5 [layer-list example](examples/layer_list.c) shows dynamic Path ordering. For Path, Tree, and Group operations, see the [usage guide](docs/USAGE.md).
 
-## Release history and V3 development
+## Release history
 
 | Version | Main purpose | Still provisional or deferred |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
 | v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
 | v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
-| v3.0.0-preview.1 (in development) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
+| v3.0.0-preview.1 (released Preview) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
 
 Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests

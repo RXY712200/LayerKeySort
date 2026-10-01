@@ -1,8 +1,8 @@
 # Performance and benchmark evidence
 
-## V3 Preview.1 development versus stable V2.0.0
+## V3 Preview.1 versus stable V2.0.0
 
-The current V3 branch has **not been released**. The new
+The experimental V3 Preview.1 is released. The
 [`v3-preview1-comparison.csv`](../benchmarks/results/v3-preview1-comparison.csv)
 compares its public managed insertion API against stable `v2.0.0` in a clean
 detached checkout. Both binaries used MSYS2 UCRT64 GCC 16.2.0, C17,

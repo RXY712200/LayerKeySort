@@ -2,10 +2,10 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-preview.1] - Unreleased
+## [3.0.0-preview.1] - 2026-10-01
 
-Experimental V3 development is based on stable `v2.0.0`; stable V2 remains
-available and its published history is unchanged.
+This released experimental V3 Preview is based on stable `v2.0.0`. For normal
+use, prefer stable V2; its published history is unchanged.
 
 - Split manual coordinate `LksTree` from comparator-bound `LksOrderedTree`.
   The V2 per-operation-comparator Tree insert/locate functions are removed from
