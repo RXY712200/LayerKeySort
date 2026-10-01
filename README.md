@@ -1,6 +1,6 @@
 # LayerKeySort
 
-*A C17 library for stable ordering with hierarchical Path positions. Latest stable: v2.0.0. Experimental prerelease: v3.0.0-preview.1; Preview.2 is unreleased development.*
+*A C17 library for stable ordering with hierarchical Path positions. Latest stable: v2.0.0. Latest experimental prerelease: v3.0.0-preview.2.*
 
 LayerKeySort orders caller-owned item pointers with a comparator and gives each item an explicit Path position. Groups can be built independently and merged while preserving the order of comparator-equal items. The public API is C17 and models paths, trees, groups, and batches directly.
 
@@ -9,7 +9,7 @@ LayerKeySort orders caller-owned item pointers with a comparator and gives each 
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
-**V3 Preview.2 is unreleased development after the experimental Preview.1.**
+**V3 Preview.2 is a released experimental Preview, not the stable release.**
 Normal users should pin stable `v2.0.0`. V3 separates the manual Path Tree
 from a comparator-bound `LksOrderedTree`; Preview.2 reduces open-end relabel
 work without changing Path or LK1 bytes. See the [migration guide](docs/V3_MIGRATION.md).
@@ -36,7 +36,7 @@ lks_sort(items, count, compare_items, NULL);
 | v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
 | v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
 | v3.0.0-preview.1 (released Preview) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
-| v3.0.0-preview.2 (unreleased development) | Carry endpoint coordinates into available ancestor slots and adapt stride during long endpoint runs; add focused soak and diagnostic evidence. | Interior relabel cost and complete insertion complexity remain unbounded by AVL height alone. |
+| v3.0.0-preview.2 (released experimental Preview) | Carry endpoint coordinates into available ancestor slots and adapt stride during long endpoint runs; add focused soak and diagnostic evidence. | Interior relabel cost and complete insertion complexity remain unbounded by AVL height alone. |
 
 Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests

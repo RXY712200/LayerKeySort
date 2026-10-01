@@ -1,8 +1,8 @@
 # Performance and benchmark evidence
 
-## V3 Preview.2 final development candidate versus released Preview.1 and stable V2
+## Released V3 Preview.2 versus Preview.1 and stable V2
 
-The unreleased Preview.2 candidate carries full endpoint slots into an
+The released Preview.2 implementation carries full endpoint slots into an
 available ancestor and uses a one-slot stride after a long successful endpoint
 run. The original `04cdd0c` candidate used an endpoint direct-depth allowance
 of eight. A valid depth-nine append candidate triggered a full-range relabel at

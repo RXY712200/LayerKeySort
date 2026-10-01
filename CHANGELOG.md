@@ -2,11 +2,11 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-preview.2] - Unreleased
+## [3.0.0-preview.2] - 2026-10-01
 
-This local V3 development candidate optimizes comparator-managed endpoint
-insertion after released Preview.1. Stable `v2.0.0` remains the recommended
-version for normal use.
+This released experimental V3 Preview optimizes comparator-managed endpoint
+insertion after Preview.1. Stable `v2.0.0` remains the recommended version
+for normal use.
 
 - Carry a saturated endpoint slot into the nearest available ancestor instead
   of repeatedly extending the Path. Prepend uses negative-root slot and level

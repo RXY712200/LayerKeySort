@@ -60,7 +60,7 @@ itself, require 3.0.
 
 ## V3 Preview development boundary
 
-The released experimental Preview.1 and unreleased Preview.2 are outside the
+The released experimental Preview.1 and Preview.2 are outside the
 2.x compatibility promise above. Stable users can continue using the
 published `v2.0.0` tag.
 V3 intentionally removes the two per-operation-comparator `LksTree`

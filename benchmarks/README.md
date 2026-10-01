@@ -1,10 +1,10 @@
-# Current benchmark harness (V3 Preview.2 development)
+# Current benchmark harness (V3 Preview.2)
 
 Stable v2.0.0 leaves captured Preview.4/Stage 5 timing data unchanged. The
 current harness times V3 comparator-managed `LksOrderedTree` insertion for
 `tree` cases. `v3-preview1-comparison.csv` records the earlier stable V2
 versus released Preview.1 comparison. `v3-preview2-comparison.csv` records a
-direct stable V2 / Preview.1 / unreleased Preview.2 comparison.
+direct stable V2 / Preview.1 / original Preview.2 candidate comparison.
 Mutation soak is a separate correctness test.
 
 `current_benchmark.c` exercises public APIs and prints one CSV row:
