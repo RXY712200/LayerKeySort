@@ -2,6 +2,20 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [3.0.0-rc.1] - Unreleased candidate
+
+This branch freezes the existing V3 feature set for release-candidate review.
+It does not add an ordering model, change Path/LK1 encoding, or claim a bound
+for complete managed insertion.
+
+- Extend documented-input and lifecycle regression checks, including NULL
+  arguments, duplicate/missing Paths, aliased locate outputs, undersized
+  formatting, and constructor allocation failures.
+- Revalidate deterministic mixed mutations, adversarial insertion patterns,
+  parser inputs, existing OOM sweeps, supported compilers, and consumer builds.
+- Keep possible full-range relabel, workload-dependent Path growth, and
+  insertion tail latency visible as known limitations.
+
 ## [3.0.0-preview.5] - 2026-10-02
 
 This released experimental Preview prepares the existing V3 implementation for

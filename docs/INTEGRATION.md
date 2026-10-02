@@ -2,8 +2,8 @@
 
 Pin `v2.0.0` for the stable 52-function V2 API. The experimental
 `v3.0.0-preview.1` through `v3.0.0-preview.5` are released experimental
-snapshots. Preview.5 retains 59 public functions and the changed V3 Tree API.
-See [V3 migration](V3_MIGRATION.md) before integrating this Preview.
+snapshots. The unreleased RC.1 candidate retains 59 public functions and the
+changed V3 Tree API. See [V3 migration](V3_MIGRATION.md) before integrating it.
 Generated Path layouts and performance policy remain implementation details.
 
 ## Requirements and tested configurations
@@ -13,7 +13,8 @@ Generated Path layouts and performance policy remain implementation details.
 - CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
   with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
   and compiler versions, not every version of those operating systems or
-  compilers. The RC.1 macOS job passed for its recorded CI runner.
+  compilers. The historical V2 RC.1 macOS job passed for its recorded runner;
+  V3 RC.1 results must be verified separately.
 
 The public header has `extern "C"` guards for inclusion by C++ applications;
 the library implementation remains C17. Callers own item objects. Tree and
