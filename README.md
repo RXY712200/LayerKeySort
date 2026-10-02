@@ -8,17 +8,16 @@ Both support exact-Path removal; neither owns the item objects. A Path is a
 changeable ordering coordinate, not an item ID. Immutable Groups and a stable
 pointer-array sort cover batch use.
 
-**Latest stable:** `v2.0.0`. **Latest published V3 Preview:**
-`v3.0.0-preview.5`. This branch prepares an unreleased
-`v3.0.0-rc.1` candidate for independent review. Stable `v2.0.0` remains
-recommended for normal use.
+**Latest stable:** `v2.0.0`. **Latest V3 prerelease:**
+`v3.0.0-rc.1`. Preview.1 through Preview.5 preceded this public Release
+Candidate. Stable `v2.0.0` remains recommended for normal use.
 
 > [!WARNING]
 > **V2 is stable as of v2.0.0.** It retains RC.1's production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
-**The V3 RC.1 candidate is experimental, not a published or stable release.**
+**V3 RC.1 is a published prerelease, not a stable release.**
 Normal users should pin stable `v2.0.0`. See the
 [V2 to V3 migration guide](docs/V3_MIGRATION.md) before adopting the
 development API.
@@ -66,7 +65,7 @@ project, follow [integration](docs/INTEGRATION.md); only
 | v3.0.0-preview.3 (released experimental Preview) | Stabilize comparator/borrow contracts, correct V3 complexity documentation, and add comparable hotspot and footprint diagnostics. | Full-range relabel and Path growth remain workload dependent; no formal complete-insertion bound. |
 | v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
 | v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
-| v3.0.0-rc.1 (unreleased candidate branch) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the candidate before an independent release decision. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
+| v3.0.0-rc.1 (published Release Candidate) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the implementation for final stabilization. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
 
 Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests

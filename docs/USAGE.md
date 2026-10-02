@@ -1,6 +1,6 @@
 # Using LayerKeySort
 
-This guide describes the unreleased V3 RC.1 candidate header. For stable
+This guide describes the published V3 RC.1 prerelease header. For stable
 applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
 
 ## Requirements

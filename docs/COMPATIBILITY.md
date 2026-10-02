@@ -60,14 +60,14 @@ itself, require 3.0.
 
 ## V3 prerelease development boundary
 
-The released experimental V3 Preview.1 through Preview.5 and the unreleased
-RC.1 candidate are outside the 2.x
-compatibility promise above. Stable users can continue using the published
+The released experimental V3 Preview.1 through Preview.5 and the published
+RC.1 prerelease are outside the 2.x compatibility promise above. Stable users
+can continue using the published
 `v2.0.0` tag.
 V3 intentionally removes the two per-operation-comparator `LksTree`
 functions and introduces a comparator-bound `LksOrderedTree`; see
-[V3_MIGRATION.md](V3_MIGRATION.md). The RC.1 candidate freezes this feature
-set; only evidenced release-blocking defects justify changes before review.
+[V3_MIGRATION.md](V3_MIGRATION.md). RC.1 freezes this feature set; further
+changes require evidence from release-candidate validation.
 Path comparison, display text, and LK1 v1 bytes
-are preserved through the RC.1 candidate, but this does not freeze every future V3
+are preserved through RC.1, but this does not freeze every future V3
 API or generated Path coordinate.

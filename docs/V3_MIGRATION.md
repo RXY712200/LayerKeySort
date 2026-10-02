@@ -1,7 +1,7 @@
-# Migrating V2 Tree code to the V3 RC.1 candidate
+# Migrating V2 Tree code to V3 RC.1
 
 Stable applications should continue to pin `v2.0.0`. This document describes
-the unreleased `v3.0.0-rc.1` candidate API; its contracts may change
+the published `v3.0.0-rc.1` prerelease API; its contracts may change
 before a stable V3 release.
 
 V2 let one `LksTree` accept caller-selected Paths and per-operation comparators.

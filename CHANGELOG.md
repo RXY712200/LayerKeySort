@@ -2,19 +2,25 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-rc.1] - Unreleased candidate
+## [3.0.0-rc.1] - 2026-10-02
 
-This branch freezes the existing V3 feature set for release-candidate review.
-It does not add an ordering model, change Path/LK1 encoding, or claim a bound
-for complete managed insertion.
+This published Release Candidate freezes the existing V3 feature set for final
+stabilization. It does not add an ordering model, change Path/LK1 encoding, or
+claim a bound for complete managed insertion.
 
 - Extend documented-input and lifecycle regression checks, including NULL
   arguments, duplicate/missing Paths, aliased locate outputs, undersized
   formatting, and constructor allocation failures.
 - Revalidate deterministic mixed mutations, adversarial insertion patterns,
   parser inputs, existing OOM sweeps, supported compilers, and consumer builds.
+- Pass strict local GCC C17, MSVC Debug/Release and MSVC AddressSanitizer
+  validation. The reviewed candidate passed Windows MSVC, Ubuntu GCC/Clang,
+  Ubuntu Clang sanitizer, and macOS AppleClang CI with CTest 8/8 in each job.
+- Verify `add_subdirectory`, SHA-pinned remote `FetchContent`, direct C17
+  source integration, and all three public examples.
 - Keep possible full-range relabel, workload-dependent Path growth, and
-  insertion tail latency visible as known limitations.
+  insertion tail latency visible as known limitations; no proven worst-case
+  or formal amortized bound is claimed for complete managed insertion.
 
 ## [3.0.0-preview.5] - 2026-10-02
 

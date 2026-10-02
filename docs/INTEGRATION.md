@@ -2,8 +2,9 @@
 
 Pin `v2.0.0` for the stable 52-function V2 API. The experimental
 `v3.0.0-preview.1` through `v3.0.0-preview.5` are released experimental
-snapshots. The unreleased RC.1 candidate retains 59 public functions and the
-changed V3 Tree API. See [V3 migration](V3_MIGRATION.md) before integrating it.
+snapshots. The published `v3.0.0-rc.1` Release Candidate retains 59 public
+functions and the changed V3 Tree API. See [V3 migration](V3_MIGRATION.md)
+before integrating it.
 Generated Path layouts and performance policy remain implementation details.
 
 ## Requirements and tested configurations
@@ -13,8 +14,8 @@ Generated Path layouts and performance policy remain implementation details.
 - CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
   with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
   and compiler versions, not every version of those operating systems or
-  compilers. The historical V2 RC.1 macOS job passed for its recorded runner;
-  V3 RC.1 results must be verified separately.
+  compilers. The V3 RC.1 candidate passed all five CI configurations with
+  CTest 8/8 on their recorded runners.
 
 The public header has `extern "C"` guards for inclusion by C++ applications;
 the library implementation remains C17. Callers own item objects. Tree and
@@ -50,7 +51,7 @@ parent project.
 
 ## CMake `FetchContent`
 
-For this released V3 Preview, pin its tag:
+For this published V3 Release Candidate, pin its tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -63,7 +64,7 @@ set(LKS_BUILD_TESTS OFF)
 set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v3.0.0-preview.5)
+    GIT_TAG v3.0.0-rc.1)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app src/main.c)
@@ -73,7 +74,7 @@ target_link_libraries(my_app PRIVATE layerkeysort)
 `FetchContent_MakeAvailable` also adds the repository's example
 targets; `cmake --build build --target my_app` builds only the application and
 its library dependency when that distinction matters. The tag identifies this
-Preview snapshot; use `v2.0.0` when a stable release is required. The CMake
+prerelease; use `v2.0.0` when a stable release is required. The CMake
 recipe can also be tested offline by setting
 `FETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE` to a local checkout before
 configuration; that bypasses the network fetch while preserving the consumer

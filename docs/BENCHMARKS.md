@@ -1,8 +1,8 @@
 # Performance and benchmark evidence
 
-## V3 Preview.3 validation retained for the RC.1 candidate
+## V3 Preview.3 validation retained for RC.1
 
-The RC.1 candidate retains Preview.3's ordering algorithm. A one-machine validation at
+RC.1 retains Preview.3's ordering algorithm. A one-machine validation at
 100k–1m managed Tree insertions found substantial workload differences. The
 [timed CSV](../benchmarks/results/v3-preview3-validation-timed.csv),
 [diagnostic capture](../benchmarks/results/v3-preview3-validation-diagnostics.txt),
@@ -406,7 +406,7 @@ LayerKeySort and 0.439 ms for the external generator; hotspot 4,000 took
 38 durable-key bytes versus 4 external bytes; hotspot: 8 display/17 durable
 versus 669 external bytes). These results cannot establish a general winner.
 
-## Complexity and limits of the current V3 RC candidate
+## Complexity and limits of V3 RC.1
 
 Let `n` be the Tree size, `d` a Path depth, `b` an encoded text length, and
 `c` the cost of the caller's item comparator. An AVL visit may also compare
