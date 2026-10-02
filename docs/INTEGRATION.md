@@ -1,10 +1,9 @@
 # Integrating LayerKeySort
 
 Pin `v2.0.0` for the stable 52-function V2 API. The experimental
-`v3.0.0-preview.1` and `v3.0.0-preview.2` are released. The current
-Preview.4 development branch retains 59 public functions and the changed V3
-Tree API; Preview.3 was an unpublished branch milestone. See
-[V3 migration](V3_MIGRATION.md) before integrating this development branch.
+`v3.0.0-preview.1` through `v3.0.0-preview.4` are released experimental
+snapshots. Preview.4 retains 59 public functions and the changed V3 Tree API.
+See [V3 migration](V3_MIGRATION.md) before integrating this Preview.
 Generated Path layouts and performance policy remain implementation details.
 
 ## Requirements and tested configurations
@@ -50,7 +49,7 @@ parent project.
 
 ## CMake `FetchContent`
 
-For the current V3 development API, fetch its branch:
+For this released V3 Preview, pin its tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -63,7 +62,7 @@ set(LKS_BUILD_TESTS OFF)
 set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v3-preview4-user-experience)
+    GIT_TAG v3.0.0-preview.4)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app src/main.c)
@@ -72,10 +71,9 @@ target_link_libraries(my_app PRIVATE layerkeysort)
 
 `FetchContent_MakeAvailable` also adds the repository's example
 targets; `cmake --build build --target my_app` builds only the application and
-its library dependency when that distinction matters. This branch name moves:
-replace `GIT_TAG` with the full tested commit SHA for a reproducible build.
-Until Preview.4 is published, use `v2.0.0` instead when a stable release is
-required. The CMake recipe can also be tested offline by setting
+its library dependency when that distinction matters. The tag identifies this
+Preview snapshot; use `v2.0.0` when a stable release is required. The CMake
+recipe can also be tested offline by setting
 `FETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE` to a local checkout before
 configuration; that bypasses the network fetch while preserving the consumer
 target path.

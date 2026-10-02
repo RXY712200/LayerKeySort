@@ -1,9 +1,8 @@
 # Developing LayerKeySort
 
-The current branch contains unreleased `v3.0.0-preview.4` usability and
-integration work. Preview.3 is an unpublished branch milestone. Released
-experimental `v3.0.0-preview.2` and stable `v2.0.0` remain available;
-the 2.x compatibility policy is unchanged.
+The current branch is the released `v3.0.0-preview.4` experimental snapshot.
+V3 Preview.3 and stable `v2.0.0` remain available; the 2.x compatibility
+policy is unchanged.
 
 ## Repository layout
 
@@ -33,7 +32,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-`layerkeysort` contains production source only. Both example targets link
+`layerkeysort` contains production source only. All three example targets link
 that library. `layerkeysort_tests` and `layerkeysort_soak` link a separately
 compiled diagnostic variant so allocation counters and single-shot fault
 injection remain usable without shared mutable instrumentation in ordinary
@@ -174,7 +173,7 @@ use `LksOrderedTree` directly. Normal production builds omit the bridge.
 
 ### Coding constraints
 
-Preview.3 uses the full public slot domain `0..65535` (65,536 values) while
+V2 Preview.3 uses the full public slot domain `0..65535` (65,536 values) while
 retaining the compact numeric `uint16_t` slot array and aligned `size_t` level
 array in one Path step allocation. The public API accepts/returns slots as
 `unsigned int`; constructors and append operations validate the range before
@@ -197,7 +196,7 @@ the complete character order and public text contract.
 three codec characters per step, one `/` between steps, and minimal decimal
 metadata for a nonzero first absolute level or later level delta greater than
 one. `/` is a separator, never the old unary level count. The formatter has
-one canonical output per valid Path. Preview.4 `lks_path_parse()` accepts
+one canonical output per valid Path. V2 Preview.4 `lks_path_parse()` accepts
 exactly that output; `src/path_order_key.c` owns a separate versioned durable
 key. Cross-Preview display-text compatibility is not promised. A zero-based chain
 with consecutive levels uses exactly `4 * depth` text characters. In the
@@ -295,7 +294,7 @@ the new node is then linked and rebalanced without allocation. The full
 rebuild remains the correctness fallback and swaps an independently built
 Tree. No ChildBlock is used by the mutable index. This also makes physical
 height depend on node count rather than caller-supplied Path depth. Repair
-counters are process-wide only in diagnostic builds. In Preview.4, the
+counters are process-wide only in diagnostic builds. In V2 Preview.4, the
 policy now inserts an open-end candidate directly while its depth is at most
 six: repeatedly regenerating overlapping endpoint repair windows was costly
 without improving the accepted coordinate. Interior gaps retain repair, and
@@ -304,12 +303,12 @@ Comparator insertion transfers its already-owned candidate Path into the node
 after successful allocation. This removes a transient clone but may retain
 spare Path capacity, a small measured peak-memory tradeoff. Detailed counts,
 candidate trials, and limitations are in [BENCHMARKS.md](BENCHMARKS.md).
-Preview.4 supports exact Path removal with allocation-free AVL successor
+V2 Preview.4 supports exact Path removal with allocation-free AVL successor
 transplant. Rekey first allocates a replacement Path and node, then links the
 replacement and detaches the old node without any further allocation. Delete
 does not compact Path coordinates; AVL rotations only change physical links.
 Item ownership remains with callers. Published Groups remain immutable.
-Preview.4 includes Stage 3's strict canonical display parser and a portable,
+V2 Preview.4 includes Stage 3's strict canonical display parser and a portable,
 bytewise-sortable `LK1:` persistence key. Its levels use minimal base-256
 big-endian bytes with descending-order complement and a unary byte-count
 prefix; it does not serialize `size_t` or structs. `src/slot_codec.c` remains
@@ -344,7 +343,7 @@ platform `qsort`, which does not promise stable ordering.
 
 ### Local stabilization disposition after Stage 5
 
-This table describes the released Preview.4 core for a later roadmap review;
+This table describes the released V2 Preview.4 core for a later roadmap review;
 it does not claim that Preview.3 contains these changes.
 
 | Area | Disposition |

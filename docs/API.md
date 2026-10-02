@@ -12,14 +12,14 @@
 - `LKS_VERSION_PRERELEASE` is `"preview.4"`.
 - `LKS_VERSION_STRING` is `"3.0.0-preview.4"`.
 
-This page describes the unreleased V3 Preview.4 development header with 59
+This page describes the released V3 Preview.4 header with 59
 public functions. Stable v2.0.0 remains available with its frozen 52-function
 API. The [migration guide](V3_MIGRATION.md) lists the Tree changes; the
 [2.x compatibility contract](COMPATIBILITY.md) applies to stable V2.
 
 Path values are ordering coordinates, not permanent application item IDs.
-Preview.3 specified the current formatter output but had no public
-parser or durable key. Preview.4 adds both below.
+V2 Preview.3 specified the current formatter output but had no public
+parser or durable key. V2 Preview.4 added both below.
 Exact coordinates can change when a Tree is re-encoded or internal policy
 changes; a persisted coordinate is not a permanent item identity.
 
@@ -73,7 +73,7 @@ only the first 65,536 values are legal. Verified examples:
 | 65535 | `RUc` | | |
 
 Slot 259 is shown as a codec example near the historical v1 upper bound;
-it is not a Preview.3 limit.
+it is not a V2 Preview.3 limit.
 
 Digits rank before uppercase, and uppercase before lowercase: `A < a` and
 `Z < a`. These are ASCII byte/codepoint and codec-rank rules, not
@@ -116,7 +116,8 @@ strings. Use `lks_path_compare()`.
 ## Current Path text grammar
 
 For a valid Path, the formatter emits the following deterministic,
-NUL-terminated ASCII text. The Preview.4 parser accepts exactly this grammar:
+NUL-terminated ASCII text. The parser introduced in V2 Preview.4 accepts
+exactly this grammar:
 
 ```text
 ZERO     = "000"
@@ -156,7 +157,7 @@ Verified formatter examples:
 | Negative, first slot 54 at level 12 | `112232` |
 
 The table's first, minimum, maximum, skipped-level, and nonzero-first-level
-cases are asserted by the focused Preview.3 tests; consecutive-step output
+cases are asserted by the focused V2 Preview.3 tests; consecutive-step output
 also follows their depth/length test and the same formatter. Formatting
 retains all three slot digits, omits default level metadata, and emits no
 decimal leading zeroes. Thus each valid Path has one formatter-produced
@@ -172,7 +173,7 @@ levels starting at zero use exactly `4 * depth` characters. In general,
 length is one direction character plus three per step, one separator per
 additional step, and the decimal digits of any emitted level metadata.
 
-### Strict display parser (Preview.4)
+### Strict display parser (V2 Preview.4 origin)
 
 ```c
 LksStatus lks_path_parse(const char *text, LksPath **out_path);
@@ -191,7 +192,7 @@ and arithmetic overflow return `LKS_STATUS_INVALID_ARGUMENT`; allocation
 failure returns `LKS_STATUS_OUT_OF_MEMORY`. Parsing is iterative and no
 partially built Path escapes.
 
-## Durable Path order key v1 (Preview.4)
+## Durable Path order key v1 (V2 Preview.4 origin)
 
 ```c
 size_t lks_path_order_key_length(const LksPath *path);
@@ -660,7 +661,7 @@ const LksTreeNode *lks_tree_root_child_at(
 );
 ```
 
-### `lks_tree_remove_path` (Preview.4)
+### `lks_tree_remove_path` (V2 Preview.4 origin)
 
 Remove exactly one Path-keyed Tree node without allocating or relabeling other
 Paths. The Tree destroys its node and owned Path, but never frees the borrowed
@@ -675,7 +676,7 @@ LksStatus lks_tree_remove_path(
 );
 ```
 
-### `lks_tree_rekey` (Preview.4)
+### `lks_tree_rekey` (V2 Preview.4 origin)
 
 Move one caller-owned item from `old_path` to an unoccupied `new_path` without
 changing its item pointer or Tree size. The Tree clones the new Path. Missing
