@@ -11,8 +11,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 3
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.2"
-#define LKS_VERSION_STRING "3.0.0-preview.2"
+#define LKS_VERSION_PRERELEASE "preview.3"
+#define LKS_VERSION_STRING "3.0.0-preview.3"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -41,7 +41,9 @@ typedef int (*LksCompareFn)(
 );
 
 /* Comparator callback and caller-owned context. Ordered Tree copies this
- * descriptor at creation; other APIs borrow it for one operation. */
+ * descriptor at creation, not the context it points to. Its callback/context
+ * must stay callable with unchanged ordering semantics while the Tree lives.
+ * Comparisons must give a consistent order for all resident items. */
 typedef struct LksComparator {
     LksCompareFn compare;
     void *context;
@@ -177,8 +179,10 @@ LksStatus lks_path_after(
  * rekey succeeds without mutation and preserves borrowed observations. */
 typedef struct LksTree LksTree;
 typedef struct LksTreeNode LksTreeNode;
-/* Comparator-bound online ordering container. Owns its Path-keyed AVL nodes
- * and Paths, but borrows items and the comparator context. */
+/* Comparator-bound online ordering container. Owns nodes and Paths, but
+ * borrows items and comparator context. Keep comparator-relevant item fields
+ * unchanged while resident: remove by exact Path, update, then reinsert.
+ * Modifying them in place makes future comparator searches unreliable. */
 typedef struct LksOrderedTree LksOrderedTree;
 /* Opaque sorted collection. Group owns its structural storage, not its items. */
 typedef struct LksGroup LksGroup;
@@ -301,7 +305,8 @@ LksStatus lks_tree_rekey(
 const LksPath *lks_tree_node_path(const LksTreeNode *node);
 /* Return the borrowed item pointer stored in a node; NULL node returns NULL. */
 void *lks_tree_node_item(const LksTreeNode *node);
-/* Physical index navigation is implementation-defined and may change on an
+/* Physical index navigation is an ephemeral diagnostic view, not a logical
+ * ordering traversal or a stable topology contract. It may change on an
  * actual mutation. A physical parent need not be a Path prefix; children
  * need not be logical Path descendants. Physical preorder is not Path order.
  * Compare Paths with lks_path_compare() for logical ordering. */
@@ -323,9 +328,10 @@ const LksTreeNode *lks_tree_root_child_at(
     const LksTree *tree,
     size_t index
 );
-/* Create an empty comparator-managed Tree. The descriptor is copied; its
- * context and comparison semantics must remain valid and ordering-compatible
- * until this container is destroyed. Returns NULL on invalid input or OOM. */
+/* Create an empty comparator-managed Tree. The descriptor is copied; callback
+ * code and borrowed context must remain valid, deterministic, and compatible
+ * with every resident item until this container is destroyed. The descriptor
+ * object itself may go out of scope. Returns NULL on invalid input or OOM. */
 LksOrderedTree *lks_ordered_tree_create(const LksComparator *comparator);
 void lks_ordered_tree_destroy(LksOrderedTree *tree);
 size_t lks_ordered_tree_size(const LksOrderedTree *tree);
@@ -335,12 +341,16 @@ size_t lks_ordered_tree_size(const LksOrderedTree *tree);
 LksStatus lks_ordered_tree_insert(LksOrderedTree *tree, void *item,
     const LksTreeNode **out_node);
 /* Locate first equal or the immediate neighbors under the bound comparator.
- * All three outputs are required and reset to NULL before searching. */
+ * ITEM is a borrowed query and need not be resident. All three distinct
+ * outputs are required and reset to NULL before searching. Returned nodes
+ * have the same borrow lifetime as other Tree navigation results. */
 LksStatus lks_ordered_tree_locate(const LksOrderedTree *tree,
     const void *item, const LksTreeNode **out_left,
     const LksTreeNode **out_equal, const LksTreeNode **out_right);
-/* Exact coordinate operations cannot change comparator order. Removal never
- * frees the caller item and does not re-encode other Paths. */
+/* Exact coordinate lookup/removal does not invoke the item comparator.
+ * Removal never frees the caller item, never re-encodes other Paths, and
+ * invalidates earlier borrowed node/Path/navigation observations. A missing
+ * Path leaves the container unchanged and optional OUT_ITEM NULL. */
 LksStatus lks_ordered_tree_find_path(const LksOrderedTree *tree,
     const LksPath *path, const LksTreeNode **out_node);
 LksStatus lks_ordered_tree_remove_path(LksOrderedTree *tree,

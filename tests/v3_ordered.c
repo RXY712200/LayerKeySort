@@ -100,6 +100,9 @@ static int check_bound_context(void)
     OrderedItem query = { 2, 99 };
     size_t i;
     int valid = tree != NULL;
+    /* The descriptor is copied, while its pointed-to context remains borrowed. */
+    comparator.compare = NULL;
+    comparator.context = NULL;
     for (i = 0; i < 6 && valid; ++i)
         valid = lks_ordered_tree_insert(tree, &items[i], NULL) == LKS_STATUS_OK;
     if (valid) valid = verify_ordered(tree, -1) &&
@@ -107,6 +110,42 @@ static int check_bound_context(void)
             LKS_STATUS_OK && equal != NULL &&
         ((OrderedItem *)lks_tree_node_item(equal))->key == 2;
     printf("V3 ordered bound context/equals %s\n", valid ? "PASS" : "FAIL");
+    lks_ordered_tree_destroy(tree);
+    return valid;
+}
+
+static int check_key_update_by_remove(void)
+{
+    OrderedItem items[3] = {{1, 0}, {2, 1}, {3, 2}};
+    OrderedItem query = {4, 3};
+    LksComparator comparator = { compare_ordered, NULL };
+    LksOrderedTree *tree = lks_ordered_tree_create(&comparator);
+    const LksTreeNode *node = NULL, *left = NULL, *equal = NULL, *right = NULL;
+    LksPath *old_path = NULL;
+    void *removed = NULL;
+    int valid = tree != NULL;
+    size_t i;
+    for (i = 0; i < 3 && valid; ++i) {
+        if (lks_ordered_tree_insert(tree, &items[i], &node) != LKS_STATUS_OK)
+            valid = 0;
+        if (valid && i == 1)
+            old_path = lks_path_clone(lks_tree_node_path(node));
+    }
+    if (valid && old_path == NULL) valid = 0;
+    if (valid) valid = lks_ordered_tree_remove_path(tree, old_path,
+        &removed) == LKS_STATUS_OK && removed == &items[1];
+    if (valid) {
+        items[1].key = 4;
+        valid = lks_ordered_tree_insert(tree, &items[1], &node) ==
+            LKS_STATUS_OK && node != NULL && verify_ordered(tree, 1);
+    }
+    if (valid) valid = lks_ordered_tree_locate(tree, &query, &left,
+        &equal, &right) == LKS_STATUS_OK && equal == node &&
+        left == NULL && right == NULL;
+    if (valid) valid = lks_ordered_tree_locate(tree, &query, &left,
+        &left, &right) == LKS_STATUS_INVALID_ARGUMENT;
+    printf("V3 ordered remove/update/reinsert %s\n", valid ? "PASS" : "FAIL");
+    lks_path_destroy(old_path);
     lks_ordered_tree_destroy(tree);
     return valid;
 }
@@ -519,6 +558,7 @@ int lks_run_v3_ordered_tests(void)
 {
     if (lks_ordered_tree_create(NULL) != NULL) return 1;
     if (!check_public_order() || !check_bound_context() ||
+        !check_key_update_by_remove() ||
         !check_endpoint_runs() || !check_endpoint_carry_oom() ||
         !check_deep_endpoint_direct_oom() ||
         !check_endpoint_depth_limit_oom() ||

@@ -438,7 +438,9 @@ static LksStatus locate_by_comparator(const LksTree *tree,
     const LksTreeNode **out_equal, const LksTreeNode **out_right)
 {
     LksTreeNode *before, *equal, *after;
-    if (out_left == NULL || out_equal == NULL || out_right == NULL)
+    if (out_left == NULL || out_equal == NULL || out_right == NULL ||
+        out_left == out_equal || out_left == out_right ||
+        out_equal == out_right)
         return LKS_STATUS_INVALID_ARGUMENT;
     *out_left = NULL; *out_equal = NULL; *out_right = NULL;
     if (tree == NULL || comparator == NULL || comparator->compare == NULL)

@@ -81,6 +81,9 @@ static int fill_items(Item *items, void **pointers, size_t count,
             value = (int)((i & 1u) ? count - 1 - i / 2 : i / 2);
         else if (strcmp(distribution, "middle") == 0)
             value = (int)((i & 1u) ? count / 2 + i / 2 : count / 2 - i / 2);
+        /* Repeatedly insert immediately after a pinned lowest-key item. */
+        else if (strcmp(distribution, "hotspot") == 0)
+            value = (int)(i == 0 ? 0 : count - i);
         else if (strcmp(distribution, "random") == 0) value = (int)i;
         else return 0;
         items[i].key = value;
@@ -176,6 +179,10 @@ static void diagnose_tree(const LksTree *tree, const char *distribution,
         size_t children = lks_tree_node_child_count(node);
         size_t display = lks_path_text_length(path);
         size_t key = lks_path_order_key_length(path);
+        if (display == 0 || key == 0 ||
+            display_sum > SIZE_MAX - display ||
+            key_sum > SIZE_MAX - key ||
+            depth_sum > SIZE_MAX - lks_path_depth(path)) abort();
         depths[used++] = lks_path_depth(path);
         depth_sum += lks_path_depth(path);
         display_sum += display; key_sum += key;
@@ -188,6 +195,15 @@ static void diagnose_tree(const LksTree *tree, const char *distribution,
     qsort(depths, count, sizeof(*depths), compare_size);
     printf("path_max,%s,%zu,%zu\n", distribution, count,
         count == 0 ? 0 : depths[count - 1]);
+    /* Final resident Path allocation and persisted ASCII footprint are
+     * separate: LK1 bytes are an estimate, not live Tree storage. */
+    if (key_sum > SIZE_MAX - count || display_sum > SIZE_MAX - count ||
+        allocations.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes > SIZE_MAX -
+            allocations.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes) abort();
+    printf("footprint,%s,%zu,%zu,%zu,%zu,%zu\n", distribution, count,
+        allocations.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes +
+            allocations.tags[LKS_ALLOC_TAG_PATH_STEPS].live_bytes,
+        depth_sum, display_sum + count, key_sum + count);
     printf("diag,%s,%zu", distribution, count);
     printf(",%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu,%zu",
         comparator_calls, repair.comparator_search_steps,

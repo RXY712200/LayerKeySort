@@ -1,6 +1,6 @@
 # Using LayerKeySort
 
-This guide describes the released experimental V3 Preview.2 header. For stable
+This guide describes the unreleased V3 Preview.3 development header. For stable
 applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
 
 ## Requirements
@@ -207,10 +207,15 @@ caller-owned context at creation. Insertions are stable for equal values and
 may relabel a contiguous logical range to make coordinate space. The region
 can grow geometrically to the entire collection. Existing AVL nodes remain;
 only Paths and the new node are prepared before an allocation-free commit.
-The comparator callback, context, and comparator-relevant item values must
-remain valid and compatible for the container's lifetime. To change a sort
-key, remove the item and insert its updated value. There is no arbitrary
-managed rekey or per-call comparator replacement.
+The descriptor is copied, so its stack object may expire after creation. The
+callback code and caller-owned context remain borrowed; keep them alive and
+keep their ordering semantics stable for the container's lifetime. Every
+resident item must remain alive, and its comparator-relevant fields must not
+change while resident. To change a sort key, first clone or otherwise save
+its Path, remove the item by that exact Path, update the item, then insert it
+again. In-place key changes can make comparator searches miss items or choose
+the wrong insertion gap. There is no arbitrary managed rekey or per-call
+comparator replacement.
 
 ```c
 LksComparator order = { compare_items, context };
@@ -223,9 +228,10 @@ lks_ordered_tree_destroy(ordered);
 
 Both containers borrow items and own Paths/nodes. Reacquire borrowed nodes,
 Paths, and navigation observations after an actual successful mutation.
-Manual equal-Path rekey is a no-op and preserves borrowed observations.
 Physical navigation exposes implementation-defined AVL links, not Path
-hierarchy. Compare Paths using `lks_path_compare()`.
+hierarchy. Use it only as a transient index view; compare Paths using
+`lks_path_compare()` for logical order. A failed operation leaves existing
+borrows valid. Manual equal-Path rekey is the documented successful no-op.
 
 A Path is an ordering coordinate rather than a stable application identity.
 Canonical display text is readable; versioned LK1 keys can persist and

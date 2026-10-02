@@ -2,6 +2,20 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [3.0.0-preview.3] - Unreleased
+
+This development snapshot stabilizes the current V3 core contract. It does
+not redesign the ordering algorithm or change Path/LK1 bytes.
+
+- Clarify borrowed item/context lifetime, comparator stability, safe item-key
+  update by remove/reinsert, and mutation invalidation for both Tree models.
+- Keep physical navigation as an ephemeral implementation-defined view rather
+  than making AVL shape a logical ordering contract.
+- Correct V3 relabel and complexity documentation, including the depth-16
+  endpoint allowance and potentially full-range Path replacement.
+- Extend diagnostic benchmarking with a pinned-item interior hotspot and
+  final resident Path/LK1 footprint records. Historical timing data are unchanged.
+
 ## [3.0.0-preview.2] - 2026-10-01
 
 This released experimental V3 Preview optimizes comparator-managed endpoint

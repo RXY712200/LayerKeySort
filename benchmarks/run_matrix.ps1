@@ -33,6 +33,8 @@ $cases = @(
 )
 if ($Profile -eq 'Current') {
     $cases += @(
+        @('tree', 'hotspot', 4000),
+        @('tree', 'hotspot', 10000),
         @('tree', 'ascending', 100000), @('tree', 'descending', 100000),
         @('tree', 'random', 100000), @('tree', 'equal', 100000),
         @('tree', 'duplicates', 100000),

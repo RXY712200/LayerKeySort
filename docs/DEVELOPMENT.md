@@ -1,7 +1,8 @@
 # Developing LayerKeySort
 
-The current branch contains released experimental `v3.0.0-preview.2`. Stable
-`v2.0.0` remains recommended; its 2.x compatibility policy is unchanged.
+The current branch contains unreleased `v3.0.0-preview.3` stabilization work.
+Released experimental `v3.0.0-preview.2` and stable `v2.0.0` remain available;
+the 2.x compatibility policy is unchanged.
 
 ## Repository layout
 
@@ -124,8 +125,8 @@ preserves interior room for mixed workloads while allowing long endpoint
 runs to consume each root-level slot before requesting another level.
 
 The provisional policy prefers direct depth at most six and accepts open-end
-depth up to eight. When a candidate is deeper
-or a gap operation reports `LEVEL_LIMIT`, relabel planning starts with eight
+depth up to sixteen. When a candidate is deeper or a gap operation reports
+`LEVEL_LIMIT`, relabel planning starts with eight
 logical neighbors and doubles the region until it succeeds or reaches every
 existing node. There is no 64-node architectural ceiling. The small-region
 arrays use stack scratch; larger regions allocate checked-size scratch arrays.

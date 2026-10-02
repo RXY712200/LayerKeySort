@@ -1,7 +1,7 @@
-# Migrating V2 Tree code to V3 Preview.2
+# Migrating V2 Tree code to V3 Preview.3 development
 
 Stable applications should continue to pin `v2.0.0`. This document describes
-the released experimental `v3.0.0-preview.2` API; its contracts may change
+the unreleased `v3.0.0-preview.3` development API; its contracts may change
 before a stable V3 release.
 
 V2 let one `LksTree` accept caller-selected Paths and per-operation comparators.
@@ -20,11 +20,13 @@ the next comparator insert. V3 separates those models:
 | Node Path/item/physical child/parent access | Unchanged, using `LksTreeNode` | Same borrowed `LksTreeNode` accessors |
 | Virtual-root navigation | `lks_tree_root_child_*()` | `lks_ordered_tree_root_child_*()` |
 
-The managed container copies the `LksComparator` descriptor at creation. Its
-context pointer and all item values used for comparison remain caller-owned.
-They must stay alive and preserve compatible ordering semantics until the
-container is destroyed. Changing an item's comparator-relevant fields in place
-can break ordering; remove it first and insert the updated item again.
+The managed container copies the `LksComparator` descriptor at creation; the
+descriptor object may then expire. Its callback code, context pointer, and
+all resident item values used for comparison remain caller-owned. They must
+stay alive and preserve consistent ordering semantics until the container is
+destroyed. Changing an item's comparator-relevant fields in place can break
+search and insertion. Save its exact Path, remove it first, update it, then
+insert it again.
 
 Both containers own structural AVL nodes and Paths, borrow items, and use
 `lks_path_compare()` for coordinate order. A successful mutation invalidates
@@ -35,3 +37,4 @@ does not expose arbitrary movement because it would violate its bound order.
 Path, display text, LK1 v1, Group, GroupBatch, and `lks_sort()` semantics are
 unchanged. Exact automatically generated Paths and AVL physical shape are not
 compatibility promises. There is no automatic whole-Tree or item serialization.
+Physical navigation is an ephemeral index view, not logical Path hierarchy.

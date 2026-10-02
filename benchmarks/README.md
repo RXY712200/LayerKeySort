@@ -1,4 +1,4 @@
-# Current benchmark harness (V3 Preview.2)
+# Current benchmark harness (V3 Preview.3 development)
 
 Stable v2.0.0 leaves captured Preview.4/Stage 5 timing data unchanged. The
 current harness times V3 comparator-managed `LksOrderedTree` insertion for
@@ -7,7 +7,8 @@ versus released Preview.1 comparison. `v3-preview2-comparison.csv` records a
 direct stable V2 / Preview.1 / original Preview.2 candidate comparison.
 Mutation soak is a separate correctness test.
 
-`current_benchmark.c` exercises public APIs and prints one CSV row:
+`current_benchmark.c` times public operations, while its verification and
+optional diagnostics use private test interfaces. It prints one CSV row:
 
 ```text
 operation,distribution,n,warmups,repetitions,median_ms,min_ms,max_ms,output_bytes
@@ -46,6 +47,9 @@ diagnostic instrumentation for timing.
 `run_matrix.ps1` takes an executable, version label, output CSV path, and
 `Common` or `Current` profile. `Common` uses only Preview.3-compatible public
 operations; `Current` adds larger scales, mutations, and Path text/key cases.
+The current profile includes a `hotspot` Tree workload: it inserts a pinned
+lowest-key item, then repeatedly inserts the next item immediately after it.
+This exercises one fixed interior gap, unlike ascending endpoint insertion.
 The optional seed argument to the C executable supports independent holdout
 runs. For example:
 
@@ -59,7 +63,16 @@ The diagnostic build is separate from timed results. Compile the harness and
 library with `LKS_ENABLE_ALLOC_DIAGNOSTICS` and `LKS_BENCH_DIAGNOSTICS`, add
 `src/` to the include path, and run `tree` cases with one repetition. Its
 `path_max` records distribution, count, and maximum final Path depth. The
-`diag` record reports, in order: distribution, count, comparator calls,
+`footprint` record gives distribution, count, final live Path-object plus
+Path-step bytes, total Path steps, total display bytes including one NUL per
+Path, and total LK1 bytes including one NUL per Path. The latter two are
+estimates for storing each final coordinate as a C string, not resident Tree
+allocations. `relabel.nodes_relabelled` counts existing coordinates replaced
+during successful insertions; add direct inserts and relabel successes for
+the number of newly assigned coordinates. `relabel.max_region_nodes` is the
+largest successful region, while `placement.max_attempted_region` includes
+failed planning attempts. These distinctions matter when comparing versions.
+The `diag` record reports, in order: distribution, count, comparator calls,
 comparator search steps, rotations, AVL height, repair attempts, successes,
 fallbacks, expansions, maximum region nodes, relabelled nodes, deeper
 acceptances, full rebuilds, allocation calls, cumulative requested bytes,

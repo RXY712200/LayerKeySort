@@ -9,10 +9,10 @@
 - `LKS_VERSION_MAJOR` is `3`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.2"`.
-- `LKS_VERSION_STRING` is `"3.0.0-preview.2"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.3"`.
+- `LKS_VERSION_STRING` is `"3.0.0-preview.3"`.
 
-This page describes the released experimental V3 Preview.2 header with 59
+This page describes the unreleased V3 Preview.3 development header with 59
 public functions. Stable v2.0.0 remains available with its frozen 52-function
 API. The [migration guide](V3_MIGRATION.md) lists the Tree changes; the
 [2.x compatibility contract](COMPATIBILITY.md) applies to stable V2.
@@ -276,6 +276,7 @@ Tree, and does not create a permanent item identity.
 - **`LksDirection`** — Direction of a Path relative to the zero Path.
 - **`LksPath`** — Opaque Path value; use public Path functions to create, inspect, and destroy it.
 - **`LksTree`** — Opaque Tree that owns its structural nodes and Path copies.
+- **`LksOrderedTree`** — Comparator-bound mutable Tree; it owns nodes/Paths and borrows items/context.
 - **`LksTreeNode`** — Opaque, read-only Tree node view returned by Tree navigation functions.
 - **`LksGroup`** — Opaque ordered Group that owns structural storage and borrows item pointers.
 - **`LksGroupBatch`** — Opaque collection of Groups built from consecutive input chunks.
@@ -700,19 +701,25 @@ LksStatus lks_tree_rekey(
 );
 ```
 
-The physical Tree index shape is implementation-defined and is not a stable
-API contract. Physical parents need not be Path prefixes, physical children
+The physical Tree navigation functions provide an ephemeral diagnostic view;
+their shape is implementation-defined and is not a stable API contract.
+Physical parents need not be Path prefixes, physical children
 need not be logical Path descendants, and physical preorder is not logical
 Path order. Shape may change after mutation. Use `lks_path_compare()` to
 compare positions; reacquire all borrowed navigation results after mutations.
 
 ## Comparator-managed ordered Tree API
 
-`LksOrderedTree` copies one comparator descriptor at creation. The callback,
-its caller-owned context, and comparator-relevant item values must remain
-valid and ordering-compatible for the container lifetime. Change an item's
-sort key by removing it and inserting its updated value; there is no arbitrary
-managed rekey and no per-operation comparator parameter.
+`LksOrderedTree` copies one comparator descriptor at creation, so the
+descriptor object itself may expire. Callback code and its caller-owned
+context are borrowed and must remain usable with stable, deterministic
+ordering semantics until destruction. Every resident item must remain alive,
+and its comparator-relevant fields must remain unchanged while resident.
+Comparisons must consistently order all resident items; the library does not
+detect an inconsistent comparator. To change an item's sort key, save its
+Path, remove by that exact Path, update the item, then insert it again.
+Changing a key in place can invalidate comparator lookup and placement.
+There is no arbitrary managed rekey or per-operation comparator parameter.
 
 ```c
 LksOrderedTree *lks_ordered_tree_create(const LksComparator *comparator);
@@ -737,11 +744,15 @@ never frees caller items. Size treats NULL as empty. Insert uses upper-bound
 placement, so new comparator-equal items follow existing equals. All
 fallible Path planning and node allocation occur before any mutation; on
 failure the container is unchanged and optional `out_node` is NULL. On
-success, reacquire prior borrowed observations. Locate requires all three
-outputs, resets them to NULL, and returns the first equal node or immediate
-neighbors. Find returns `NOT_FOUND` for an absent Path. Exact removal has the
-same allocation-free ownership behavior as manual Tree removal. Physical
-node access uses the shared `lks_tree_node_*()` functions; virtual-root
+success, reacquire prior borrowed observations. Locate requires three
+distinct output locations; it resets them to NULL and returns the first equal
+node or immediate neighbors. Invalid output locations return
+`INVALID_ARGUMENT`; returned nodes remain borrowed until mutation/destruction.
+Find returns `NOT_FOUND` for an absent Path and sets its output to NULL.
+Exact removal never calls the comparator, frees no caller item, relabels no
+other Path, and sets optional `out_item` to NULL on failure. Successful removal
+invalidates earlier node/Path/navigation borrows; missing-Path removal changes
+nothing. Physical node access uses the shared `lks_tree_node_*()` functions; virtual-root
 access uses the ordered-specific functions above.
 
 ## Group API

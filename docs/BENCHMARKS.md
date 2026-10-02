@@ -1,5 +1,16 @@
 # Performance and benchmark evidence
 
+## Preview.3 development diagnostics
+
+No Preview.3 timing comparison is claimed here. The current harness adds a
+fixed interior `hotspot` insertion pattern and a `footprint` record for final
+resident Path allocation, total steps, and display/LK1 C-string bytes.
+`relabel.nodes_relabelled` counts old coordinates replaced by successful
+managed insertions; `max_region_nodes` records the largest successful region.
+The diagnostic records are separate from wall-clock timing and cannot prove
+an asymptotic bound. Historical Preview.2/V2 measurements below retain their
+original labels and values.
+
 ## Released V3 Preview.2 versus Preview.1 and stable V2
 
 The released Preview.2 implementation carries full endpoint slots into an
@@ -362,7 +373,7 @@ LayerKeySort and 0.439 ms for the external generator; hotspot 4,000 took
 38 durable-key bytes versus 4 external bytes; hotspot: 8 display/17 durable
 versus 669 external bytes). These results cannot establish a general winner.
 
-## Complexity and limits
+## Complexity and limits of the current V3 development code
 
 Let `n` be the Tree size, `d` a Path depth, `b` an encoded text length, and
 `c` the cost of the caller's item comparator. An AVL visit may also compare
@@ -378,19 +389,20 @@ cost.
 | Display/key parse | Iterative `O(b)` syntax work plus decoded Path allocation/growth; malformed input and overflow fail cleanly. |
 | Explicit Tree find | `O(log n)` AVL visits, each Path comparison up to shared depth. |
 | Explicit Tree insert | Same search plus clone of the supplied Path and `O(log n)` AVL rebalance; no repair policy. |
-| Comparator Tree locate | `O(log n)` caller comparator calls plus neighboring Path work where requested. |
-| Comparator Tree insert with direct gap | Upper-bound search and gap generation, then `O(log n)` Path-index insertion; costs include `c`, Path comparisons, and allocated candidate depth. |
+| Ordered Tree locate | `O(log n)` caller comparator calls under a consistent comparator. Returned nodes are borrowed. |
+| Ordered Tree insert with direct gap | Upper-bound search and gap generation, then `O(log n)` Path-index insertion; costs include `c`, Path comparisons, and allocated candidate depth. Endpoint carry can scan/copy up to Path depth. |
 | Tree remove | `O(log n)` Path-index search/rebalance plus Path comparisons and destruction; no allocation. |
 | Tree rekey | Two Path-index searches and `O(log n)` structural work, plus clone/new-node allocation and old-Path cleanup; unchanged-coordinate success is a no-op. |
-| Local repair | Up to 64 nodes in the current logical window, with possible expansions and Path regeneration; exterior lookup remains AVL-based. This is a policy bound, not a stable public API promise. |
-| Full rebuild | At least linear collection/construction, with stable ordering and Path generation; it can dominate an individual insertion. |
+| Adaptive relabel | Starts with eight logical neighbors and doubles the region as needed. A successful `k`-node region prepares `k + 1` Paths, replaces `k` existing coordinates, and can reach all `n` nodes. Failed attempts also cost Path generation and allocation. |
+| Full-range relabel | Prepares `n + 1` fresh Paths, then swaps the `n` old coordinates and links one node without rebuilding the physical AVL index. Peak memory includes old and prepared Paths and scratch arrays. |
 | Group build | Stable sort uses `O(n log n)` comparator calls, then Path generation, Tree construction, and validation; Path work adds its own cost. |
 | Group merge | Stable merge visits both ordered inputs linearly in item count, then builds/validates the result's fresh Path space. |
 | `lks_sort` | Stable merge sort: `O(n log n)` comparator calls, `O(n)` pointer scratch, and `O(log n)` recursion depth. |
 
-An individual comparator-driven insertion **does not** have a guaranteed
-`O(log n)` time bound because it may fall back to a full rebuild. No formal
-amortized bound or fixed Path-depth/memory ceiling is claimed. Rebuild timing
-was not isolated from the surrounding insertion in the reported timed rows;
-the diagnostic counters show frequency and cumulative affected nodes instead.
+An individual managed insertion **does not** have a guaranteed `O(log n)`
+time bound because adaptive relabel can touch every resident coordinate.
+No formal amortized bound or fixed Path-depth/memory ceiling is claimed.
+Historical V2 full-rebuild counts above are not V3 full-range relabel counts;
+the separate V3 diagnostic counters report relabel frequency and affected
+coordinates.
 Database collation for `LK1:` must preserve bytewise ASCII order.
