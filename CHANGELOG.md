@@ -2,9 +2,9 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-preview.3] - Unreleased
+## [3.0.0-preview.3] - 2026-10-02
 
-This development snapshot stabilizes the current V3 core contract. It does
+This released experimental snapshot stabilizes the current V3 core contract. It does
 not redesign the ordering algorithm or change Path/LK1 bytes.
 
 - Clarify borrowed item/context lifetime, comparator stability, safe item-key

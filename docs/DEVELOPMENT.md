@@ -1,7 +1,7 @@
 # Developing LayerKeySort
 
-The current branch contains unreleased `v3.0.0-preview.3` stabilization work.
-Released experimental `v3.0.0-preview.2` and stable `v2.0.0` remain available;
+The current branch is the released `v3.0.0-preview.3` experimental snapshot.
+Stable `v2.0.0` remains available;
 the 2.x compatibility policy is unchanged.
 
 ## Repository layout

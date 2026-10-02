@@ -1,6 +1,6 @@
 # Using LayerKeySort
 
-This guide describes the unreleased V3 Preview.3 development header. For stable
+This guide describes the released V3 Preview.3 header. For stable
 applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
 
 ## Requirements
@@ -157,7 +157,7 @@ The parsed Path belongs to the caller and must be destroyed with
 `lks_path_destroy()`. Invalid or noncanonical inputs fail with NULL output;
 allocator failure also leaves output NULL. The exact key grammar and
 cross-platform overflow rule are in [API.md](API.md). These APIs were added in
-Preview.4; Preview.3 did not contain them.
+V2 Preview.4; V2 Preview.3 did not contain them.
 
 The key persists a Path coordinate and can order canonical same-version keys
 under bytewise ASCII collation. It does not save a Tree, reconstruct its AVL

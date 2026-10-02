@@ -1,10 +1,9 @@
 # Integrating LayerKeySort
 
 Pin `v2.0.0` for the stable 52-function V2 API. The experimental
-`v3.0.0-preview.1` and `v3.0.0-preview.2` are released. The current
-Preview.3 development header retains 59 public functions and the changed V3
-Tree API. See
-[V3 migration](V3_MIGRATION.md) before integrating this Preview. Generated
+`v3.0.0-preview.1`, `v3.0.0-preview.2`, and `v3.0.0-preview.3` are released
+experimental snapshots. Preview.3 retains 59 public functions and the changed
+V3 Tree API. See [V3 migration](V3_MIGRATION.md) before integrating it. Generated
 Path layouts and performance policy remain implementation details.
 
 ## Requirements and tested configurations

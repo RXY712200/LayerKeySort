@@ -60,12 +60,12 @@ itself, require 3.0.
 
 ## V3 Preview development boundary
 
-The released experimental Preview.1 and Preview.2 are outside the
+The released experimental V3 Preview.1, Preview.2, and Preview.3 are outside the
 2.x compatibility promise above. Stable users can continue using the
 published `v2.0.0` tag.
 V3 intentionally removes the two per-operation-comparator `LksTree`
 functions and introduces a comparator-bound `LksOrderedTree`; see
 [V3_MIGRATION.md](V3_MIGRATION.md). Further Preview API changes may occur
 before a stable V3 release. Path comparison, display text, and LK1 v1 bytes
-are preserved in Preview.1 and Preview.2, but this does not freeze every
+are preserved through V3 Preview.3, but this does not freeze every
 future V3 API or generated Path coordinate.
