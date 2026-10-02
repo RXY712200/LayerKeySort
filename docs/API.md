@@ -9,10 +9,10 @@
 - `LKS_VERSION_MAJOR` is `3`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.3"`.
-- `LKS_VERSION_STRING` is `"3.0.0-preview.3"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.4"`.
+- `LKS_VERSION_STRING` is `"3.0.0-preview.4"`.
 
-This page describes the unreleased V3 Preview.3 development header with 59
+This page describes the unreleased V3 Preview.4 development header with 59
 public functions. Stable v2.0.0 remains available with its frozen 52-function
 API. The [migration guide](V3_MIGRATION.md) lists the Tree changes; the
 [2.x compatibility contract](COMPATIBILITY.md) applies to stable V2.

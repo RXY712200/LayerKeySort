@@ -17,6 +17,8 @@ jobs:
         run: ctest --test-dir build -C Debug --output-on-failure
       - name: Basic example
         run: .\build\Debug\layerkeysort_example.exe
+      - name: Ordered-tree example
+        run: .\build\Debug\layerkeysort_ordered_example.exe
       - name: Layer-list example
         run: .\build\Debug\layerkeysort_layer_list_example.exe
 
@@ -42,6 +44,8 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Basic example
         run: ./build/layerkeysort_example
+      - name: Ordered-tree example
+        run: ./build/layerkeysort_ordered_example
       - name: Layer-list example
         run: ./build/layerkeysort_layer_list_example
 
@@ -61,5 +65,7 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Basic example
         run: ./build/layerkeysort_example
+      - name: Ordered-tree example
+        run: ./build/layerkeysort_ordered_example
       - name: Layer-list example
         run: ./build/layerkeysort_layer_list_example

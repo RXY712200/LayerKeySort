@@ -1,6 +1,6 @@
 # Using LayerKeySort
 
-This guide describes the unreleased V3 Preview.3 development header. For stable
+This guide describes the unreleased V3 Preview.4 development header. For stable
 applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
 
 ## Requirements
@@ -40,6 +40,26 @@ The private headers under `src/` are implementation details. The Visual Studio
 project also provides a combined validation executable; use the CMake library
 target for an application build.
 
+## First use: managed Tree
+
+[`examples/ordered_tree.c`](../examples/ordered_tree.c) is a complete,
+public-header-only example. It creates a comparator-bound Tree, inserts three
+caller-owned items, locates one by a query value, removes it by its borrowed
+Path, locates the new neighbors, and destroys the Tree. It reacquires query
+results after removal rather than using an invalidated node pointer.
+
+```sh
+cmake -S . -B build -DLKS_BUILD_TESTS=OFF
+cmake --build build --target layerkeysort_ordered_example
+./build/layerkeysort_ordered_example
+```
+
+For Visual Studio generators, run the executable under `build/Debug/` after a
+Debug build. The Tree copies the comparator descriptor but borrows its context
+and the inserted items. Keep both alive and keep comparator-relevant fields
+unchanged while an item is resident. See [integration](INTEGRATION.md) when
+using the library from another project.
+
 ## Sorting a pointer array
 
 Define a comparator over your pointed-to item type, then call:
@@ -50,7 +70,7 @@ LksStatus status = lks_sort(items, item_count, compare_items, NULL);
 
 `lks_sort` changes the pointer array, not the pointed-to objects. It is stable
 for comparator-equal items and leaves the input array unchanged if allocation
-fails. [`examples/basic.c`](../examples/basic.c) is the complete first-use example.
+fails. [`examples/basic.c`](../examples/basic.c) is the smaller sort-only example.
 
 To build and run it with CMake:
 
@@ -63,7 +83,7 @@ cmake --build build
 The executable path can differ with multi-configuration generators such as
 Visual Studio (for example, `build/Debug/layerkeysort_example.exe`).
 
-## Dynamic layer-list example (Preview.5)
+## Dynamic layer-list example (V2 Preview.5 origin)
 
 [`examples/layer_list.c`](../examples/layer_list.c) models Background, Player,
 HUD, and Effects as caller-owned objects with stable application IDs. It uses
@@ -75,8 +95,8 @@ application owns its Path copies and destroys them after the Tree.
 Build target `layerkeysort_layer_list_example` and run it after the normal
 CMake build. The example orders its application-side Path associations with
 `lks_path_compare()`; physical AVL navigation is not logical item order.
-The simple [`basic.c`](../examples/basic.c) remains the first-use `lks_sort()`
-example. The [integration guide](INTEGRATION.md) covers consuming the library.
+The simple [`basic.c`](../examples/basic.c) remains the `lks_sort()` example.
+The [integration guide](INTEGRATION.md) covers consuming the library.
 
 ## Comparator
 

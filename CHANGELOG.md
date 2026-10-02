@@ -2,7 +2,22 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-preview.3] - Unreleased
+## [3.0.0-preview.4] - Unreleased
+
+This development stage prepares the existing V3 architecture for first use.
+It changes examples, documentation, and integration guidance without changing
+the ordering algorithm, public function set, Path semantics, or LK1 bytes.
+
+- Add a short comparator-managed Tree example covering create, insert, locate,
+  exact removal, and cleanup; build and run it in CI.
+- Put a verified Quick Start and CMake consumer paths near the start of the
+  documentation, and distinguish the manual and managed Tree models.
+- Publish measured large-relabel and Path-storage limitations without claiming
+  a complete-insertion bound or a universal performance result.
+- Keep Preview.3 as an unpublished branch milestone; stable V2 remains the
+  recommended release until a separate V3 publication decision.
+
+## [3.0.0-preview.3] - Unpublished development milestone
 
 This development snapshot stabilizes the current V3 core contract. It does
 not redesign the ordering algorithm or change Path/LK1 bytes.

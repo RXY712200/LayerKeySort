@@ -1,7 +1,8 @@
 # Developing LayerKeySort
 
-The current branch contains unreleased `v3.0.0-preview.3` stabilization work.
-Released experimental `v3.0.0-preview.2` and stable `v2.0.0` remain available;
+The current branch contains unreleased `v3.0.0-preview.4` usability and
+integration work. Preview.3 is an unpublished branch milestone. Released
+experimental `v3.0.0-preview.2` and stable `v2.0.0` remain available;
 the 2.x compatibility policy is unchanged.
 
 ## Repository layout
@@ -10,7 +11,7 @@ the 2.x compatibility policy is unchanged.
 - `src/` — production C implementation and private headers.
 - `tests/` — property, stress, deterministic soak, and public API validation code.
 - `benchmarks/` — optional current public-API benchmark harness and matrix runner.
-- `examples/` — basic sort and dynamic layer-list public API examples.
+- `examples/` — managed Tree first use, basic sort, and dynamic layer-list public API examples.
 - `demo/` — executable validation/demo entry point.
 - `docs/` — user documentation, visualizer, and site assets.
 - `LayerKeySort.slnx` — Visual Studio solution.

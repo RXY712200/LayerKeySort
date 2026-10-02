@@ -1,5 +1,38 @@
 # Performance and benchmark evidence
 
+## V3 Preview.3 validation for Preview.4 users
+
+Preview.4 retains Preview.3's ordering algorithm. A one-machine validation at
+100k–1m managed Tree insertions found substantial workload differences. The
+[timed CSV](../benchmarks/results/v3-preview3-validation-timed.csv),
+[diagnostic capture](../benchmarks/results/v3-preview3-validation-diagnostics.txt),
+and [methodology](../benchmarks/results/v3-preview3-validation-metadata.md)
+are retained for inspection. All rows below use the same source commit and
+compiler; 1m timings are single runs and should not be read as stable medians.
+
+| Insertion pattern | 100k ms | 1m ms | 1m full-range relabels | 1m final resident Path MiB | 1m estimated LK1 MiB |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Ascending | 54 | 2,428 | 1 | 112.5 | 53.8 |
+| Descending | 36 | 411 | 0 | 45.8 | 14.3 |
+| Random unique | 99 | 2,277 | 1 | 69.1 | 29.8 |
+| All equal | 54 | 2,447 | 1 | 112.5 | 53.8 |
+| 32-value duplicates | 109 | 5,007 | 2 | 96.2 | 40.3 |
+| Alternating low/high | 1,655 | 44,023 | 56 | 98.5 | 40.8 |
+| Fixed interior hotspot | 38 | 418 | 0 | 45.8 | 19.8 |
+
+The alternating pattern repeatedly approaches both ends of the ordered
+range. At 1m it caused 353,830 successful relabels and 69.4 million
+cumulative old-coordinate replacements, including 56 full-range events.
+The final Path depth still had mean 4.47 and maximum 6. This is a relabel
+and allocation-churn cost, not evidence that final Path depth grew without
+control. A separate per-insert probe observed pauses above 700 ms in this
+pattern and above 1 second in the duplicate pattern; methodology and limits
+are in the linked metadata. Applications requiring bounded or consistently
+low synchronous insertion latency at hundreds of thousands of items should
+measure their own workload or choose an ordering design with a suitable
+guarantee. No worst-case `O(log n)` complete insertion or formal amortized
+bound is claimed.
+
 ## Preview.3 development diagnostics
 
 No Preview.3 timing comparison is claimed here. The current harness adds a

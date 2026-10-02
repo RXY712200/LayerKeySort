@@ -31,6 +31,8 @@ lks_configure_target(layerkeysort)
 
 add_executable(layerkeysort_example examples/basic.c)
 target_link_libraries(layerkeysort_example PRIVATE layerkeysort)
+add_executable(layerkeysort_ordered_example examples/ordered_tree.c)
+target_link_libraries(layerkeysort_ordered_example PRIVATE layerkeysort)
 add_executable(layerkeysort_layer_list_example examples/layer_list.c)
 target_link_libraries(layerkeysort_layer_list_example PRIVATE layerkeysort)
 
