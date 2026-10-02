@@ -9,15 +9,15 @@ changeable ordering coordinate, not an item ID. Immutable Groups and a stable
 pointer-array sort cover batch use.
 
 **Latest stable:** `v2.0.0`. **Latest published V3 Preview:**
-`v3.0.0-preview.2`. This branch develops `v3.0.0-preview.5`; Preview.3 and
-Preview.4 were development-branch milestones, not published releases.
+`v3.0.0-preview.5`. Preview.3, Preview.4, and Preview.5 are published
+experimental snapshots; stable `v2.0.0` remains recommended for normal use.
 
 > [!WARNING]
 > **V2 is stable as of v2.0.0.** It retains RC.1's production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
-**V3 Preview.5 remains experimental and unreleased.** Normal users should pin
+**V3 Preview.5 is experimental, not a stable release.** Normal users should pin
 stable `v2.0.0`. See the [V2 to V3 migration guide](docs/V3_MIGRATION.md)
 before adopting the development API.
 
@@ -61,9 +61,9 @@ project, follow [integration](docs/INTEGRATION.md); only
 | v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
 | v3.0.0-preview.1 (released Preview) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
 | v3.0.0-preview.2 (released experimental Preview) | Carry endpoint coordinates into available ancestor slots and adapt stride during long endpoint runs; add focused soak and diagnostic evidence. | Interior relabel cost and complete insertion complexity remain unbounded by AVL height alone. |
-| v3.0.0-preview.3 (unpublished milestone) | Stabilize comparator/borrow contracts, correct V3 complexity documentation, and add comparable hotspot and footprint diagnostics. | Full-range relabel and Path growth remain workload dependent; no formal complete-insertion bound. |
-| v3.0.0-preview.4 (unpublished milestone) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
-| v3.0.0-preview.5 (unreleased development) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
+| v3.0.0-preview.3 (released experimental Preview) | Stabilize comparator/borrow contracts, correct V3 complexity documentation, and add comparable hotspot and footprint diagnostics. | Full-range relabel and Path growth remain workload dependent; no formal complete-insertion bound. |
+| v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
+| v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
 
 Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests

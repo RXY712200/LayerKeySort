@@ -2,22 +2,22 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-preview.5] - Unreleased
+## [3.0.0-preview.5] - 2026-10-02
 
-This branch prepares the existing V3 implementation for release-candidate
-consideration. It does not change the ordering algorithm, Path model, LK1
-format, or public function signatures.
+This released experimental Preview prepares the existing V3 implementation for
+release-candidate consideration. It does not change the ordering algorithm,
+Path model, LK1 format, or public function signatures.
 
 - Recheck public ownership, comparator, borrow, and error contracts against
   implementation and consumer tests.
 - Align current-version documentation and distinguish historical V2 Preview
-  features from unpublished V3 development milestones.
+  features from the released V3 Preview milestones.
 - Validate strict C17 builds, examples, external CMake consumers, and the
   complete test suite across available local configurations.
 
-## [3.0.0-preview.4] - Unpublished development milestone
+## [3.0.0-preview.4] - 2026-10-02
 
-This development stage prepares the existing V3 architecture for first use.
+This released experimental Preview prepares the existing V3 architecture for first use.
 It changes examples, documentation, and integration guidance without changing
 the ordering algorithm, public function set, Path semantics, or LK1 bytes.
 
@@ -27,12 +27,12 @@ the ordering algorithm, public function set, Path semantics, or LK1 bytes.
   documentation, and distinguish the manual and managed Tree models.
 - Publish measured large-relabel and Path-storage limitations without claiming
   a complete-insertion bound or a universal performance result.
-- Keep Preview.3 as an unpublished branch milestone; stable V2 remains the
-  recommended release until a separate V3 publication decision.
+- Keep stable V2 as the recommended release for normal use while V3 remains
+  experimental. Preview.3 is also published as a Prerelease.
 
-## [3.0.0-preview.3] - Unpublished development milestone
+## [3.0.0-preview.3] - 2026-10-02
 
-This development snapshot stabilizes the current V3 core contract. It does
+This released experimental Preview stabilizes the current V3 core contract. It does
 not redesign the ordering algorithm or change Path/LK1 bytes.
 
 - Clarify borrowed item/context lifetime, comparator stability, safe item-key

@@ -12,7 +12,7 @@
 - `LKS_VERSION_PRERELEASE` is `"preview.5"`.
 - `LKS_VERSION_STRING` is `"3.0.0-preview.5"`.
 
-This page describes the unreleased V3 Preview.5 development header with 59
+This page describes the released V3 Preview.5 header with 59
 public functions. Stable v2.0.0 remains available with its frozen 52-function
 API. The [migration guide](V3_MIGRATION.md) lists the Tree changes; the
 [2.x compatibility contract](COMPATIBILITY.md) applies to stable V2.
