@@ -1,8 +1,8 @@
 # Performance and benchmark evidence
 
-## V3 Preview.3 validation for Preview.4 users
+## V3 Preview.3 validation for Preview.5 users
 
-Preview.4 retains Preview.3's ordering algorithm. A one-machine validation at
+Preview.5 retains Preview.3's ordering algorithm. A one-machine validation at
 100k–1m managed Tree insertions found substantial workload differences. The
 [timed CSV](../benchmarks/results/v3-preview3-validation-timed.csv),
 [diagnostic capture](../benchmarks/results/v3-preview3-validation-diagnostics.txt),

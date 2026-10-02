@@ -2,7 +2,20 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0-preview.4] - Unreleased
+## [3.0.0-preview.5] - Unreleased
+
+This branch prepares the existing V3 implementation for release-candidate
+consideration. It does not change the ordering algorithm, Path model, LK1
+format, or public function signatures.
+
+- Recheck public ownership, comparator, borrow, and error contracts against
+  implementation and consumer tests.
+- Align current-version documentation and distinguish historical V2 Preview
+  features from unpublished V3 development milestones.
+- Validate strict C17 builds, examples, external CMake consumers, and the
+  complete test suite across available local configurations.
+
+## [3.0.0-preview.4] - Unpublished development milestone
 
 This development stage prepares the existing V3 architecture for first use.
 It changes examples, documentation, and integration guidance without changing

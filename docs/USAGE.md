@@ -1,6 +1,6 @@
 # Using LayerKeySort
 
-This guide describes the unreleased V3 Preview.4 development header. For stable
+This guide describes the unreleased V3 Preview.5 development header. For stable
 applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
 
 ## Requirements
@@ -162,7 +162,7 @@ Appending slot 0 at level five gives `0DEq/5222`, where `5` is the level
 delta. Ordinary next-level steps omit the numeric prefix. Each slot is three
 radix-54 characters from the case-sensitive ASCII alphabet documented in
 [`API.md`](API.md); `/` separates steps and never counts levels. The
-formatter writes canonical current output. In Preview.4,
+formatter writes canonical current output. Since V2 Preview.4,
 `lks_path_parse()` accepts exactly that text and returns a caller-owned Path.
 For storage and bytewise ordering, use the separate versioned
 `lks_path_order_key_*()` API. **Use `lks_path_compare()` to order Paths; do not
@@ -177,7 +177,7 @@ The parsed Path belongs to the caller and must be destroyed with
 `lks_path_destroy()`. Invalid or noncanonical inputs fail with NULL output;
 allocator failure also leaves output NULL. The exact key grammar and
 cross-platform overflow rule are in [API.md](API.md). These APIs were added in
-Preview.4; Preview.3 did not contain them.
+V2 Preview.4; V2 Preview.3 did not contain them.
 
 The key persists a Path coordinate and can order canonical same-version keys
 under bytewise ASCII collation. It does not save a Tree, reconstruct its AVL

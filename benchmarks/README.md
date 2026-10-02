@@ -1,6 +1,6 @@
-# Current benchmark harness (V3 Preview.4 development)
+# Current benchmark harness (V3 Preview.5 development)
 
-Stable v2.0.0 leaves captured Preview.4/Stage 5 timing data unchanged. The
+Stable v2.0.0 leaves captured V2 Preview.4/Stage 5 timing data unchanged. The
 current harness times V3 comparator-managed `LksOrderedTree` insertion for
 `tree` cases. `v3-preview1-comparison.csv` records the earlier stable V2
 versus released Preview.1 comparison. `v3-preview2-comparison.csv` records a

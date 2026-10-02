@@ -11,8 +11,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 3
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.4"
-#define LKS_VERSION_STRING "3.0.0-preview.4"
+#define LKS_VERSION_PRERELEASE "preview.5"
+#define LKS_VERSION_STRING "3.0.0-preview.5"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -333,7 +333,10 @@ const LksTreeNode *lks_tree_root_child_at(
  * with every resident item until this container is destroyed. The descriptor
  * object itself may go out of scope. Returns NULL on invalid input or OOM. */
 LksOrderedTree *lks_ordered_tree_create(const LksComparator *comparator);
+/* Destroy the container and its nodes/Paths, never the borrowed items or
+ * comparator context. NULL is accepted. */
 void lks_ordered_tree_destroy(LksOrderedTree *tree);
+/* Return item count; NULL is treated as empty. */
 size_t lks_ordered_tree_size(const LksOrderedTree *tree);
 /* Stable upper-bound insertion: equal items follow earlier equal items.
  * Failure leaves all nodes and Paths unchanged and OUT_NODE NULL. Success
@@ -355,6 +358,8 @@ LksStatus lks_ordered_tree_find_path(const LksOrderedTree *tree,
     const LksPath *path, const LksTreeNode **out_node);
 LksStatus lks_ordered_tree_remove_path(LksOrderedTree *tree,
     const LksPath *path, void **out_item);
+/* Physical index-root navigation; it is not logical Path order. Borrowed
+ * results expire after an actual successful mutation or destruction. */
 size_t lks_ordered_tree_root_child_count(const LksOrderedTree *tree);
 const LksTreeNode *lks_ordered_tree_root_child_at(
     const LksOrderedTree *tree, size_t index);

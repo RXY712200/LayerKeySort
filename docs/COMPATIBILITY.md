@@ -61,9 +61,9 @@ itself, require 3.0.
 ## V3 Preview development boundary
 
 The released experimental V3 Preview.1 and Preview.2 and the current
-unreleased V3 Preview.4 development branch are outside the 2.x compatibility
-promise above. Preview.3 was an unpublished branch milestone. Stable users
-can continue using the published `v2.0.0` tag.
+unreleased V3 Preview.5 development branch are outside the 2.x compatibility
+promise above. V3 Preview.3 and Preview.4 were unpublished branch milestones.
+Stable users can continue using the published `v2.0.0` tag.
 V3 intentionally removes the two per-operation-comparator `LksTree`
 functions and introduces a comparator-bound `LksOrderedTree`; see
 [V3_MIGRATION.md](V3_MIGRATION.md). Further Preview API changes may occur
