@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title desc">
+  <title id="title">LayerKeySort V3 social preview</title>
+  <desc id="desc">LayerKeySort, a C17 library for mutable ordering. V3 separates comparator-managed ordered Trees from explicit-coordinate manual Trees; Paths are mutable positions, not item IDs.</desc>
+  <defs><style>
+    text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;fill:#153a30}
+    .brand{font-size:72px;font-weight:760;letter-spacing:-2px}.sub{font-size:27px;fill:#456558}.label{font-size:31px;font-weight:740}.body{font-size:22px;fill:#315548}.micro{font-size:19px;fill:#527367}.mono{font-family:ui-monospace,Consolas,monospace;font-size:19px;font-weight:700}
+  </style></defs>
+  <rect width="1280" height="640" fill="#f0f7f3"/>
+  <rect x="46" y="42" width="1188" height="556" rx="28" fill="#fff" stroke="#c9ded2" stroke-width="2"/>
+  <circle cx="91" cy="94" r="11" fill="#25af83"/>
+  <text x="117" y="101" class="micro" letter-spacing="3">C17 · MUTABLE ORDERING COORDINATES</text>
+  <text x="88" y="206" class="brand">LayerKeySort V3</text>
+  <text x="91" y="251" class="sub">Item identity stays separate from Path position.</text>
+  <rect x="86" y="296" width="523" height="202" rx="19" fill="#e9f6ef" stroke="#8fc7ad" stroke-width="2"/>
+  <text x="114" y="345" class="label">LksOrderedTree</text>
+  <text x="114" y="385" class="body">Comparator-bound ordering</text>
+  <text x="114" y="422" class="body">Managed Path assignment</text>
+  <text x="114" y="459" class="micro">Stable equals · possible relabel</text>
+  <rect x="671" y="296" width="523" height="202" rx="19" fill="#edf3ff" stroke="#9ab5d8" stroke-width="2"/>
+  <text x="699" y="345" class="label">LksTree</text>
+  <text x="699" y="385" class="body">Application-selected coordinates</text>
+  <text x="699" y="422" class="body">Exact insert · remove · rekey</text>
+  <text x="699" y="459" class="micro">Identity remains caller-owned</text>
+  <text x="90" y="558" class="mono">Logical Path order</text>
+  <text x="342" y="558" class="body">·</text>
+  <text x="378" y="558" class="mono">Physical AVL index</text>
+  <text x="650" y="558" class="body">·</text>
+  <text x="687" y="558" class="mono">Display + LK1 coordinate</text>
+</svg>

@@ -28,7 +28,7 @@ documented limitations, not claims of a complexity guarantee.
 - `benchmarks/` — optional current public-API benchmark harness and matrix runner.
 - `examples/` — managed Tree first use, basic sort, and dynamic layer-list public API examples.
 - `demo/` — executable validation/demo entry point.
-- `docs/` — user documentation, visualizer, and site assets.
+- `docs/` — user documentation, current V3 visualizer, historical V1 showcase, and site assets.
 - `LayerKeySort.slnx` — Visual Studio solution.
 - `LayerKeySort.vcxproj` — Visual Studio project and build configurations.
 - `CMakeLists.txt` — reusable production library, example, and test targets.
@@ -89,7 +89,7 @@ The Visual Studio project defines **Debug**, **Release**, and **ASan** configura
 The Visual Studio executable entry point is `demo/main.c`. With no argument it
 runs the V2 focused tests, public API smoke, deterministic property tests,
 stress tests, and OOM tests. The CMake test executable uses `tests/v2_main.c`
-for the same preview suite. `tests/benchmark.c` preserves the historical v1
+for the same retained regression suite. `tests/benchmark.c` preserves the historical v1
 benchmark evidence and remains available through its existing focused runner
 switches; its exact v1 baseline expectations do not describe V2 Path output.
 
@@ -129,7 +129,7 @@ cannot disturb the relative comparator order of remaining items. Caller item
 objects and comparator context remain borrowed.
 
 Managed insertion finds the comparator upper bound in AVL-height work. It
-first generates a direct Path. At an open end, Preview.2 scans the prior
+first generates a direct Path. At an open end, the policy introduced in V3 Preview.2 scans the prior
 coordinate toward its root and carries a saturated slot into the nearest
 ancestor with capacity, truncating the suffix. Append advances an ordinary
 slot; the negative root moves in reverse slot order. Prepend allocates a new
@@ -140,7 +140,7 @@ removal resets the run hint. Failed operations leave it unchanged. This
 preserves interior room for mixed workloads while allowing long endpoint
 runs to consume each root-level slot before requesting another level.
 
-The provisional policy prefers direct depth at most six and accepts open-end
+The current private policy prefers direct depth at most six and accepts open-end
 depth up to sixteen. When a candidate is deeper or a gap operation reports
 `LEVEL_LIMIT`, relabel planning starts with eight
 logical neighbors and doubles the region until it succeeds or reaches every
@@ -176,7 +176,7 @@ in-place relabeling. Blocks might reduce large relabels but add a second order
 representation, block split invariants, and lookup synchronization. The
 measured geometric design removes physical reconstruction and performs well
 on duplicate-heavy and alternating workloads without that complexity. It is
-the one retained V3 design. Preview.2 adds endpoint carry to reduce how often
+the one retained V3 design. V3 Preview.2 added endpoint carry to reduce how often
 this relabel policy is entered. The preferred/open-end depths, burst threshold,
 and stride are private policy hints, not validity limits or a compatibility
 contract.
@@ -214,7 +214,9 @@ metadata for a nonzero first absolute level or later level delta greater than
 one. `/` is a separator, never the old unary level count. The formatter has
 one canonical output per valid Path. V2 Preview.4 `lks_path_parse()` accepts
 exactly that output; `src/path_order_key.c` owns a separate versioned durable
-key. Cross-Preview display-text compatibility is not promised. A zero-based chain
+key. Historical Preview-to-Preview display-text compatibility was not promised;
+published stable 2.x and the proposed stable 3.x boundary preserve the
+documented canonical grammar. A zero-based chain
 with consecutive levels uses exactly `4 * depth` text characters. In the
 general case, add the decimal digits of emitted level metadata to that
 per-step cost. This is separate from internal numeric Path storage.
@@ -277,7 +279,7 @@ repair is obsolete, or that worst-case complexity has been solved.
 
 ### Historical merge code
 
-Current public V2 `lks_group_merge` stably merges the ordered item sequences,
+The public `lks_group_merge`, established in V2 and retained in V3, stably merges the ordered item sequences,
 placing comparator-equal Base items before Incoming items, then builds a new
 Group with fresh Paths. Neither source Group changes. The private historical
 v1 owned-base helper instead preserves an exclusively owned Base object and
@@ -380,22 +382,29 @@ the mixed results do not support a broad speed claim or a winner graphic.
 ### Core engineering constraints
 
 - Keep implementation in portable C17 under both build systems.
-- Preserve public ownership and ordering semantics; generated Path coordinates
-  can change when the preview allocator policy changes.
+- Preserve public ownership and ordering semantics. Exact generated Path
+  coordinates and private placement policy are implementation details; a
+  compatible future 3.x release may change them while preserving documented
+  public contracts.
 - Preserve stable ordering and the documented ownership rules.
 - Keep relevant regression coverage passing when behavior changes.
 
-## Per-Preview documentation review
+## Release documentation and presentation review
 
-Before every future Preview commit or release, review and update as applicable
-`README.md`, `docs/API.md`, `docs/USAGE.md`, `docs/DEVELOPMENT.md`,
-`CHANGELOG.md`, and the active roadmap GitHub Issue. The review is mandatory
-even when a file needs only a small change or none. When useful, leave a
-completed Preview implementation-result comment on the active roadmap Issue,
-especially if a planned problem was solved, an assumption changed, an issue
-was superseded, measurements changed technical-debt priority, or work was
-deliberately deferred. Review before posting; documentation work itself does
-not imply a release.
+For every Stable release, review the complete public path from first visit to
+first use: README, API, usage, integration, compatibility, development and
+relevant migration guides, benchmark documentation, CHANGELOG, examples,
+visual diagrams, interactive demos, GitHub Pages entry and navigation, release
+notes, and relevant GitHub Issues. Read each section, classify it as current,
+historical, stale, or obsolete, and verify that historical material is clearly
+labeled and does not become the default presentation. Verify links and visual
+claims against the released implementation. A Stable release is not complete
+merely because its version numbers and CHANGELOG were updated.
+
+Apply a scope-appropriate review to other releases and code changes too. Keep
+Issue updates and release notes aligned with verified evidence; local-only
+validation must not be presented as CI evidence. Documentation review alone
+does not publish a release.
 
 ## Line endings
 

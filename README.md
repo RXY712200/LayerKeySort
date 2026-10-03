@@ -20,11 +20,10 @@ it is not a published V3 Stable release.
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
 **V3 RC.1 is a published prerelease, not a stable release.** This candidate
-branch changes version metadata and release documentation for independent
+branch changes version metadata, documentation, and static presentation for independent
 review; it has not been tagged or released as `v3.0.0`.
 Normal users should pin stable `v2.0.0`. See the
-[V2 to V3 migration guide](docs/V3_MIGRATION.md) before adopting the
-candidate API.
+[V2 to V3 migration guide](docs/V3_MIGRATION.md) before adopting V3.
 
 ## Quick start
 
@@ -53,56 +52,46 @@ For one-time stable array sorting, use the smaller
 project, follow [integration](docs/INTEGRATION.md); only
 `#include "layerkeysort.h"` is needed by application code.
 
-## Release history
+**[Review the V3 Tree visualizer](docs/v3/index.html).** This candidate
+changes the Pages source entry to V3; the currently published Pages site will
+not switch until this branch is integrated.
 
-| Version | Main purpose | Still provisional or deferred |
-| --- | --- | --- |
-| v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
-| v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
-| v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
-| v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
-| v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
-| v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
-| v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
-| v3.0.0-preview.1 (released Preview) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
-| v3.0.0-preview.2 (released experimental Preview) | Carry endpoint coordinates into available ancestor slots and adapt stride during long endpoint runs; add focused soak and diagnostic evidence. | Interior relabel cost and complete insertion complexity remain unbounded by AVL height alone. |
-| v3.0.0-preview.3 (released experimental Preview) | Stabilize comparator/borrow contracts, correct V3 complexity documentation, and add comparable hotspot and footprint diagnostics. | Full-range relabel and Path growth remain workload dependent; no formal complete-insertion bound. |
-| v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
-| v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
-| v3.0.0-rc.1 (published Release Candidate) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the implementation for final stabilization. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
-| v3.0.0 (unreleased Stable candidate) | Prepare stable version metadata and compatibility wording after RC.1 post-release validation; no production algorithm or API change. | Independent review remains; relabel, latency, storage, and complexity limits remain. |
+![V3 separates comparator-managed and explicit-coordinate Trees over logical Paths and a physical AVL index](docs/assets/v3-architecture.svg)
 
-Stable v2.0.0 retains `v2.0.0-rc.1`'s Path-keyed Tree, remove/rekey, canonical
-display parsing, LK1 sortable keys, and production algorithm. Observation tests
-add consumer persistence and adversarial input coverage. See the
-[compatibility contract](docs/COMPATIBILITY.md).
-
-**[Open the live interactive visualizer](https://rxy712200.github.io/LayerKeySort/)**
-
-![LayerKeySort transforms unordered values into an ascending sequence by locating each item and assigning a hierarchical Path](docs/assets/layerkeysort-insertion.svg)
-
-The visual shows a **historical v1** Path showcase. The local browser visualizer in [`docs/demo/`](docs/demo/) does not execute the production C implementation and its recorded Path values do not describe the V2 allocator.
+The browser [V3 visualizer source](docs/v3/index.html) replays exact Path
+snapshots recorded from the published RC.1 production C implementation.
+It does not run C or model the physical AVL in JavaScript. The candidate
+leaves that production source unchanged. The former interactive
+[V1 Path showcase](docs/demo/index.html) remains available as history;
+its recorded Path values do not describe V3.
 
 ## Visual overview
 
 ```mermaid
 flowchart TD
-    A[Input items] --> B[Build local Groups]
-    B --> C[Assign local hierarchical Paths]
-    C --> D[Stable merge]
-    D --> E[Assign fresh result Paths]
-    E --> G[Final ordered Group]
+    A[Caller-owned items and application IDs] --> B[LksOrderedTree: bound comparator]
+    A --> C[LksTree: application-selected Paths]
+    B --> D[Managed Path assignment and possible relabel]
+    C --> E[Explicit insert, remove, and rekey]
+    D --> F[Logical Path order via lks_path_compare]
+    E --> F
+    F --> G[Path-keyed physical AVL index]
+    F --> H[Readable display text or sortable LK1 key]
 ```
 
-Paths in separate Groups are local positions. A merge leaves both inputs unchanged and assigns a fresh coordinate layout to the result; exact Base Paths may change.
+Physical AVL parent/child links are an ephemeral index view, not Path-prefix
+relationships. Managed relabel changes coordinates while retaining existing
+physical nodes. Display text is not a lexical sort key; LK1 persists one
+sortable coordinate, not an item ID or a Tree. Immutable Group/GroupBatch
+and `lks_sort()` remain separate batch and array APIs.
 
 ## Why LayerKeySort?
 
-- Stable ordering for items that compare equal.
-- Hierarchical Path positions that can represent deeper levels and gaps.
-- A one-call stable pointer-array sort for ordinary use.
-- Explicit Group and GroupBatch construction and merge operations.
-- Base-first ordering for equal items from a public two-Group merge.
+- Comparator-managed online ordering with stable equal-item placement.
+- Explicit Path coordinates for applications that control manual moves.
+- Hierarchical coordinates with gaps; a managed Tree can relabel them as needed.
+- Caller-owned item identity remains separate from its ordering coordinate.
+- Immutable Group/GroupBatch operations and stable pointer-array sort for batch use.
 - A C17 public API that borrows caller-owned item pointers.
 
 ## Choosing the right API
@@ -167,7 +156,7 @@ The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
 - **Path:** create, clone, append, format/parse display text, format/parse durable keys, compare, and find positions before, after, or between other Paths.
 - **Simple sort:** `lks_sort()` stable-sorts the caller's pointer array.
 - **Manual Tree:** insert, find, remove, and rekey explicit Path coordinates.
-- **Ordered Tree (V3 candidate):** bind a comparator at creation, insert and
+- **Ordered Tree (V3):** bind a comparator at creation, insert and
   locate items in stable comparator order, remove by exact Path, and read nodes.
 - **Group:** build a sorted Group and access its items and Paths.
 - **GroupBatch / merge:** build Groups from consecutive input chunks and merge Groups or a Batch.
@@ -222,11 +211,37 @@ examples/ordered_tree.c
 examples/layer_list.c
 tests/
 demo/main.c
+docs/v3/                 current V3 visualizer and production-recorded fixtures
+docs/demo/               historical V1 Path showcase
 LayerKeySort.slnx
 LayerKeySort.vcxproj
 LICENSE
 CHANGELOG.md
 ```
+
+## Release history
+
+| Version | Main purpose | Still provisional or deferred |
+| --- | --- | --- |
+| v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
+| v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
+| v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
+| v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
+| v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
+| v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
+| v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
+| v3.0.0-preview.1 (released Preview) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
+| v3.0.0-preview.2 (released experimental Preview) | Carry endpoint coordinates into available ancestor slots and adapt stride during long endpoint runs; add focused soak and diagnostic evidence. | Interior relabel cost and complete insertion complexity remain unbounded by AVL height alone. |
+| v3.0.0-preview.3 (released experimental Preview) | Stabilize comparator/borrow contracts, correct V3 complexity documentation, and add comparable hotspot and footprint diagnostics. | Full-range relabel and Path growth remain workload dependent; no formal complete-insertion bound. |
+| v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
+| v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
+| v3.0.0-rc.1 (published Release Candidate) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the implementation for final stabilization. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
+| v3.0.0 (unreleased Stable candidate) | Prepare stable metadata, compatibility wording, and V3-first visual/documentation paths after RC.1 validation; no production algorithm or API change. | Independent review remains; relabel, latency, storage, and complexity limits remain. |
+
+Stable v2.0.0 retains `v2.0.0-rc.1`'s Path-keyed Tree, remove/rekey, canonical
+display parsing, LK1 sortable keys, and production algorithm. Observation tests
+add consumer persistence and adversarial input coverage. See the
+[compatibility contract](docs/COMPATIBILITY.md).
 
 ## Documentation
 
@@ -238,7 +253,8 @@ CHANGELOG.md
 - [Development guide](docs/DEVELOPMENT.md)
 - [Benchmark report](docs/BENCHMARKS.md)
 - [Contributing](CONTRIBUTING.md)
-- [Interactive visualizer source](docs/demo/index.html)
+- [V3 interactive visualizer source](docs/v3/index.html)
+- [Historical V1 Path showcase](docs/demo/index.html)
 
 ## License
 

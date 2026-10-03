@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">LayerKeySort V3 manual and comparator-managed ordering</title>
+  <desc id="desc">Caller-owned items enter either a comparator-bound LksOrderedTree that assigns and may relabel Paths, or an explicit-coordinate LksTree where the application supplies Paths and can rekey. Both use logical Path coordinates and a separate physical AVL index. Display text is readable; LK1 stores one sortable coordinate, not item identity.</desc>
+  <defs><style>
+    text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;fill:#17332e}
+    .title{font-size:37px;font-weight:750;letter-spacing:-1px}.sub{font-size:17px;fill:#49655c}
+    .card{fill:#fff;stroke:#c9dfd5;stroke-width:2}.managed{fill:#e9f6ef;stroke:#7dbca2;stroke-width:2}.manual{fill:#edf3ff;stroke:#91acd7;stroke-width:2}
+    .head{font-size:24px;font-weight:750}.body{font-size:17px}.small{font-size:14px;fill:#526e63}.mono{font-family:ui-monospace,Consolas,monospace;font-size:16px;font-weight:700}
+    .line{stroke:#397d6b;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10 Z" fill="#397d6b"/></marker></defs>
+  <rect width="1200" height="620" fill="#f2f7f5"/>
+  <text x="46" y="61" class="title">LayerKeySort V3 · two ways to manage order</text>
+  <text x="47" y="91" class="sub">Items belong to the application. A Path is a mutable ordering coordinate, never the item ID.</text>
+  <rect x="45" y="118" width="1110" height="63" rx="13" class="card"/>
+  <text x="70" y="156" class="head">Caller-owned items + stable application IDs</text>
+  <path d="M350 181 V205 H306 V221 M850 181 V205 H894 V221" class="line"/>
+  <rect x="45" y="225" width="530" height="173" rx="18" class="managed"/>
+  <text x="70" y="263" class="head">LksOrderedTree</text>
+  <text x="70" y="294" class="body">Comparator bound at construction</text>
+  <text x="70" y="323" class="body">Stable equal-item order · managed Path assignment</text>
+  <text x="70" y="352" class="body">Insertion may relabel existing coordinates</text>
+  <text x="70" y="380" class="small">Change sort key: remove → modify → reinsert</text>
+  <rect x="625" y="225" width="530" height="173" rx="18" class="manual"/>
+  <text x="650" y="263" class="head">LksTree</text>
+  <text x="650" y="294" class="body">Application supplies exact Path coordinates</text>
+  <text x="650" y="323" class="body">Insert · exact-Path remove · manual rekey</text>
+  <text x="650" y="352" class="body">No bound item comparator</text>
+  <text x="650" y="380" class="small">Application ID stays separate from coordinate</text>
+  <path d="M306 398 V421 M894 398 V421" class="line"/>
+  <rect x="45" y="426" width="1110" height="101" rx="18" class="card"/>
+  <text x="70" y="462" class="head">Shared Path model</text>
+  <text x="70" y="489" class="body">Logical order: lks_path_compare() · Physical structure: implementation-defined Path-keyed AVL</text>
+  <text x="70" y="513" class="small">Physical parent/child links are not Path prefix relationships.</text>
+  <text x="45" y="563" class="mono">Readable display Path</text>
+  <text x="302" y="563" class="body">→</text>
+  <text x="341" y="563" class="mono">LK1 sortable coordinate</text>
+  <text x="671" y="563" class="body">· neither is permanent identity or whole-Tree storage</text>
+  <text x="46" y="596" class="small">Managed relabel can touch the full logical range; no proven complete-insertion worst-case O(log n) bound.</text>
+</svg>

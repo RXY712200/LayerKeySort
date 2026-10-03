@@ -26,8 +26,12 @@ V3 prerelease. No `v3.0.0` tag or Release has been published.
 - Keep full-range relabel, synchronous insertion tail latency, and
   workload-dependent Path depth/storage explicit. Complete managed insertion
   has no proven worst-case `O(log n)` guarantee or formal amortized bound.
+- Replace the default historical V1 web and README visuals with a V3
+  architecture explanation and production-recorded managed-ordering replay.
+  Keep the V1 showcase clearly marked as history. Extend the release review
+  to all user-facing documentation, examples, assets, and navigation.
 
-The candidate changes version metadata and documentation only. It does not
+The candidate changes version metadata, documentation, and static presentation only. It does not
 change public function signatures, the 59-function API count, production
 ordering, Path semantics, parser behavior, or LK1 v1 encoding.
 

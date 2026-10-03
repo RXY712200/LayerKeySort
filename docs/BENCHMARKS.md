@@ -40,9 +40,11 @@ measure their own workload or choose an ordering design with a suitable
 guarantee. No worst-case `O(log n)` complete insertion or formal amortized
 bound is claimed.
 
-## Preview.3 development diagnostics
+## V3 Preview.3 development diagnostics
 
-No Preview.3 timing comparison is claimed here. The current harness adds a
+The Preview.3 stabilization work did not add a controlled cross-version
+timing comparison; the later same-source validation above reports its own
+single-version timings. The current harness adds a
 fixed interior `hotspot` insertion pattern and a `footprint` record for final
 resident Path allocation, total steps, and display/LK1 C-string bytes.
 `relabel.nodes_relabelled` counts old coordinates replaced by successful
@@ -175,7 +177,7 @@ milliseconds. Compiler, thermal state, and OS scheduling limit generality.
 The [metadata sidecar](../benchmarks/results/v3-preview1-metadata.md) records
 the source checkouts, flags, and measurement boundaries.
 
-| Managed insert workload | N | Stable V2 | V3 development |
+| Managed insert workload | N | Stable V2 | V3 Preview.1 |
 | --- | ---: | ---: | ---: |
 | Ascending | 100,000 | 327.913 | 421.662 |
 | All equal | 100,000 | 331.146 | 419.852 |

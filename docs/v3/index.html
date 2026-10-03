@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="LayerKeySort V3 manual and comparator-managed Tree models, with recorded Path snapshots from the production C implementation.">
+  <title>LayerKeySort V3 — ordering coordinates</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="fixtures.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <p class="eyebrow">LayerKeySort · V3 architecture</p>
+    <h1>Items have identity. Paths have position.</h1>
+    <p class="lede">Explore the two V3 Tree models. The managed replay uses Path snapshots recorded from the exact <code>v3.0.0-rc.1</code> C implementation, whose production source is unchanged in the unreleased Stable candidate.</p>
+    <nav aria-label="Project links"><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/README.md">README</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/USAGE.md">Usage</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/API.md">API</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/V3_MIGRATION.md">V2 migration</a><a href="../demo/">Historical V1 visualizer</a></nav>
+  </header>
+  <main>
+    <section class="explorer" aria-labelledby="explorer-title">
+      <div class="section-heading"><div><p class="eyebrow">Interactive explanation</p><h2 id="explorer-title">One ordering model at a time</h2></div><p class="source-note">This page replays recorded results. It does not run production C or simulate the AVL index.</p></div>
+      <div class="mode-tabs" role="group" aria-label="Tree model"><button type="button" id="managed-mode" class="active" aria-pressed="true">Comparator-managed · LksOrderedTree</button><button type="button" id="manual-mode" aria-pressed="false">Manual coordinates · LksTree</button></div>
+      <div id="managed-intro" class="model-intro"><p>The comparator is bound when the Tree is created. New items enter numeric value order; equal values retain insertion order. The Tree assigns Paths, and a congested gap may relabel existing coordinates.</p><label for="scenario">Recorded sequence <select id="scenario"><option value="mixed">Mixed values and stable equality</option><option value="hotspot">Repeated interior hotspot and relabel</option></select></label></div>
+      <div id="manual-intro" class="model-intro" hidden><p>The application chooses coordinates and may insert, remove, or rekey one item by exact Path. The layer-list sequence below is taken from the public C example. Its IDs are application identity; Paths are mutable ordering state.</p></div>
+      <div class="controls" role="group" aria-label="Replay controls"><button id="step" type="button" class="primary">Step</button><button id="play" type="button">Play</button><button id="pause" type="button" disabled>Pause</button><button id="reset" type="button">Reset</button><label for="speed">Speed <select id="speed"><option value="1100">Slow</option><option value="600" selected>Normal</option><option value="250">Fast</option></select></label><span id="progress" class="progress">0 / 10</span></div>
+      <div class="event" aria-live="polite"><p class="eyebrow">Current operation</p><h3 id="event-title">Ready to insert</h3><p id="event-detail">Choose Step or Play.</p><p id="relabel-detail" class="relabel-detail">Existing Paths changed: 0</p></div>
+      <div class="table-wrap"><table><caption id="table-caption">Current logical order by comparator and Path</caption><thead><tr><th scope="col">Position</th><th scope="col">Application item</th><th scope="col">Comparator value</th><th scope="col">Current Path</th><th scope="col">Change</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <p id="fixture-note" class="fixture-note">Exact Paths are recorded snapshots. Reset or switching sequences starts at the beginning.</p>
+    </section>
+    <section class="concepts" aria-label="How to read the replay">
+      <article><h2>Logical coordinate</h2><p>Read table rows in Path order. <code>lks_path_compare()</code> defines that order. Display text is readable but is not a lexical sort key. A changed Path does not change an item's application ID.</p></article>
+      <article><h2>Physical index</h2><p>Both Tree models use a Path-keyed AVL index. Physical parent and child links are implementation-defined and do not mean Path prefix or logical parentage. Managed relabel retains the existing physical nodes while replacing Path coordinates.</p></article>
+      <article><h2>Persistence</h2><p>Canonical display text represents one readable Path. A versioned <code>LK1:</code> key can persist and bytewise-sort one current coordinate. Neither stores item payloads, permanent IDs, or a whole Tree.</p></article>
+    </section>
+    <section class="limits"><h2>Limits to plan for</h2><p>A managed insertion can relabel the full logical range. A large relabel can cause significant synchronous tail latency. Path depth and storage depend on the workload. Complete insertion has no proven worst-case <code>O(log n)</code> guarantee or formal amortized bound.</p><p>Caller-owned items and comparator context must stay alive. Remove an item, change comparator-visible fields, then reinsert it; do not mutate its sort key while resident.</p></section>
+  </main>
+  <footer><p>V3 Stable candidate is unreleased. Latest published Stable: <code>v2.0.0</code>. Latest V3 prerelease: <code>v3.0.0-rc.1</code>. <a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/v3/README.md">Fixture provenance</a> · <a href="../demo/">Historical V1 showcase</a>.</p></footer>
+</body>
+</html>

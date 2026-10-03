@@ -14,7 +14,7 @@ Generated Path layouts and performance policy remain implementation details.
 - CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
   with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
   and compiler versions, not every version of those operating systems or
-  compilers. The V3 RC.1 candidate passed all five CI configurations with
+  compilers. The published V3 RC.1 commit passed all five CI configurations with
   CTest 8/8 on their recorded runners.
 
 The public header has `extern "C"` guards for inclusion by C++ applications;

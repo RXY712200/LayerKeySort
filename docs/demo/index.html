@@ -12,7 +12,7 @@
   <header class="page-header">
     <p class="eyebrow">LayerKeySort · historical v1 Path showcase</p>
     <h1>Watch items find ordered positions</h1>
-    <p class="intro">Bar height represents comparator value. The default 16-item run shows recorded Path values from historical v1 Group builds. V2 uses a different bulk allocator; these exact strings are not V2 output.</p>
+    <p class="intro">Bar height represents comparator value. The default 16-item run shows recorded Path values from historical v1 Group builds. These exact strings are not current V3 output. <a href="../v3/">Open the current V3 Tree visualizer</a>.</p>
   </header>
   <main>
     <section class="visualizer" aria-labelledby="chart-title">
@@ -53,8 +53,8 @@
       </div>
       <p id="completion" class="completion" hidden></p>
     </section>
-    <aside class="algorithm-note"><h2>Historical v1 algorithm mapping</h2><p>The v1 Group builder processed input items in order. Tree lookup binary-searched ordered child lists and descended through predecessor children; it returned located neighbors, not a public linear scan. The animation shows recorded v1 positions and Paths, without inventing internal comparison probes. V2 Group build sorts first and bulk-assigns Paths, so this animation does not depict V2 construction.</p><p>The default values are unique. This run does not demonstrate stability; LayerKeySort preserves input order for comparator-equal items.</p></aside>
+    <aside class="algorithm-note"><h2>Historical v1 algorithm mapping</h2><p>The v1 Group builder processed input items in order. Tree lookup binary-searched ordered child lists and descended through predecessor children; it returned located neighbors, not a public linear scan. The animation shows recorded v1 positions and Paths, without inventing internal comparison probes. V2 and V3 use different Tree/Group construction, so this animation depicts neither current V3 behavior nor V2 construction.</p><p>The default values are unique. This run does not demonstrate stability; LayerKeySort preserves input order for comparator-equal items.</p></aside>
   </main>
-  <footer>This is a historical v1 explanatory visualization; it does not execute production C in the browser. Randomized runs do not display exact Path text because no JavaScript Path generator is used.</footer>
+  <footer>This is a historical v1 explanatory visualization; it does not execute current production C in the browser. Randomized runs do not display exact Path text because no JavaScript Path generator is used. <a href="../v3/">Return to V3</a>.</footer>
 </body>
 </html>
