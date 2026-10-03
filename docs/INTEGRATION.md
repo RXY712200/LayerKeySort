@@ -1,10 +1,10 @@
 # Integrating LayerKeySort
 
-Pin `v2.0.0` for the stable 52-function V2 API. The experimental
-`v3.0.0-preview.1` through `v3.0.0-preview.5` are released experimental
-snapshots. The published `v3.0.0-rc.1` Release Candidate retains 59 public
-functions and the changed V3 Tree API. See [V3 migration](V3_MIGRATION.md)
-before integrating it.
+Pin `v2.0.0` for the latest published Stable API (52 functions). The
+experimental `v3.0.0-preview.1` through `v3.0.0-preview.5` snapshots and
+`v3.0.0-rc.1` Release Candidate are published. This branch prepares an
+**unreleased `v3.0.0` Stable candidate** with 59 public functions and the V3
+Tree API. See [V3 migration](V3_MIGRATION.md) before integrating it.
 Generated Path layouts and performance policy remain implementation details.
 
 ## Requirements and tested configurations
@@ -51,7 +51,7 @@ parent project.
 
 ## CMake `FetchContent`
 
-For this published V3 Release Candidate, pin its tag:
+For the latest published V3 prerelease, pin the RC.1 tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -74,7 +74,9 @@ target_link_libraries(my_app PRIVATE layerkeysort)
 `FetchContent_MakeAvailable` also adds the repository's example
 targets; `cmake --build build --target my_app` builds only the application and
 its library dependency when that distinction matters. The tag identifies this
-prerelease; use `v2.0.0` when a stable release is required. The CMake
+prerelease; use `v2.0.0` when a published Stable release is required. Reviewers
+of the unreleased Stable candidate should pin its exact commit SHA rather
+than the moving candidate branch. The CMake
 recipe can also be tested offline by setting
 `FETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE` to a local checkout before
 configuration; that bypasses the network fetch while preserving the consumer

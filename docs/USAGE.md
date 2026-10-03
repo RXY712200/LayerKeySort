@@ -1,7 +1,8 @@
 # Using LayerKeySort
 
-This guide describes the published V3 RC.1 prerelease header. For stable
-applications, pin `v2.0.0`; see [V3 migration](V3_MIGRATION.md).
+This guide describes the unreleased V3 Stable candidate header. The latest
+published V3 prerelease is `v3.0.0-rc.1`; for a published Stable release,
+pin `v2.0.0`. See [V3 migration](V3_MIGRATION.md).
 
 ## Requirements
 
@@ -256,9 +257,12 @@ borrows valid. Manual equal-Path rekey is the documented successful no-op.
 A Path is an ordering coordinate rather than a stable application identity.
 Canonical display text is readable; versioned LK1 keys can persist and
 bytewise-sort one coordinate. Neither saves caller payloads or a whole Tree.
-Exact generated Path strings and private relabel thresholds may change in V3
-Preview development. Complete managed insertion can relabel all `n` nodes;
-no worst-case `O(log n)` or formal amortized bound is claimed.
+Exact generated Path strings are not stable application identities. Private
+relabel thresholds are not public compatibility promises: a compatible
+future 3.x implementation may change both while preserving documented
+public ordering, ownership, failure, and LK1 contracts. Complete managed
+insertion can relabel all `n` nodes; no worst-case `O(log n)` or formal
+amortized bound is claimed.
 
 ## Error handling
 

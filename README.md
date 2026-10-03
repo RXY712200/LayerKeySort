@@ -11,16 +11,20 @@ pointer-array sort cover batch use.
 **Latest stable:** `v2.0.0`. **Latest V3 prerelease:**
 `v3.0.0-rc.1`. Preview.1 through Preview.5 preceded this public Release
 Candidate. Stable `v2.0.0` remains recommended for normal use.
+This branch prepares an **unreleased `v3.0.0` Stable candidate** for review;
+it is not a published V3 Stable release.
 
 > [!WARNING]
-> **V2 is stable as of v2.0.0.** It retains RC.1's production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
+> **V2 is stable as of v2.0.0.** It retains `v2.0.0-rc.1`'s production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
 >
 > Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
 
-**V3 RC.1 is a published prerelease, not a stable release.**
+**V3 RC.1 is a published prerelease, not a stable release.** This candidate
+branch changes version metadata and release documentation for independent
+review; it has not been tagged or released as `v3.0.0`.
 Normal users should pin stable `v2.0.0`. See the
 [V2 to V3 migration guide](docs/V3_MIGRATION.md) before adopting the
-development API.
+candidate API.
 
 ## Quick start
 
@@ -66,8 +70,9 @@ project, follow [integration](docs/INTEGRATION.md); only
 | v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
 | v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
 | v3.0.0-rc.1 (published Release Candidate) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the implementation for final stabilization. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
+| v3.0.0 (unreleased Stable candidate) | Prepare stable version metadata and compatibility wording after RC.1 post-release validation; no production algorithm or API change. | Independent review remains; relabel, latency, storage, and complexity limits remain. |
 
-Stable v2.0.0 retains RC.1's Path-keyed Tree, remove/rekey, canonical
+Stable v2.0.0 retains `v2.0.0-rc.1`'s Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests
 add consumer persistence and adversarial input coverage. See the
 [compatibility contract](docs/COMPATIBILITY.md).
@@ -162,7 +167,7 @@ The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
 - **Path:** create, clone, append, format/parse display text, format/parse durable keys, compare, and find positions before, after, or between other Paths.
 - **Simple sort:** `lks_sort()` stable-sorts the caller's pointer array.
 - **Manual Tree:** insert, find, remove, and rekey explicit Path coordinates.
-- **Ordered Tree (V3 development):** bind a comparator at creation, insert and
+- **Ordered Tree (V3 candidate):** bind a comparator at creation, insert and
   locate items in stable comparator order, remove by exact Path, and read nodes.
 - **Group:** build a sorted Group and access its items and Paths.
 - **GroupBatch / merge:** build Groups from consecutive input chunks and merge Groups or a Batch.
@@ -185,7 +190,7 @@ For consuming this library from another CMake project, see
 
 ## Validation
 
-The repository includes deterministic property tests, stress tests, a Preview.5 mutation soak, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured for Windows/MSVC, Ubuntu/GCC and Clang (including sanitizer validation), and macOS/AppleClang. A passing runner does not guarantee every platform version. Path heuristics are internal and may change; no optimal complexity claim is made.
+The repository includes deterministic property tests, stress tests, a mutation soak, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured for Windows/MSVC, Ubuntu/GCC and Clang (including sanitizer validation), and macOS/AppleClang. A passing runner does not guarantee every platform version. Path heuristics are internal and may change; no optimal complexity claim is made.
 
 ## Performance evidence
 
@@ -194,7 +199,9 @@ development measurements, including regressions and memory tradeoffs. The
 [benchmark harness](benchmarks/README.md) is optional in CMake. V3 managed
 insertion keeps physical AVL nodes during a full-range coordinate relabel,
 but the relabel can still touch every item. Complete insertion has no claimed
-worst-case `O(log n)` or formal amortized bound.
+worst-case `O(log n)` or formal amortized bound. Generated Path depth and
+storage depend on the workload; large relabels can create significant
+synchronous insertion pauses.
 
 ## Current limitations
 

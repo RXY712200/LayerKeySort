@@ -2,7 +2,7 @@
 
 Beginning with v2.0.0, LayerKeySort 2.x preserves the documented public
 source/API and semantic compatibility contract below, subject to documented
-bug fixes and backward-compatible additions. RC.1 was the prerelease freeze
+bug fixes and backward-compatible additions. `v2.0.0-rc.1` was the prerelease freeze
 candidate for this contract.
 
 ## Stable public contract
@@ -58,16 +58,28 @@ An intentional breaking change to the frozen public contract requires the
 next major version. An optimization that preserves the contract does not, by
 itself, require 3.0.
 
-## V3 prerelease development boundary
+## Proposed 3.x compatibility boundary (unreleased candidate)
 
-The released experimental V3 Preview.1 through Preview.5 and the published
-RC.1 prerelease are outside the 2.x compatibility promise above. Stable users
-can continue using the published
-`v2.0.0` tag.
+The released V3 Preview.1 through Preview.5 and `v3.0.0-rc.1` are outside
+the 2.x compatibility promise above. `v2.0.0` remains the latest published
+Stable release. This branch prepares an unreleased `v3.0.0` Stable candidate
+for independent review; it has no Stable tag or GitHub Release yet.
+
 V3 intentionally removes the two per-operation-comparator `LksTree`
-functions and introduces a comparator-bound `LksOrderedTree`; see
-[V3_MIGRATION.md](V3_MIGRATION.md). RC.1 freezes this feature set; further
-changes require evidence from release-candidate validation.
-Path comparison, display text, and LK1 v1 bytes
-are preserved through RC.1, but this does not freeze every future V3
-API or generated Path coordinate.
+functions and introduces comparator-bound `LksOrderedTree`; see
+[V3_MIGRATION.md](V3_MIGRATION.md). If this candidate is published as Stable,
+compatible 3.x updates are intended to preserve the documented public names,
+signatures, status meanings, ownership and borrow lifetimes, comparator-bound
+ordering, failure behavior, Path comparison, canonical display grammar, LK1 v1
+bytes and ordering, Group/Batch semantics, stable sort behavior, and the
+`layerkeysort` CMake source-integration target. Backward-compatible additions
+and documented bug fixes may occur within 3.x; intentional breaks to those
+contracts require a new major version or, for an incompatible external key,
+a new key-format version.
+
+Exact generated Path coordinates, private relabel thresholds, physical AVL
+shape, node addresses, diagnostic counters, allocation layout, and benchmark
+timings are not compatibility promises. A compatible 3.x implementation may
+change those details while preserving the public contracts above. Paths and
+LK1 keys remain ordering coordinates, not permanent item IDs. This is a
+source/API and semantic policy, not a cross-toolchain binary ABI guarantee.

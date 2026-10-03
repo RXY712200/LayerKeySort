@@ -2,6 +2,35 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [3.0.0] - Unreleased Stable candidate
+
+This branch prepares the V3 Stable release for independent review. Publicly,
+`v2.0.0` remains the latest Stable release and `v3.0.0-rc.1` remains the latest
+V3 prerelease. No `v3.0.0` tag or Release has been published.
+
+- Separate manual-coordinate `LksTree` from comparator-bound `LksOrderedTree`.
+  Managed insertion uses logical Path relabeling rather than the V2 managed
+  full-Tree replacement fallback; a relabel may still cover the full range.
+- Retain V2 Path comparison, canonical display parsing, LK1 v1 bytes, Group
+  and GroupBatch semantics, and stable `lks_sort()` behavior.
+- Clarify comparator, caller-owned item/context, borrowed-view lifetime, and
+  remove/update/reinsert contracts. Improve Quick Start, examples, and C17
+  source/CMake consumer guidance across the V3 Preview series.
+- Retain the RC.1 documented-input, mutation, parser, and allocation-failure
+  regressions. The exact RC.1 commit passed five GitHub CI configurations,
+  each with CTest 8/8. A separate local post-release campaign used clean
+  consumers, ten 500,000-operation seeds per Tree type at a 12,000-item peak,
+  adversarial insertion, parser/LK1 torture, OOM sweeps, and 5,000 lifecycle
+  cycles. These extended local runs were not reproduced by GitHub CI and
+  their raw outputs are not part of this repository.
+- Keep full-range relabel, synchronous insertion tail latency, and
+  workload-dependent Path depth/storage explicit. Complete managed insertion
+  has no proven worst-case `O(log n)` guarantee or formal amortized bound.
+
+The candidate changes version metadata and documentation only. It does not
+change public function signatures, the 59-function API count, production
+ordering, Path semantics, parser behavior, or LK1 v1 encoding.
+
 ## [3.0.0-rc.1] - 2026-10-02
 
 This published Release Candidate freezes the existing V3 feature set for final
@@ -108,7 +137,7 @@ use, prefer stable V2; its published history is unchanged.
 ## [2.0.0] - 2026-10-01
 
 The first stable V2 release establishes the documented 2.x source/API and
-semantic compatibility contract. It retains RC.1's production implementation:
+semantic compatibility contract. It retains `v2.0.0-rc.1`'s production implementation:
 
 - Hierarchical Path coordinates, a mutable Path-keyed Tree, stable ordering of
   comparator-equal items, and before/after/between coordinate generation.

@@ -1,5 +1,12 @@
 # Performance and benchmark evidence
 
+The unreleased `v3.0.0` Stable candidate retains the RC.1 production
+implementation. The measurements below identify their original Preview/RC
+sources; they are not new Stable-candidate timings. The post-RC local
+validation campaign confirmed large relabels and synchronous tail latency,
+but its raw outputs are outside this repository and were not run by CI.
+No complete managed-insertion worst-case or formal amortized bound is claimed.
+
 ## V3 Preview.3 validation retained for RC.1
 
 RC.1 retains Preview.3's ordering algorithm. A one-machine validation at
@@ -214,7 +221,7 @@ or formal amortized bound is claimed.
 
 ## Stable V2 historical evidence (Preview.4 and Stage 5)
 
-Stable v2.0.0 retains the published RC.1 production code. The
+Stable v2.0.0 retains the published `v2.0.0-rc.1` production code. The
 Stage 4 and Stage 5
 columns below are historical development snapshots. These numbers describe
 one machine and the stated workloads; they are not universal performance
@@ -406,7 +413,7 @@ LayerKeySort and 0.439 ms for the external generator; hotspot 4,000 took
 38 durable-key bytes versus 4 external bytes; hotspot: 8 display/17 durable
 versus 669 external bytes). These results cannot establish a general winner.
 
-## Complexity and limits of V3 RC.1
+## Complexity and limits of the V3 Stable candidate
 
 Let `n` be the Tree size, `d` a Path depth, `b` an encoded text length, and
 `c` the cost of the caller's item comparator. An AVL visit may also compare

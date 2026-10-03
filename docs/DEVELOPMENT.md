@@ -1,8 +1,24 @@
 # Developing LayerKeySort
 
-The current branch contains the published `v3.0.0-rc.1` Release Candidate,
-based on Preview.5. Stable `v2.0.0` remains available. The 2.x
-compatibility policy is unchanged.
+The current branch prepares an **unreleased `v3.0.0` Stable candidate** from
+the published `v3.0.0-rc.1` commit. Latest published Stable remains `v2.0.0`;
+latest published V3 prerelease remains RC.1. The 2.x compatibility policy is
+unchanged, and the proposed 3.x boundary is in
+[COMPATIBILITY.md](COMPATIBILITY.md). No production ordering, Path, or LK1
+implementation change belongs to this candidate.
+
+## RC.1 post-release evidence
+
+The exact RC.1 tag passed five GitHub CI configurations with CTest 8/8 in
+each: Windows MSVC, Ubuntu GCC, Ubuntu Clang, Ubuntu Clang with sanitizers,
+and macOS AppleClang. A separate local campaign outside the released source
+tree exercised clean C/C++ consumers, ten deterministic 500,000-operation
+seeds per Tree type at a 12,000-item peak live set, adversarial insertion,
+parser/LK1 and OOM inputs, and 5,000 lifecycle cycles. It found no
+implementation or documented-contract defect. Those extended local outputs
+are not checked into this repository and were not independently reproduced
+by GitHub CI. Measured full-range relabel and insertion tail latency remain
+documented limitations, not claims of a complexity guarantee.
 
 ## Repository layout
 
