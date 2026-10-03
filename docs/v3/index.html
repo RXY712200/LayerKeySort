@@ -13,8 +13,8 @@
   <header class="site-header">
     <p class="eyebrow">LayerKeySort · V3 architecture</p>
     <h1>Items have identity. Paths have position.</h1>
-    <p class="lede">Explore the two V3 Tree models. The managed replay uses Path snapshots recorded from the exact <code>v3.0.0-rc.1</code> C implementation, whose production source is unchanged in the unreleased Stable candidate.</p>
-    <nav aria-label="Project links"><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/README.md">README</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/USAGE.md">Usage</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/API.md">API</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/V3_MIGRATION.md">V2 migration</a><a href="../demo/">Historical V1 visualizer</a></nav>
+    <p class="lede">Explore the two V3 Tree models. The managed replay uses Path snapshots recorded from the exact <code>v3.0.0-rc.1</code> C implementation, whose production source is unchanged in V3.0.0 Stable.</p>
+    <nav aria-label="Project links"><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.0.0/README.md">README</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.0.0/docs/USAGE.md">Usage</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.0.0/docs/API.md">API</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.0.0/docs/V3_MIGRATION.md">V2 migration</a><a href="../demo/">Historical V1 visualizer</a></nav>
   </header>
   <main>
     <section class="explorer" aria-labelledby="explorer-title">
@@ -34,6 +34,6 @@
     </section>
     <section class="limits"><h2>Limits to plan for</h2><p>A managed insertion can relabel the full logical range. A large relabel can cause significant synchronous tail latency. Path depth and storage depend on the workload. Complete insertion has no proven worst-case <code>O(log n)</code> guarantee or formal amortized bound.</p><p>Caller-owned items and comparator context must stay alive. Remove an item, change comparator-visible fields, then reinsert it; do not mutate its sort key while resident.</p></section>
   </main>
-  <footer><p>V3 Stable candidate is unreleased. Latest published Stable: <code>v2.0.0</code>. Latest V3 prerelease: <code>v3.0.0-rc.1</code>. <a href="https://github.com/RXY712200/LayerKeySort/blob/v3-stable-candidate/docs/v3/README.md">Fixture provenance</a> · <a href="../demo/">Historical V1 showcase</a>.</p></footer>
+  <footer><p>Latest Stable: <code>v3.0.0</code>. Historical 2.x Stable: <code>v2.0.0</code>. <a href="https://github.com/RXY712200/LayerKeySort/blob/v3.0.0/docs/v3/README.md">Fixture provenance</a> · <a href="../demo/">Historical V1 showcase</a>.</p></footer>
 </body>
 </html>

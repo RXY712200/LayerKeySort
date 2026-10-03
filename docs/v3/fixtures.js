@@ -604,5 +604,5 @@ window.LKS_V3_FIXTURES = {
       "title": "Repeated interior hotspot"
     }
   ],
-  "note": "Recorded from the exact RC.1 production C implementation; candidate src/*.c is unchanged."
+  "note": "Recorded from the exact RC.1 production C implementation; V3.0.0 Stable src/*.c is unchanged."
 };

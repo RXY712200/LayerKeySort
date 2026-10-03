@@ -58,17 +58,15 @@ An intentional breaking change to the frozen public contract requires the
 next major version. An optimization that preserves the contract does not, by
 itself, require 3.0.
 
-## Proposed 3.x compatibility boundary (unreleased candidate)
+## Stable 3.x compatibility contract
 
-The released V3 Preview.1 through Preview.5 and `v3.0.0-rc.1` are outside
-the 2.x compatibility promise above. `v2.0.0` remains the latest published
-Stable release. This branch prepares an unreleased `v3.0.0` Stable candidate
-for independent review; it has no Stable tag or GitHub Release yet.
+The released V3 Preview.1 through Preview.5 and `v3.0.0-rc.1` preceded
+the published `v3.0.0` Stable release. The 3.x contract below is active.
+The historical 2.x contract above remains applicable to `v2.0.0`.
 
 V3 intentionally removes the two per-operation-comparator `LksTree`
 functions and introduces comparator-bound `LksOrderedTree`; see
-[V3_MIGRATION.md](V3_MIGRATION.md). If this candidate is published as Stable,
-compatible 3.x updates are intended to preserve the documented public names,
+[V3_MIGRATION.md](V3_MIGRATION.md). Compatible 3.x updates preserve the documented public names,
 signatures, status meanings, ownership and borrow lifetimes, comparator-bound
 ordering, failure behavior, Path comparison, canonical display grammar, LK1 v1
 bytes and ordering, Group/Batch semantics, stable sort behavior, and the

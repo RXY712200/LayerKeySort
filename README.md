@@ -8,22 +8,19 @@ Both support exact-Path removal; neither owns the item objects. A Path is a
 changeable ordering coordinate, not an item ID. Immutable Groups and a stable
 pointer-array sort cover batch use.
 
-**Latest stable:** `v2.0.0`. **Latest V3 prerelease:**
-`v3.0.0-rc.1`. Preview.1 through Preview.5 preceded this public Release
-Candidate. Stable `v2.0.0` remains recommended for normal use.
-This branch prepares an **unreleased `v3.0.0` Stable candidate** for review;
-it is not a published V3 Stable release.
+**Latest Stable:** `v3.0.0`. `v2.0.0` remains the historical stable 2.x
+release. V3 Preview.1 through Preview.5 and RC.1 are historical prereleases.
+The [3.x compatibility contract](docs/COMPATIBILITY.md) is active.
 
 > [!WARNING]
-> **V2 is stable as of v2.0.0.** It retains `v2.0.0-rc.1`'s production behavior and includes observation regression tests. Exact automatically generated Path layouts and performance remain implementation details.
+> **V3 is Stable as of v3.0.0.** It retains `v3.0.0-rc.1`'s production implementation. Exact automatically generated Path layouts and performance remain implementation details.
 >
-> Passing tests confirms the tested correctness properties. It does not establish final optimization, complexity, heuristic tuning, or production readiness.
+> Passing tests confirms the tested correctness properties. It does not establish optimal performance or a formal bound for complete insertion. Measure synchronous relabel latency and Path storage for your workload.
 
-**V3 RC.1 is a published prerelease, not a stable release.** This candidate
-branch changes version metadata, documentation, and static presentation for independent
-review; it has not been tagged or released as `v3.0.0`.
-Normal users should pin stable `v2.0.0`. See the
-[V2 to V3 migration guide](docs/V3_MIGRATION.md) before adopting V3.
+**V3 RC.1 is a historical prerelease.** The Stable release retains its
+production source and adds final release documentation and presentation.
+Users migrating from V2 should read the
+[V2 to V3 migration guide](docs/V3_MIGRATION.md).
 
 ## Quick start
 
@@ -52,16 +49,15 @@ For one-time stable array sorting, use the smaller
 project, follow [integration](docs/INTEGRATION.md); only
 `#include "layerkeysort.h"` is needed by application code.
 
-**[Review the V3 Tree visualizer](docs/v3/index.html).** This candidate
-changes the Pages source entry to V3; the currently published Pages site will
-not switch until this branch is integrated.
+**[Explore the V3 Tree visualizer](docs/v3/index.html).** The Pages root
+opens this V3 presentation.
 
 ![V3 separates comparator-managed and explicit-coordinate Trees over logical Paths and a physical AVL index](docs/assets/v3-architecture.svg)
 
 The browser [V3 visualizer source](docs/v3/index.html) replays exact Path
 snapshots recorded from the published RC.1 production C implementation.
-It does not run C or model the physical AVL in JavaScript. The candidate
-leaves that production source unchanged. The former interactive
+It does not run C or model the physical AVL in JavaScript. Stable V3 leaves
+that production source unchanged. The former interactive
 [V1 Path showcase](docs/demo/index.html) remains available as history;
 its recorded Path values do not describe V3.
 
@@ -236,9 +232,9 @@ CHANGELOG.md
 | v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
 | v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
 | v3.0.0-rc.1 (published Release Candidate) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the implementation for final stabilization. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
-| v3.0.0 (unreleased Stable candidate) | Prepare stable metadata, compatibility wording, and V3-first visual/documentation paths after RC.1 validation; no production algorithm or API change. | Independent review remains; relabel, latency, storage, and complexity limits remain. |
+| v3.0.0 (Stable) | Publish the V3 manual/managed Tree architecture, active 3.x contract, and V3-first documentation and visualizer after RC.1 validation; production algorithms and the 59-function API match RC.1. | Full-range relabel, synchronous tail latency, workload-dependent Path storage, and no formal complete-insertion bound. |
 
-Stable v2.0.0 retains `v2.0.0-rc.1`'s Path-keyed Tree, remove/rekey, canonical
+Historical stable v2.0.0 retains `v2.0.0-rc.1`'s Path-keyed Tree, remove/rekey, canonical
 display parsing, LK1 sortable keys, and production algorithm. Observation tests
 add consumer persistence and adversarial input coverage. See the
 [compatibility contract](docs/COMPATIBILITY.md).
@@ -247,7 +243,7 @@ add consumer persistence and adversarial input coverage. See the
 
 - [Usage guide](docs/USAGE.md)
 - [Integration guide](docs/INTEGRATION.md)
-- [2.x compatibility contract](docs/COMPATIBILITY.md)
+- [2.x and 3.x compatibility contracts](docs/COMPATIBILITY.md)
 - [V3 migration guide](docs/V3_MIGRATION.md)
 - [API reference](docs/API.md)
 - [Development guide](docs/DEVELOPMENT.md)

@@ -47,7 +47,7 @@ function renderManaged() {
   const previous = step < 2 ? null : replay.steps[step - 2];
   rows.replaceChildren();
   byId("table-caption").textContent = "Current logical order · numeric comparator, then insertion order for ties";
-  byId("fixture-note").textContent = `Exact Path snapshots from production C at ${fixtures.sourceCommit}. The browser does not allocate or compare Paths; this candidate leaves production source unchanged.`;
+  byId("fixture-note").textContent = `Exact Path snapshots from production C at ${fixtures.sourceCommit}. The browser does not allocate or compare Paths; V3.0.0 Stable leaves that production source unchanged.`;
   if (!current) {
     byId("event-title").textContent = "Ready to insert";
     byId("event-detail").textContent = `Recorded sequence: ${replay.title}. Choose Step or Play.`;

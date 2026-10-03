@@ -9,8 +9,8 @@ snapshots for two deterministic `LksOrderedTree` insertion sequences:
 
 The snapshots were recorded with [record_fixtures.c](record_fixtures.c)
 linked against the exact published RC.1 production library at
-`e7508550533f7c5f7f74b6c873fd8800576db954`. The unreleased Stable
-candidate changes no `src/*.c` file. The recorder traverses public physical
+`e7508550533f7c5f7f74b6c873fd8800576db954`. The published Stable
+release changes no `src/*.c` file. The recorder traverses public physical
 navigation only to collect every item-to-Path association after each insert;
 it separately checks every pair against `lks_path_compare()` and the numeric
 comparator's stable equal-item order. It compares consecutive snapshots to

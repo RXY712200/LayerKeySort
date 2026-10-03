@@ -1,10 +1,8 @@
-# Migrating V2 Tree code to the V3 Stable candidate
+# Migrating from stable V2.0.0 to stable V3.0.0
 
-Stable applications should continue to pin the published `v2.0.0` release.
-This document describes the **unreleased `v3.0.0` Stable candidate** API,
-which retains the 59 functions of the published `v3.0.0-rc.1` prerelease.
-The candidate is under independent review and has not been tagged or
-published as V3 Stable. The proposed 3.x compatibility boundary is in
+This document describes migration from historical stable `v2.0.0` to
+published stable `v3.0.0`. The V3 API retains the 59 functions of the
+published `v3.0.0-rc.1` prerelease. The active 3.x compatibility contract is in
 [COMPATIBILITY.md](COMPATIBILITY.md).
 
 V2 let one `LksTree` accept caller-selected Paths and per-operation comparators.

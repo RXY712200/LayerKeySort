@@ -12,12 +12,12 @@
 - `LKS_VERSION_PRERELEASE` is `""`.
 - `LKS_VERSION_STRING` is `"3.0.0"`.
 
-This page describes the **unreleased V3 Stable candidate** header with 59
-public functions. The latest published Stable release is `v2.0.0` with its
-52-function API; the latest published V3 prerelease is `v3.0.0-rc.1`.
+This page describes the published **V3.0.0 Stable** header with 59
+public functions. Historical stable `v2.0.0` has a 52-function API;
+`v3.0.0-rc.1` is a historical prerelease.
 The [migration guide](V3_MIGRATION.md) lists the Tree changes. The
 [compatibility guide](COMPATIBILITY.md) distinguishes the established 2.x
-contract from the proposed 3.x boundary under review.
+contract from the active 3.x boundary.
 
 Path values are ordering coordinates, not permanent application item IDs.
 V2 Preview.3 specified the current formatter output but had no public
@@ -921,7 +921,7 @@ comparator-equal Base items before Incoming items, while Batch merge preserves
 source chunk order for equals. Each successful merge result has its own Path
 coordinate space, independent of unchanged source Groups.
 
-Stable v2.0.0 has **52 functions**. The V3 Stable candidate header has **59**:
+Historical stable v2.0.0 has **52 functions**. The V3.0.0 Stable header has **59**:
 two V2 comparator Tree functions were removed and nine ordered-container
 functions were added. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

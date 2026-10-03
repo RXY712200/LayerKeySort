@@ -1,8 +1,8 @@
-# Current benchmark harness (unreleased V3 Stable candidate)
+# Current benchmark harness (V3.0.0 Stable)
 
-This candidate retains the published `v3.0.0-rc.1` production benchmark
-behavior. Captured Preview and RC development data are historical; no new
-Stable-candidate timing CSV is claimed here.
+V3.0.0 retains the published `v3.0.0-rc.1` production benchmark behavior.
+Captured Preview and RC development data are historical; no new Stable-release
+timing CSV is claimed here.
 
 Stable v2.0.0 leaves captured V2 Preview.4/Stage 5 timing data unchanged. The
 current harness times V3 comparator-managed `LksOrderedTree` insertion for

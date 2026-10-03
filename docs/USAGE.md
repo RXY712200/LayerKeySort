@@ -1,8 +1,8 @@
 # Using LayerKeySort
 
-This guide describes the unreleased V3 Stable candidate header. The latest
-published V3 prerelease is `v3.0.0-rc.1`; for a published Stable release,
-pin `v2.0.0`. See [V3 migration](V3_MIGRATION.md).
+This guide describes the published `v3.0.0` Stable API. Pin `v3.0.0` for
+the current Stable generation. See [V3 migration](V3_MIGRATION.md) when
+upgrading from historical stable `v2.0.0`.
 
 ## Requirements
 

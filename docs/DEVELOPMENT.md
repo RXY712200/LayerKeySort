@@ -1,11 +1,9 @@
 # Developing LayerKeySort
 
-The current branch prepares an **unreleased `v3.0.0` Stable candidate** from
-the published `v3.0.0-rc.1` commit. Latest published Stable remains `v2.0.0`;
-latest published V3 prerelease remains RC.1. The 2.x compatibility policy is
-unchanged, and the proposed 3.x boundary is in
-[COMPATIBILITY.md](COMPATIBILITY.md). No production ordering, Path, or LK1
-implementation change belongs to this candidate.
+The published `v3.0.0` Stable release retains the production implementation
+from `v3.0.0-rc.1`. The 3.x compatibility contract is active; the historical
+2.x contract remains documented in [COMPATIBILITY.md](COMPATIBILITY.md).
+Stable release preparation did not change production ordering, Path, or LK1.
 
 ## RC.1 post-release evidence
 

@@ -2,11 +2,11 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.0.0] - Unreleased Stable candidate
+## [3.0.0] - 2026-10-03
 
-This branch prepares the V3 Stable release for independent review. Publicly,
-`v2.0.0` remains the latest Stable release and `v3.0.0-rc.1` remains the latest
-V3 prerelease. No `v3.0.0` tag or Release has been published.
+This is the published V3 Stable release. `v2.0.0` remains the historical
+stable 2.x release; `v3.0.0-rc.1` remains a historical prerelease. The 3.x
+compatibility contract is active.
 
 - Separate manual-coordinate `LksTree` from comparator-bound `LksOrderedTree`.
   Managed insertion uses logical Path relabeling rather than the V2 managed
@@ -31,7 +31,7 @@ V3 prerelease. No `v3.0.0` tag or Release has been published.
   Keep the V1 showcase clearly marked as history. Extend the release review
   to all user-facing documentation, examples, assets, and navigation.
 
-The candidate changes version metadata, documentation, and static presentation only. It does not
+The final Stable preparation changes version metadata, documentation, and static presentation only. It does not
 change public function signatures, the 59-function API count, production
 ordering, Path semantics, parser behavior, or LK1 v1 encoding.
 

@@ -1,10 +1,9 @@
 # Integrating LayerKeySort
 
-Pin `v2.0.0` for the latest published Stable API (52 functions). The
-experimental `v3.0.0-preview.1` through `v3.0.0-preview.5` snapshots and
-`v3.0.0-rc.1` Release Candidate are published. This branch prepares an
-**unreleased `v3.0.0` Stable candidate** with 59 public functions and the V3
-Tree API. See [V3 migration](V3_MIGRATION.md) before integrating it.
+Pin `v3.0.0` for the current published Stable API (59 functions). Historical
+stable `v2.0.0` has 52 functions; V3 Preview.1 through Preview.5 and RC.1
+are historical prereleases. See [V3 migration](V3_MIGRATION.md) when
+upgrading from the V2 Tree API.
 Generated Path layouts and performance policy remain implementation details.
 
 ## Requirements and tested configurations
@@ -51,7 +50,7 @@ parent project.
 
 ## CMake `FetchContent`
 
-For the latest published V3 prerelease, pin the RC.1 tag:
+For the current Stable release, pin the `v3.0.0` tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -64,7 +63,7 @@ set(LKS_BUILD_TESTS OFF)
 set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v3.0.0-rc.1)
+    GIT_TAG v3.0.0)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app src/main.c)
@@ -73,11 +72,8 @@ target_link_libraries(my_app PRIVATE layerkeysort)
 
 `FetchContent_MakeAvailable` also adds the repository's example
 targets; `cmake --build build --target my_app` builds only the application and
-its library dependency when that distinction matters. The tag identifies this
-prerelease; use `v2.0.0` when a published Stable release is required. Reviewers
-of the unreleased Stable candidate should pin its exact commit SHA rather
-than the moving candidate branch. The CMake
-recipe can also be tested offline by setting
+its library dependency when that distinction matters. The tag identifies the
+published Stable release. The CMake recipe can also be tested offline by setting
 `FETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE` to a local checkout before
 configuration; that bypasses the network fetch while preserving the consumer
 target path.
