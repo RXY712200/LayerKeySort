@@ -1,256 +1,120 @@
 # LayerKeySort
 
-*A C17 library for mutable ordering with hierarchical Path coordinates.*
+LayerKeySort is a C17 library for keeping a collection in order as items are added, removed, or moved.
 
-`LksOrderedTree` keeps borrowed items in comparator order and assigns their
-Paths. `LksTree` lets an application choose Paths itself for explicit moves.
-Both support exact-Path removal; neither owns the item objects. A Path is a
-changeable ordering coordinate, not an item ID. Immutable Groups and a stable
-pointer-array sort cover batch use.
+Imagine adding an Effects layer to a layer list:
 
-**Latest Stable:** `v3.0.0`. `v2.0.0` remains the historical stable 2.x
-release. V3 Preview.1 through Preview.5 and RC.1 are historical prereleases.
-The [3.x compatibility contract](docs/COMPATIBILITY.md) is active.
-
-> [!WARNING]
-> **V3 is Stable as of v3.0.0.** It retains `v3.0.0-rc.1`'s production implementation. Exact automatically generated Path layouts and performance remain implementation details.
->
-> Passing tests confirms the tested correctness properties. It does not establish optimal performance or a formal bound for complete insertion. Measure synchronous relabel latency and Path storage for your workload.
-
-**V3 RC.1 is a historical prerelease.** The Stable release retains its
-production source and adds final release documentation and presentation.
-Users migrating from V2 should read the
-[V2 to V3 migration guide](docs/V3_MIGRATION.md).
-
-## Quick start
-
-From the repository root, build and run the
-[ordered-tree example](examples/ordered_tree.c):
-
-```sh
-cmake -S . -B build -DLKS_BUILD_TESTS=OFF
-cmake --build build --target layerkeysort_ordered_example
-./build/layerkeysort_ordered_example
+```text
+Before:  Background  Player  HUD
+After:   Background  Player  Effects  HUD
 ```
 
-With a multi-configuration generator such as Visual Studio, run
-`build/Debug/layerkeysort_ordered_example.exe` after building Debug. The
-example creates a Tree, inserts three caller-owned items, locates one,
-removes it, and destroys the Tree. Expected output:
+Sorting an array can tell you the order *now*, but an array index is a poor lasting position when the order keeps changing. LayerKeySort gives items sortable **ordering coordinates** and helps you place new items between existing ones.
+
+The library can manage those coordinates from your comparator, or your application can choose them for explicit moves. The coordinates are called **Paths**. They describe position, not item identity.
+
+**Current Stable release:** [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0). The earlier [v2.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v2.0.0) remains available for 2.x users.
+
+## Try LayerKeySort
+
+From a repository checkout, build and run the [small ordered-tree example](examples/ordered_tree.c):
+
+```sh
+cmake -S . -B build/quickstart -DLKS_BUILD_TESTS=OFF
+cmake --build build/quickstart --target layerkeysort_ordered_example
+```
+
+Run `./build/quickstart/layerkeysort_ordered_example` on Unix-like systems. On Windows, run `build\quickstart\layerkeysort_ordered_example.exe` for a single-configuration build, or `build\quickstart\Debug\layerkeysort_ordered_example.exe` for Visual Studio Debug. The example inserts three items, finds one, removes it, and prints:
 
 ```text
 Found: Middle
 After removal: Low < 20 < High
 ```
 
-For one-time stable array sorting, use the smaller
-[sort example](examples/basic.c). For explicit coordinates and moves, use the
-[layer-list example](examples/layer_list.c). To link the library from another
-project, follow [integration](docs/INTEGRATION.md); only
-`#include "layerkeysort.h"` is needed by application code.
+For explicit moves, try the [layer-list example](examples/layer_list.c). For a one-time stable pointer-array sort, see the [sort example](examples/basic.c). The [V3 visualizer](https://rxy712200.github.io/LayerKeySort/) shows recorded ordering changes without requiring a C build.
 
-**[Explore the V3 Tree visualizer](docs/v3/index.html).** The Pages root
-opens this V3 presentation.
+## Use LayerKeySort in your project
 
-![V3 separates comparator-managed and explicit-coordinate Trees over logical Paths and a physical AVL index](docs/assets/v3-architecture.svg)
+The supported integration path is the CMake `layerkeysort` static-library target. In your application's `CMakeLists.txt`, pin the Stable tag with `FetchContent`:
 
-The browser [V3 visualizer source](docs/v3/index.html) replays exact Path
-snapshots recorded from the published RC.1 production C implementation.
-It does not run C or model the physical AVL in JavaScript. Stable V3 leaves
-that production source unchanged. The former interactive
-[V1 Path showcase](docs/demo/index.html) remains available as history;
-its recorded Path values do not describe V3.
+```cmake
+cmake_minimum_required(VERSION 3.21)
+project(my_app LANGUAGES C)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
-## Visual overview
+include(FetchContent)
+set(LKS_BUILD_TESTS OFF)
+set(LKS_BUILD_BENCHMARKS OFF)
+FetchContent_Declare(layerkeysort_source
+    GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
+    GIT_TAG v3.0.0)
+FetchContent_MakeAvailable(layerkeysort_source)
 
-```mermaid
-flowchart TD
-    A[Caller-owned items and application IDs] --> B[LksOrderedTree: bound comparator]
-    A --> C[LksTree: application-selected Paths]
-    B --> D[Managed Path assignment and possible relabel]
-    C --> E[Explicit insert, remove, and rekey]
-    D --> F[Logical Path order via lks_path_compare]
-    E --> F
-    F --> G[Path-keyed physical AVL index]
-    F --> H[Readable display text or sortable LK1 key]
+add_executable(my_app main.c)
+target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-Physical AVL parent/child links are an ephemeral index view, not Path-prefix
-relationships. Managed relabel changes coordinates while retaining existing
-physical nodes. Display text is not a lexical sort key; LK1 persists one
-sortable coordinate, not an item ID or a Tree. Immutable Group/GroupBatch
-and `lks_sort()` remain separate batch and array APIs.
+For LayerKeySort, your `main.c` needs only `#include "layerkeysort.h"`; application code does not need private `src/*.h` headers. Build the application with `cmake -S . -B build` and `cmake --build build --target my_app`. This repository does not yet provide an installed package, package-manager recipe, or single-file distribution.
 
-## Why LayerKeySort?
+If you vendor the source or compile it directly, follow the [integration guide](docs/INTEGRATION.md) for the verified `add_subdirectory` and direct C17 source paths.
 
-- Comparator-managed online ordering with stable equal-item placement.
-- Explicit Path coordinates for applications that control manual moves.
-- Hierarchical coordinates with gaps; a managed Tree can relabel them as needed.
-- Caller-owned item identity remains separate from its ordering coordinate.
-- Immutable Group/GroupBatch operations and stable pointer-array sort for batch use.
-- A C17 public API that borrows caller-owned item pointers.
+## Which API should I use?
 
-## Choosing the right API
+| Your task | Start with |
+| --- | --- |
+| Keep items in comparator order as the collection changes | [`LksOrderedTree`](examples/ordered_tree.c): the library assigns Paths and keeps equal values in insertion order. |
+| Choose positions yourself, including explicit moves | [`LksTree`](examples/layer_list.c): your application selects and changes Paths. |
+| Sort a pointer array once, stably | [`lks_sort()`](examples/basic.c); a normal sort may be simpler if stability is unnecessary. |
+| Build or merge immutable sorted batches | [Group and GroupBatch](docs/USAGE.md) are specialized batch APIs. |
 
-### When to use it
+`LksOrderedTree` binds one comparator when created. If an item's fields used by that comparator need to change, remove the item, update it, and reinsert it. `LksTree` does not impose a comparator order; the application manages its coordinates.
 
-Use `LksOrderedTree` when items have a consistent comparator and the library
-should manage their order. Equal items retain insertion order. To change a
-sort key, remove the item by its Path, update it, and reinsert it; changing
-comparison fields while resident breaks the ordering assumption.
+## Is it a fit?
 
-Use `LksTree` when the application chooses coordinates, such as inserting a
-layer between two others or moving one with `lks_tree_rekey()`. Keep stable
-application IDs separate from Paths. The [layer-list example](examples/layer_list.c)
-shows this model. `LK1:` can persist one sortable coordinate, not an entire
-Tree or item identity.
+LayerKeySort is useful when positions change repeatedly and you need to insert between existing items or keep a changing collection in comparator order. It is less compelling when:
 
-### When not to use it
+- You only sort an array once. Use an ordinary sort, or `lks_sort()` when you specifically need stable pointer-array sorting.
+- You need a short database rank string for occasional reorders and do not need this library's Tree or Path behavior. A simpler fractional-ranking scheme may have less overhead.
+- You need immutable position IDs or distributed/CRDT convergence. Paths can change, and this library does not coordinate independent replicas.
+- You require a proven bound on every insertion or consistently low synchronous latency. Managed insertion may relabel many Paths at once; measure your workload before using it in a latency-sensitive path.
 
-- For one-time array sorting, an ordinary sorting routine may be simpler.
-  `lks_sort()` is available when a stable pointer-array sort is useful, but
-  dynamic Path machinery is unnecessary.
-- If only occasional database reorder operations need a compact lexical rank
-  string, a simpler fractional-ranking scheme may have lower conceptual and
-  storage overhead.
-- The current mutable Path model does not provide distributed/CRDT replica
-  convergence or immutable permanent rank or item-identity values.
-- Complete comparator-driven insertion has no claimed worst-case `O(log n)`
-  bound or formal amortized bound. Choose a different design if a proven
-  operation bound is required.
-- Managed insertion can relabel many existing Paths at once. In the documented
-  [one-machine Preview.3 validation](docs/BENCHMARKS.md), 1,000,000 alternating
-  inserts took about 44 seconds and had individual pauses over 700 ms. Avoid synchronous
-  latency-sensitive use at that scale without measuring your workload.
+The [benchmark report](docs/BENCHMARKS.md) includes slower workloads and large relabel events alongside faster ones. It is evidence from specific machines and inputs, not a universal speed claim.
 
-## Core idea
+## The model in a little more detail
 
-A Path is an ordering coordinate, **not a permanent item ID**. `000` is the ZERO Path, distinct from the Tree's virtual root. Since V2 Preview.3, Paths have all 65,536 numeric slots (`0..65535`); each formats as three radix-54 characters from the current ASCII alphabet. Positive Paths begin with `0`, negative Paths with `1`; `/` separates steps, and optional decimal metadata records a nonzero first level or a later level jump. A parent sorts before its descendants. Use `lks_path_compare()` for ordering: complete formatted Path strings are not a general lexicographic sort key. The exact alphabet, comparison rules, and formatter grammar are specified in the [API reference](docs/API.md).
+A **Path** is a sortable ordering coordinate. Keep your own application ID for each item: `item identity != Path identity`. The library's Tree objects borrow your item pointers; they do not copy or free the items.
 
-For example, an additional position can be inserted between a parent and an existing descendant by using a deeper skipped level:
+With `LksOrderedTree`, the comparator determines logical item order and the library chooses Paths. Comparator-equal items keep stable insertion order. If a gap becomes crowded, a managed insertion may **relabel** existing Paths. Reacquire borrowed Tree nodes and Paths after an actual mutation. With `LksTree`, your application chooses coordinates and can insert, remove, or rekey by Path.
 
-```text
-A         0DEq
-Inserted  0DEq/5222
-X         0DEq/2222
-B         0DEr
-```
+`lks_path_compare()` defines Path order. The physical AVL index is an implementation detail, not a hierarchy of logical Path parents. Readable Path text is for display; the separate versioned `LK1:` key can persist and bytewise-sort one coordinate. Neither form saves an entire Tree or gives an item a permanent ID.
 
-The Path comparison and gap APIs implement this ordering. Tree mutations may re-encode Paths; reacquire borrowed Tree nodes and Paths after an actual mutation. Canonical display text can be parsed, and a coordinate can be persisted as a separate `LK1:` order key. For example, display `0222` has key `LK1:201FF0000!`. A persisted coordinate is not a permanent item identity. The historical **V2** Preview.3 did not contain the parser or LK1 APIs.
+For an interactive explanation, open the [V3 visualizer](https://rxy712200.github.io/LayerKeySort/). Its managed replay uses Path snapshots recorded from the Stable release's unchanged RC.1 production implementation; the browser does not run the C algorithm. The [historical V1 visualizer](docs/demo/index.html) remains separate.
 
-## Ordering and stability guarantees
+## Limits to plan for
 
-- A comparator result below zero places the left item first; zero means equal under that comparator; above zero places it after the right item.
-- Comparator-equal items retain their input/source order. In a public two-Group merge, equal Base items precede equal Incoming items; Batch merging preserves chunk order.
-- Group and Batch merge inputs must have ordering semantics compatible with the supplied merge comparator and context.
-- Item pointers are borrowed. LayerKeySort does not clone or free caller-owned items; callers manage their lifetime.
+- A managed insertion can relabel a large region or even the full collection, causing workload-dependent synchronous pauses. Path depth, memory use, and LK1 key size also depend on the workload.
+- Complete managed insertion has no proven worst-case `O(log n)` guarantee and no formal amortized bound. The [benchmarks](docs/BENCHMARKS.md) give measured cases and methodology.
+- Shared mutable objects need external synchronization. Caller-owned items and comparator context must remain valid for the documented lifetimes.
+- LK1 stores one coordinate under bytewise ASCII ordering; it is not whole-Tree or item serialization. The library provides no distributed conflict resolution.
 
-## Public API overview
-
-The public header is [`include/layerkeysort.h`](include/layerkeysort.h).
-
-- **Path:** create, clone, append, format/parse display text, format/parse durable keys, compare, and find positions before, after, or between other Paths.
-- **Simple sort:** `lks_sort()` stable-sorts the caller's pointer array.
-- **Manual Tree:** insert, find, remove, and rekey explicit Path coordinates.
-- **Ordered Tree (V3):** bind a comparator at creation, insert and
-  locate items in stable comparator order, remove by exact Path, and read nodes.
-- **Group:** build a sorted Group and access its items and Paths.
-- **GroupBatch / merge:** build Groups from consecutive input chunks and merge Groups or a Batch.
-- **Status / comparator:** report operation status and supply a comparison callback with caller-owned context.
-
-## Build
-
-For the reusable library and test suite:
-
-```sh
-cmake -S . -B build
-cmake --build build
-ctest --test-dir build --output-on-failure
-```
-
-The existing `LayerKeySort.slnx` / `.vcxproj` remain available for MSVC C17
-validation. Build artifacts belong in an out-of-source `build/` directory.
-For consuming this library from another CMake project, see
-[integration](docs/INTEGRATION.md).
-
-## Validation
-
-The repository includes deterministic property tests, stress tests, a mutation soak, allocation-failure and out-of-memory tests, and a public API smoke test. CI is configured for Windows/MSVC, Ubuntu/GCC and Clang (including sanitizer validation), and macOS/AppleClang. A passing runner does not guarantee every platform version. Path heuristics are internal and may change; no optimal complexity claim is made.
-
-## Performance evidence
-
-The [benchmark report](docs/BENCHMARKS.md) includes stable V2 and V3
-development measurements, including regressions and memory tradeoffs. The
-[benchmark harness](benchmarks/README.md) is optional in CMake. V3 managed
-insertion keeps physical AVL nodes during a full-range coordinate relabel,
-but the relabel can still touch every item. Complete insertion has no claimed
-worst-case `O(log n)` or formal amortized bound. Generated Path depth and
-storage depend on the workload; large relabels can create significant
-synchronous insertion pauses.
-
-## Current limitations
-
-- Shared mutable objects are not guaranteed to be thread-safe; use external synchronization when sharing them.
-- Paths from separate Groups are local coordinates until a merge establishes the result's path space.
-- Published Groups are immutable; their borrowed Paths stay stable until Group destruction. After an actual Tree mutation, reacquire all borrowed Tree nodes, Paths, and navigation results. Equal-Path rekey is a no-op and preserves them.
-- Manual Tree removal does not compact Paths; manual rekey changes the selected item's coordinate. The V3 ordered container does not expose arbitrary rekey.
-- No binary serialization protocol, fixed memory ceiling, or public allocator/fault-injection API is provided. The `LK1:` key requires bytewise ASCII database collation for ordering.
-- The `LK1:` key persists one Path coordinate; it does not save a Tree or caller items, assign permanent item IDs, or provide distributed/CRDT conflict resolution. Package-manager recipes and a public custom allocator are optional future integrations.
-
-## Project layout
-
-```text
-include/layerkeysort.h
-src/
-examples/basic.c
-examples/ordered_tree.c
-examples/layer_list.c
-tests/
-demo/main.c
-docs/v3/                 current V3 visualizer and production-recorded fixtures
-docs/demo/               historical V1 Path showcase
-LayerKeySort.slnx
-LayerKeySort.vcxproj
-LICENSE
-CHANGELOG.md
-```
-
-## Release history
-
-| Version | Main purpose | Still provisional or deferred |
-| --- | --- | --- |
-| v2.0.0-preview.1 | Establish the V2 baseline: re-encodable Paths, sparse bulk Group/Batch construction, `lks_sort`, CMake/CI, and production diagnostic isolation. | Local congestion handling, online insertion policy, heuristic tuning, and final performance. |
-| v2.0.0-preview.2 (released) | Add bounded local Tree relabel/rebuild before accepting a deeper Path or using the full-Tree fallback. | Window and depth heuristics, equal-run lookup performance, allocator tuning, long-term Tree/Path design, and complexity analysis. |
-| v2.0.0-preview.3 (released) | Use the full 16-bit slot range and a compact Path text codec while keeping the V2 ordering model. | Equal-run lookup, child storage, topology coupling, and heuristic tuning remain open. |
-| v2.0.0-preview.4 (released) | Add a Path-keyed AVL Tree, remove/rekey, canonical display parsing, LK1 sortable keys, and measured endpoint insertion improvements. | Preview semantics and generated Paths remain provisional; full rebuild has adversarial costs, and some insertion workloads regress. |
-| v2.0.0-preview.5 (released) | Improve real-use examples, integration guidance, long-run mutation testing, platform coverage, and public-contract review. | Still a Preview; core complexity and persistence limits remain. |
-| v2.0.0-rc.1 (released candidate) | Freeze and validate the V2 public contract and documented source integration. | Historical prerelease; production implementation retained for stable 2.0.0. |
-| v2.0.0 (stable) | Activate the 2.x compatibility contract and retain RC observation regression coverage. | Full rebuild cost, formal insertion bounds, and optional integrations remain open. |
-| v3.0.0-preview.1 (released Preview) | Separate manual and managed Tree ordering; replace managed physical full rebuild with adaptive logical coordinate relabeling. | Experimental API, provisional relabel policy, no formal amortized insertion bound. |
-| v3.0.0-preview.2 (released experimental Preview) | Carry endpoint coordinates into available ancestor slots and adapt stride during long endpoint runs; add focused soak and diagnostic evidence. | Interior relabel cost and complete insertion complexity remain unbounded by AVL height alone. |
-| v3.0.0-preview.3 (released experimental Preview) | Stabilize comparator/borrow contracts, correct V3 complexity documentation, and add comparable hotspot and footprint diagnostics. | Full-range relabel and Path growth remain workload dependent; no formal complete-insertion bound. |
-| v3.0.0-preview.4 (released experimental Preview) | Make the V3 entry path, examples, integration, and performance limits easier to verify. | The V3 algorithm and its large-relabel costs are unchanged. |
-| v3.0.0-preview.5 (released experimental Preview) | Audit the V3 public and release contracts, and validate supported consumer/build paths for RC consideration. | Full-range relabel and Path/storage growth remain workload-dependent; no formal complete-insertion bound. |
-| v3.0.0-rc.1 (published Release Candidate) | Freeze the V3 feature set, strengthen negative-contract coverage, and validate the implementation for final stabilization. | Possible full-range relabel, workload-dependent storage and tail latency, and no formal complete-insertion bound. |
-| v3.0.0 (Stable) | Publish the V3 manual/managed Tree architecture, active 3.x contract, and V3-first documentation and visualizer after RC.1 validation; production algorithms and the 59-function API match RC.1. | Full-range relabel, synchronous tail latency, workload-dependent Path storage, and no formal complete-insertion bound. |
-
-Historical stable v2.0.0 retains `v2.0.0-rc.1`'s Path-keyed Tree, remove/rekey, canonical
-display parsing, LK1 sortable keys, and production algorithm. Observation tests
-add consumer persistence and adversarial input coverage. See the
-[compatibility contract](docs/COMPATIBILITY.md).
+See the [API reference](docs/API.md) for exact ownership, error, and Path rules, and the [3.x compatibility contract](docs/COMPATIBILITY.md) for what a compatible update preserves.
 
 ## Documentation
 
-- [Usage guide](docs/USAGE.md)
-- [Integration guide](docs/INTEGRATION.md)
-- [2.x and 3.x compatibility contracts](docs/COMPATIBILITY.md)
-- [V3 migration guide](docs/V3_MIGRATION.md)
-- [API reference](docs/API.md)
-- [Development guide](docs/DEVELOPMENT.md)
-- [Benchmark report](docs/BENCHMARKS.md)
-- [Contributing](CONTRIBUTING.md)
-- [V3 interactive visualizer source](docs/v3/index.html)
-- [Historical V1 Path showcase](docs/demo/index.html)
+| Looking for… | Read |
+| --- | --- |
+| How to use the main APIs | [Usage guide](docs/USAGE.md) |
+| CMake, vendoring, or direct C17 source integration | [Integration guide](docs/INTEGRATION.md) |
+| Exact functions, ownership, errors, and Path/LK1 formats | [API reference](docs/API.md) |
+| Stable 3.x promises and historical 2.x promises | [Compatibility contract](docs/COMPATIBILITY.md) |
+| Changes from V2 Tree code | [V2 to V3 migration guide](docs/V3_MIGRATION.md) |
+| Measurements and their limits | [Benchmark report](docs/BENCHMARKS.md) |
+| Building, testing, and contributing | [Development guide](docs/DEVELOPMENT.md) and [Contributing](CONTRIBUTING.md) |
+| See ordering changes visually | [V3 visualizer](https://rxy712200.github.io/LayerKeySort/) |
+| Release-by-release history | [Changelog](CHANGELOG.md) |
+
+The public header is [`include/layerkeysort.h`](include/layerkeysort.h). V3.0.0 is the current Stable generation; the [migration guide](docs/V3_MIGRATION.md) covers the breaking change from stable V2's comparator Tree API. Older Preview and RC details remain in the changelog.
 
 ## License
 

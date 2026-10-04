@@ -12,9 +12,9 @@ upgrading from historical stable `v2.0.0`.
 ## Adding LayerKeySort to a project
 
 The CMake target `layerkeysort` is a reusable static library and exposes the
-public include directory. The repository does not provide an installed package
-or package-manager recipe. For source-based integration, compile the production
-C files and add `include/` to the compiler search path.
+public include directory. Follow the [integration guide](INTEGRATION.md) for
+`FetchContent`, vendored `add_subdirectory`, or direct C17 source integration.
+The repository does not provide an installed package or package-manager recipe.
 
 The public header is `include/layerkeysort.h`. Include it as:
 
@@ -22,24 +22,9 @@ The public header is `include/layerkeysort.h`. Include it as:
 #include "layerkeysort.h"
 ```
 
-Set the compiler include search path to the repository’s `include/` directory. The production implementation files currently are:
-
-- `src/lks_alloc.c`
-- `src/lks_base.c`
-- `src/path.c`
-- `src/path_text.c`
-- `src/path_order_key.c`
-- `src/slot_codec.c`
-- `src/path_compare.c`
-- `src/gap.c`
-- `src/tree.c`
-- `src/group.c`
-- `src/sort.c`
-- `src/bulk.c`
-
-The private headers under `src/` are implementation details. The Visual Studio
-project also provides a combined validation executable; use the CMake library
-target for an application build.
+Only `layerkeysort.h` is an application header; the private headers under
+`src/` are implementation details. The exact source-file list for direct C17
+integration is maintained in the [integration guide](INTEGRATION.md).
 
 ## First use: managed Tree
 
