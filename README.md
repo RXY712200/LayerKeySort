@@ -1,5 +1,7 @@
 # LayerKeySort
 
+English | [简体中文](README.zh-CN.md)
+
 LayerKeySort is a C17 library for keeping a collection in order as items are added, removed, or moved.
 
 Imagine adding an Effects layer to a layer list:

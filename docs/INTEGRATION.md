@@ -1,5 +1,7 @@
 # Integrating LayerKeySort
 
+English | [简体中文](INTEGRATION.zh-CN.md)
+
 Choose a method for your build. These are the LayerKeySort 3.1.0 integration
 routes. The `v3.1.0` tag and assets become publicly available at final
 publication; until then, use this source checkout or an exact reviewed commit.

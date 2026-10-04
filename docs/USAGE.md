@@ -1,5 +1,7 @@
 # Using LayerKeySort
 
+English | [简体中文](USAGE.zh-CN.md)
+
 This is the LayerKeySort 3.1.0 API/use guide. The public function set remains
 compatible with stable `v3.0.0`. See [Integration](INTEGRATION.md) for obtaining
 the library and [V3 migration](V3_MIGRATION.md) when upgrading from V2.
