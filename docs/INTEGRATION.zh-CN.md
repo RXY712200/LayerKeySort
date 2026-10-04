@@ -2,7 +2,7 @@
 
 [English](INTEGRATION.md) | 简体中文
 
-本文介绍 LayerKeySort 3.1.0 的接入方式。`v3.1.0` tag 和发布资源将在最终发布时提供；在此之前，请使用当前源码检出或固定已审查的提交。升级自 V2 时另见[英文 V3 迁移指南](V3_MIGRATION.md)和[英文兼容性约定](COMPATIBILITY.md)。
+本文介绍 LayerKeySort 3.1.0 的接入方式。可使用 `v3.1.0` Release tag、发布资源或固定的具体提交。升级自 V2 时另见[英文 V3 迁移指南](V3_MIGRATION.md)和[英文兼容性约定](COMPATIBILITY.md)。
 
 | 方式 | 适用情况 | 接入时需要 CMake？ | 放入应用的文件 |
 | --- | --- | --- | --- |
@@ -16,7 +16,7 @@
 
 ## 两文件合并版
 
-最终发布后，从 [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases) 下载 `LayerKeySort-3.1.0-amalgamation.zip`。GitHub 自动提供的源码 ZIP／tar.gz 包含完整仓库；合并版 ZIP 是更小的直接接入包，内含 `layerkeysort.h`、`layerkeysort.c`、`example.c`、`LICENSE` 和 `README.txt`。
+从 [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases) 下载 `LayerKeySort-3.1.0-amalgamation.zip`。GitHub 自动提供的源码 ZIP／tar.gz 包含完整仓库；合并版 ZIP 是更小的直接接入包，内含 `layerkeysort.h`、`layerkeysort.c`、`example.c`、`LICENSE` 和 `README.txt`。
 
 解压后，将头文件和实现文件复制到应用中。使用 `#include "layerkeysort.h"`，按 C17 与应用一起编译：
 
@@ -36,7 +36,7 @@ cl /std:c17 /I. layerkeysort.c main.c
 
 ## CMake FetchContent
 
-下面是面向最终 `v3.1.0` tag 的完整消费者 `CMakeLists.txt`：
+下面是面向 `v3.1.0` Release tag 的完整消费者 `CMakeLists.txt`：
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -54,7 +54,7 @@ add_executable(my_app main.c)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-运行 `cmake -S . -B build`，再运行 `cmake --build build --target my_app`。作为 3.1.0 源码依赖时，测试、示例和安装规则默认关闭。正式发布前，`v3.1.0` tag 尚不可解析，应固定已审查的具体提交。离线测试本地检出可配置 `-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`。
+运行 `cmake -S . -B build`，再运行 `cmake --build build --target my_app`。作为 3.1.0 源码依赖时，测试、示例和安装规则默认关闭。应固定 Release tag 或具体提交。离线测试本地检出可配置 `-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`。
 
 ## 将完整仓库放入 CMake 项目
 

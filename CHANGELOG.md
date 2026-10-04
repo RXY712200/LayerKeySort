@@ -2,7 +2,7 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [3.1.0] - Unreleased
+## [3.1.0] - 2026-10-05
 
 This compatible V3 feature release improves how applications obtain and build
 LayerKeySort. It does not change the public C function set or production

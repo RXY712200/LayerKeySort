@@ -15,7 +15,7 @@ Sorting an array can tell you the order *now*, but an array index is a poor last
 
 The library can manage those coordinates from your comparator, or your application can choose them for explicit moves. The coordinates are called **Paths**. They describe position, not item identity.
 
-**Version in this source tree: 3.1.0.** Published versions are on [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). The `v3.1.0` tag and assets are created during final publication; the earlier [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) remains available.
+**Current Stable release: [v3.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.1.0).** Earlier releases, including [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0), remain available.
 
 ## Get LayerKeySort
 
@@ -27,7 +27,7 @@ The library can manage those coordinates from your comparator, or your applicati
 | Reuse a local CMake installation | Install once, then use `find_package`. |
 | Vendor the full repository | Use `add_subdirectory`. |
 
-For a published 3.1.0 Release, download `LayerKeySort-3.1.0-amalgamation.zip` from [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). Until the tag and assets are published, this source checkout can generate the package with `python tools/amalgamate.py --package-parent build/amalgamation`. GitHub's automatic source archive is the full repository; the amalgamation ZIP is the smaller two-file route.
+For the 3.1.0 Release, download `LayerKeySort-3.1.0-amalgamation.zip` from [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). This source checkout can also generate the package with `python tools/amalgamate.py --package-parent build/amalgamation`. GitHub's automatic source archive is the full repository; the amalgamation ZIP is the smaller two-file route.
 
 Extract the ZIP, copy those two files beside your application, include `#include "layerkeysort.h"`, and compile both C files as C17:
 
@@ -48,7 +48,7 @@ FetchContent_MakeAvailable(layerkeysort_source)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-The `v3.1.0` tag becomes resolvable when it is created during final delivery. Until then, use an exact reviewed source commit. Pin a tag or commit, not a moving branch. `my_app` must already be a target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for complete setup.
+Pin a release tag such as `v3.1.0` or an exact commit, not a moving branch. `my_app` must already be a target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for complete setup.
 
 ## Try LayerKeySort
 

@@ -1,7 +1,6 @@
 # Developing LayerKeySort
 
-This is the contributor workflow for LayerKeySort 3.1.0 source. The `v3.1.0`
-tag and GitHub Release are created during final publication, after review.
+This is the contributor workflow for the LayerKeySort 3.1.0 release.
 Read [architecture](ARCHITECTURE.md) for the current implementation,
 [validation](VALIDATION.md) for test scope and evidence, and
 [benchmark evidence](BENCHMARKS.md) for performance limits. The

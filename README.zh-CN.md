@@ -15,7 +15,7 @@ LayerKeySort 是一个 C17 库，用来维护会不断插入、删除或调整�
 
 这个坐标叫 `Path`。`Path` 表示位置，**不是元素的永久 ID**。库可以根据比较器管理坐标，也可以由应用自行选择坐标来移动元素。
 
-**当前源码版本为 3.1.0。** 已发布版本见 [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases)。`v3.1.0` tag 和资源会在最终发布时创建；此前的 [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) 仍可获取。
+**当前稳定版本为 [v3.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.1.0)。** 此前的 [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) 等版本仍可获取。
 
 ## 获取 LayerKeySort
 
@@ -27,7 +27,7 @@ LayerKeySort 是一个 C17 库，用来维护会不断插入、删除或调整�
 | 在本机安装后复用 | 用 `cmake --install` 和 `find_package` |
 | 将完整仓库放进项目 | 用 `add_subdirectory` |
 
-3.1.0 正式发布后，可从 [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases) 下载 `LayerKeySort-3.1.0-amalgamation.zip`。发布前也可在当前源码检出中运行 `python tools/amalgamate.py --package-parent build/amalgamation` 生成它。GitHub 自动提供的源码压缩包包含完整仓库；合并版 ZIP 是更轻量的两文件接入方式。
+可从 [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases) 下载 `LayerKeySort-3.1.0-amalgamation.zip`。也可在当前源码检出中运行 `python tools/amalgamate.py --package-parent build/amalgamation` 生成它。GitHub 自动提供的源码压缩包包含完整仓库；合并版 ZIP 是更轻量的两文件接入方式。
 
 ZIP 内文件如下；大多数不使用 CMake 的项目只需要复制其中的 `layerkeysort.h` 和 `layerkeysort.c`：
 
@@ -59,7 +59,7 @@ FetchContent_MakeAvailable(layerkeysort_source)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-`v3.1.0` tag 要等最终交付创建后才能解析；在此之前应固定已审查的具体提交，不要依赖会移动的开发分支。`my_app` 应已是 C17 CMake 项目中的目标，CMake 版本需至少 3.21。完整配置、安装和直接编译方式见[中文集成指南](docs/INTEGRATION.zh-CN.md)。
+应固定 `v3.1.0` 等 Release tag 或具体提交，不要依赖会移动的开发分支。`my_app` 应已是 C17 CMake 项目中的目标，CMake 版本需至少 3.21。完整配置、安装和直接编译方式见[中文集成指南](docs/INTEGRATION.zh-CN.md)。
 
 ## 先运行一个示例
 

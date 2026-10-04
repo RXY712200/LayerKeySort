@@ -3,8 +3,7 @@
 English | [简体中文](INTEGRATION.zh-CN.md)
 
 Choose a method for your build. These are the LayerKeySort 3.1.0 integration
-routes. The `v3.1.0` tag and assets become publicly available at final
-publication; until then, use this source checkout or an exact reviewed commit.
+routes. Use the `v3.1.0` release tag, its published assets, or an exact commit.
 See [V3 migration](V3_MIGRATION.md) and [compatibility](COMPATIBILITY.md).
 
 | Method | Best for | CMake to consume? | Files in application |
@@ -19,7 +18,7 @@ The library requires C17. CMake routes require CMake 3.21+. CI tests Windows/MSV
 
 ## Two-file amalgamation
 
-After publication, download `LayerKeySort-3.1.0-amalgamation.zip` from
+Download `LayerKeySort-3.1.0-amalgamation.zip` from
 [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). GitHub's
 automatic source ZIP/tar.gz is the full repository; the amalgamation ZIP is
 the smaller drop-in. It contains `layerkeysort.h` (public API),
@@ -46,7 +45,7 @@ PowerShell against `LayerKeySort-3.1.0-SHA256SUMS.txt` from that Release.
 
 ## CMake FetchContent
 
-A complete consumer `CMakeLists.txt` for the intended `v3.1.0` tag:
+A complete consumer `CMakeLists.txt` for the `v3.1.0` release tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -66,8 +65,7 @@ target_link_libraries(my_app PRIVATE layerkeysort)
 
 Build with `cmake -S . -B build` and `cmake --build build --target my_app`.
 For 3.1.0 source dependencies, tests, examples, and install rules default OFF.
-The tag becomes resolvable at final publication; before then, pin the exact
-reviewed commit. To test a local checkout offline, configure with
+Pin a release tag or exact commit. To test a local checkout offline, configure with
 `-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`.
 
 ## Vendored CMake add_subdirectory
