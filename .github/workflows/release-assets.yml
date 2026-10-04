@@ -1,0 +1,49 @@
+name: Build release assets
+
+on:
+  workflow_dispatch:
+  # Branch-only validation while this new workflow is awaiting review.
+  # workflow_dispatch becomes available in the UI once the file reaches main.
+  push:
+    branches: [v3-docs-entry-ux]
+    paths:
+      - .github/workflows/release-assets.yml
+      - tools/amalgamate.py
+      - tools/package_release.py
+      - tools/verify_release_assets.py
+      - tools/validate_release_assets.py
+
+permissions:
+  contents: read
+
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate source distribution and external consumers
+        run: python3 tools/validate_distribution.py
+      - name: Build the exact candidate asset set
+        id: package
+        run: python3 tools/package_release.py --output-dir release-assets
+      - name: Verify checksums, membership, and reproducibility
+        run: |
+          python3 tools/verify_release_assets.py release-assets
+          python3 tools/validate_release_assets.py --asset-dir release-assets
+      - name: Record source provenance
+        run: |
+          echo "Source commit: \`$GITHUB_SHA\`" >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/verify_release_assets.py release-assets --summary >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload candidate bundle for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: LayerKeySort-${{ steps.package.outputs.version }}-release-assets
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 7

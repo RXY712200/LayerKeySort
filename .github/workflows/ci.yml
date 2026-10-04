@@ -58,6 +58,9 @@ jobs:
           python-version: '3.11'
       - name: Distribution consumers and reproducible amalgamation
         run: python3 tools/validate_distribution.py
+      - name: Verify release asset wrapper
+        if: matrix.compiler == 'gcc' && matrix.sanitizer == 'OFF'
+        run: python3 tools/validate_release_assets.py
 
   macos-appleclang:
     runs-on: macos-latest

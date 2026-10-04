@@ -5,6 +5,7 @@
 
 # Build directories
 build/
+release-assets/
 __pycache__/
 *.pyc
 x64/
