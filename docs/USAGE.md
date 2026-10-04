@@ -69,7 +69,7 @@ cmake --build build
 The executable path can differ with multi-configuration generators such as
 Visual Studio (for example, `build/Debug/layerkeysort_example.exe`).
 
-## Dynamic layer-list example (V2 Preview.5 origin)
+## Dynamic layer-list example
 
 [`examples/layer_list.c`](../examples/layer_list.c) models Background, Player,
 HUD, and Effects as caller-owned objects with stable application IDs. It uses
@@ -139,37 +139,22 @@ if (status == LKS_STATUS_OK) {
 
 The Batch and its Groups remain readable after a successful merge.
 
-## Reading Path text
+## Reading and storing Path coordinates
 
-`lks_path_text_length(path)` returns the character count excluding the null
-terminator. Supply at least one additional byte to `lks_path_format`. ZERO is
-`000`; a positive Path with slot 32768 at level zero formats as `0DEq`.
-Appending slot 0 at level five gives `0DEq/5222`, where `5` is the level
-delta. Ordinary next-level steps omit the numeric prefix. Each slot is three
-radix-54 characters from the case-sensitive ASCII alphabet documented in
-[`API.md`](API.md); `/` separates steps and never counts levels. The
-formatter writes canonical current output. Since V2 Preview.4,
-`lks_path_parse()` accepts exactly that text and returns a caller-owned Path.
-For storage and bytewise ordering, use the separate versioned
-`lks_path_order_key_*()` API. **Use `lks_path_compare()` to order Paths; do not
-use `strcmp` on complete formatted text.** The canonical display grammar is
-part of the 2.x contract; generated coordinates may change. Do not persist
-Path text as an item ID.
+`lks_path_format()` produces canonical readable text, and `lks_path_parse()`
+reconstructs a caller-owned Path. Use `lks_path_compare()` for logical order:
+complete display strings are not lexical sort keys. The separately versioned
+`lks_path_order_key_*()` API produces canonical `LK1:` keys whose bytewise
+ASCII lexical order matches Path order within the same version. For example,
+a positive level-zero slot-zero Path has display text `0222` and key
+`LK1:201FF0000!`. Use a database collation that preserves bytewise ASCII
+ordering. The exact grammars, invalid-input rules, and overflow behavior are
+in [API.md](API.md).
 
-For example, the positive level-zero, slot-zero Path has display text `0222`
-and durable key `LK1:201FF0000!`. Canonical keys of the same version sort
-under `strcmp()` or a database collation preserving bytewise ASCII order.
-The parsed Path belongs to the caller and must be destroyed with
-`lks_path_destroy()`. Invalid or noncanonical inputs fail with NULL output;
-allocator failure also leaves output NULL. The exact key grammar and
-cross-platform overflow rule are in [API.md](API.md). These APIs were added in
-V2 Preview.4; V2 Preview.3 did not contain them.
-
-The key persists a Path coordinate and can order canonical same-version keys
-under bytewise ASCII collation. It does not save a Tree, reconstruct its AVL
-shape, save caller item payloads, or assign permanent item IDs. The application
-must associate its own item identity with the stored coordinate and account
-for Path changes after Tree mutation.
+A stored key preserves a coordinate at one point in time, not permanent item
+identity, caller payloads, or a whole Tree. The application must associate
+its own identity with the coordinate and account for Path changes after
+managed mutation. Destroy parsed Paths with `lks_path_destroy()`.
 
 ## Reading results
 
@@ -210,9 +195,10 @@ comparator invariant and exposes no comparator-based insert/locate operation.
 
 Use `LksOrderedTree` for online comparator order. Supply one comparator and a
 caller-owned context at creation. Insertions are stable for equal values and
-may relabel a contiguous logical range to make coordinate space. The region
-can grow geometrically to the entire collection. Existing AVL nodes remain;
-only Paths and the new node are prepared before an allocation-free commit.
+may relabel a contiguous logical range to make coordinate space. Relabel may
+change every resident Path; see the
+[architecture](ARCHITECTURE.md) for the implementation and
+[benchmarks](BENCHMARKS.md) for measured costs.
 The descriptor is copied, so its stack object may expire after creation. The
 callback code and caller-owned context remain borrowed; keep them alive and
 keep their ordering semantics stable for the container's lifetime. Every
@@ -243,9 +229,8 @@ A Path is an ordering coordinate rather than a stable application identity.
 Canonical display text is readable; versioned LK1 keys can persist and
 bytewise-sort one coordinate. Neither saves caller payloads or a whole Tree.
 Exact generated Path strings are not stable application identities. Private
-relabel thresholds are not public compatibility promises: a compatible
-future 3.x implementation may change both while preserving documented
-public ordering, ownership, failure, and LK1 contracts. Complete managed
+relabel thresholds are not public compatibility promises; see the
+[3.x contract](COMPATIBILITY.md). Complete managed
 insertion can relabel all `n` nodes; no worst-case `O(log n)` or formal
 amortized bound is claimed.
 

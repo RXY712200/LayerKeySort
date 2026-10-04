@@ -107,10 +107,13 @@ See the [API reference](docs/API.md) for exact ownership, error, and Path rules,
 | How to use the main APIs | [Usage guide](docs/USAGE.md) |
 | CMake, vendoring, or direct C17 source integration | [Integration guide](docs/INTEGRATION.md) |
 | Exact functions, ownership, errors, and Path/LK1 formats | [API reference](docs/API.md) |
+| How the two Trees and relabel work | [Architecture](docs/ARCHITECTURE.md) |
 | Stable 3.x promises and historical 2.x promises | [Compatibility contract](docs/COMPATIBILITY.md) |
 | Changes from V2 Tree code | [V2 to V3 migration guide](docs/V3_MIGRATION.md) |
 | Measurements and their limits | [Benchmark report](docs/BENCHMARKS.md) |
+| CI, regression tests, and soak counts | [Validation](docs/VALIDATION.md) |
 | Building, testing, and contributing | [Development guide](docs/DEVELOPMENT.md) and [Contributing](CONTRIBUTING.md) |
+| Earlier design and measurement decisions | [Design history](docs/history/DESIGN_HISTORY.md) and [benchmark history](docs/history/BENCHMARK_HISTORY.md) |
 | See ordering changes visually | [V3 visualizer](https://rxy712200.github.io/LayerKeySort/) |
 | Release-by-release history | [Changelog](CHANGELOG.md) |
 

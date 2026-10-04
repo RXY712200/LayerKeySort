@@ -8,7 +8,8 @@
 
 ## Building
 
-Follow the [development guide](docs/DEVELOPMENT.md) for the verified Visual Studio / MSVC build configurations.
+Follow the [development guide](docs/DEVELOPMENT.md) for build configurations
+and the [validation guide](docs/VALIDATION.md) for current test scope.
 
 ## Testing
 

@@ -1,10 +1,8 @@
 # Integrating LayerKeySort
 
-Pin `v3.0.0` for the current published Stable API (59 functions). Historical
-stable `v2.0.0` has 52 functions; V3 Preview.1 through Preview.5 and RC.1
-are historical prereleases. See [V3 migration](V3_MIGRATION.md) when
-upgrading from the V2 Tree API.
-Generated Path layouts and performance policy remain implementation details.
+Pin `v3.0.0` for the published Stable API. See
+[V3 migration](V3_MIGRATION.md) when upgrading from V2. The
+[compatibility contract](COMPATIBILITY.md) identifies public guarantees.
 
 ## Requirements and tested configurations
 
@@ -13,8 +11,7 @@ Generated Path layouts and performance policy remain implementation details.
 - CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
   with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
   and compiler versions, not every version of those operating systems or
-  compilers. The published V3 RC.1 commit passed all five CI configurations with
-  CTest 8/8 on their recorded runners.
+  compilers. See [validation](VALIDATION.md) for test scope and evidence.
 
 The public header has `extern "C"` guards for inclusion by C++ applications;
 the library implementation remains C17. Callers own item objects. Tree and
@@ -123,6 +120,5 @@ placement, rekey, remove, and LK1 round trip without adding convenience
 functions to the public API. All application examples include only
 `layerkeysort.h`; none needs an internal header.
 
-For Path persistence, store canonical versioned `LK1:` keys under a database
-collation preserving bytewise ASCII order. A persisted Path is a mutable
-ordering coordinate, not a permanent item ID or whole-Tree snapshot.
+For Path persistence and bytewise ordering, see [usage](USAGE.md) and the
+[LK1 specification](API.md).
