@@ -3,11 +3,108 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="0; url=v3/">
-  <title>LayerKeySort V3 visualizer</title>
-  <script>window.location.replace("v3/");</script>
+  <meta name="description" content="LayerKeySort is a C17 library for keeping changing collections ordered with sortable Path coordinates. Find the code, integration guides, and V3 visualizer.">
+  <title>LayerKeySort — keep changing collections in order</title>
+  <link rel="stylesheet" href="site.css">
 </head>
 <body>
-  <p><a href="v3/">Open the current V3 visualizer</a>. The <a href="demo/">V1 visualizer</a> is historical.</p>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-row">
+      <a class="brand" href="./" aria-label="LayerKeySort home">LayerKeySort</a>
+      <nav aria-label="Primary">
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">README</a>
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文</a>
+        <a href="v3/">V3 visualizer</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">C17 library · current source version 3.1.0</p>
+        <h1 id="hero-title">Keep changing collections in order.</h1>
+        <p class="lede">LayerKeySort gives items sortable position coordinates when a collection is repeatedly inserted into, removed from, or rearranged. Your application keeps each item's identity; a <code>Path</code> describes its current position.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.md">Get the library</a>
+          <a class="button" href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文入门</a>
+        </div>
+      </div>
+      <div class="model" aria-label="An Effects layer inserted between Player and HUD">
+        <p class="model-title">A small change in position</p>
+        <div class="model-row"><span class="row-label">Before</span><span>Background</span><span>Player</span><span>HUD</span></div>
+        <div class="model-row"><span class="row-label">After</span><span>Background</span><span>Player</span><span class="new-item">Effects</span><span>HUD</span></div>
+        <p>Sorting says who comes first now. A <code>Path</code> is a sortable coordinate that can change as the collection changes. It is not a permanent item ID.</p>
+      </div>
+    </section>
+
+    <section class="section shell" aria-labelledby="start-title">
+      <div class="section-heading">
+        <p class="eyebrow">Start here</p>
+        <h2 id="start-title">Choose your next step</h2>
+      </div>
+      <div class="card-grid">
+        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.md">
+          <span class="card-kicker">Build</span><strong>Get the library</strong>
+          <span>Two-file download, CMake source dependency, vendoring, and local install.</span>
+        </a>
+        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/API.md">
+          <span class="card-kicker">Reference</span><strong>Read the API</strong>
+          <span>Exact functions, ownership, errors, Path text, and LK1 keys.</span>
+        </a>
+        <a class="card" href="v3/">
+          <span class="card-kicker">Explore</span><strong>Open the V3 visualizer</strong>
+          <span>Step through recorded ordering changes and Path relabels.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section shell split" aria-labelledby="get-title">
+      <div>
+        <p class="eyebrow">Getting the code</p>
+        <h2 id="get-title">One library, several ways to use it</h2>
+        <p>For a small C project, download the two-file amalgamation from <a href="https://github.com/RXY712200/LayerKeySort/releases">GitHub Releases</a> after publication. Copy <code>layerkeysort.h</code> and <code>layerkeysort.c</code> into your project and compile the implementation as C17.</p>
+        <p>Already using CMake? Choose <code>FetchContent</code>, <code>add_subdirectory</code>, or a local install with <code>find_package</code>. The <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.md">integration guide</a> has complete commands; <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md" lang="zh-CN">中文集成指南</a> covers the same first-use paths.</p>
+        <p class="release-note">The 3.1.0 tag and downloadable assets are prepared for final publication; they are not public yet.</p>
+      </div>
+      <aside class="aside" aria-labelledby="models-title">
+        <h3 id="models-title">Which API?</h3>
+        <ul>
+          <li><code>LksOrderedTree</code> keeps comparator order as items change.</li>
+          <li><code>LksTree</code> lets the application choose positions.</li>
+          <li><code>lks_sort()</code> stably sorts a pointer array once.</li>
+        </ul>
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/USAGE.md">Usage guide →</a>
+      </aside>
+    </section>
+
+    <section class="section shell visual" aria-labelledby="visual-title">
+      <div>
+        <p class="eyebrow">See the model</p>
+        <h2 id="visual-title">Watch positions change</h2>
+        <p>The <a href="v3/">V3 visualizer</a> replays Path snapshots recorded from the production C implementation. It helps explain manual and comparator-managed Trees; the browser does not execute the C library.</p>
+      </div>
+      <a class="button primary" href="v3/">Open visualizer</a>
+    </section>
+
+    <section class="section shell limits" aria-labelledby="limits-title">
+      <p class="eyebrow">Before you adopt it</p>
+      <h2 id="limits-title">Measure the workload that matters to you</h2>
+      <p>Managed insertion may relabel many Paths, sometimes the whole collection. Synchronous latency and Path storage depend on the workload. Paths are not permanent item IDs, and LayerKeySort is not distributed or CRDT ordering. For latency-sensitive use, read the <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">benchmark evidence</a> and test your own insertion patterns.</p>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="shell">
+      <p>LayerKeySort · MIT licensed C17 library</p>
+      <nav aria-label="Footer">
+        <a href="https://github.com/RXY712200/LayerKeySort">GitHub repository</a>
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/LICENSE">MIT license</a>
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">English README</a>
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文 README</a>
+        <a href="v3/">V3 visualizer</a>
+        <a href="demo/">Historical V1 visualizer</a>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>
