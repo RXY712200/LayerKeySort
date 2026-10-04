@@ -132,10 +132,14 @@ def package(parent, header, source, version):
     (directory / "example.c").write_bytes(read(ROOT / "examples" / "basic.c").encode("utf-8"))
     (directory / "LICENSE").write_bytes(read(ROOT / "LICENSE").encode("utf-8"))
     note = ("LayerKeySort generated C17 source package.\n"
-            "Compile layerkeysort.c and your application.c with a C17 compiler.\n"
-            "Example: cc -std=c17 -I. layerkeysort.c example.c -o example\n"
-            "Application items remain caller-owned.\n"
-            "Canonical source and documentation: https://github.com/RXY712200/LayerKeySort\n")
+            "layerkeysort.h: public API; layerkeysort.c: implementation.\n"
+            "Also included: example.c, LICENSE, and this README.txt.\n"
+            "Copy the two layerkeysort files into your project and include\n"
+            "#include \"layerkeysort.h\" in your application.\n"
+            "GCC/Clang: cc -std=c17 -I. layerkeysort.c example.c -o example\n"
+            "MSVC Developer Command Prompt: cl /std:c17 /I. layerkeysort.c example.c\n"
+            "Replace example.c with your application source. Items remain caller-owned.\n"
+            "Documentation: https://github.com/RXY712200/LayerKeySort\n")
     (directory / "README.txt").write_bytes(note.encode("utf-8"))
     archive = parent / f"{name}.zip"
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:

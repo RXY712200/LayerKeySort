@@ -4,27 +4,12 @@ This guide describes the published `v3.0.0` Stable API. Pin `v3.0.0` for
 the current Stable generation. See [V3 migration](V3_MIGRATION.md) when
 upgrading from historical stable `v2.0.0`.
 
-## Requirements
+## Before you start
 
-- C17.
-- A C17 compiler and CMake 3.21 or newer for the CMake build.
-
-## Adding LayerKeySort to a project
-
-The CMake target `layerkeysort` is a reusable static library and exposes the
-public include directory. Follow the [integration guide](INTEGRATION.md) for
-`FetchContent`, vendored `add_subdirectory`, or direct C17 source integration.
-The repository does not provide an installed package or package-manager recipe.
-
-The public header is `include/layerkeysort.h`. Include it as:
-
-```c
-#include "layerkeysort.h"
-```
-
-Only `layerkeysort.h` is an application header; the private headers under
-`src/` are implementation details. The exact source-file list for direct C17
-integration is maintained in the [integration guide](INTEGRATION.md).
+Use the [integration guide](INTEGRATION.md) to obtain the two-file package,
+add a CMake source dependency, install a local CMake package, or build modular
+sources. Application code includes only `layerkeysort.h`. This guide starts
+with using the API after the library is available.
 
 ## First use: managed Tree
 

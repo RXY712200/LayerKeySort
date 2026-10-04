@@ -2,16 +2,6 @@ name: Build release assets
 
 on:
   workflow_dispatch:
-  # Branch-only validation while this new workflow is awaiting review.
-  # workflow_dispatch becomes available in the UI once the file reaches main.
-  push:
-    branches: [v3-docs-entry-ux]
-    paths:
-      - .github/workflows/release-assets.yml
-      - tools/amalgamate.py
-      - tools/package_release.py
-      - tools/verify_release_assets.py
-      - tools/validate_release_assets.py
 
 permissions:
   contents: read

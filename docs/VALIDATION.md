@@ -56,3 +56,19 @@ seeds, adversarial insertion, parser/LK1 and OOM cases, and lifecycle cycles.
 Its raw outputs are outside this repository and were not reproduced by CI.
 The current Stable production source retains the RC.1 implementation. See
 [BENCHMARKS.md](BENCHMARKS.md) for measured limits and provenance.
+
+## Distribution validation
+
+`python tools/validate_distribution.py` exercises external source-tree and
+offline FetchContent consumers, local install plus `find_package` for C and
+C++, strict-warning amalgamation consumers, the generated package example,
+and repeatable package generation. It checks that a source dependency does
+not enable repository tests, examples, or install rules by default.
+
+`python tools/validate_release_assets.py` builds the candidate asset set twice
+and checks exact ZIP/checksum membership, reproducibility, checksum matching,
+and tamper rejection. Normal CI runs these checks as regression protection.
+The separate `Build release assets` workflow is a read-only, manually
+initiated candidate build that uploads a temporary GitHub Actions artifact.
+It does not publish a GitHub Release or attach public Release assets. Manual
+dispatch in the GitHub UI requires the workflow to reach the default branch.

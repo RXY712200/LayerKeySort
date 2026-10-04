@@ -24,6 +24,12 @@ change those details while preserving the public contracts above. Paths and
 LK1 keys remain ordering coordinates, not permanent item IDs. This is a
 source/API and semantic policy, not a cross-toolchain binary ABI guarantee.
 
+The current development tree can install a locally built static CMake package.
+Build it for the consuming toolchain and C runtime. This installation route
+does not extend the published 3.x contract to binary ABI or a permanent
+installed filesystem layout. Any additional installed-target promise belongs
+to a future release decision.
+
 ---
 
 ## Historical LayerKeySort 2.x compatibility contract

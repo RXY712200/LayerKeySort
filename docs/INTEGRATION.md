@@ -1,124 +1,124 @@
 # Integrating LayerKeySort
 
-Pin `v3.0.0` for the published Stable API. See
-[V3 migration](V3_MIGRATION.md) when upgrading from V2. The
-[compatibility contract](COMPATIBILITY.md) identifies public guarantees.
+Choose a method for your build. This development tree supports the routes below. The already-published [v3.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) predates the new amalgamation Release asset and install support; those are not in that historical tag. Pin a release tag or reviewed commit when fetching source. See [V3 migration](V3_MIGRATION.md) and [compatibility](COMPATIBILITY.md).
 
-## Requirements and tested configurations
+| Method | Best for | CMake to consume? | Files in application |
+| --- | --- | --- | --- |
+| Two-file amalgamation | Small source drop-in | No | `layerkeysort.h` + `layerkeysort.c` |
+| `FetchContent` | CMake source dependency | Yes | Fetched source |
+| `add_subdirectory` | Vendored full repository | Yes | Full checkout |
+| Install + `find_package` | Reusable local installation | Yes | Locally built package |
+| Direct modular sources | Unusual/manual builds | No | 12 production `.c` files and private headers |
 
-- C17 for the library and application code using its C header.
-- CMake 3.21 or newer for the CMake build.
-- CI configurations: Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang
-  with sanitizers, and macOS/AppleClang. A passing CI run validates its runner
-  and compiler versions, not every version of those operating systems or
-  compilers. See [validation](VALIDATION.md) for test scope and evidence.
+The library requires C17. CMake routes require CMake 3.21+. CI tests Windows/MSVC, Ubuntu/GCC and Clang, and macOS/AppleClang; see [Validation](VALIDATION.md).
 
-The public header has `extern "C"` guards for inclusion by C++ applications;
-the library implementation remains C17. Callers own item objects. Tree and
-Group objects borrow item pointers.
+## Two-file amalgamation
 
-## CMake `add_subdirectory`
+For a compatible release that publishes distribution assets, download `LayerKeySort-<version>-amalgamation.zip` from [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). GitHub's automatic source ZIP/tar.gz is the full repository; the additional amalgamation ZIP is the smaller drop-in. It contains `layerkeysort.h` (public API), `layerkeysort.c` (implementation), `example.c`, `LICENSE`, and `README.txt`.
 
-Place or vendor a checked-out LayerKeySort release alongside the application.
-The normal CMake target is the production-only static library `layerkeysort`.
-Disable repository validation targets in the consuming project before adding
-the subdirectory:
+Extract it and copy `layerkeysort.h` and `layerkeysort.c` into the application. Include `#include "layerkeysort.h"`. Compile as C17:
 
-```cmake
-cmake_minimum_required(VERSION 3.21)
-project(my_app LANGUAGES C)
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-set(LKS_BUILD_TESTS OFF)
-set(LKS_BUILD_BENCHMARKS OFF)
-add_subdirectory(external/LayerKeySort EXCLUDE_FROM_ALL)
-
-add_executable(my_app src/main.c)
-target_link_libraries(my_app PRIVATE layerkeysort)
+```sh
+cc -std=c17 -I. layerkeysort.c main.c -o my_app
 ```
 
-The `layerkeysort` target supplies `include/` transitively. `EXCLUDE_FROM_ALL`
-keeps the repository's example targets out of a normal consumer-wide build;
-linking `layerkeysort` still builds the library. CMake 3.21 honors
-these normal variables for the project's `option()` calls. If several
-subprojects use the same option names, configure them deliberately in the
-parent project.
+`cc` may be GCC or Clang. From an MSVC Developer Command Prompt:
 
-## CMake `FetchContent`
+```bat
+cl /std:c17 /I. layerkeysort.c main.c
+```
 
-For the current Stable release, pin the `v3.0.0` tag:
+Replace `main.c` with `example.c` to compile the packaged example. Users of the generated package need no Python. Maintainers use Python to generate it from canonical `include/` and `src/` sources; do not edit generated `layerkeysort.c`.
+
+For optional checksum verification, compare `sha256sum LayerKeySort-<version>-amalgamation.zip` on GNU/Linux or `Get-FileHash .\LayerKeySort-<version>-amalgamation.zip -Algorithm SHA256` in PowerShell against the matching `LayerKeySort-<version>-SHA256SUMS.txt` from that Release.
+
+## CMake FetchContent
+
+A complete consumer `CMakeLists.txt` for a C17 application:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
 project(my_app LANGUAGES C)
-include(FetchContent)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(LKS_BUILD_TESTS OFF)
-set(LKS_BUILD_BENCHMARKS OFF)
+include(FetchContent)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
     GIT_TAG v3.0.0)
 FetchContent_MakeAvailable(layerkeysort_source)
 
-add_executable(my_app src/main.c)
+add_executable(my_app main.c)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-`FetchContent_MakeAvailable` also adds the repository's example
-targets; `cmake --build build --target my_app` builds only the application and
-its library dependency when that distinction matters. The tag identifies the
-published Stable release. The CMake recipe can also be tested offline by setting
-`FETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE` to a local checkout before
-configuration; that bypasses the network fetch while preserving the consumer
-target path.
+Build with `cmake -S . -B build` and `cmake --build build --target my_app`. The `v3.0.0` tag is suitable for the published source integration, but does not contain the newer distribution additions. Pin a compatible later release or reviewed commit to use those. As a subproject, repository tests, examples, and install rules default OFF. To test a local checkout offline, configure with `-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`.
 
-## Direct C17 source integration
+## Vendored CMake add_subdirectory
 
-Add `include/` to the compiler's include search path and compile these
-production sources into the application or a static library:
+Place a checkout at `external/LayerKeySort` and use:
 
-```text
-src/lks_alloc.c
-src/lks_base.c
-src/path.c
-src/path_text.c
-src/path_order_key.c
-src/slot_codec.c
-src/path_compare.c
-src/gap.c
-src/tree.c
-src/group.c
-src/sort.c
-src/bulk.c
+```cmake
+cmake_minimum_required(VERSION 3.21)
+project(my_app LANGUAGES C)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+add_subdirectory(external/LayerKeySort)
+add_executable(my_app main.c)
+target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-Include `layerkeysort.h`. The `src/*.h` files are private implementation
-headers required by those `.c` files, not application headers or public ABI.
-Do not define `LKS_ENABLE_ALLOC_DIAGNOSTICS` or
-`LKS_ENABLE_V1_REGRESSION_HELPERS` in a normal application build; the CMake
-production target does not define them. The historical Visual Studio project
-is a combined diagnostic runner, not the reusable library target.
+The source target `layerkeysort` supplies the public include directory. Tests, examples, and install rules default OFF for a subproject; no explicit OFF flags are needed. A namespaced alias is also available in the build tree.
 
-MSVC uses `/std:c17`; GCC and Clang use `-std=c17`. The public C header may be
-included from C++ code, but compile the production `.c` files as C17.
+## Local install and find_package
 
-## Build options
+Build and install the current development tree with your C17 toolchain:
 
-| Option | Default | Use |
-| --- | --- | --- |
-| `LKS_BUILD_TESTS` | `ON` | Repository diagnostic test runner and mutation soak. Set `OFF` for a normal consumer build. |
-| `LKS_BUILD_BENCHMARKS` | `OFF` | Optional public-API benchmark harness and three CTest correctness smoke cases when tests are enabled. Set `OFF` for a normal consumer build. |
-| `LKS_ENABLE_SANITIZERS` | `OFF` | ASan/UBSan flags for supported GCC/Clang validation builds. Use only with a compatible compiler/runtime. |
+```sh
+cmake -S . -B build/install -DLKS_BUILD_TESTS=OFF -DLKS_BUILD_EXAMPLES=OFF
+cmake --build build/install
+cmake --install build/install --prefix /some/prefix
+```
 
-The CMake targets `layerkeysort_ordered_example`, `layerkeysort_example`, and
-`layerkeysort_layer_list_example` show managed Tree first use, basic stable
-sorting, and manual dynamic layer ordering. The latter covers between
-placement, rekey, remove, and LK1 round trip without adding convenience
-functions to the public API. All application examples include only
-`layerkeysort.h`; none needs an internal header.
+For a multi-configuration generator, pass the same `--config Release` to build and install. In another CMake project:
 
-For Path persistence and bytewise ordering, see [usage](USAGE.md) and the
-[LK1 specification](API.md).
+```cmake
+cmake_minimum_required(VERSION 3.21)
+project(my_app LANGUAGES C)
+find_package(LayerKeySort CONFIG REQUIRED)
+add_executable(my_app main.c)
+target_link_libraries(my_app PRIVATE LayerKeySort::layerkeysort)
+```
+
+Configure with `cmake -S . -B build -DCMAKE_PREFIX_PATH=/some/prefix`, then `cmake --build build`. Point `CMAKE_PREFIX_PATH` to the install prefix, not its `lib/cmake` directory. The installed target is `LayerKeySort::layerkeysort`; source-tree examples use `layerkeysort`. This is a locally built static package, not a cross-toolchain binary SDK. The published v3.0.0 tag does not provide these install rules.
+
+## Direct modular C17 sources
+
+For a custom build that cannot use CMake and where amalgamation is unsuitable, add `include/` to your compiler search path and compile all 12 production sources:
+
+```text
+src/lks_alloc.c       src/lks_base.c
+src/path.c            src/path_text.c
+src/path_order_key.c  src/slot_codec.c
+src/path_compare.c    src/gap.c
+src/tree.c            src/group.c
+src/sort.c            src/bulk.c
+```
+
+The authoritative source list is [the production manifest](../cmake/ProductionSources.cmake). The `src/*.h` files are private dependencies of those sources, not application headers. Do not define `LKS_ENABLE_ALLOC_DIAGNOSTICS` or `LKS_ENABLE_V1_REGRESSION_HELPERS` in a production build. The historical Visual Studio project is a combined diagnostic runner, not the reusable library target. Amalgamation is usually simpler without CMake.
+
+## C++ consumers
+
+The public header has `extern "C"` guards. C++ applications may include it and link the C17 library, as the installed consumer test does. Compile the implementation sources as C17, not C++.
+
+## Build options and troubleshooting
+
+| Option | Top-level default | Subproject default | Purpose |
+| --- | --- | --- | --- |
+| `LKS_BUILD_TESTS` | ON | OFF | Diagnostic tests and soak |
+| `LKS_BUILD_EXAMPLES` | ON | OFF | Public API examples |
+| `LKS_INSTALL` | ON | OFF | Install/export rules |
+| `LKS_BUILD_BENCHMARKS` | OFF | OFF | Public API benchmark harness |
+| `LKS_ENABLE_SANITIZERS` | OFF | OFF | ASan/UBSan where supported |
+
+If a consumer cannot find `layerkeysort.h`, link the documented target instead of adding private `src/` headers. If `find_package` fails, check the installation prefix and `CMAKE_PREFIX_PATH`. A C++ link should use the C17-built library. LayerKeySort borrows caller-owned item objects; keep them alive as required by [Usage](USAGE.md). For Path persistence, see the [LK1 specification](API.md).

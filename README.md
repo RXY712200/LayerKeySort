@@ -15,6 +15,39 @@ The library can manage those coordinates from your comparator, or your applicati
 
 **Current Stable release:** [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0). The earlier [v2.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v2.0.0) remains available for 2.x users.
 
+## Get LayerKeySort
+
+| I want to… | Start with |
+| --- | --- |
+| Try the project | Build the example below. |
+| Drop C files into an application | Use the two-file amalgamation. |
+| Add a CMake dependency | Use `FetchContent` with a pinned release tag. |
+| Reuse a local CMake installation | Install once, then use `find_package`. |
+| Vendor the full repository | Use `add_subdirectory`. |
+
+The [published v3.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) predates the amalgamation asset and installed-package support in this development tree. For a release that **provides** distribution assets, download `LayerKeySort-<version>-amalgamation.zip` from its [GitHub Release](https://github.com/RXY712200/LayerKeySort/releases). Until such a release, this checkout can generate the package with `python tools/amalgamate.py --package-parent build/amalgamation`. GitHub's automatic source archive is the full repository; the additional amalgamation ZIP is a smaller route to `layerkeysort.h` and `layerkeysort.c`.
+
+Extract the ZIP, copy those two files beside your application, include `#include "layerkeysort.h"`, and compile both C files as C17:
+
+```sh
+cc -std=c17 -I. layerkeysort.c main.c -o my_app
+```
+
+In an MSVC Developer Command Prompt, use `cl /std:c17 /I. layerkeysort.c main.c`. The ZIP also includes `example.c`, `LICENSE`, and a short `README.txt`. Python is used to **generate** the package in this repository; it is not needed to consume the downloaded files. A compatible Release may also provide `LayerKeySort-<version>-SHA256SUMS.txt` beside the ZIP: run `sha256sum LayerKeySort-<version>-amalgamation.zip` on GNU/Linux or `Get-FileHash .\LayerKeySort-<version>-amalgamation.zip -Algorithm SHA256` in PowerShell and compare the digest.
+
+For a CMake project, use the source target `layerkeysort`:
+
+```cmake
+include(FetchContent)
+FetchContent_Declare(layerkeysort_source
+    GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
+    GIT_TAG v3.0.0)
+FetchContent_MakeAvailable(layerkeysort_source)
+target_link_libraries(my_app PRIVATE layerkeysort)
+```
+
+Pin a release tag or exact reviewed commit, not a moving development branch. `my_app` must already be an executable or library target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for a complete project, `add_subdirectory`, local install/`find_package`, and direct modular source builds.
+
 ## Try LayerKeySort
 
 From a repository checkout, build and run the [small ordered-tree example](examples/ordered_tree.c):
@@ -35,29 +68,7 @@ For explicit moves, try the [layer-list example](examples/layer_list.c). For a o
 
 ## Use LayerKeySort in your project
 
-The supported integration path is the CMake `layerkeysort` static-library target. In your application's `CMakeLists.txt`, pin the Stable tag with `FetchContent`:
-
-```cmake
-cmake_minimum_required(VERSION 3.21)
-project(my_app LANGUAGES C)
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-include(FetchContent)
-set(LKS_BUILD_TESTS OFF)
-set(LKS_BUILD_BENCHMARKS OFF)
-FetchContent_Declare(layerkeysort_source
-    GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v3.0.0)
-FetchContent_MakeAvailable(layerkeysort_source)
-
-add_executable(my_app main.c)
-target_link_libraries(my_app PRIVATE layerkeysort)
-```
-
-For LayerKeySort, your `main.c` needs only `#include "layerkeysort.h"`; application code does not need private `src/*.h` headers. Build the application with `cmake -S . -B build` and `cmake --build build --target my_app`. This repository does not yet provide an installed package, package-manager recipe, or single-file distribution.
-
-If you vendor the source or compile it directly, follow the [integration guide](docs/INTEGRATION.md) for the verified `add_subdirectory` and direct C17 source paths.
+For vendored source, `add_subdirectory(external/LayerKeySort)` and link `layerkeysort`. To install from this development tree, configure and build it, run `cmake --install build --prefix <prefix>`, then use `find_package(LayerKeySort CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort` in the consuming CMake project. The [integration guide](docs/INTEGRATION.md) gives complete commands and explains `CMAKE_PREFIX_PATH`. Only the public `layerkeysort.h` belongs in application code.
 
 ## Which API should I use?
 
@@ -105,7 +116,7 @@ See the [API reference](docs/API.md) for exact ownership, error, and Path rules,
 | Looking for… | Read |
 | --- | --- |
 | How to use the main APIs | [Usage guide](docs/USAGE.md) |
-| CMake, vendoring, or direct C17 source integration | [Integration guide](docs/INTEGRATION.md) |
+| Download, amalgamation, CMake, install, or direct C17 source integration | [Integration guide](docs/INTEGRATION.md) |
 | Exact functions, ownership, errors, and Path/LK1 formats | [API reference](docs/API.md) |
 | How the two Trees and relabel work | [Architecture](docs/ARCHITECTURE.md) |
 | Stable 3.x promises and historical 2.x promises | [Compatibility contract](docs/COMPATIBILITY.md) |

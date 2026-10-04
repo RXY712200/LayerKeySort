@@ -1,6 +1,8 @@
 # Developing LayerKeySort
 
-This is the contributor workflow for the published `v3.0.0` Stable source.
+This is the contributor workflow for the current V3 development tree. The
+published Stable release remains `v3.0.0`; distribution additions here are
+newer than that tag.
 Read [architecture](ARCHITECTURE.md) for the current implementation,
 [validation](VALIDATION.md) for test scope and evidence, and
 [benchmark evidence](BENCHMARKS.md) for performance limits. The
@@ -19,6 +21,11 @@ Read [architecture](ARCHITECTURE.md) for the current implementation,
 - `LayerKeySort.vcxproj` — Visual Studio project and build configurations.
 - `CMakeLists.txt` — reusable production library, example, and test targets.
 - `.github/workflows/ci.yml` — MSVC, GCC, Clang, and AppleClang validation.
+- `cmake/ProductionSources.cmake` — single ordered production-source manifest
+  used by CMake and amalgamation generation.
+- `tools/amalgamate.py`, `tools/package_release.py`, and their validators —
+  generated source distribution and candidate asset tooling.
+- `.github/workflows/release-assets.yml` — read-only manual candidate build.
 
 ## Toolchain
 
@@ -48,6 +55,35 @@ process-global test state and carries no concurrent-test guarantee.
 
 For test names, soak counts and seeds, sanitizer scope, and historical
 validation evidence, see [VALIDATION.md](VALIDATION.md).
+
+## Source distribution and candidate assets
+
+The production manifest is shared by CMake and `tools/amalgamate.py` so the
+two-file generated distribution follows the same source list. Generation also
+checks the Visual Studio production compile set for drift. Keep modular files
+under `include/` and `src/` canonical; generated `layerkeysort.h/.c`, package
+ZIPs, and temporary `release-assets/` output are not committed.
+
+From the repository root, Python 3 is needed for maintainer tooling only:
+
+```sh
+python tools/amalgamate.py --package-parent build/amalgamation-check
+python tools/validate_distribution.py
+python tools/package_release.py --output-dir build/release-assets-check
+python tools/verify_release_assets.py build/release-assets-check
+python tools/validate_release_assets.py --asset-dir build/release-assets-check
+```
+
+Use fresh output directories: the packager refuses to overwrite an existing
+asset set. `validate_distribution.py` exercises source-tree and offline
+FetchContent C/C++ consumers, installed C/C++ consumers, strict-warning
+amalgamation consumers, the packaged example, and repeated generation. It
+accepts explicit CMake/generator/compiler paths for local installations.
+Release-asset validation checks exact membership, checksums, reproducibility,
+and rejection of a tampered ZIP. The read-only manual workflow produces a
+temporary Actions artifact for review. It does not create a GitHub Release;
+publication remains a separate decision. GitHub's manual UI control depends
+on the workflow being present on the default branch.
 
 ## Build configurations
 
