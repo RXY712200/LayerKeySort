@@ -1,0 +1,33 @@
+cmake_minimum_required(VERSION 3.21)
+project(LayerKeySortExternalConsumer LANGUAGES C CXX)
+
+if(DEFINED LKS_SOURCE_DIR OR DEFINED LKS_FETCHCONTENT_SOURCE_DIR)
+    if(DEFINED LKS_FETCHCONTENT_SOURCE_DIR)
+        include(FetchContent)
+        set(FETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE "${LKS_FETCHCONTENT_SOURCE_DIR}")
+        FetchContent_Declare(layerkeysort_source
+            GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
+            GIT_TAG v3.0.0)
+        FetchContent_MakeAvailable(layerkeysort_source)
+    else()
+        add_subdirectory("${LKS_SOURCE_DIR}" lks_dependency)
+    endif()
+    if(TARGET layerkeysort_example OR TARGET layerkeysort_tests OR
+       TARGET layerkeysort_diagnostics)
+        message(FATAL_ERROR "source dependency created examples or diagnostic tests by default")
+    endif()
+    if(LKS_INSTALL)
+        message(FATAL_ERROR "source dependency enabled install rules by default")
+    endif()
+    set(LKS_CONSUMER_TARGET layerkeysort)
+    set(LKS_CONSUMER_CPP_TARGET LayerKeySort::layerkeysort)
+else()
+    find_package(LayerKeySort 3.0 CONFIG REQUIRED)
+    set(LKS_CONSUMER_TARGET LayerKeySort::layerkeysort)
+    set(LKS_CONSUMER_CPP_TARGET LayerKeySort::layerkeysort)
+endif()
+
+add_executable(consumer_c consumer.c)
+target_link_libraries(consumer_c PRIVATE ${LKS_CONSUMER_TARGET})
+add_executable(consumer_cpp consumer.cpp)
+target_link_libraries(consumer_cpp PRIVATE ${LKS_CONSUMER_CPP_TARGET})

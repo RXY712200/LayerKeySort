@@ -21,6 +21,11 @@ jobs:
         run: .\build\Debug\layerkeysort_ordered_example.exe
       - name: Layer-list example
         run: .\build\Debug\layerkeysort_layer_list_example.exe
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Distribution consumers and reproducible amalgamation
+        run: python tools/validate_distribution.py
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -48,6 +53,11 @@ jobs:
         run: ./build/layerkeysort_ordered_example
       - name: Layer-list example
         run: ./build/layerkeysort_layer_list_example
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Distribution consumers and reproducible amalgamation
+        run: python3 tools/validate_distribution.py
 
   macos-appleclang:
     runs-on: macos-latest
@@ -69,3 +79,8 @@ jobs:
         run: ./build/layerkeysort_ordered_example
       - name: Layer-list example
         run: ./build/layerkeysort_layer_list_example
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Distribution consumers and reproducible amalgamation
+        run: python3 tools/validate_distribution.py

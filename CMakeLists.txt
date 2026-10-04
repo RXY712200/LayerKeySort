@@ -6,20 +6,25 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-option(LKS_BUILD_TESTS "Build diagnostic tests" ON)
+if(PROJECT_IS_TOP_LEVEL)
+    set(LKS_EMBEDDED_DEFAULT ON)
+else()
+    set(LKS_EMBEDDED_DEFAULT OFF)
+endif()
+option(LKS_BUILD_TESTS "Build diagnostic tests" ${LKS_EMBEDDED_DEFAULT})
 option(LKS_BUILD_BENCHMARKS "Build the public-API benchmark harness" OFF)
 option(LKS_ENABLE_SANITIZERS "Enable AddressSanitizer and UBSan where supported" OFF)
+option(LKS_BUILD_EXAMPLES "Build LayerKeySort examples" ${LKS_EMBEDDED_DEFAULT})
+option(LKS_INSTALL "Generate LayerKeySort install rules" ${LKS_EMBEDDED_DEFAULT})
 
-set(LKS_SOURCES
-    src/lks_alloc.c src/lks_base.c src/path.c src/path_text.c src/path_order_key.c src/slot_codec.c
-    src/path_compare.c src/gap.c src/tree.c src/group.c
-    src/sort.c src/bulk.c)
+include(GNUInstallDirs)
+include(cmake/ProductionSources.cmake)
 
 function(lks_configure_target target)
     target_compile_features(${target} PUBLIC c_std_17)
     target_include_directories(${target} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>)
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
     if(LKS_ENABLE_SANITIZERS AND CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
         target_compile_options(${target} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
         target_link_options(${target} PUBLIC -fsanitize=address,undefined)
@@ -27,18 +32,44 @@ function(lks_configure_target target)
 endfunction()
 
 add_library(layerkeysort STATIC ${LKS_SOURCES})
+add_library(LayerKeySort::layerkeysort ALIAS layerkeysort)
 lks_configure_target(layerkeysort)
 
-add_executable(layerkeysort_example examples/basic.c)
-target_link_libraries(layerkeysort_example PRIVATE layerkeysort)
-add_executable(layerkeysort_ordered_example examples/ordered_tree.c)
-target_link_libraries(layerkeysort_ordered_example PRIVATE layerkeysort)
-add_executable(layerkeysort_layer_list_example examples/layer_list.c)
-target_link_libraries(layerkeysort_layer_list_example PRIVATE layerkeysort)
+if(LKS_BUILD_EXAMPLES)
+    add_executable(layerkeysort_example examples/basic.c)
+    target_link_libraries(layerkeysort_example PRIVATE layerkeysort)
+    add_executable(layerkeysort_ordered_example examples/ordered_tree.c)
+    target_link_libraries(layerkeysort_ordered_example PRIVATE layerkeysort)
+    add_executable(layerkeysort_layer_list_example examples/layer_list.c)
+    target_link_libraries(layerkeysort_layer_list_example PRIVATE layerkeysort)
+endif()
 
 if(LKS_BUILD_BENCHMARKS)
     add_executable(layerkeysort_benchmark benchmarks/current_benchmark.c)
     target_link_libraries(layerkeysort_benchmark PRIVATE layerkeysort)
+endif()
+
+if(LKS_INSTALL)
+    include(CMakePackageConfigHelpers)
+    set(LKS_PACKAGE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/LayerKeySort")
+    configure_package_config_file(cmake/LayerKeySortConfig.cmake.in
+        "${CMAKE_CURRENT_BINARY_DIR}/LayerKeySortConfig.cmake"
+        INSTALL_DESTINATION "${LKS_PACKAGE_DIR}")
+    # Same-major source compatibility for locally built static packages;
+    # this does not promise cross-toolchain binary ABI compatibility.
+    write_basic_package_version_file(
+        "${CMAKE_CURRENT_BINARY_DIR}/LayerKeySortConfigVersion.cmake"
+        VERSION "${PROJECT_VERSION}" COMPATIBILITY SameMajorVersion)
+    install(TARGETS layerkeysort EXPORT LayerKeySortTargets
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+    install(FILES include/layerkeysort.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+    install(FILES LICENSE DESTINATION "${CMAKE_INSTALL_DATADIR}/licenses/LayerKeySort")
+    install(EXPORT LayerKeySortTargets NAMESPACE LayerKeySort::
+        DESTINATION "${LKS_PACKAGE_DIR}")
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/LayerKeySortConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/LayerKeySortConfigVersion.cmake"
+        DESTINATION "${LKS_PACKAGE_DIR}")
 endif()
 
 if(LKS_BUILD_TESTS)

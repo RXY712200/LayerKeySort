@@ -5,6 +5,8 @@
 
 # Build directories
 build/
+__pycache__/
+*.pyc
 x64/
 Debug/
 Release/
