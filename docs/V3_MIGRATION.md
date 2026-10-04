@@ -1,8 +1,8 @@
-# Migrating from stable V2.0.0 to stable V3.0.0
+# Migrating from stable V2.0.0 to V3 3.x
 
-This document describes migration from historical stable `v2.0.0` to
-published stable `v3.0.0`. The V3 API retains the 59 functions of the
-published `v3.0.0-rc.1` prerelease. The active 3.x compatibility contract is in
+This document describes migration from historical stable `v2.0.0` to the V3
+API introduced in published `v3.0.0`. The 3.1.0 source retains the same 59
+public functions. The active 3.x compatibility contract is in
 [COMPATIBILITY.md](COMPATIBILITY.md).
 
 V2 let one `LksTree` accept caller-selected Paths and per-operation comparators.

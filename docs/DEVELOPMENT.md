@@ -1,8 +1,7 @@
 # Developing LayerKeySort
 
-This is the contributor workflow for the current V3 development tree. The
-published Stable release remains `v3.0.0`; distribution additions here are
-newer than that tag.
+This is the contributor workflow for LayerKeySort 3.1.0 source. The `v3.1.0`
+tag and GitHub Release are created during final publication, after review.
 Read [architecture](ARCHITECTURE.md) for the current implementation,
 [validation](VALIDATION.md) for test scope and evidence, and
 [benchmark evidence](BENCHMARKS.md) for performance limits. The
@@ -74,7 +73,11 @@ python tools/verify_release_assets.py build/release-assets-check
 python tools/validate_release_assets.py --asset-dir build/release-assets-check
 ```
 
-Use fresh output directories: the packager refuses to overwrite an existing
+For 3.1.0, the candidate asset names are
+`LayerKeySort-3.1.0-amalgamation.zip` and
+`LayerKeySort-3.1.0-SHA256SUMS.txt`. The generator derives the version from
+the public header and checks it against CMake. Use fresh output directories:
+the packager refuses to overwrite an existing
 asset set. `validate_distribution.py` exercises source-tree and offline
 FetchContent C/C++ consumers, installed C/C++ consumers, strict-warning
 amalgamation consumers, the packaged example, and repeated generation. It

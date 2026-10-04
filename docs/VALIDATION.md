@@ -54,18 +54,19 @@ The exact RC.1 tag passed all five CI configurations with CTest 8/8 each.
 An additional post-RC local campaign covered deterministic 500,000-operation
 seeds, adversarial insertion, parser/LK1 and OOM cases, and lifecycle cycles.
 Its raw outputs are outside this repository and were not reproduced by CI.
-The current Stable production source retains the RC.1 implementation. See
+The published `v3.0.0` production source retains the RC.1 implementation;
+the 3.1.0 source keeps that ordering implementation unchanged. See
 [BENCHMARKS.md](BENCHMARKS.md) for measured limits and provenance.
 
 ## Distribution validation
 
-In this development tree, `python tools/validate_distribution.py` exercises
+For 3.1.0 source, `python tools/validate_distribution.py` exercises
 external source-tree and offline FetchContent consumers, local install plus
 `find_package` for C and C++, strict-warning amalgamation consumers,
 the generated package example,
-and repeatable package generation. It checks that this development tree as a
-source dependency does not enable tests, examples, or install rules by default;
-the published `v3.0.0` tag has different subproject defaults.
+and repeatable package generation. It checks that 3.1.0 source dependencies do
+not enable tests, examples, or install rules by default. The historical
+`v3.0.0` tag had different subproject defaults.
 
 `python tools/validate_release_assets.py` builds the candidate asset set twice
 and checks exact ZIP/checksum membership, reproducibility, checksum matching,

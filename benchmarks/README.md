@@ -1,7 +1,7 @@
-# Current benchmark harness (V3.0.0 Stable)
+# Current benchmark harness (3.1.0 source)
 
-V3.0.0 retains the published `v3.0.0-rc.1` production benchmark behavior.
-Captured Preview and RC development data are historical; no new Stable-release
+The 3.1.0 source retains the published `v3.0.0` production ordering code and
+benchmark harness. Captured Preview and RC data are historical; no new 3.1.0
 timing CSV is claimed here.
 
 Stable v2.0.0 leaves captured V2 Preview.4/Stage 5 timing data unchanged. The

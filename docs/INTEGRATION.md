@@ -1,6 +1,9 @@
 # Integrating LayerKeySort
 
-Choose a method for your build. This development tree supports the routes below. The already-published [v3.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) predates the new amalgamation Release asset and install support; those are not in that historical tag. Pin a release tag or reviewed commit when fetching source. See [V3 migration](V3_MIGRATION.md) and [compatibility](COMPATIBILITY.md).
+Choose a method for your build. These are the LayerKeySort 3.1.0 integration
+routes. The `v3.1.0` tag and assets become publicly available at final
+publication; until then, use this source checkout or an exact reviewed commit.
+See [V3 migration](V3_MIGRATION.md) and [compatibility](COMPATIBILITY.md).
 
 | Method | Best for | CMake to consume? | Files in application |
 | --- | --- | --- | --- |
@@ -14,7 +17,11 @@ The library requires C17. CMake routes require CMake 3.21+. CI tests Windows/MSV
 
 ## Two-file amalgamation
 
-For a compatible release that publishes distribution assets, download `LayerKeySort-<version>-amalgamation.zip` from [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). GitHub's automatic source ZIP/tar.gz is the full repository; the additional amalgamation ZIP is the smaller drop-in. It contains `layerkeysort.h` (public API), `layerkeysort.c` (implementation), `example.c`, `LICENSE`, and `README.txt`.
+After publication, download `LayerKeySort-3.1.0-amalgamation.zip` from
+[GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). GitHub's
+automatic source ZIP/tar.gz is the full repository; the amalgamation ZIP is
+the smaller drop-in. It contains `layerkeysort.h` (public API),
+`layerkeysort.c` (implementation), `example.c`, `LICENSE`, and `README.txt`.
 
 Extract it and copy `layerkeysort.h` and `layerkeysort.c` into the application. Include `#include "layerkeysort.h"`. Compile as C17:
 
@@ -30,11 +37,14 @@ cl /std:c17 /I. layerkeysort.c main.c
 
 Replace `main.c` with `example.c` to compile the packaged example. Users of the generated package need no Python. Maintainers use Python to generate it from canonical `include/` and `src/` sources; do not edit generated `layerkeysort.c`.
 
-For optional checksum verification, compare `sha256sum LayerKeySort-<version>-amalgamation.zip` on GNU/Linux or `Get-FileHash .\LayerKeySort-<version>-amalgamation.zip -Algorithm SHA256` in PowerShell against the matching `LayerKeySort-<version>-SHA256SUMS.txt` from that Release.
+For optional checksum verification, compare
+`sha256sum LayerKeySort-3.1.0-amalgamation.zip` on GNU/Linux or
+`Get-FileHash .\LayerKeySort-3.1.0-amalgamation.zip -Algorithm SHA256` in
+PowerShell against `LayerKeySort-3.1.0-SHA256SUMS.txt` from that Release.
 
 ## CMake FetchContent
 
-A complete consumer `CMakeLists.txt` for the published `v3.0.0` tag:
+A complete consumer `CMakeLists.txt` for the intended `v3.1.0` tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -43,11 +53,9 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include(FetchContent)
-set(LKS_BUILD_TESTS OFF)
-set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v3.0.0)
+    GIT_TAG v3.1.0)
 FetchContent_MakeAvailable(layerkeysort_source)
 
 add_executable(my_app main.c)
@@ -55,21 +63,14 @@ target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
 Build with `cmake -S . -B build` and `cmake --build build --target my_app`.
-In published `v3.0.0`, tests default ON unless disabled above, and all three
-example targets are created unconditionally. Building only `my_app` does not
-build those example executables. That tag has no `LKS_BUILD_EXAMPLES` or
-`LKS_INSTALL` option, installed package, or amalgamation asset.
-
-In the **current development tree** and a future compatible release containing
-these distribution changes, tests, examples, and install rules default OFF
-when LayerKeySort is a subproject. Pin that release or an exact reviewed commit
-to use its newer behavior. To test this checkout offline, configure with
+For 3.1.0 source dependencies, tests, examples, and install rules default OFF.
+The tag becomes resolvable at final publication; before then, pin the exact
+reviewed commit. To test a local checkout offline, configure with
 `-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`.
 
 ## Vendored CMake add_subdirectory
 
-For the **current development tree**, place a checkout at
-`external/LayerKeySort` and use:
+Place 3.1.0 source at `external/LayerKeySort` and use:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -81,20 +82,15 @@ add_executable(my_app main.c)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-The source target `layerkeysort` supplies the public include directory. In
-this development tree, tests, examples, and install rules default OFF for a
-subproject; no explicit OFF flags are needed. Its build tree also has a
-namespaced alias.
-
-If vendoring the **published `v3.0.0` tag**, set `LKS_BUILD_TESTS` to OFF
-before adding it. That tag always creates example targets. Use
-`add_subdirectory(external/LayerKeySort EXCLUDE_FROM_ALL)` if a normal
-consumer-wide build should skip them; linking `layerkeysort` still builds
-the library. `LKS_BUILD_EXAMPLES` and `LKS_INSTALL` do not exist in that tag.
+The source target `layerkeysort` supplies the public include directory. Tests,
+examples, and install rules default OFF for a subproject; no explicit OFF
+flags are needed. A namespaced alias is also available in the build tree.
+Historical `v3.0.0` had different subproject defaults and did not include
+installation or amalgamation; consult that tag's CMake file when vendoring it.
 
 ## Local install and find_package
 
-Build and install the current development tree with your C17 toolchain:
+Build and install 3.1.0 source with your C17 toolchain:
 
 ```sh
 cmake -S . -B build/install -DLKS_BUILD_TESTS=OFF -DLKS_BUILD_EXAMPLES=OFF
@@ -112,7 +108,7 @@ add_executable(my_app main.c)
 target_link_libraries(my_app PRIVATE LayerKeySort::layerkeysort)
 ```
 
-Configure with `cmake -S . -B build -DCMAKE_PREFIX_PATH=/some/prefix`, then `cmake --build build`. Point `CMAKE_PREFIX_PATH` to the install prefix, not its `lib/cmake` directory. The installed target is `LayerKeySort::layerkeysort`; source-tree examples use `layerkeysort`. This is a locally built static package, not a cross-toolchain binary SDK. The published v3.0.0 tag does not provide these install rules.
+Configure with `cmake -S . -B build -DCMAKE_PREFIX_PATH=/some/prefix`, then `cmake --build build`. Point `CMAKE_PREFIX_PATH` to the install prefix, not its `lib/cmake` directory. The installed target is `LayerKeySort::layerkeysort`; source-tree examples use `layerkeysort`. This is a locally built static package, not a cross-toolchain binary SDK.
 
 ## Direct modular C17 sources
 
@@ -135,8 +131,7 @@ The public header has `extern "C"` guards. C++ applications may include it and l
 
 ## Build options and troubleshooting
 
-The defaults below describe the **current development tree**, not published
-`v3.0.0`.
+These are the 3.1.0 build defaults.
 
 | Option | Top-level default | Subproject default | Purpose |
 | --- | --- | --- | --- |

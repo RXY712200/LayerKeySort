@@ -3,7 +3,9 @@
 ## Stable 3.x compatibility contract
 
 The released V3 Preview.1 through Preview.5 and `v3.0.0-rc.1` preceded
-the published `v3.0.0` Stable release. The 3.x contract below is active.
+the published `v3.0.0` Stable release. The 3.1.0 source extends its supported
+CMake integration surface without changing the C API or ordering semantics.
+The 3.x contract below is active.
 The historical 2.x contract below remains applicable to `v2.0.0`.
 
 V3 intentionally removes the two per-operation-comparator `LksTree`
@@ -24,11 +26,18 @@ change those details while preserving the public contracts above. Paths and
 LK1 keys remain ordering coordinates, not permanent item IDs. This is a
 source/API and semantic policy, not a cross-toolchain binary ABI guarantee.
 
-The current development tree can install a locally built static CMake package.
-Build it for the consuming toolchain and C runtime. This installation route
-does not extend the published 3.x contract to binary ABI or a permanent
-installed filesystem layout. Any additional installed-target promise belongs
-to a future release decision.
+Starting with 3.1.0, supported CMake integration includes the source-tree
+`layerkeysort` target and an installed package found with
+`find_package(LayerKeySort CONFIG REQUIRED)` and linked through
+`LayerKeySort::layerkeysort`. Compatible later 3.x releases should preserve
+these integration names or provide a compatible path. The installed static
+library is built locally for the consuming toolchain and C runtime. No binary
+ABI compatibility across toolchains or runtime choices, fixed archive filename,
+absolute prefix, `lib` versus `lib64` layout, or precompiled binary
+compatibility is promised. `GNUInstallDirs` conventions may vary by platform.
+
+The two-file amalgamation and SHA-256 manifest are 3.1.0 distribution policy,
+not additions to the C API or a promise about generated implementation internals.
 
 ---
 

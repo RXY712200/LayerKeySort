@@ -7,13 +7,13 @@
 ## Version macros
 
 - `LKS_VERSION_MAJOR` is `3`.
-- `LKS_VERSION_MINOR` is `0`.
+- `LKS_VERSION_MINOR` is `1`.
 - `LKS_VERSION_PATCH` is `0`.
 - `LKS_VERSION_PRERELEASE` is `""`.
-- `LKS_VERSION_STRING` is `"3.0.0"`.
+- `LKS_VERSION_STRING` is `"3.1.0"`.
 
-This page describes the published **V3.0.0 Stable** header with 59
-public functions. Historical stable `v2.0.0` has a 52-function API;
+This page describes the **3.1.0 source** header with 59 public functions.
+Stable `v3.0.0` has the same function set; historical stable `v2.0.0` has 52.
 `v3.0.0-rc.1` is a historical prerelease.
 The [migration guide](V3_MIGRATION.md) lists the Tree changes. The
 [compatibility guide](COMPATIBILITY.md) gives the active 3.x contract
@@ -918,7 +918,7 @@ comparator-equal Base items before Incoming items, while Batch merge preserves
 source chunk order for equals. Each successful merge result has its own Path
 coordinate space, independent of unchanged source Groups.
 
-Historical stable v2.0.0 has **52 functions**. The V3.0.0 Stable header has **59**:
+Historical stable v2.0.0 has **52 functions**. The V3.0.0 Stable and 3.1.0 source headers have **59**:
 two V2 comparator Tree functions were removed and nine ordered-container
 functions were added. Private allocator, profile, benchmark, and test entry
 points are not part of this reference.

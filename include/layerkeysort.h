@@ -9,10 +9,10 @@ extern "C" {
 #endif
 
 #define LKS_VERSION_MAJOR 3
-#define LKS_VERSION_MINOR 0
+#define LKS_VERSION_MINOR 1
 #define LKS_VERSION_PATCH 0
 #define LKS_VERSION_PRERELEASE ""
-#define LKS_VERSION_STRING "3.0.0"
+#define LKS_VERSION_STRING "3.1.0"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u

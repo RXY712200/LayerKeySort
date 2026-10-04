@@ -1,9 +1,8 @@
 # Using LayerKeySort
 
-This guide uses the published `v3.0.0` Stable API. Its examples also apply to
-the current development tree. The linked integration guide distinguishes
-distribution routes added after `v3.0.0` from those available in that tag.
-See [V3 migration](V3_MIGRATION.md) when upgrading from stable `v2.0.0`.
+This is the LayerKeySort 3.1.0 API/use guide. The public function set remains
+compatible with stable `v3.0.0`. See [Integration](INTEGRATION.md) for obtaining
+the library and [V3 migration](V3_MIGRATION.md) when upgrading from V2.
 
 ## Before you start
 

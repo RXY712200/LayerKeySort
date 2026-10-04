@@ -2,6 +2,30 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [3.1.0] - Unreleased
+
+This compatible V3 feature release improves how applications obtain and build
+LayerKeySort. It does not change the public C function set or production
+ordering implementation.
+
+- Add CMake install/export support for a locally built static library. Consumers
+  can use `find_package(LayerKeySort CONFIG REQUIRED)` and link
+  `LayerKeySort::layerkeysort`. Source subprojects now default tests, examples,
+  and install rules OFF.
+- Add a generated two-file C17 amalgamation and deterministic candidate Release
+  assets: `LayerKeySort-3.1.0-amalgamation.zip` plus a SHA-256 manifest.
+  GitHub's automatic tagged source archives remain the full repository.
+- Extend regression validation to source-tree and offline FetchContent builds,
+  installed C and C++ consumers, and amalgamation consumers. CI also checks
+  asset reproducibility, exact membership, checksum integrity, and tamper
+  rejection. The read-only candidate workflow produces an Actions artifact;
+  public Release publication remains separate.
+- Rework first-use documentation around integration choices and API selection.
+  Separate current architecture, validation, and usage from archived design
+  decisions and benchmark history.
+- Preserve Path comparison, display grammar, LK1 v1 bytes, Tree ownership,
+  comparator behavior, relabel semantics, and the core production C source.
+
 ## [3.0.0] - 2026-10-03
 
 This is the published V3 Stable release. `v2.0.0` remains the historical

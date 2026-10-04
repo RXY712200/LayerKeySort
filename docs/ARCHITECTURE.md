@@ -1,6 +1,7 @@
 # V3 architecture
 
-This describes the current `v3.0.0` implementation. The [API reference](API.md)
+This describes the 3.1.0 source implementation, whose ordering code is unchanged
+from `v3.0.0`. The [API reference](API.md)
 and [3.x compatibility contract](COMPATIBILITY.md) define public behavior;
 physical AVL shape, generated coordinates, and policy thresholds remain private.
 

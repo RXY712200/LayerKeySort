@@ -13,7 +13,7 @@ Sorting an array can tell you the order *now*, but an array index is a poor last
 
 The library can manage those coordinates from your comparator, or your application can choose them for explicit moves. The coordinates are called **Paths**. They describe position, not item identity.
 
-**Current Stable release:** [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0). The earlier [v2.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v2.0.0) remains available for 2.x users.
+**Version in this source tree: 3.1.0.** Published versions are on [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). The `v3.1.0` tag and assets are created during final publication; the earlier [v3.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) remains available.
 
 ## Get LayerKeySort
 
@@ -25,7 +25,7 @@ The library can manage those coordinates from your comparator, or your applicati
 | Reuse a local CMake installation | Install once, then use `find_package`. |
 | Vendor the full repository | Use `add_subdirectory`. |
 
-The [published v3.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v3.0.0) predates the amalgamation asset and installed-package support in this development tree. For a release that **provides** distribution assets, download `LayerKeySort-<version>-amalgamation.zip` from its [GitHub Release](https://github.com/RXY712200/LayerKeySort/releases). Until such a release, this checkout can generate the package with `python tools/amalgamate.py --package-parent build/amalgamation`. GitHub's automatic source archive is the full repository; the additional amalgamation ZIP is a smaller route to `layerkeysort.h` and `layerkeysort.c`.
+For a published 3.1.0 Release, download `LayerKeySort-3.1.0-amalgamation.zip` from [GitHub Releases](https://github.com/RXY712200/LayerKeySort/releases). Until the tag and assets are published, this source checkout can generate the package with `python tools/amalgamate.py --package-parent build/amalgamation`. GitHub's automatic source archive is the full repository; the amalgamation ZIP is the smaller two-file route.
 
 Extract the ZIP, copy those two files beside your application, include `#include "layerkeysort.h"`, and compile both C files as C17:
 
@@ -33,22 +33,20 @@ Extract the ZIP, copy those two files beside your application, include `#include
 cc -std=c17 -I. layerkeysort.c main.c -o my_app
 ```
 
-In an MSVC Developer Command Prompt, use `cl /std:c17 /I. layerkeysort.c main.c`. The ZIP also includes `example.c`, `LICENSE`, and a short `README.txt`. Python is used to **generate** the package in this repository; it is not needed to consume the downloaded files. A compatible Release may also provide `LayerKeySort-<version>-SHA256SUMS.txt` beside the ZIP: run `sha256sum LayerKeySort-<version>-amalgamation.zip` on GNU/Linux or `Get-FileHash .\LayerKeySort-<version>-amalgamation.zip -Algorithm SHA256` in PowerShell and compare the digest.
+In an MSVC Developer Command Prompt, use `cl /std:c17 /I. layerkeysort.c main.c`. The ZIP also includes `example.c`, `LICENSE`, and a short `README.txt`. Python generates the package in this repository; it is not needed to consume it. The companion `LayerKeySort-3.1.0-SHA256SUMS.txt` records the ZIP digest.
 
 For a CMake project, use the source target `layerkeysort`:
 
 ```cmake
 include(FetchContent)
-set(LKS_BUILD_TESTS OFF)
-set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
-    GIT_TAG v3.0.0)
+    GIT_TAG v3.1.0)
 FetchContent_MakeAvailable(layerkeysort_source)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-This pins the published `v3.0.0` source build; its example targets still exist. The newer subproject defaults, amalgamation, and installation routes belong to this development tree and a future compatible release. Pin a release tag or exact reviewed commit, not a moving branch. `my_app` must already be a target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for complete setup.
+The `v3.1.0` tag becomes resolvable when it is created during final delivery. Until then, use an exact reviewed source commit. Pin a tag or commit, not a moving branch. `my_app` must already be a target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for complete setup.
 
 ## Try LayerKeySort
 
@@ -70,7 +68,7 @@ For explicit moves, try the [layer-list example](examples/layer_list.c). For a o
 
 ## Use LayerKeySort in your project
 
-For vendoring this development tree, `add_subdirectory(external/LayerKeySort)` and link `layerkeysort`. To install from this development tree, configure and build it, run `cmake --install build --prefix <prefix>`, then use `find_package(LayerKeySort CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort` in the consuming CMake project. The [integration guide](docs/INTEGRATION.md) gives complete commands and explains `CMAKE_PREFIX_PATH`. Only the public `layerkeysort.h` belongs in application code.
+For vendored 3.1.0 source, `add_subdirectory(external/LayerKeySort)` and link `layerkeysort`. To install it locally, build the source, run `cmake --install build --prefix <prefix>`, then use `find_package(LayerKeySort CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort`. The [integration guide](docs/INTEGRATION.md) gives complete commands and explains `CMAKE_PREFIX_PATH`. Application code includes only `layerkeysort.h`.
 
 ## Which API should I use?
 
@@ -130,7 +128,7 @@ See the [API reference](docs/API.md) for exact ownership, error, and Path rules,
 | See ordering changes visually | [V3 visualizer](https://rxy712200.github.io/LayerKeySort/) |
 | Release-by-release history | [Changelog](CHANGELOG.md) |
 
-The public header is [`include/layerkeysort.h`](include/layerkeysort.h). V3.0.0 is the current Stable generation; the [migration guide](docs/V3_MIGRATION.md) covers the breaking change from stable V2's comparator Tree API. Older Preview and RC details remain in the changelog.
+The public header is [`include/layerkeysort.h`](include/layerkeysort.h). The [migration guide](docs/V3_MIGRATION.md) covers the V2-to-V3 Tree API change. Earlier release details remain in the changelog.
 
 ## License
 

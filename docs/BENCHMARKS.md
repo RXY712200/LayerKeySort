@@ -1,7 +1,7 @@
 # V3 performance evidence
 
-The published `v3.0.0` Stable source retains the Preview.3/RC.1 production
-implementation measured below. The capture is not a new Stable timing run.
+The 3.1.0 source retains the published `v3.0.0` production ordering code and
+benchmark harness. The capture below is not a new 3.1.0 timing run.
 It describes one machine and the listed workloads; benchmark timing is not a
 complexity proof or a universal speed claim. The source and benchmark harness
 have no changes between the captured Preview.3 commit and the Stable tag.
@@ -61,7 +61,7 @@ successful region. Footprint records final resident Path allocation, total
 Path steps, and display/LK1 C-string bytes. These are separate from wall-clock
 timing and do not establish an asymptotic bound.
 
-## Complexity and limits of V3.0.0 Stable
+## Complexity and limits of V3 ordering
 
 Let `n` be the Tree size, `d` a Path depth, `b` an encoded text length, and
 `c` the cost of the caller's item comparator. An AVL visit may also compare
