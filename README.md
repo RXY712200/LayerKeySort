@@ -39,6 +39,8 @@ For a CMake project, use the source target `layerkeysort`:
 
 ```cmake
 include(FetchContent)
+set(LKS_BUILD_TESTS OFF)
+set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
     GIT_TAG v3.0.0)
@@ -46,7 +48,7 @@ FetchContent_MakeAvailable(layerkeysort_source)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-Pin a release tag or exact reviewed commit, not a moving development branch. `my_app` must already be an executable or library target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for a complete project, `add_subdirectory`, local install/`find_package`, and direct modular source builds.
+This pins the published `v3.0.0` source build; its example targets still exist. The newer subproject defaults, amalgamation, and installation routes belong to this development tree and a future compatible release. Pin a release tag or exact reviewed commit, not a moving branch. `my_app` must already be a target in a C17 CMake project (CMake 3.21+). See [Integration](docs/INTEGRATION.md) for complete setup.
 
 ## Try LayerKeySort
 
@@ -68,7 +70,7 @@ For explicit moves, try the [layer-list example](examples/layer_list.c). For a o
 
 ## Use LayerKeySort in your project
 
-For vendored source, `add_subdirectory(external/LayerKeySort)` and link `layerkeysort`. To install from this development tree, configure and build it, run `cmake --install build --prefix <prefix>`, then use `find_package(LayerKeySort CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort` in the consuming CMake project. The [integration guide](docs/INTEGRATION.md) gives complete commands and explains `CMAKE_PREFIX_PATH`. Only the public `layerkeysort.h` belongs in application code.
+For vendoring this development tree, `add_subdirectory(external/LayerKeySort)` and link `layerkeysort`. To install from this development tree, configure and build it, run `cmake --install build --prefix <prefix>`, then use `find_package(LayerKeySort CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort` in the consuming CMake project. The [integration guide](docs/INTEGRATION.md) gives complete commands and explains `CMAKE_PREFIX_PATH`. Only the public `layerkeysort.h` belongs in application code.
 
 ## Which API should I use?
 

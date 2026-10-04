@@ -1,8 +1,9 @@
 # Using LayerKeySort
 
-This guide describes the published `v3.0.0` Stable API. Pin `v3.0.0` for
-the current Stable generation. See [V3 migration](V3_MIGRATION.md) when
-upgrading from historical stable `v2.0.0`.
+This guide uses the published `v3.0.0` Stable API. Its examples also apply to
+the current development tree. The linked integration guide distinguishes
+distribution routes added after `v3.0.0` from those available in that tag.
+See [V3 migration](V3_MIGRATION.md) when upgrading from stable `v2.0.0`.
 
 ## Before you start
 

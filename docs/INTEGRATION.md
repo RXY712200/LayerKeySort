@@ -34,7 +34,7 @@ For optional checksum verification, compare `sha256sum LayerKeySort-<version>-am
 
 ## CMake FetchContent
 
-A complete consumer `CMakeLists.txt` for a C17 application:
+A complete consumer `CMakeLists.txt` for the published `v3.0.0` tag:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -43,6 +43,8 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include(FetchContent)
+set(LKS_BUILD_TESTS OFF)
+set(LKS_BUILD_BENCHMARKS OFF)
 FetchContent_Declare(layerkeysort_source
     GIT_REPOSITORY https://github.com/RXY712200/LayerKeySort.git
     GIT_TAG v3.0.0)
@@ -52,11 +54,22 @@ add_executable(my_app main.c)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-Build with `cmake -S . -B build` and `cmake --build build --target my_app`. The `v3.0.0` tag is suitable for the published source integration, but does not contain the newer distribution additions. Pin a compatible later release or reviewed commit to use those. As a subproject, repository tests, examples, and install rules default OFF. To test a local checkout offline, configure with `-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`.
+Build with `cmake -S . -B build` and `cmake --build build --target my_app`.
+In published `v3.0.0`, tests default ON unless disabled above, and all three
+example targets are created unconditionally. Building only `my_app` does not
+build those example executables. That tag has no `LKS_BUILD_EXAMPLES` or
+`LKS_INSTALL` option, installed package, or amalgamation asset.
+
+In the **current development tree** and a future compatible release containing
+these distribution changes, tests, examples, and install rules default OFF
+when LayerKeySort is a subproject. Pin that release or an exact reviewed commit
+to use its newer behavior. To test this checkout offline, configure with
+`-DFETCHCONTENT_SOURCE_DIR_LAYERKEYSORT_SOURCE=<checkout>`.
 
 ## Vendored CMake add_subdirectory
 
-Place a checkout at `external/LayerKeySort` and use:
+For the **current development tree**, place a checkout at
+`external/LayerKeySort` and use:
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
@@ -68,7 +81,16 @@ add_executable(my_app main.c)
 target_link_libraries(my_app PRIVATE layerkeysort)
 ```
 
-The source target `layerkeysort` supplies the public include directory. Tests, examples, and install rules default OFF for a subproject; no explicit OFF flags are needed. A namespaced alias is also available in the build tree.
+The source target `layerkeysort` supplies the public include directory. In
+this development tree, tests, examples, and install rules default OFF for a
+subproject; no explicit OFF flags are needed. Its build tree also has a
+namespaced alias.
+
+If vendoring the **published `v3.0.0` tag**, set `LKS_BUILD_TESTS` to OFF
+before adding it. That tag always creates example targets. Use
+`add_subdirectory(external/LayerKeySort EXCLUDE_FROM_ALL)` if a normal
+consumer-wide build should skip them; linking `layerkeysort` still builds
+the library. `LKS_BUILD_EXAMPLES` and `LKS_INSTALL` do not exist in that tag.
 
 ## Local install and find_package
 
@@ -112,6 +134,9 @@ The authoritative source list is [the production manifest](../cmake/ProductionSo
 The public header has `extern "C"` guards. C++ applications may include it and link the C17 library, as the installed consumer test does. Compile the implementation sources as C17, not C++.
 
 ## Build options and troubleshooting
+
+The defaults below describe the **current development tree**, not published
+`v3.0.0`.
 
 | Option | Top-level default | Subproject default | Purpose |
 | --- | --- | --- | --- |

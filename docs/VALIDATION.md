@@ -59,11 +59,13 @@ The current Stable production source retains the RC.1 implementation. See
 
 ## Distribution validation
 
-`python tools/validate_distribution.py` exercises external source-tree and
-offline FetchContent consumers, local install plus `find_package` for C and
-C++, strict-warning amalgamation consumers, the generated package example,
-and repeatable package generation. It checks that a source dependency does
-not enable repository tests, examples, or install rules by default.
+In this development tree, `python tools/validate_distribution.py` exercises
+external source-tree and offline FetchContent consumers, local install plus
+`find_package` for C and C++, strict-warning amalgamation consumers,
+the generated package example,
+and repeatable package generation. It checks that this development tree as a
+source dependency does not enable tests, examples, or install rules by default;
+the published `v3.0.0` tag has different subproject defaults.
 
 `python tools/validate_release_assets.py` builds the candidate asset set twice
 and checks exact ZIP/checksum membership, reproducibility, checksum matching,
