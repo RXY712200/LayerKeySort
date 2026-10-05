@@ -12,7 +12,7 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -A x64 -DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_RESEARCH=ON
       - name: Build
-        run: cmake --build build --config Debug --parallel
+        run: cmake --build build --config Debug --parallel 4
       - name: Test
         run: ctest --test-dir build -C Debug --output-on-failure
       - name: Basic example
@@ -44,7 +44,7 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_ENABLE_SANITIZERS=${{ matrix.sanitizer }} -DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_RESEARCH=ON
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 4
       - name: Test
         run: ctest --test-dir build --output-on-failure
       - name: Basic example
@@ -73,7 +73,7 @@ jobs:
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_RESEARCH=ON
       - name: Build
-        run: cmake --build build --parallel
+        run: cmake --build build --parallel 4
       - name: Test
         run: ctest --test-dir build --output-on-failure
       - name: Basic example
