@@ -16,6 +16,7 @@ option(LKS_BUILD_BENCHMARKS "Build the public-API benchmark harness" OFF)
 option(LKS_ENABLE_SANITIZERS "Enable AddressSanitizer and UBSan where supported" OFF)
 option(LKS_BUILD_EXAMPLES "Build LayerKeySort examples" ${LKS_EMBEDDED_DEFAULT})
 option(LKS_INSTALL "Generate LayerKeySort install rules" ${LKS_EMBEDDED_DEFAULT})
+option(LKS_BUILD_RESEARCH "Build branch-only tail-cost research configurations" OFF)
 
 include(GNUInstallDirs)
 include(cmake/ProductionSources.cmake)
@@ -84,6 +85,9 @@ if(LKS_BUILD_TESTS)
     target_compile_definitions(layerkeysort_diagnostics PRIVATE
         LKS_ENABLE_ALLOC_DIAGNOSTICS LKS_ENABLE_V1_REGRESSION_HELPERS)
     lks_configure_target(layerkeysort_diagnostics)
+    if(LKS_BUILD_RESEARCH)
+        target_compile_definitions(layerkeysort_diagnostics PRIVATE LKS_RESEARCH_TRACE)
+    endif()
     add_executable(layerkeysort_tests tests/v2_main.c tests/v2_preview.c
         tests/property.c tests/mutation.c tests/path_external.c tests/public_api_usage.c
         tests/v3_ordered.c)
@@ -111,6 +115,9 @@ if(LKS_BUILD_TESTS)
         lks_configure_target(layerkeysort_workload_diagnostics)
         target_include_directories(layerkeysort_workload_diagnostics PRIVATE src)
         target_compile_definitions(layerkeysort_workload_diagnostics PRIVATE LKS_WORKLOAD_DIAGNOSTICS)
+        if(LKS_BUILD_RESEARCH)
+            target_compile_definitions(layerkeysort_workload_diagnostics PRIVATE LKS_RESEARCH_TRACE)
+        endif()
         target_link_libraries(layerkeysort_workload_diagnostics PRIVATE layerkeysort_diagnostics)
         foreach(family timeline priority local churn)
             add_test(NAME layerkeysort_workload_${family}_smoke

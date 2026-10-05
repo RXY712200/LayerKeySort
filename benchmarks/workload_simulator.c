@@ -10,6 +10,7 @@
 #include "layerkeysort.h"
 #include "lks_tree_internal.h"
 #include "lks_path_internal.h"
+#include "lks_research_internal.h"
 #ifdef LKS_WORKLOAD_DIAGNOSTICS
 #include "lks_alloc_internal.h"
 #endif
@@ -43,6 +44,10 @@ typedef struct Simulation {
     Event *events;
     LksOrderedTree *tree;
     int trace;
+#ifdef LKS_RESEARCH_TRACE
+    size_t research_operation, research_emitted;
+    int research_full;
+#endif
 } Simulation;
 
 static void fail(const Simulation *s, const char *message)
@@ -190,6 +195,10 @@ static void insert_item(Simulation *s, Item *item, int64_t key, int measured)
     uint64_t calls = s->comparisons;
 #endif
     require(s, !item->active, "inserted resident item");
+#ifdef LKS_RESEARCH_TRACE
+    lks_research_trace_begin(measured && ((s->research_full && s->research_emitted < 4) ||
+        s->operation == s->research_operation));
+#endif
     item->key = key; item->sequence = ++s->sequence;
     if (measured) begin = now_ms();
     status = lks_ordered_tree_insert(s->tree, item, &node);
@@ -219,6 +228,29 @@ static void insert_item(Simulation *s, Item *item, int64_t key, int measured)
         e->category = e->full ? 3 : e->relabelled > 128 ? 2 : e->relabelled ? 1 : 0;
         require(s, (after.direct_inserts - before.direct_inserts) +
             (after.successes - before.successes) == 1, "insert diagnostic accounting");
+#ifdef LKS_RESEARCH_TRACE
+        if ((s->research_full && e->full && s->research_emitted < 4) ||
+            s->operation == s->research_operation) {
+            size_t n, w;
+            const LksResearchWindow *records = lks_research_trace_get(&n);
+            ++s->research_emitted;
+            for (w = 0; w < n; ++w) {
+                const LksResearchWindow *r = &records[w];
+                printf("{\"kind\":\"research_window\",\"operation\":%zu,\"window\":%zu,"
+                    "\"candidate_depth\":%zu,\"position\":%zu,\"selected_left\":%zu,\"selected_right\":%zu,"
+                    "\"left_depth\":%zu,\"right_depth\":%zu,\"outer_left\":\"%s\",\"outer_right\":\"%s\","
+                    "\"before\":\"%s\",\"after\":\"%s\",\"generated\":%zu,\"max_depth\":%zu,"
+                    "\"next_window\":%zu,\"status\":%d,\"accepted\":%d,\"full\":%d,"
+                    "\"alloc_calls\":%zu,\"requested_bytes\":%zu,\"scratch_ms\":%.6f,"
+                    "\"selection_ms\":%.6f,\"generation_ms\":%.6f,\"validation_ms\":%.6f,\"finish_ms\":%.6f}\n",
+                    s->operation, r->window, r->candidate_depth, r->position, r->selected_left,
+                    r->selected_right, r->left_depth, r->right_depth, r->left, r->right, r->before, r->after,
+                    r->generated, r->max_depth, r->next_window, (int)r->status, r->accepted, r->full,
+                    r->alloc_calls, r->requested_bytes, r->scratch_ms, r->selection_ms,
+                    r->generation_ms, r->validation_ms, r->finish_ms);
+            }
+        }
+#endif
 #else
         e->category = -1; /* No private work counts in production timing. */
 #endif
@@ -593,6 +625,15 @@ int main(int argc, char **argv)
         fprintf(stderr, "invalid scenario arguments\n"); return 2;
     }
     s.seed = s.random = (uint32_t)seed;
+#ifdef LKS_RESEARCH_TRACE
+    {
+        const char *selection = getenv("LKS_RESEARCH_TRACE_OP");
+        if (selection != NULL) {
+            if (!strcmp(selection, "full")) s.research_full = 1;
+            else s.research_operation = decimal(selection);
+        }
+    }
+#endif
     initialize(&s); growth(&s);
     for (s.operation = 1; s.operation <= s.operations; ++s.operation) {
         mutate(&s);

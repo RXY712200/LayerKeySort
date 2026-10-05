@@ -5,6 +5,42 @@
 #include "lks_tree_internal.h"
 #include "lks_bulk_internal.h"
 #include "lks_policy_internal.h"
+#include "lks_research_internal.h"
+
+#ifdef LKS_RESEARCH_TRACE
+#include <time.h>
+/* At most log2(SIZE_MAX)+1 windows; no allocation or fault-injection effect.
+ * Disabled tracing does not take clock/stat snapshots. Trace timing includes
+ * allocator work within phases, not a separately measurable allocator cost. */
+static LksResearchWindow research_windows[128];
+static size_t research_count;
+static int research_enabled;
+void lks_research_trace_begin(int enabled)
+{ research_enabled = enabled; research_count = 0; }
+const LksResearchWindow *lks_research_trace_get(size_t *count)
+{ *count = research_count; return research_windows; }
+static double research_time(void)
+{
+    struct timespec t;
+    if (timespec_get(&t, TIME_UTC) != TIME_UTC) return 0.0;
+    return (double)t.tv_sec * 1000.0 + (double)t.tv_nsec / 1000000.0;
+}
+static void research_path(const LksPath *path, char *buffer, size_t capacity)
+{
+    if (path == NULL) strcpy(buffer, "absent");
+    else if (lks_path_format(path, buffer, capacity) != LKS_STATUS_OK)
+        strcpy(buffer, "too-long");
+}
+static void research_finish(LksResearchWindow *record, double begin)
+{
+    if (record != NULL) {
+        LksAllocStats stats = lks_alloc_stats_get();
+        record->finish_ms = research_time() - begin;
+        record->alloc_calls = stats.alloc_calls - record->alloc_calls;
+        record->requested_bytes = stats.total_successful_requested_bytes - record->requested_bytes;
+    }
+}
+#endif
 
 struct LksTreeNode {
     LksPath *path;
@@ -709,6 +745,20 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         size_t count = 0, position = 0, i, max_depth = 0;
         LksStatus status;
         int take_left = 1;
+#ifdef LKS_RESEARCH_TRACE
+        LksResearchWindow *trace = NULL;
+        double phase = 0.0;
+        if (research_enabled && research_count < 128) {
+            LksAllocStats stats = lks_alloc_stats_get();
+            trace = &research_windows[research_count++];
+            memset(trace, 0, sizeof(*trace));
+            trace->candidate_depth = candidate_depth;
+            trace->window = window; trace->full = window == tree->size;
+            trace->alloc_calls = stats.alloc_calls;
+            trace->requested_bytes = stats.total_successful_requested_bytes;
+            phase = research_time();
+        }
+#endif
         if (heap_scratch) {
             if (window > (size_t)-1 / sizeof(*nodes) ||
                 window == (size_t)-1 ||
@@ -724,6 +774,9 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
             }
         }
         for (i = 0; i <= window; ++i) paths[i] = NULL;
+#ifdef LKS_RESEARCH_TRACE
+        if (trace != NULL) { trace->scratch_ms = research_time() - phase; phase = research_time(); }
+#endif
         /* Alternate around the insertion gap, then use whichever side remains.
          * At window == size this necessarily includes every existing node. */
         while (count < window && (left != NULL || right != NULL)) {
@@ -761,12 +814,34 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         }
         outer_left = predecessor(start) == NULL ? NULL : predecessor(start)->path;
         outer_right = cursor == NULL ? NULL : cursor->path;
+#ifdef LKS_RESEARCH_TRACE
+        if (trace != NULL) {
+            trace->selection_ms = research_time() - phase;
+            trace->position = position; trace->selected_left = position;
+            trace->selected_right = count - position;
+            trace->left_depth = lks_path_depth(outer_left);
+            trace->right_depth = lks_path_depth(outer_right);
+            research_path(outer_left, trace->left, sizeof(trace->left));
+            research_path(outer_right, trace->right, sizeof(trace->right));
+            research_path(before == NULL ? NULL : before->path, trace->before, sizeof(trace->before));
+            research_path(after == NULL ? NULL : after->path, trace->after, sizeof(trace->after));
+            phase = research_time();
+        }
+#endif
         /* With no exterior bounds, the sparse bulk coordinate generator is
          * faster and shallower than recursively splitting every gap. It
          * prepares Paths only: existing physical nodes stay in place. */
         status = window == tree->size ?
             lks_bulk_generate_paths(paths, count + 1) :
             generate_range(paths, 0, count + 1, outer_left, outer_right);
+#ifdef LKS_RESEARCH_TRACE
+        if (trace != NULL) {
+            trace->generation_ms = research_time() - phase;
+            trace->status = status;
+            for (i = 0; i <= count; ++i) if (paths[i] != NULL) ++trace->generated;
+            phase = research_time();
+        }
+#endif
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
         for (i = 0; i <= count; ++i)
             if (paths[i] != NULL) REPAIR_ADD(generated_relabel_paths, 1);
@@ -796,6 +871,16 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
                 LKS_ALLOC_TAG_TREE_NODE);
             if (new_node == NULL) status = LKS_STATUS_OUT_OF_MEMORY;
         } else new_node = NULL;
+#ifdef LKS_RESEARCH_TRACE
+        if (trace != NULL) {
+            trace->validation_ms = research_time() - phase;
+            trace->max_depth = max_depth; trace->status = status;
+            trace->accepted = new_node != NULL;
+            trace->next_window = window == tree->size ? 0 :
+                window > tree->size / 2 ? tree->size : window * 2;
+            phase = research_time();
+        }
+#endif
         if (new_node != NULL) {
             /* No allocation or recoverable error occurs from here onward. */
             for (i = 0; i < count; ++i) {
@@ -822,10 +907,16 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
             if (out_node != NULL) *out_node = new_node;
             *out_relabelled = 1;
             if (heap_scratch) { lks_free(paths); lks_free(nodes); }
+#ifdef LKS_RESEARCH_TRACE
+            research_finish(trace, phase);
+#endif
             return LKS_STATUS_OK;
         }
         destroy_path_array(paths, count + 1);
         if (heap_scratch) { lks_free(paths); lks_free(nodes); }
+#ifdef LKS_RESEARCH_TRACE
+        research_finish(trace, phase);
+#endif
         if (status != LKS_STATUS_OK && status != LKS_STATUS_LEVEL_LIMIT)
             return status;
         if (window == tree->size) return LKS_STATUS_OK;
