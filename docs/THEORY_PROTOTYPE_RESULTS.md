@@ -153,6 +153,7 @@ Both 50k/500k seeds passed all 11 checkpoint reference-model/identity/order chec
 - Every captured pair passed the frozen comparator/order/identity/membership oracle and zero-live-allocation cleanup. Timed/diagnostic coordinate digests match within each strategy. Logical trace digest matches across strategies. Coordinate digests across different algorithms need not match.
 - Source-level default algorithm branches are preserved under `#ifndef LKS_RESEARCH_SLACK`. GCC `.text` from default tree.c equals original main tree.c compiled with the same current private diagnostic declarations/options: SHA256 `04b6cb4cd21ead377d64fb58beb3178bf55b4cdd6dba9bdcdf6344696a544aa1`. Private diagnostic return-layout extension is not a public ABI change; this is not a claim that all old binary files have identical hashes.
 - Five-platform CI runs normal baseline tests plus bounded prototype 14-test validation under MSVC, GCC, Clang, Clang ASan/UBSan and AppleClang. It does not run the 20/52-scenario campaign. The delivery report supplies the final run URL and actual conclusions.
+- The first delivery CI passed both test suites but caught an amalgamation include-layout error. Private research declarations were moved into `src/lks_slack_research_internal.h`, which the unchanged bundler recognizes. This is an include-layout fix only; captured implementation/measurements remain pinned to the original implementation commit above. No algorithm or workload was retuned.
 
 ## Adoption disposition and Phase 3 recommendation
 

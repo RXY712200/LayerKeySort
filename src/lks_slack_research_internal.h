@@ -1,5 +1,5 @@
-#ifndef LKS_RESEARCH_SLACK_FAMILY_H
-#define LKS_RESEARCH_SLACK_FAMILY_H
+#ifndef LKS_SLACK_RESEARCH_INTERNAL_H
+#define LKS_SLACK_RESEARCH_INTERNAL_H
 #include <stdint.h>
 #include "layerkeysort.h"
 

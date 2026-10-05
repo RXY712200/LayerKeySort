@@ -1,4 +1,4 @@
-#include "slack_family.h"
+#include "../src/lks_slack_research_internal.h"
 
 static unsigned int slot_at(const LksSlackPlan *p, uint64_t rank, size_t i)
 {

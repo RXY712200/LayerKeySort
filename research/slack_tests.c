@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "slack_family.h"
+#include "../src/lks_slack_research_internal.h"
 #include "lks_alloc_internal.h"
 #include "lks_tree_internal.h"
 

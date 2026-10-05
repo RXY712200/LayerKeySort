@@ -9,7 +9,7 @@
 #include "lks_path_internal.h"
 #endif
 #ifdef LKS_RESEARCH_SLACK
-#include "../research/slack_family.h"
+#include "lks_slack_research_internal.h"
 #endif
 
 struct LksTreeNode {
