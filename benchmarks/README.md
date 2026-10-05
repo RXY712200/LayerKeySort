@@ -106,3 +106,11 @@ The captured 30-row Preview.3 and 61-row Stage 4/5 matrices are in
 [`results/`](results/). Each row records the observed range as well as median;
 new runs should be compared as distributions rather than expected to reproduce
 identical millisecond text.
+
+## Post-release workload evidence
+
+The additive [v3.1.0 workload evidence](../docs/WORKLOAD_EVIDENCE.md) uses four
+synthetic application-like profiles, paired production/diagnostic runs, and
+per-insert latency, relabel, and storage-growth observations. See
+[the simulator methodology](WORKLOADS.md) for exact assumptions and reproduction.
+The released algorithm and historical controls/results remain unchanged.
