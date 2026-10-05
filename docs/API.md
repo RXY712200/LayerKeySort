@@ -6,16 +6,20 @@
 
 ## Version macros
 
-- `LKS_VERSION_MAJOR` is `3`.
-- `LKS_VERSION_MINOR` is `1`.
+- `LKS_VERSION_MAJOR` is `4`.
+- `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `""`.
-- `LKS_VERSION_STRING` is `"3.1.0"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.1"`.
+- `LKS_VERSION_STRING` is `"4.0.0-preview.1"`.
 
-This page describes the **3.1.0 source** header with 59 public functions.
+This branch's **4.0.0-preview.1 source** header has 73 public functions:
+14 provisional live-order functions plus all 59 coexisting V3 functions.
+See [V4 Preview.1](V4_PREVIEW1.md) and the header for the new API contracts.
+The Path/Tree/Group reference below describes the preserved V3 API.
 Stable `v3.0.0` has the same function set; historical stable `v2.0.0` has 52.
 `v3.0.0-rc.1` is a historical prerelease.
-The [migration guide](V3_MIGRATION.md) lists the Tree changes. The
+The appended `LKS_STATUS_CAPACITY_LIMIT` describes V4 count/revision exhaustion;
+existing enum values are unchanged. The [migration guide](V3_MIGRATION.md) lists the Tree changes. The
 [compatibility guide](COMPATIBILITY.md) gives the active 3.x contract
 and preserves the historical 2.x contract.
 

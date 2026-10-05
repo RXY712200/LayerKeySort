@@ -10,6 +10,7 @@ set(LKS_SOURCES
     src/path_compare.c
     src/gap.c
     src/tree.c
+    src/order.c
     src/group.c
     src/sort.c
     src/bulk.c

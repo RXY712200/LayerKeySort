@@ -2,7 +2,9 @@
 
 English | [简体中文](USAGE.zh-CN.md)
 
-This is the LayerKeySort 3.1.0 API/use guide. The public function set remains
+This page covers the coexisting V3 API. For the local, unreleased V4 explicit
+container, use [V4 Preview.1](V4_PREVIEW1.md); its handles are not Paths and
+V4 comparator/snapshot APIs do not exist yet. V3 functions remain
 compatible with stable `v3.0.0`. See [Integration](INTEGRATION.md) for obtaining
 the library and [V3 migration](V3_MIGRATION.md) when upgrading from V2.
 

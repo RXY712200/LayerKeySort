@@ -196,6 +196,10 @@
     <ClInclude Include="src\lks_slot_codec_internal.h" />
     <ClInclude Include="src\lks_group_internal.h" />
     <ClCompile Include="src\tree.c" />
+    <ClCompile Include="src\order.c" />
+    <ClInclude Include="src\lks_order_internal.h" />
+    <None Include="tests\v4_order.c" />
+    <None Include="examples\live_order.c" />
     <ClCompile Include="src\group.c" />
     <ClCompile Include="src\sort.c" />
     <ClCompile Include="src\bulk.c" />

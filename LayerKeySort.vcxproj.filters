@@ -61,6 +61,12 @@
     <ClInclude Include="src\lks_group_internal.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClCompile Include="src\order.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClInclude Include="src\lks_order_internal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClCompile Include="src\tree.c">
       <Filter>源文件</Filter>
     </ClCompile>

@@ -1,5 +1,11 @@
 # LayerKeySort compatibility
 
+The local `4.0.0-preview.1` branch preserves the V3 function signatures and
+ordering behavior below while adding a separate provisional explicit-order API.
+Its version macros are 4.0.0-preview.1; the new API is not frozen. An appended
+CAPACITY_LIMIT status does not renumber V3 statuses. See [V4 Preview.1](V4_PREVIEW1.md).
+The published Stable remains v3.1.0; no stable V4 compatibility promise exists.
+
 ## Stable 3.x compatibility contract
 
 The released V3 Preview.1 through Preview.5 and `v3.0.0-rc.1` preceded

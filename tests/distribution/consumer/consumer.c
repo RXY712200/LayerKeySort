@@ -1,4 +1,5 @@
 #include "layerkeysort.h"
+#include "v4_usage.h"
 
 static int compare_int(const void *left, const void *right, void *context)
 {
@@ -47,5 +48,5 @@ int main(void)
         return 5;
     }
     lks_ordered_tree_destroy(tree);
-    return 0;
+    return v4_consumer_usage();
 }

@@ -1,5 +1,10 @@
 # Current benchmark harness (3.1.0 source)
 
+The V3 harness/data below remain preserved. This local V4 Preview.1 branch also
+builds `layerkeysort_v4_smoke` with benchmarks ON. Its limited explicit-order
+sanity comparisons and adapter differences are documented in
+[V4 Preview.1](../docs/V4_PREVIEW1.md); they are not final benchmark rankings.
+
 The 3.1.0 source retains the published `v3.0.0` production ordering code and
 benchmark harness. Captured Preview and RC data are historical; no new 3.1.0
 timing CSV is claimed here.

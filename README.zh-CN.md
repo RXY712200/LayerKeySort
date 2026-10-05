@@ -1,5 +1,10 @@
 # LayerKeySort
 
+此分支是尚未发布的 `v4.0.0-preview.1`：新增基于上下文顺序的容器和稳定驻留句柄，
+保留原有 V3 API。参见 [V4 Preview.1 指南](docs/V4_PREVIEW1.md)。
+V4 移动、比较器管理、快照和持久化尚未实现；最新公开稳定版仍为 `v3.1.0`。
+下文的 Path 介绍和入门示例适用于保留的 V3 实现。
+
 [English](README.md) | 简体中文
 
 LayerKeySort 是一个 C17 库，用来维护会不断插入、删除或调整位置的集合顺序。

@@ -2,6 +2,12 @@
 
 English | [简体中文](INTEGRATION.zh-CN.md)
 
+For this local, unreleased V4 branch use the same source/library integration
+mechanisms, with [V4 Preview.1](V4_PREVIEW1.md) as the usage guide. Installed
+current-branch packages have numeric version 4.0.0; request 4.0 or omit a version
+in `find_package`. The pinned v3.1.0 examples/assets below refer to the published
+Stable and do not contain the new V4 API. No V4 release asset is published yet.
+
 Choose a method for your build. These are the LayerKeySort 3.1.0 integration
 routes. Use the `v3.1.0` release tag, its published assets, or an exact commit.
 See [V3 migration](V3_MIGRATION.md) and [compatibility](COMPATIBILITY.md).

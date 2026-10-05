@@ -1,5 +1,10 @@
 # Validation
 
+Local V4 Preview.1 adds `layerkeysort_v4_live_order` to the preserved V3 suite.
+See [V4 Preview.1](V4_PREVIEW1.md) for oracle/failpoint/structural scope. The V3
+coverage and historical validation evidence below remain applicable to the
+coexisting V3 implementation, not proof of future snapshot/comparator features.
+
 This page describes how the current V3 source is checked. Test coverage and
 past passing runs are evidence, not a formal proof of all workloads.
 

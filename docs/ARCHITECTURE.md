@@ -1,5 +1,10 @@
 # V3 architecture
 
+This page describes the preserved V3 implementation. The local V4 Preview.1
+core is documented in [V4 Preview.1](V4_PREVIEW1.md) and derives from the
+[V4 design](design/V4_ARCHITECTURE.md). Future design sections do not imply that
+V4 moves, comparator facade, snapshots or persistence have been implemented.
+
 This describes the 3.1.0 source implementation, whose ordering code is unchanged
 from `v3.0.0`. The [API reference](API.md)
 and [3.x compatibility contract](COMPATIBILITY.md) define public behavior;

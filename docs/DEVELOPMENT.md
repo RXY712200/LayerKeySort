@@ -1,6 +1,8 @@
 # Developing LayerKeySort
 
-This is the contributor workflow for the LayerKeySort 3.1.0 release.
+This branch prepares local, unreleased `4.0.0-preview.1`. See
+[V4 Preview.1](V4_PREVIEW1.md) for current scope and validation; the V3 production
+implementation remains intact alongside the new `src/order.c` core.
 Read [architecture](ARCHITECTURE.md) for the current implementation,
 [validation](VALIDATION.md) for test scope and evidence, and
 [benchmark evidence](BENCHMARKS.md) for performance limits. The
@@ -39,8 +41,9 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-`layerkeysort` contains production source only. All three example targets link
-that library. `layerkeysort_tests` and `layerkeysort_soak` link a separately
+`layerkeysort` contains production source only. All four example targets link
+that library, including the new `layerkeysort_order_example`.
+`layerkeysort_tests`, `layerkeysort_v4_tests` and `layerkeysort_soak` link a separately
 compiled diagnostic variant so allocation counters and single-shot fault
 injection remain usable without shared mutable instrumentation in ordinary
 production allocations.

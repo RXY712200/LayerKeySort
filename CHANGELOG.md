@@ -2,6 +2,27 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0-preview.1] - Unreleased
+
+First V4 production implementation, built from audited production main rather
+than research ancestry. Local Preview only; no tag or Release yet.
+
+- Add provisional `LksOrder` / `LksOrderHandle` explicit-order API: relative and
+  endpoint insertion, exact removal, logical traversal, item access and contextual
+  comparison. Handles survive maintenance while resident; items remain borrowed.
+- Implement fixed bounded blocks, an implicit AVL of blocks, subtree block
+  counts, threaded neighbors, one-split insertion and allocation-free neighboring
+  removal repair. No live Path/key generation or global coordinate rewrite.
+- Preserve strong insertion failure atomicity; add diagnostic invariants,
+  failpoint sweeps, independent randomized oracle and adversarial structural tests.
+- Append CAPACITY_LIMIT without renumbering existing statuses. Retain all V3
+  functions, production ordering algorithms and LK1 bytes unchanged.
+- Import only the Stage3 design documents with exact-commit provenance; add
+  public example, source/install/amalgamation consumer coverage and preliminary
+  workload sanity screen. No benchmark capture/prototype/research options imported.
+- Defer movement, V4 comparator facade, snapshot/export, persistence, migration,
+  Group/Batch replacement and final API/wire/performance acceptance to later stages.
+
 ## [3.1.0] - 2026-10-05
 
 This compatible V3 feature release improves how applications obtain and build

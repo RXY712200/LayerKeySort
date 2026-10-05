@@ -1,5 +1,9 @@
 # V3 performance evidence
 
+The local V4 Preview.1 sanity screen is described in [V4 Preview.1](V4_PREVIEW1.md).
+The captured V3 measurements below remain historical evidence and are unchanged;
+they do not measure the new contextual live-order core.
+
 The 3.1.0 source retains the published `v3.0.0` production ordering code and
 benchmark harness. The capture below is not a new 3.1.0 timing run.
 It describes one machine and the listed workloads; benchmark timing is not a

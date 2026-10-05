@@ -2,6 +2,14 @@
 
 English | [简体中文](README.zh-CN.md)
 
+**This branch implements local, unreleased `v4.0.0-preview.1`.**
+It adds an explicit contextual order container with stable resident handles,
+while preserving the V3 APIs. Start with the [V4 Preview.1 guide](docs/V4_PREVIEW1.md)
+and [live-order example](examples/live_order.c). V4 moves, comparator ordering,
+snapshots and persistence are not implemented yet. The API is provisional.
+The coordinate-based introduction and Quick Start below describe the coexisting
+V3 implementation; latest published Stable remains `v3.1.0`.
+
 LayerKeySort is a C17 library for keeping a collection in order as items are added, removed, or moved.
 
 Imagine adding an Effects layer to a layer list:

@@ -21,6 +21,8 @@ const char *lks_status_string(LksStatus status)
         return "Not implemented";
     case LKS_STATUS_INTERNAL_ERROR:
         return "Internal error";
+    case LKS_STATUS_CAPACITY_LIMIT:
+        return "Capacity limit reached";
     default:
         return "Unknown status";
     }

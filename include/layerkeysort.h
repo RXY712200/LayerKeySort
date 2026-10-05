@@ -8,11 +8,11 @@
 extern "C" {
 #endif
 
-#define LKS_VERSION_MAJOR 3
-#define LKS_VERSION_MINOR 1
+#define LKS_VERSION_MAJOR 4
+#define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE ""
-#define LKS_VERSION_STRING "3.1.0"
+#define LKS_VERSION_PRERELEASE "preview.1"
+#define LKS_VERSION_STRING "4.0.0-preview.1"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -28,7 +28,8 @@ typedef enum LksStatus {
     LKS_STATUS_NOT_FOUND,
     LKS_STATUS_NOT_IMPLEMENTED,
     LKS_STATUS_INTERNAL_ERROR,
-    LKS_STATUS_ALREADY_EXISTS
+    LKS_STATUS_ALREADY_EXISTS,
+    LKS_STATUS_CAPACITY_LIMIT /* V4 count/revision capacity; published values unchanged */
 } LksStatus;
 
 /* Generic item comparison: negative / zero / positive means before / equal /
@@ -370,6 +371,68 @@ LksStatus lks_path_between(
     const LksPath *right,
     LksPath **out_path
 );
+
+/* V4 Preview.1 explicit live order. Provisional API coexists with the V3 API
+ * above; V3 Path/LK1 semantics are unchanged. No V4 moves, comparator facade,
+ * snapshots or serialization are provided in this Preview.
+ *
+ * ORDER owns structural storage and borrows non-NULL application item pointers.
+ * Each insertion creates an occurrence; the same item may reside more than once.
+ * A handle stays valid through unrelated insert/remove, split, merge, neighbor
+ * redistribution and rotations. Its own removal or container destruction expires
+ * ALL copies. Never pass a dangling handle: detection is not promised. Handles
+ * are not Paths, IDs, serialized keys or pointer-value ordering coordinates.
+ *
+ * Caller serializes access against mutation/destruction. No internal locking.
+ * Counts/revisions never wrap: mutation can return CAPACITY_LIMIT. Items remain
+ * caller-owned and are never freed by LayerKeySort. */
+typedef struct LksOrder LksOrder;
+typedef struct LksOrderHandle LksOrderHandle;
+
+/* Caller owns result; NULL on allocation failure. Destroy(NULL) is harmless.
+ * Size(NULL) is zero; first/last(NULL) and getters(NULL) return NULL. */
+LksOrder *lks_order_create(void);
+void lks_order_destroy(LksOrder *order);
+size_t lks_order_size(const LksOrder *order);
+
+/* OUT_HANDLE required and set NULL on failure. ORDER and ITEM required; relative
+ * insertion requires a live same-order anchor. Strong failure atomicity: order,
+ * count and every prior handle are unchanged on any failure. Target structural
+ * cost O(B + log(1+M)), B private fixed block capacity, M current block count.
+ * Record and optional spare block allocation precede an allocation-free commit. */
+LksStatus lks_order_insert_front(LksOrder *order, void *item,
+    const LksOrderHandle **out_handle);
+LksStatus lks_order_insert_back(LksOrder *order, void *item,
+    const LksOrderHandle **out_handle);
+LksStatus lks_order_insert_before(LksOrder *order, const LksOrderHandle *anchor,
+    void *item, const LksOrderHandle **out_handle);
+LksStatus lks_order_insert_after(LksOrder *order, const LksOrderHandle *anchor,
+    void *item, const LksOrderHandle **out_handle);
+
+/* Exact occurrence removal, no allocation. Optional OUT_ITEM is initialized NULL
+ * on failure, receives the borrowed item on success. Only removed handle expires.
+ * Surviving relative order/handles remain valid. O(B + log(1+M)) structural work.
+ * Live foreign handles rejected; freed handles are invalid C lifetime usage. */
+LksStatus lks_order_remove(LksOrder *order, const LksOrderHandle *handle,
+    void **out_item);
+
+/* Logical O(1) traversal, independent of physical block/index boundaries.
+ * Empty order and neighbor past an endpoint return NULL. Returned handles borrow
+ * the residence. Save next before removing current if iterating with removals;
+ * later insertion may change a previously observed adjacency, not handle identity.
+ * No revision-checked cursor object is provided in Preview.1. */
+const LksOrderHandle *lks_order_first(const LksOrder *order);
+const LksOrderHandle *lks_order_last(const LksOrder *order);
+const LksOrderHandle *lks_order_next(const LksOrderHandle *handle);
+const LksOrderHandle *lks_order_previous(const LksOrderHandle *handle);
+void *lks_order_item(const LksOrderHandle *handle);
+
+/* OUT_ORDER required, initialized zero on failure; negative/zero/positive gives
+ * residence order. All handles required, live and in ORDER. Same-block O(1),
+ * cross-block O(log(1+M)); allocation-free, read-only. Never compare raw pointer
+ * values to determine order. Comparator equality is not residence equality. */
+LksStatus lks_order_compare(const LksOrder *order, const LksOrderHandle *left,
+    const LksOrderHandle *right, int *out_order);
 
 #ifdef __cplusplus
 }

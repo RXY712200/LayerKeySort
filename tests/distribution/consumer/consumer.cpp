@@ -1,4 +1,5 @@
 #include "layerkeysort.h"
+#include "v4_usage.h"
 
 extern "C" int compare_int_cpp(const void *left, const void *right, void *context)
 {
@@ -14,5 +15,5 @@ int main()
     void *items[] = {&values[0], &values[1]};
     if (lks_sort(items, 2, compare_int_cpp, nullptr) != LKS_STATUS_OK ||
         items[0] != &values[1]) return 1;
-    return 0;
+    return v4_consumer_usage();
 }
