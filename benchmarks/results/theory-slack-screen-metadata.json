@@ -1,0 +1,166 @@
+{
+  "head": "2ea0a37f231f8009c398d442995a1c456fde8898",
+  "captured_utc": "2026-10-05T08:07:40Z",
+  "environment": "Windows-11-10.0.26300-SP0",
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "plan": [
+    [
+      "timeline",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      305419896,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      2654435769,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      826366246,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      12648430,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      3512641005,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      17,
+      100000,
+      100000
+    ],
+    [
+      "priority",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      305419896,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      2654435769,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      826366246,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      12648430,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      3512641005,
+      10000,
+      100000
+    ],
+    [
+      "random",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "duplicates",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "alternating",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      50000,
+      500000
+    ],
+    [
+      "churn",
+      3512641005,
+      50000,
+      500000
+    ]
+  ],
+  "binaries": {
+    "baseline": {
+      "timed": {
+        "path": "D:\\Ddoc\\c\\001\\build\\theory-baseline\\layerkeysort_workload.exe",
+        "sha256": "fa25f32acecfb8421b8a01a02b85a2776635a5762a4012d942c7ee8987b0c4df"
+      },
+      "diagnostic": {
+        "path": "D:\\Ddoc\\c\\001\\build\\theory-baseline\\layerkeysort_workload_diagnostics.exe",
+        "sha256": "37478005bec105807cf9855f85857b04b081b2d7a50756e0fb5b4a40cb8bf8c8"
+      }
+    },
+    "slack": {
+      "timed": {
+        "path": "D:\\Ddoc\\c\\001\\build\\theory-slack\\layerkeysort_workload.exe",
+        "sha256": "4892e8a119887f0cb73bf40cc98c4bcf29fea9ce017b3e034c89e973dc8230a4"
+      },
+      "diagnostic": {
+        "path": "D:\\Ddoc\\c\\001\\build\\theory-slack\\layerkeysort_workload_diagnostics.exe",
+        "sha256": "2a047acd518c284c276342e2b7e29eabaec52c4383c22406f200568cf6087a52"
+      }
+    }
+  },
+  "order": "sequential baseline timed/diagnostic, slack timed/diagnostic per scenario",
+  "timing": "frozen C17 timespec_get insertion-only, nearest-rank quantiles; one pass, no affinity/power isolation",
+  "compiler": "GCC 16.2.0 UCRT x64, C17 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Werror",
+  "machine": "Ryzen 9 9955HX; 16 cores / 32 logical processors; 15922848 KiB RAM",
+  "definitions": "benchmarks/workload_simulator.c and benchmarks/run_workloads.py frozen workloads/RNG/seeds",
+  "source_sha256": {
+    "src\\tree.c": "df70ee149434d6c872c5ee2f354b64307241c27e5149afc9531822736655dad6",
+    "research\\slack_family.c": "badc90f9ff026f86b92299b637208682c6107aadec8148a2bf48afb0820d98ca",
+    "benchmarks\\workload_simulator.c": "02c7a2368b5153885daffbfaed6f7cb55a3ec3ad77e285aff66605e948a53488",
+    "benchmarks\\run_workloads.py": "f89657a2ffd884f7e0da56ee3079b6a4dd75033af455488f8b2e2e3d6a1f64c7"
+  },
+  "rewritten_bytes": "diagnostic cumulative old resident Path object + allocated storage; includes initial prefix",
+  "capacity_counters": "diagnostic cumulative; includes initial prefix; not measured production latency",
+  "completed_pairs": 40,
+  "scenarios": 20,
+  "correctness_failures": 0
+}
