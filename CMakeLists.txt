@@ -47,6 +47,10 @@ endif()
 if(LKS_BUILD_BENCHMARKS)
     add_executable(layerkeysort_benchmark benchmarks/current_benchmark.c)
     target_link_libraries(layerkeysort_benchmark PRIVATE layerkeysort)
+    add_executable(layerkeysort_workload benchmarks/workload_simulator.c)
+    lks_configure_target(layerkeysort_workload)
+    target_include_directories(layerkeysort_workload PRIVATE src)
+    target_link_libraries(layerkeysort_workload PRIVATE layerkeysort)
 endif()
 
 if(LKS_INSTALL)
@@ -103,6 +107,22 @@ if(LKS_BUILD_TESTS)
     target_link_libraries(layerkeysort_rc_contract PRIVATE layerkeysort_diagnostics)
     add_test(NAME layerkeysort_rc_contract COMMAND layerkeysort_rc_contract)
     if(LKS_BUILD_BENCHMARKS)
+        add_executable(layerkeysort_workload_diagnostics benchmarks/workload_simulator.c)
+        lks_configure_target(layerkeysort_workload_diagnostics)
+        target_include_directories(layerkeysort_workload_diagnostics PRIVATE src)
+        target_compile_definitions(layerkeysort_workload_diagnostics PRIVATE LKS_WORKLOAD_DIAGNOSTICS)
+        target_link_libraries(layerkeysort_workload_diagnostics PRIVATE layerkeysort_diagnostics)
+        foreach(family timeline priority local churn)
+            add_test(NAME layerkeysort_workload_${family}_smoke
+                COMMAND layerkeysort_workload_diagnostics ${family} 7 128 512 128)
+        endforeach()
+        find_package(Python3 COMPONENTS Interpreter QUIET)
+        if(Python3_Interpreter_FOUND)
+            add_test(NAME layerkeysort_workload_output_smoke
+                COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/benchmarks/run_workloads.py"
+                    --timed $<TARGET_FILE:layerkeysort_workload>
+                    --diagnostic $<TARGET_FILE:layerkeysort_workload_diagnostics> --smoke)
+        endif()
         add_test(NAME layerkeysort_benchmark_tree_smoke
             COMMAND layerkeysort_benchmark tree equal 200 0 1)
         add_test(NAME layerkeysort_benchmark_mutation_smoke
