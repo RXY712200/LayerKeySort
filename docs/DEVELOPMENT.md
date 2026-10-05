@@ -1,8 +1,12 @@
 # Developing LayerKeySort
 
-This branch prepares local, unreleased `4.0.0-preview.1`. See
-[V4 Preview.1](V4_PREVIEW1.md) for current scope and validation; the V3 production
-implementation remains intact alongside the new `src/order.c` core.
+Current V4 scope is **experimental Preview.2**: [live moves, managed order and
+revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
+Preview.1 descriptions below identify that milestone, not current feature limits.
+
+This branch prepares experimental `4.0.0-preview.2`. See
+[V4 Preview.2](V4_PREVIEW2.md) for current scope and validation; the V3 production
+implementation remains intact alongside `src/order.c` and its `src/managed_order.c` facade.
 Read [architecture](ARCHITECTURE.md) for the current implementation,
 [validation](VALIDATION.md) for test scope and evidence, and
 [benchmark evidence](BENCHMARKS.md) for performance limits. The
@@ -41,9 +45,9 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-`layerkeysort` contains production source only. All four example targets link
+`layerkeysort` contains production source only. All five example targets link
 that library, including the new `layerkeysort_order_example`.
-`layerkeysort_tests`, `layerkeysort_v4_tests` and `layerkeysort_soak` link a separately
+`layerkeysort_tests`, `layerkeysort_v4_tests`, `layerkeysort_v4_mutation` and `layerkeysort_soak` link a separately
 compiled diagnostic variant so allocation counters and single-shot fault
 injection remain usable without shared mutable instrumentation in ordinary
 production allocations.

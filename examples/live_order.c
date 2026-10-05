@@ -26,6 +26,11 @@ int main(void)
     if (lks_order_size(order) != 2 || lks_order_previous(actor) != back) {
         lks_order_destroy(order); return 1;
     }
+    /* Move preserves the background handle and item association. */
+    if (lks_order_move_back(order, back) != LKS_STATUS_OK ||
+        lks_order_last(order) != back || lks_order_item(back) != &background) {
+        lks_order_destroy(order); return 1;
+    }
     lks_order_destroy(order);
     return 0;
 }

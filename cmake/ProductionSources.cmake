@@ -11,6 +11,7 @@ set(LKS_SOURCES
     src/gap.c
     src/tree.c
     src/order.c
+    src/managed_order.c
     src/group.c
     src/sort.c
     src/bulk.c

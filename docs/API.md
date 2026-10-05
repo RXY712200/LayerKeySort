@@ -1,5 +1,9 @@
 # API Reference
 
+Current V4 scope is **experimental Preview.2**: [live moves, managed order and
+revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
+Preview.1 descriptions below identify that milestone, not current feature limits.
+
 ## Header
 
 `include/layerkeysort.h` is the source of truth for the public API.
@@ -9,17 +13,17 @@
 - `LKS_VERSION_MAJOR` is `4`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.1"`.
-- `LKS_VERSION_STRING` is `"4.0.0-preview.1"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.2"`.
+- `LKS_VERSION_STRING` is `"4.0.0-preview.2"`.
 
-This branch's **4.0.0-preview.1 source** header has 73 public functions:
-14 provisional live-order functions plus all 59 coexisting V3 functions.
-See [V4 Preview.1](V4_PREVIEW1.md) and the header for the new API contracts.
+This branch's **4.0.0-preview.2 source** header has 90 public functions:
+31 provisional V4 functions plus all 59 coexisting V3 functions.
+See [V4 Preview.2](V4_PREVIEW2.md) and the header for current contracts.
 The Path/Tree/Group reference below describes the preserved V3 API.
-Stable `v3.0.0` has the same function set; historical stable `v2.0.0` has 52.
+Stable `v3.0.0` and `v3.1.0` expose those 59 V3 functions; historical stable `v2.0.0` has 52.
 `v3.0.0-rc.1` is a historical prerelease.
 The appended `LKS_STATUS_CAPACITY_LIMIT` describes V4 count/revision exhaustion;
-existing enum values are unchanged. The [migration guide](V3_MIGRATION.md) lists the Tree changes. The
+INVALIDATED and REENTRANT also append statuses; existing enum values are unchanged. The [migration guide](V3_MIGRATION.md) lists the Tree changes. The
 [compatibility guide](COMPATIBILITY.md) gives the active 3.x contract
 and preserves the historical 2.x contract.
 

@@ -1,6 +1,7 @@
 # Current benchmark harness (3.1.0 source)
 
-The V3 harness/data below remain preserved. This local V4 Preview.1 branch also
+The V3 harness/data below remain preserved. Preview.2 adds separate production
+and diagnostic mutation screens; see [Preview.2 methodology](../docs/V4_PREVIEW2.md). This local V4 Preview.1 branch also
 builds `layerkeysort_v4_smoke` with benchmarks ON. Its limited explicit-order
 sanity comparisons and adapter differences are documented in
 [V4 Preview.1](../docs/V4_PREVIEW1.md); they are not final benchmark rankings.

@@ -1,10 +1,13 @@
 # Using LayerKeySort
 
+Current V4 scope is **experimental Preview.2**: [live moves, managed order and
+revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
+Preview.1 descriptions below identify that milestone, not current feature limits.
+
 English | [简体中文](USAGE.zh-CN.md)
 
-This page covers the coexisting V3 API. For the local, unreleased V4 explicit
-container, use [V4 Preview.1](V4_PREVIEW1.md); its handles are not Paths and
-V4 comparator/snapshot APIs do not exist yet. V3 functions remain
+This page covers the coexisting V3 API. For the experimental V4 live-order API, use [Preview.2](V4_PREVIEW2.md);
+its handles are not Paths. The managed facade exists; snapshots do not. V3 functions remain
 compatible with stable `v3.0.0`. See [Integration](INTEGRATION.md) for obtaining
 the library and [V3 migration](V3_MIGRATION.md) when upgrading from V2.
 

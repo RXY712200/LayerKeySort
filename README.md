@@ -2,11 +2,11 @@
 
 English | [简体中文](README.zh-CN.md)
 
-**This branch implements local, unreleased `v4.0.0-preview.1`.**
-It adds an explicit contextual order container with stable resident handles,
-while preserving the V3 APIs. Start with the [V4 Preview.1 guide](docs/V4_PREVIEW1.md)
-and [live-order example](examples/live_order.c). V4 moves, comparator ordering,
-snapshots and persistence are not implemented yet. The API is provisional.
+**This branch implements experimental `v4.0.0-preview.2`.**
+V4 adds handle-preserving moves, comparator-managed order and revision-checked
+cursors to the contextual live-order core. Start with the [Preview.2 guide](docs/V4_PREVIEW2.md),
+[explicit example](examples/live_order.c) and [managed example](examples/managed_order.c).
+Snapshots/export/persistence remain unimplemented and V4 APIs are provisional.
 The coordinate-based introduction and Quick Start below describe the coexisting
 V3 implementation; latest published Stable remains `v3.1.0`.
 

@@ -2,6 +2,27 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0-preview.2] - 2026-10-06
+
+Experimental V4 prerelease; Stable remains v3.1.0. V4 APIs are provisional.
+
+- Add handle-preserving front/back/before/after moves. Same-block interval shifts
+  allocate nothing; cross-block moves prepare an optional spare before unlinking,
+  with at most one destination split and one bounded source repair.
+- Successful self/adjacent/endpoint no-ops preserve revision and cursors.
+- Add LksManagedOrder, exclusively owning one private explicit core and a copied
+  comparator descriptor. Stable upper-bound insertion and lower/upper locate use
+  AVL block maxima plus local binary search, without equal-run successor scanning.
+- Exact managed removal invokes no comparator and allocates nothing. Add simple
+  comparator reentry rejection without locks or payload-mutation detection.
+- Add shared revision-checked forward/reverse cursors and appended INVALIDATED/
+  REENTRANT statuses; preserve previous enum values and all 59 V3 functions.
+- Add move/managed oracle, OOM, adversarial, reentry and cursor regressions; extend
+  public C/C++ consumers and preliminary production/diagnostic mutation screens.
+- Run both V4 examples explicitly in every CI job alongside retained V3 examples.
+- Snapshots, persistence, migration, Group/Batch and final freeze/performance work
+  remain later scope. No V3 Path/LK1 or algorithm changes.
+
 ## [4.0.0-preview.1] - Unreleased
 
 First V4 production implementation, built from audited production main rather

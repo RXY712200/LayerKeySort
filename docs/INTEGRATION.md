@@ -1,9 +1,13 @@
 # Integrating LayerKeySort
 
+Current V4 scope is **experimental Preview.2**: [live moves, managed order and
+revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
+Preview.1 descriptions below identify that milestone, not current feature limits.
+
 English | [简体中文](INTEGRATION.zh-CN.md)
 
-For this local, unreleased V4 branch use the same source/library integration
-mechanisms, with [V4 Preview.1](V4_PREVIEW1.md) as the usage guide. Installed
+For this experimental V4 branch use the same source/library integration
+mechanisms, with [V4 Preview.2](V4_PREVIEW2.md) as the usage guide. Installed
 current-branch packages have numeric version 4.0.0; request 4.0 or omit a version
 in `find_package`. The pinned v3.1.0 examples/assets below refer to the published
 Stable and do not contain the new V4 API. No V4 release asset is published yet.

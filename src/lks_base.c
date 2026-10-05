@@ -23,6 +23,10 @@ const char *lks_status_string(LksStatus status)
         return "Internal error";
     case LKS_STATUS_CAPACITY_LIMIT:
         return "Capacity limit reached";
+    case LKS_STATUS_INVALIDATED:
+        return "Cursor invalidated";
+    case LKS_STATUS_REENTRANT:
+        return "Reentrant access rejected";
     default:
         return "Unknown status";
     }

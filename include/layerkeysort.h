@@ -11,8 +11,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 4
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.1"
-#define LKS_VERSION_STRING "4.0.0-preview.1"
+#define LKS_VERSION_PRERELEASE "preview.2"
+#define LKS_VERSION_STRING "4.0.0-preview.2"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -29,7 +29,9 @@ typedef enum LksStatus {
     LKS_STATUS_NOT_IMPLEMENTED,
     LKS_STATUS_INTERNAL_ERROR,
     LKS_STATUS_ALREADY_EXISTS,
-    LKS_STATUS_CAPACITY_LIMIT /* V4 count/revision capacity; published values unchanged */
+    LKS_STATUS_CAPACITY_LIMIT, /* V4 count/revision capacity; published values unchanged */
+    LKS_STATUS_INVALIDATED, /* revision-checked cursor after an actual mutation */
+    LKS_STATUS_REENTRANT /* same-container access from a managed comparator */
 } LksStatus;
 
 /* Generic item comparison: negative / zero / positive means before / equal /
@@ -372,9 +374,9 @@ LksStatus lks_path_between(
     LksPath **out_path
 );
 
-/* V4 Preview.1 explicit live order. Provisional API coexists with the V3 API
- * above; V3 Path/LK1 semantics are unchanged. No V4 moves, comparator facade,
- * snapshots or serialization are provided in this Preview.
+/* V4 Preview.2 explicit live order. Provisional API coexists with the V3 API
+ * above; V3 Path/LK1 semantics are unchanged. No V4 snapshots or serialization
+ * are provided in this Preview.
  *
  * ORDER owns structural storage and borrows non-NULL application item pointers.
  * Each insertion creates an occurrence; the same item may reside more than once.
@@ -420,7 +422,7 @@ LksStatus lks_order_remove(LksOrder *order, const LksOrderHandle *handle,
  * Empty order and neighbor past an endpoint return NULL. Returned handles borrow
  * the residence. Save next before removing current if iterating with removals;
  * later insertion may change a previously observed adjacency, not handle identity.
- * No revision-checked cursor object is provided in Preview.1. */
+ * Use a revision-checked cursor below when mutation detection is required. */
 const LksOrderHandle *lks_order_first(const LksOrder *order);
 const LksOrderHandle *lks_order_last(const LksOrder *order);
 const LksOrderHandle *lks_order_next(const LksOrderHandle *handle);
@@ -433,6 +435,70 @@ void *lks_order_item(const LksOrderHandle *handle);
  * values to determine order. Comparator equality is not residence equality. */
 LksStatus lks_order_compare(const LksOrder *order, const LksOrderHandle *left,
     const LksOrderHandle *right, int *out_order);
+
+/* Move one live same-order residence without changing handle, item or size.
+ * Self, already-adjacent and already-at-endpoint moves succeed without allocation,
+ * structural work or revision increment (even at revision capacity). Actual moves
+ * increment revision once. O(B + log(1+M)) structural work independent of distance;
+ * same-block moves allocate nothing and shift only the affected interval.
+ * Cross-block move prepares a spare only for a full destination. Strong failure
+ * atomicity applies. No cross-container transfer or managed-order moves exist. */
+LksStatus lks_order_move_front(LksOrder *order, const LksOrderHandle *handle);
+LksStatus lks_order_move_back(LksOrder *order, const LksOrderHandle *handle);
+LksStatus lks_order_move_before(LksOrder *order, const LksOrderHandle *handle,
+    const LksOrderHandle *anchor);
+LksStatus lks_order_move_after(LksOrder *order, const LksOrderHandle *handle,
+    const LksOrderHandle *anchor);
+
+/* Comparator-managed V4 facade; distinct from the preserved V3 OrderedTree.
+ * Owns one private LksOrder exclusively, copies descriptor and borrows callback/
+ * context. Comparator must define a consistent total preorder, remain callable
+ * and have stable semantics throughout the facade lifetime. Resident comparator-
+ * visible data must not change: remove, modify, reinsert instead.
+ * Insert uses stable upper bound. Handles use the same occurrence/lifetime rules
+ * as explicit order; logical next/previous/item use lks_order_* accessors above.
+ * There is no public mutable core escape. Same-facade callback reentry is rejected:
+ * status APIs return REENTRANT; pointer/size getters return NULL/zero; destroy is
+ * ignored while busy. This guard is not synchronization. Serialize access. */
+typedef struct LksManagedOrder LksManagedOrder;
+/* Comparator and callback required; NULL for invalid descriptor or OOM. */
+LksManagedOrder *lks_managed_order_create(const LksComparator *comparator);
+void lks_managed_order_destroy(LksManagedOrder *order);
+size_t lks_managed_order_size(const LksManagedOrder *order);
+LksStatus lks_managed_order_insert(LksManagedOrder *order, void *item,
+    const LksOrderHandle **out_handle);
+/* Required, distinct outputs are set NULL before validation/search. EQUAL is the first
+ * equal residence; PREDECESSOR immediately precedes that first equal (or query's
+ * missing insertion position); SUCCESSOR is the first strictly greater residence.
+ * Thus duplicate runs are bounded by strictly lower/greater neighbors. Missing
+ * equality still returns OK with EQUAL NULL. QUERY required, need not be resident.
+ * O(log(1+M)+log B) comparator calls; no allocation. */
+LksStatus lks_managed_order_locate(LksManagedOrder *order, const void *query,
+    const LksOrderHandle **out_predecessor, const LksOrderHandle **out_equal,
+    const LksOrderHandle **out_successor);
+/* Exact handle removal: no comparator calls/allocation; optional output as above. */
+LksStatus lks_managed_order_remove(LksManagedOrder *order,
+    const LksOrderHandle *handle, void **out_item);
+const LksOrderHandle *lks_managed_order_first(const LksManagedOrder *order);
+const LksOrderHandle *lks_managed_order_last(const LksManagedOrder *order);
+LksStatus lks_managed_order_compare(const LksManagedOrder *order,
+    const LksOrderHandle *left, const LksOrderHandle *right, int *out_order);
+
+/* One allocated cursor shared by explicit/managed containers. Creation borrows
+ * container, captures revision and starts at first (reverse==0) or last (reverse==1).
+ * OUT_CURSOR required, initialized NULL on failure. Reverse must be 0 or 1.
+ * Next returns successive handles, OK/NULL at end, INVALIDATED/NULL after actual
+ * mutation, before touching cached handles. Failures/no-op moves/queries preserve
+ * it. It MUST NOT outlive its container; destroy(NULL) is harmless. Output handle
+ * follows ordinary residence lifetime, independently of cursor lifetime. */
+typedef struct LksOrderCursor LksOrderCursor;
+LksStatus lks_order_cursor_create(const LksOrder *order, int reverse,
+    LksOrderCursor **out_cursor);
+LksStatus lks_managed_order_cursor_create(const LksManagedOrder *order, int reverse,
+    LksOrderCursor **out_cursor);
+LksStatus lks_order_cursor_next(LksOrderCursor *cursor,
+    const LksOrderHandle **out_handle);
+void lks_order_cursor_destroy(LksOrderCursor *cursor);
 
 #ifdef __cplusplus
 }

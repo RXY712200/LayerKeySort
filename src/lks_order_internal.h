@@ -36,6 +36,7 @@ typedef struct LksOrderWork {
     size_t splits, redistributions, merges, rotations;
     size_t left_rotations, right_rotations;
     size_t left_right_rotations, right_left_rotations, two_child_detaches;
+    size_t noop_moves, cross_block_moves;
     int tracking_overflow;
     const LksOrderBlock *tracked[LKS_ORDER_DIAG_TRACK_LIMIT];
 } LksOrderWork;
@@ -45,9 +46,23 @@ struct LksOrder {
     LksOrderBlock *root, *first, *last;
     size_t count, blocks;
     uint64_t revision;
+    int callback_active;
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
     LksOrderWork work;
 #endif
+};
+
+struct LksManagedOrder {
+    LksOrder *core;
+    LksComparator comparator;
+    int active;
+};
+
+struct LksOrderCursor {
+    const LksOrder *owner;
+    const LksOrderHandle *next;
+    uint64_t revision;
+    int reverse;
 };
 
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS

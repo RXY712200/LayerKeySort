@@ -1,5 +1,9 @@
 # Validation
 
+Current V4 scope is **experimental Preview.2**: [live moves, managed order and
+revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
+Preview.1 descriptions below identify that milestone, not current feature limits.
+
 Local V4 Preview.1 adds `layerkeysort_v4_live_order` to the preserved V3 suite.
 See [V4 Preview.1](V4_PREVIEW1.md) for oracle/failpoint/structural scope. The V3
 coverage and historical validation evidence below remain applicable to the

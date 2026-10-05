@@ -1,0 +1,11 @@
+# production: structural/allocation columns unavailable (zero)
+workload,N,operations,total_ms,p50_us,p99_us,max_us,comparator_calls,assignments,local_arrays,index_blocks,splits,repairs,max_assignments,max_index_blocks,allocations
+move_local,20000,20000,0.597,0.000,0.100,7.900,0,0,0,0,0,0,0,0,0
+move_distant,20000,20000,1.940,0.100,0.200,1.000,0,0,0,0,0,0,0,0,0
+move_random,20000,20000,3.362,0.200,0.300,3.700,0,0,0,0,0,0,0,0,0
+insert_remove_mix,20000,20000,1.750,0.100,0.100,3.500,0,0,0,0,0,0,0,0,0
+managed_ascending,20000,20000,2.060,0.100,0.200,31.200,147351,0,0,0,0,0,0,0,0
+managed_random,20000,20000,5.082,0.200,0.400,29.900,260752,0,0,0,0,0,0,0,0
+managed_equal,20000,20000,2.063,0.100,0.200,28.200,147351,0,0,0,0,0,0,0,0
+managed_duplicates,20000,20000,3.072,0.100,0.200,27.000,267489,0,0,0,0,0,0,0,0
+managed_alternating,20000,20000,2.291,0.100,0.200,26.700,211742,0,0,0,0,0,0,0,0

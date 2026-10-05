@@ -1,9 +1,9 @@
 # LayerKeySort
 
-此分支是尚未发布的 `v4.0.0-preview.1`：新增基于上下文顺序的容器和稳定驻留句柄，
-保留原有 V3 API。参见 [V4 Preview.1 指南](docs/V4_PREVIEW1.md)。
-V4 移动、比较器管理、快照和持久化尚未实现；最新公开稳定版仍为 `v3.1.0`。
-下文的 Path 介绍和入门示例适用于保留的 V3 实现。
+此分支为实验性 `v4.0.0-preview.2`：新增保留句柄的移动、比较器管理顺序和修订检查游标。
+参见 [Preview.2 指南](docs/V4_PREVIEW2.md)、[显式顺序示例](examples/live_order.c)
+和[管理顺序示例](examples/managed_order.c)。快照、导出和持久化尚未实现，V4 API 尚未冻结。
+最新公开稳定版仍为 `v3.1.0`；下文的 Path 介绍适用于保留的 V3 实现。
 
 [English](README.md) | 简体中文
 
