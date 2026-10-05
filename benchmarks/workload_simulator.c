@@ -547,13 +547,13 @@ static void summarize(Simulation *s)
     for (i = 0; i < s->insertions; ++i)
         if (s->trace || s->events[i].sample) emit_event(&s->events[i]);
     printf("{\"kind\":\"summary\",\"workload\":\"%s\",\"seed\":%" PRIu32 ","
-        "\"initial\":%zu,\"operations\":%zu,\"checkpoint\":%zu,\"diagnostic\":%d,"
+        "\"initial\":%zu,\"operations\":%zu,\"checkpoint\":%zu,\"diagnostic\":%d,\"strategy\":%d,"
         "\"insertions\":%zu,\"new_items\":%zu,\"remove_only\":%zu,\"updates\":%zu,"
         "\"final_resident\":%zu,\"trace_digest\":\"%016" PRIx64 "\",\"verified\":true,"
         "\"relabelled_total\":%zu,\"max_region\":%zu,\"attempts\":%zu,"
         "\"attempted_nodes_sum\":%zu,\"full_nodes\":%zu,\"histogram\":[",
         s->workload, s->seed, s->initial, s->operations, s->checkpoint,
-        diagnostic_build(), s->insertions, s->next_id - s->initial, s->removals,
+        diagnostic_build(), LKS_RESEARCH_RELABEL_STRATEGY, s->insertions, s->next_id - s->initial, s->removals,
         s->updates, s->count, s->digest, total, maximum, attempts, attempted, full_nodes);
     for (i = 0; i < 8; ++i) printf("%s%zu", i ? "," : "", bins[i]);
     puts("]}");

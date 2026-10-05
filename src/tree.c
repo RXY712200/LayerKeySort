@@ -711,6 +711,35 @@ static LksStatus ordered_before(const LksPath *right, unsigned int step,
     return LKS_STATUS_OK;
 }
 
+#if LKS_RESEARCH_RELABEL_STRATEGY == 5 || LKS_RESEARCH_RELABEL_STRATEGY == 6
+/* Reuse the managed endpoint carry generator once a selected region has one
+ * open exterior bound. Every key is still prepared before mutation and the
+ * ordinary validation/strict depth-improvement rule remains in force. Full
+ * range still uses the identical sparse bulk generator. */
+static LksStatus research_open_range(LksPath **paths, size_t count,
+    const LksPath *left, const LksPath *right)
+{
+    size_t i;
+    LksStatus status;
+    unsigned int step = LKS_POLICY_TARGET_SPACING;
+#if LKS_RESEARCH_RELABEL_STRATEGY == 6
+    /* Dense endpoint carry trades local spacing for avoiding expensive failed
+     * preparations. This is research-only, not a changed policy constant. */
+    step = 1;
+#endif
+    for (i = 0; i < count; ++i) {
+        if (left != NULL)
+            status = ordered_after(i ? paths[i - 1] : left,
+                step, &paths[i]);
+        else
+            status = ordered_before(i ? paths[count - i] : right,
+                step, &paths[count - 1 - i]);
+        if (status != LKS_STATUS_OK) return status;
+    }
+    return LKS_STATUS_OK;
+}
+#endif
+
 /* The affected nodes are a contiguous in-order range. Replacing their Paths
  * by a strictly increasing sequence inside unchanged exterior bounds keeps
  * every physical AVL edge ordered. The insertion gap determines a vacant
@@ -780,6 +809,17 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         /* Alternate around the insertion gap, then use whichever side remains.
          * At window == size this necessarily includes every existing node. */
         while (count < window && (left != NULL || right != NULL)) {
+#if LKS_RESEARCH_RELABEL_STRATEGY == 3
+            /* Include both gap neighbors first; then use a 3:1 bias toward
+             * the initially shallower neighbor, hoping to reach a less-deep
+             * exterior coordinate sooner. Contiguity does not depend on bias. */
+            if (count < 2) take_left = count == 0;
+            else {
+                int prefer_left = before != NULL && (after == NULL ||
+                    lks_path_depth(before->path) <= lks_path_depth(after->path));
+                take_left = count % 4 == 3 ? !prefer_left : prefer_left;
+            }
+#endif
             if (left != NULL && (take_left || right == NULL)) {
                 start = left;
                 left = predecessor(left);
@@ -833,12 +873,20 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
          * prepares Paths only: existing physical nodes stay in place. */
         status = window == tree->size ?
             lks_bulk_generate_paths(paths, count + 1) :
+#if LKS_RESEARCH_RELABEL_STRATEGY == 5 || LKS_RESEARCH_RELABEL_STRATEGY == 6
+            (candidate_depth <= 8 && (outer_left == NULL || outer_right == NULL)) ?
+                research_open_range(paths, count + 1, outer_left, outer_right) :
+#endif
             generate_range(paths, 0, count + 1, outer_left, outer_right);
 #ifdef LKS_RESEARCH_TRACE
         if (trace != NULL) {
             trace->generation_ms = research_time() - phase;
             trace->status = status;
-            for (i = 0; i <= count; ++i) if (paths[i] != NULL) ++trace->generated;
+            for (i = 0; i <= count; ++i) if (paths[i] != NULL) {
+                size_t generated_depth = lks_path_depth(paths[i]);
+                ++trace->generated;
+                if (generated_depth > trace->max_depth) trace->max_depth = generated_depth;
+            }
             phase = research_time();
         }
 #endif
@@ -866,7 +914,11 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
                 if (depth > max_depth) max_depth = depth;
             }
         }
-        if (status == LKS_STATUS_OK && max_depth < candidate_depth) {
+        if (status == LKS_STATUS_OK && (max_depth < candidate_depth
+#if LKS_RESEARCH_RELABEL_STRATEGY == 4
+            || (max_depth == candidate_depth && max_depth <= 8)
+#endif
+            )) {
             new_node = (LksTreeNode *)lks_alloc_tagged(sizeof(*new_node),
                 LKS_ALLOC_TAG_TREE_NODE);
             if (new_node == NULL) status = LKS_STATUS_OUT_OF_MEMORY;
@@ -874,7 +926,8 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
 #ifdef LKS_RESEARCH_TRACE
         if (trace != NULL) {
             trace->validation_ms = research_time() - phase;
-            trace->max_depth = max_depth; trace->status = status;
+            if (max_depth > trace->max_depth) trace->max_depth = max_depth;
+            trace->status = status;
             trace->accepted = new_node != NULL;
             trace->next_window = window == tree->size ? 0 :
                 window > tree->size / 2 ? tree->size : window * 2;
@@ -985,7 +1038,13 @@ static LksStatus insert_by_comparator(LksTree *tree, void *item,
 #endif
     if (tree->size != 0 && (candidate == NULL ||
         (depth > LKS_POLICY_PREFERRED_ONLINE_DEPTH &&
-         ((before != NULL && after != NULL) ||
+         ((before != NULL && after != NULL
+#if LKS_RESEARCH_RELABEL_STRATEGY == 1
+           && depth > 7
+#elif LKS_RESEARCH_RELABEL_STRATEGY == 2
+           && depth > 8
+#endif
+          ) ||
           depth > LKS_POLICY_OPEN_END_DIRECT_DEPTH)))) {
         status = try_adaptive_relabel(tree, before, after, item, depth,
             out_node, &relabelled);

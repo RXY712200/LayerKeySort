@@ -1,6 +1,14 @@
 #ifndef LKS_RESEARCH_INTERNAL_H
 #define LKS_RESEARCH_INTERNAL_H
 
+/* Explicit experimental builds only; zero retains the released algorithm. */
+#ifndef LKS_RESEARCH_RELABEL_STRATEGY
+#define LKS_RESEARCH_RELABEL_STRATEGY 0
+#endif
+#if LKS_RESEARCH_RELABEL_STRATEGY < 0 || LKS_RESEARCH_RELABEL_STRATEGY > 6
+#error Unknown tail-cost research strategy
+#endif
+
 /* Branch-only instrumentation. No public API or default runtime state. */
 #ifdef LKS_RESEARCH_TRACE
 #include "layerkeysort.h"

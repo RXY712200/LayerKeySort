@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure
-        run: cmake -S . -B build -A x64 -DLKS_BUILD_BENCHMARKS=ON
+        run: cmake -S . -B build -A x64 -DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_RESEARCH=ON
       - name: Build
         run: cmake --build build --config Debug --parallel
       - name: Test
@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_ENABLE_SANITIZERS=${{ matrix.sanitizer }} -DLKS_BUILD_BENCHMARKS=ON
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_ENABLE_SANITIZERS=${{ matrix.sanitizer }} -DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_RESEARCH=ON
       - name: Build
         run: cmake --build build --parallel
       - name: Test
@@ -71,7 +71,7 @@ jobs:
       - name: Compiler
         run: clang --version
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_BUILD_BENCHMARKS=ON
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_RESEARCH=ON
       - name: Build
         run: cmake --build build --parallel
       - name: Test
