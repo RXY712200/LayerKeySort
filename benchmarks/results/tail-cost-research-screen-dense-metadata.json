@@ -1,0 +1,70 @@
+{
+  "harness_commit": "921bc7063f9959ddd2bcce714823796e8b8def41",
+  "dirty_tracked": true,
+  "phase": "screen",
+  "strategies": [
+    "baseline",
+    "open_dense"
+  ],
+  "plan": [
+    [
+      "timeline",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "alternating",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "duplicates",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "random",
+      17,
+      10000,
+      100000
+    ]
+  ],
+  "os": "Windows-11-10.0.26300-SP0",
+  "captured_utc": "2026-10-05T06:12:04Z",
+  "timing": "same frozen C17 clock; public insertion only; production/diagnostic separate; trace disabled",
+  "order": "scenario outer loop, listed strategies inner loop, production then diagnostic; not randomized",
+  "comparison": "historical baseline separate; research baseline rerun and candidates in this campaign",
+  "binaries": {
+    "baseline": {
+      "timed": "f06918610d1046cbf6925d0fdf89d77b8631c97da65adda5e806b7cbd863cc39",
+      "diagnostic": "2effd07cdf0f4e13bad0666c8852dd23bec9ae37b77bfe726a55a8e2945fd814"
+    },
+    "open_dense": {
+      "timed": "795fd4c67154d2c81975f04e0fed24735ad4d89a28c8cac41c5dbec68cad07b2",
+      "diagnostic": "cb28bde13b1bbc3b9d3dfb319d00697fd0c1269db37281f1b855d01f32586d9d"
+    }
+  },
+  "scenario_pairs": 14,
+  "correctness_failures": 0
+}

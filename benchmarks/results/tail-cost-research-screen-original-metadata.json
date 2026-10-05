@@ -1,0 +1,90 @@
+{
+  "harness_commit": "921bc7063f9959ddd2bcce714823796e8b8def41",
+  "dirty_tracked": true,
+  "phase": "screen",
+  "strategies": [
+    "baseline",
+    "direct7",
+    "direct8",
+    "depth_bias",
+    "equal8",
+    "open_range"
+  ],
+  "plan": [
+    [
+      "timeline",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "alternating",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "duplicates",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "random",
+      17,
+      10000,
+      100000
+    ]
+  ],
+  "os": "Windows-11-10.0.26300-SP0",
+  "captured_utc": "2026-10-05T06:08:26Z",
+  "timing": "same frozen C17 clock; public insertion only; production/diagnostic separate; trace disabled",
+  "order": "scenario outer loop, listed strategies inner loop, production then diagnostic; not randomized",
+  "comparison": "historical baseline separate; research baseline rerun and candidates in this campaign",
+  "binaries": {
+    "baseline": {
+      "timed": "87b23d65274c70e44eb2c378f1fb49e7097770b695a71cf9d7c1ddaaae3bf792",
+      "diagnostic": "9cc6e9db0aebceca4fa51d5dccf42a69253e3d44cceda48a21b198cfeb24b910"
+    },
+    "direct7": {
+      "timed": "8dd5b4d572c8f7da0660fdfa2b59353f045591506398463f04cc79e51aaf9bcf",
+      "diagnostic": "0fd9d4d1398abb1a93c073a665569562be6024b12c1d6b521477f67d0bc7159b"
+    },
+    "direct8": {
+      "timed": "455aa69a01e48d899f830aeb7f9a43692d70ceb527e76fb7200ea55bae634ee8",
+      "diagnostic": "bffe23230913a522c465b8fd88e1f6e84749a2f1123ab8f816bf9bff6ca49ba3"
+    },
+    "depth_bias": {
+      "timed": "95643d0c964e48ef233b69ca66080c772f37e2490735df58a74a853111bcaa23",
+      "diagnostic": "cb081bb916894e764e2776b417f5b1d01697d8c87f364cfe20781f6e8eacadd4"
+    },
+    "equal8": {
+      "timed": "13e1baadad4fbebd43590be3e794bbfb3ab5520ed5be4fdbea4a85bd0c0e47c1",
+      "diagnostic": "2f268709c50432eb2d3b984b5055c2550b4f34f66d21367255240d5a37bf5579"
+    },
+    "open_range": {
+      "timed": "8d6eadd10edac3c0dfcf10c34fdd032315548504a5b26ae1836a54d7920d4b35",
+      "diagnostic": "6c0fced25c22d2b31d07fab605f3b9cacf1e36d5a146d0868d703f5268fe04f2"
+    }
+  },
+  "scenario_pairs": 42,
+  "correctness_failures": 0
+}

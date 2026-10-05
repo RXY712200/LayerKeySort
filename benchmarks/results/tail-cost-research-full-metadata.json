@@ -1,0 +1,364 @@
+{
+  "compiler": "gcc.exe (Rev4, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+  "build_options": {
+    "CMAKE_BUILD_TYPE:STRING": "Release",
+    "CMAKE_C_FLAGS:STRING": "-Wall -Wextra -Wpedantic -Werror",
+    "CMAKE_C_FLAGS_DEBUG:STRING": "-g",
+    "CMAKE_C_FLAGS_MINSIZEREL:STRING": "-Os -DNDEBUG",
+    "CMAKE_C_FLAGS_RELEASE:STRING": "-O3 -DNDEBUG",
+    "CMAKE_C_FLAGS_RELWITHDEBINFO:STRING": "-O2 -g -DNDEBUG",
+    "LKS_BUILD_BENCHMARKS:BOOL": "ON",
+    "LKS_BUILD_EXAMPLES:BOOL": "ON",
+    "LKS_BUILD_RESEARCH:BOOL": "ON",
+    "LKS_BUILD_TESTS:BOOL": "ON",
+    "LKS_ENABLE_SANITIZERS:BOOL": "OFF",
+    "LKS_INSTALL:BOOL": "ON",
+    "CMAKE_C_FLAGS-ADVANCED:INTERNAL": "1",
+    "CMAKE_C_FLAGS_DEBUG-ADVANCED:INTERNAL": "1",
+    "CMAKE_C_FLAGS_MINSIZEREL-ADVANCED:INTERNAL": "1",
+    "CMAKE_C_FLAGS_RELEASE-ADVANCED:INTERNAL": "1",
+    "CMAKE_C_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL": "1"
+  },
+  "machine": "Windows 11 Pro 10.0.26300; Ryzen 9 9955HX; 16 cores/32 threads; visible RAM 15922848 KiB; no affinity or power isolation",
+  "baseline_main": "c33afa2ac08248bffa6dde51bd590a5d799b394a",
+  "stable_tag": "v3.1.0",
+  "stable_commit": "dfa9562b9471947cfbd4ee1d1750a59434be83e2",
+  "harness_commit": "705db25b4461c9879eb412325d10b8f4d7a2ce8e",
+  "dirty_tracked": false,
+  "phase": "full",
+  "strategies": [
+    "baseline",
+    "open_dense"
+  ],
+  "plan": [
+    [
+      "timeline",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "timeline",
+      305419896,
+      1000,
+      10000
+    ],
+    [
+      "priority",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "priority",
+      305419896,
+      1000,
+      10000
+    ],
+    [
+      "local",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "local",
+      305419896,
+      1000,
+      10000
+    ],
+    [
+      "churn",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "churn",
+      305419896,
+      1000,
+      10000
+    ],
+    [
+      "timeline",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      305419896,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      2654435769,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      826366246,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      12648430,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      305419896,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      2654435769,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      826366246,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      12648430,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      305419896,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      2654435769,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      826366246,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      12648430,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      305419896,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      2654435769,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      826366246,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      12648430,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      17,
+      100000,
+      100000
+    ],
+    [
+      "priority",
+      17,
+      100000,
+      100000
+    ],
+    [
+      "local",
+      17,
+      100000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      100000,
+      100000
+    ],
+    [
+      "churn",
+      17,
+      50000,
+      500000
+    ],
+    [
+      "ascending",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "descending",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "random",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "equal",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "duplicates",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "alternating",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "hotspot",
+      17,
+      1000,
+      10000
+    ],
+    [
+      "ascending",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "descending",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "random",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "equal",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "duplicates",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "alternating",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "hotspot",
+      17,
+      10000,
+      100000
+    ],
+    [
+      "timeline",
+      3512641005,
+      10000,
+      100000
+    ],
+    [
+      "priority",
+      3512641005,
+      10000,
+      100000
+    ],
+    [
+      "local",
+      3512641005,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      3512641005,
+      10000,
+      100000
+    ],
+    [
+      "churn",
+      3512641005,
+      50000,
+      500000
+    ]
+  ],
+  "os": "Windows-11-10.0.26300-SP0",
+  "captured_utc": "2026-10-05T06:19:37Z",
+  "timing": "same frozen C17 clock; public insertion only; production/diagnostic separate; trace disabled",
+  "order": "scenario outer loop, listed strategies inner loop, production then diagnostic; not randomized",
+  "comparison": "historical baseline separate; research baseline rerun and candidates in this campaign",
+  "binaries": {
+    "baseline": {
+      "timed": "a50462f9f7277b2d9a5fa1ce47150ff985f67285e8ee4b61baab89c1e1059f5b",
+      "diagnostic": "2ca4ec4962eefa9ac9133e55217299eb514c525fb5fa55a3c585125e4b386a45"
+    },
+    "open_dense": {
+      "timed": "38dfdbb756fdae897833dbd919ab93fc140182046095e3c09725284fb21390f3",
+      "diagnostic": "1f3246b3f28bdc3f5ede977d1ad566a95be11d34ee0851789fc3c6ec8f1e47b0"
+    }
+  },
+  "scenario_pairs": 104,
+  "correctness_failures": 0
+}
