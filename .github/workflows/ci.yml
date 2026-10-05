@@ -17,6 +17,12 @@ jobs:
         run: ctest --test-dir build -C Debug --output-on-failure
       - name: Basic example
         run: .\build\Debug\layerkeysort_example.exe
+      - name: Configure opt-in slack research
+        run: cmake -S . -B build-slack -A x64 -DLKS_BUILD_BENCHMARKS=ON -DLKS_RESEARCH_SLACK=ON
+      - name: Build opt-in slack research
+        run: cmake --build build-slack --config Debug --parallel
+      - name: Test opt-in slack research (bounded; no campaign)
+        run: ctest --test-dir build-slack -C Debug --output-on-failure
       - name: Ordered-tree example
         run: .\build\Debug\layerkeysort_ordered_example.exe
       - name: Layer-list example
@@ -49,6 +55,12 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Basic example
         run: ./build/layerkeysort_example
+      - name: Configure opt-in slack research
+        run: cmake -S . -B build-slack -DCMAKE_BUILD_TYPE=Debug -DLKS_BUILD_BENCHMARKS=ON -DLKS_RESEARCH_SLACK=ON -DLKS_ENABLE_SANITIZERS=${{ matrix.sanitizer }}
+      - name: Build opt-in slack research
+        run: cmake --build build-slack --parallel
+      - name: Test opt-in slack research (bounded; no campaign)
+        run: ctest --test-dir build-slack --output-on-failure
       - name: Ordered-tree example
         run: ./build/layerkeysort_ordered_example
       - name: Layer-list example
@@ -78,6 +90,12 @@ jobs:
         run: ctest --test-dir build --output-on-failure
       - name: Basic example
         run: ./build/layerkeysort_example
+      - name: Configure opt-in slack research
+        run: cmake -S . -B build-slack -DCMAKE_BUILD_TYPE=Debug -DLKS_BUILD_BENCHMARKS=ON -DLKS_RESEARCH_SLACK=ON
+      - name: Build opt-in slack research
+        run: cmake --build build-slack --parallel
+      - name: Test opt-in slack research (bounded; no campaign)
+        run: ctest --test-dir build-slack --output-on-failure
       - name: Ordered-tree example
         run: ./build/layerkeysort_ordered_example
       - name: Layer-list example

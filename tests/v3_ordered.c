@@ -468,7 +468,15 @@ static int check_local_relabel_oom(void)
             LksTreeRepairStats stats = lks_tree_repair_stats_get();
             success = inserted != NULL && verify_ordered(tree, 1) &&
                 stats.successes == 1 && stats.nodes_relabelled > 0 &&
-                stats.max_region_nodes > 8 && stats.full_rebuilds == 0;
+                stats.full_rebuilds == 0;
+#ifdef LKS_RESEARCH_SLACK
+            /* This fixture can fit the constrained family at the first scale.
+             * Keep all rollback checks; only the baseline's expansion policy
+             * assertion differs for the opt-in capacity-selected algorithm. */
+            success = success && stats.slack_preparations > 0;
+#else
+            success = success && stats.max_region_nodes > 8;
+#endif
             break;
         }
         if (status != LKS_STATUS_OUT_OF_MEMORY || inserted != NULL ||

@@ -5,6 +5,12 @@
 #include "lks_tree_internal.h"
 #include "lks_bulk_internal.h"
 #include "lks_policy_internal.h"
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+#include "lks_path_internal.h"
+#endif
+#ifdef LKS_RESEARCH_SLACK
+#include "../research/slack_family.h"
+#endif
 
 struct LksTreeNode {
     LksPath *path;
@@ -539,6 +545,7 @@ const LksTreeNode *lks_ordered_tree_root_child_at(
 
 /* Prepare COUNT keys in (LEFT, RIGHT) by splitting logical rank intervals.
  * Each returned key is validated by the gap API. Recursion depth is log COUNT. */
+#ifndef LKS_RESEARCH_SLACK
 static LksStatus generate_range(LksPath **paths, size_t first, size_t count,
     const LksPath *left, const LksPath *right)
 {
@@ -563,6 +570,7 @@ static LksStatus generate_range(LksPath **paths, size_t first, size_t count,
     return generate_range(paths, first + middle + 1, count - middle - 1,
         paths[first + middle], right);
 }
+#endif
 
 static void destroy_path_array(LksPath **paths, size_t count)
 {
@@ -708,6 +716,10 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         const LksPath *outer_left, *outer_right;
         size_t count = 0, position = 0, i, max_depth = 0;
         LksStatus status;
+#ifdef LKS_RESEARCH_SLACK
+        LksSlackPlan slack;
+        int slack_ready = 0;
+#endif
         int take_left = 1;
         if (heap_scratch) {
             if (window > (size_t)-1 / sizeof(*nodes) ||
@@ -761,12 +773,43 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
         }
         outer_left = predecessor(start) == NULL ? NULL : predecessor(start)->path;
         outer_right = cursor == NULL ? NULL : cursor->path;
+#ifdef LKS_RESEARCH_SLACK
+        /* Stateless accounting: every resident in the selected logical range
+         * is evacuated into the finite family, even if its old Path is outside
+         * that family. Unchanged exterior nodes cannot occupy the open interval.
+         * Try references from both sides; crossing ZERO can require expansion. */
+        REPAIR_COUNT(slack_capacity_checks);
+        slack_ready = lks_slack_plan(before == NULL ? after->path : before->path,
+            outer_left, outer_right, count + 1, &slack);
+        if (!slack_ready && after != NULL)
+            slack_ready = lks_slack_plan(after->path, outer_left, outer_right,
+                count + 1, &slack);
+        if (slack_ready) {
+            REPAIR_COUNT(slack_preparations);
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+            for (i = 0; i < count; ++i)
+                if (lks_slack_occupied(&slack, nodes[i]->path))
+                    REPAIR_COUNT(slack_occupied_family_nodes);
+#endif
+            status = LKS_STATUS_OK;
+            for (i = 0; i <= count && status == LKS_STATUS_OK; ++i)
+                status = lks_slack_materialize(&slack,
+                    slack.lower + slack.stride * (i + 1) - 1, &paths[i]);
+        } else if (window != tree->size) {
+            REPAIR_COUNT(slack_capacity_rejections);
+            status = LKS_STATUS_LEVEL_LIMIT;
+        } else {
+            /* Finite-family failure retains the original full-range fallback. */
+            status = lks_bulk_generate_paths(paths, count + 1);
+        }
+#else
         /* With no exterior bounds, the sparse bulk coordinate generator is
          * faster and shallower than recursively splitting every gap. It
          * prepares Paths only: existing physical nodes stay in place. */
         status = window == tree->size ?
             lks_bulk_generate_paths(paths, count + 1) :
             generate_range(paths, 0, count + 1, outer_left, outer_right);
+#endif
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
         for (i = 0; i <= count; ++i)
             if (paths[i] != NULL) REPAIR_ADD(generated_relabel_paths, 1);
@@ -791,7 +834,11 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
                 if (depth > max_depth) max_depth = depth;
             }
         }
-        if (status == LKS_STATUS_OK && max_depth < candidate_depth) {
+        if (status == LKS_STATUS_OK && (max_depth < candidate_depth
+#ifdef LKS_RESEARCH_SLACK
+            || slack_ready /* Same depth is justified by explicit gap reserve. */
+#endif
+            )) {
             new_node = (LksTreeNode *)lks_alloc_tagged(sizeof(*new_node),
                 LKS_ALLOC_TAG_TREE_NODE);
             if (new_node == NULL) status = LKS_STATUS_OUT_OF_MEMORY;
@@ -800,6 +847,10 @@ static LksStatus try_adaptive_relabel(LksTree *tree, LksTreeNode *before,
             /* No allocation or recoverable error occurs from here onward. */
             for (i = 0; i < count; ++i) {
                 LksPath *old = nodes[i]->path;
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+                REPAIR_ADD(coordinate_bytes_rewritten,
+                    lks_path_internal_sizeof_path() + lks_path_internal_storage_bytes(old));
+#endif
                 nodes[i]->path = paths[i < position ? i : i + 1];
                 lks_path_destroy(old);
             }

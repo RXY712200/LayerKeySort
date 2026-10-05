@@ -45,6 +45,13 @@ typedef struct LksTreeRepairStats {
     size_t deeper_accepts;
     size_t comparator_search_steps;
     size_t rotations;
+    /* Private Phase 2 research accounting; baseline capacity counters are zero.
+     * Rewritten bytes count old resident Path object + allocated storage. */
+    size_t coordinate_bytes_rewritten;
+    size_t slack_capacity_checks;
+    size_t slack_capacity_rejections;
+    size_t slack_preparations;
+    size_t slack_occupied_family_nodes;
 } LksTreeRepairStats;
 
 void lks_tree_repair_stats_reset(void);

@@ -524,7 +524,19 @@ static void summarize(Simulation *s)
         diagnostic_build(), s->insertions, s->next_id - s->initial, s->removals,
         s->updates, s->count, s->digest, total, maximum, attempts, attempted, full_nodes);
     for (i = 0; i < 8; ++i) printf("%s%zu", i ? "," : "", bins[i]);
-    puts("]}");
+    printf("]");
+#ifdef LKS_WORKLOAD_DIAGNOSTICS
+    {
+        LksTreeRepairStats stats = lks_tree_repair_stats_get();
+        printf(",\"coordinate_bytes_rewritten\":%zu,\"capacity_checks\":%zu,"
+            "\"capacity_rejections\":%zu,\"slack_preparations\":%zu,"
+            "\"generated_paths\":%zu,\"occupied_family_nodes\":%zu",
+            stats.coordinate_bytes_rewritten, stats.slack_capacity_checks,
+            stats.slack_capacity_rejections, stats.slack_preparations,
+            stats.generated_relabel_paths, stats.slack_occupied_family_nodes);
+    }
+#endif
+    puts("}");
     free(times); free(rank);
 }
 static void cleanup(Simulation *s)
