@@ -1,13 +1,11 @@
 # LayerKeySort compatibility
 
-Current V4 scope is **experimental Preview.2**: [live moves, managed order and
-revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
-Preview.1 descriptions below identify that milestone, not current feature limits.
+Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
-The experimental `4.0.0-preview.2` branch preserves the V3 function signatures and
+The experimental `4.0.0-preview.3` branch preserves the V3 function signatures and
 ordering behavior below while adding a separate provisional explicit-order API.
-Its version macros are 4.0.0-preview.2; the new API is not frozen. An appended
-CAPACITY_LIMIT status does not renumber V3 statuses. See [V4 Preview.1](V4_PREVIEW1.md).
+Its version macros are 4.0.0-preview.3; the new API is not frozen. An appended
+CAPACITY_LIMIT status and later INVALIDATED, REENTRANT and DOMAIN_MISMATCH values do not renumber V3 statuses. LS1 and LKS4SNP1 are provisional until Preview.5; published V3 LK1 is unchanged. See [V4 Preview.3](V4_PREVIEW3.md).
 The published Stable remains v3.1.0; no stable V4 compatibility promise exists.
 
 ## Stable 3.x compatibility contract

@@ -1,13 +1,10 @@
 # V3 architecture
 
-Current V4 scope is **experimental Preview.2**: [live moves, managed order and
-revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
-Preview.1 descriptions below identify that milestone, not current feature limits.
+Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
 This page describes the preserved V3 implementation. The experimental V4 Preview.2
 core is documented in [V4 Preview.2](V4_PREVIEW2.md) and derives from the
-[V4 design](design/V4_ARCHITECTURE.md). Future design sections do not imply that
-V4 snapshots or persistence have been implemented.
+[V4 design](design/V4_ARCHITECTURE.md). The separate historical/export layer is implemented in [V4 Preview.3](V4_PREVIEW3.md); remaining design sections are not claims of implemented Group/Batch features.
 
 This describes the 3.1.0 source implementation, whose ordering code is unchanged
 from `v3.0.0`. The [API reference](API.md)

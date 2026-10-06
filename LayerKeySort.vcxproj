@@ -223,6 +223,15 @@
     <ClInclude Include="tests\property.h" />
     <ClInclude Include="tests\mutation.h" />
     <ClInclude Include="tests\path_external.h" />
+    <ClCompile Include="src\snapshot.c" />
+    <ClCompile Include="src\snapshot_key.c" />
+    <ClCompile Include="src\snapshot_wire.c" />
+    <ClCompile Include="src\snapshot_restore.c" />
+    <ClCompile Include="src\order_bulk.c" />
+    <ClInclude Include="src\lks_snapshot_internal.h" />
+    <None Include="tests\v4_snapshot.c" />
+    <None Include="examples\snapshot.c" />
+    <None Include="benchmarks\v4_snapshot_smoke.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

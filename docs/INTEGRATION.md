@@ -1,13 +1,11 @@
 # Integrating LayerKeySort
 
-Current V4 scope is **experimental Preview.2**: [live moves, managed order and
-revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
-Preview.1 descriptions below identify that milestone, not current feature limits.
+Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
 English | [简体中文](INTEGRATION.zh-CN.md)
 
 For this experimental V4 branch use the same source/library integration
-mechanisms, with [V4 Preview.2](V4_PREVIEW2.md) as the usage guide. Installed
+mechanisms, with [V4 Preview.3](V4_PREVIEW3.md) and its snapshot example as the export guide. The current source manifest has 19 production modules; use it rather than copying the historical Stable module count below. Installed
 current-branch packages have numeric version 4.0.0; request 4.0 or omit a version
 in `find_package`. The pinned v3.1.0 examples/assets below refer to the published
 Stable and do not contain the new V4 API. No V4 release asset is published yet.

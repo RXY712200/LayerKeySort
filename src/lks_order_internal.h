@@ -10,6 +10,9 @@
 #define LKS_ORDER_BLOCK_CAPACITY 128u
 #define LKS_ORDER_BLOCK_MIN (LKS_ORDER_BLOCK_CAPACITY / 2u)
 typedef struct LksOrderBlock LksOrderBlock;
+typedef struct LksSourceMarker LksSourceMarker;
+void lks_source_marker_release(LksSourceMarker *marker);
+LksStatus lks_order_bulk_build(void *const *items, size_t count, LksOrder **out_order);
 
 struct LksOrderHandle {
     LksOrder *owner;
@@ -47,6 +50,7 @@ struct LksOrder {
     size_t count, blocks;
     uint64_t revision;
     int callback_active;
+    LksSourceMarker *source_marker;
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
     LksOrderWork work;
 #endif

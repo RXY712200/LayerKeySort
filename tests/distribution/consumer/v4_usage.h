@@ -2,6 +2,7 @@
 #define LKS_CONSUMER_V4_USAGE_H
 /* Public-header-only use, compiled as both C and C++ by external consumers. */
 #include "layerkeysort.h"
+#include "snapshot_usage.h"
 static int v4_consumer_compare(const void *a, const void *b, void *context)
 {
     int x=*(const int *)a, y=*(const int *)b;
@@ -49,7 +50,7 @@ static int v4_consumer_usage(void)
         lks_order_cursor_next(cursor,&it)!=LKS_STATUS_OK || it!=d ||
         lks_managed_order_remove(managed,b,&removed)!=LKS_STATUS_OK || removed!=&items[1] ||
         lks_order_cursor_next(cursor,&it)!=LKS_STATUS_INVALIDATED || it) goto done;
-    failed = 0;
+    failed = snapshot_consumer_usage();
 done:
     lks_order_cursor_destroy(cursor);
     lks_managed_order_destroy(managed);

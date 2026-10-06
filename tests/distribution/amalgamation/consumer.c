@@ -1,8 +1,9 @@
-#include "layerkeysort.h"
+#include "snapshot_usage.h"
 
 int main(void)
 {
     LksPath *path = 0;
+    if (snapshot_consumer_usage()) return 6;
     LksOrder *order = lks_order_create();
     const LksOrderHandle *handle = 0;
     int item = 1;

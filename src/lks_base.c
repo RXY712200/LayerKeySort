@@ -27,6 +27,8 @@ const char *lks_status_string(LksStatus status)
         return "Cursor invalidated";
     case LKS_STATUS_REENTRANT:
         return "Reentrant access rejected";
+    case LKS_STATUS_DOMAIN_MISMATCH:
+        return "Snapshot key domain mismatch";
     default:
         return "Unknown status";
     }

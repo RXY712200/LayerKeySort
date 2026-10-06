@@ -208,6 +208,7 @@ void lks_order_destroy(LksOrder *order)
         for (i = 0; i < block->count; ++i) lks_free(block->records[i]);
         lks_free(block); block = next;
     }
+    lks_source_marker_release(order->source_marker);
     lks_free(order);
 }
 size_t lks_order_size(const LksOrder *order)

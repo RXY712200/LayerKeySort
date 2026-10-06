@@ -25,6 +25,8 @@ jobs:
         run: .\build\Debug\layerkeysort_order_example.exe
       - name: V4 managed-order example
         run: .\build\Debug\layerkeysort_managed_order_example.exe
+      - name: V4 snapshot/persistence example
+        run: .\build\Debug\layerkeysort_snapshot_example.exe
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -61,6 +63,8 @@ jobs:
         run: ./build/layerkeysort_order_example
       - name: V4 managed-order example
         run: ./build/layerkeysort_managed_order_example
+      - name: V4 snapshot/persistence example
+        run: ./build/layerkeysort_snapshot_example
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -94,6 +98,8 @@ jobs:
         run: ./build/layerkeysort_order_example
       - name: V4 managed-order example
         run: ./build/layerkeysort_managed_order_example
+      - name: V4 snapshot/persistence example
+        run: ./build/layerkeysort_snapshot_example
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

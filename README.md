@@ -2,11 +2,14 @@
 
 English | [简体中文](README.zh-CN.md)
 
-**This branch implements experimental `v4.0.0-preview.2`.**
-V4 adds handle-preserving moves, comparator-managed order and revision-checked
-cursors to the contextual live-order core. Start with the [Preview.2 guide](docs/V4_PREVIEW2.md),
-[explicit example](examples/live_order.c) and [managed example](examples/managed_order.c).
-Snapshots/export/persistence remain unimplemented and V4 APIs are provisional.
+**This branch implements experimental `v4.0.0-preview.3`.**
+Live V4 order uses contextual resident handles; historical export uses separate
+immutable snapshots, copied associations and domain-scoped LS1 keys. Capture,
+serialize/load, restore and strict V3 LK1 migration are now available. Start with
+[Preview.3](docs/V4_PREVIEW3.md) and [the public snapshot example](examples/snapshot.c),
+or [Preview.2](docs/V4_PREVIEW2.md) for live moves/managed order.
+Snapshot export is explicit O(N+A) work. V4 APIs and wire formats are provisional;
+Group/Batch integration and final freeze remain later milestones.
 The coordinate-based introduction and Quick Start below describe the coexisting
 V3 implementation; latest published Stable remains `v3.1.0`.
 

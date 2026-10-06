@@ -1,8 +1,6 @@
 # V3 performance evidence
 
-Current V4 scope is **experimental Preview.2**: [live moves, managed order and
-revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
-Preview.1 descriptions below identify that milestone, not current feature limits.
+Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
 The local V4 Preview.1 sanity screen is described in [V4 Preview.1](V4_PREVIEW1.md).
 The captured V3 measurements below remain historical evidence and are unchanged;

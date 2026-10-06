@@ -1,11 +1,9 @@
 # Developing LayerKeySort
 
-Current V4 scope is **experimental Preview.2**: [live moves, managed order and
-revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
-Preview.1 descriptions below identify that milestone, not current feature limits.
+Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
-This branch prepares experimental `4.0.0-preview.2`. See
-[V4 Preview.2](V4_PREVIEW2.md) for current scope and validation; the V3 production
+This branch prepares experimental `4.0.0-preview.3`. See
+[V4 Preview.3](V4_PREVIEW3.md) for current export scope and validation; the V3 production
 implementation remains intact alongside `src/order.c` and its `src/managed_order.c` facade.
 Read [architecture](ARCHITECTURE.md) for the current implementation,
 [validation](VALIDATION.md) for test scope and evidence, and

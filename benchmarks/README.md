@@ -120,3 +120,10 @@ synthetic application-like profiles, paired production/diagnostic runs, and
 per-insert latency, relabel, and storage-growth observations. See
 [the simulator methodology](WORKLOADS.md) for exact assumptions and reproduction.
 The released algorithm and historical controls/results remain unchanged.
+
+## V4 Preview.3 historical export
+
+Use `layerkeysort_v4_snapshot_smoke` for separate capture, key formatting, wire,
+load, restore, import and export-cadence measurements. A distinct diagnostic
+executable reports requested allocation/resident-byte counts. Do not mix
+instrumented timing with production. [Captured smoke and methodology](results/v4-preview3-smoke/README.md) are not final V4 performance acceptance.

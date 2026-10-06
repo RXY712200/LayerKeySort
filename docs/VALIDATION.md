@@ -1,16 +1,16 @@
 # Validation
 
-Current V4 scope is **experimental Preview.2**: [live moves, managed order and
-revision-checked cursors](V4_PREVIEW2.md). Stable remains v3.1.0. Historical
-Preview.1 descriptions below identify that milestone, not current feature limits.
+Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
 Local V4 Preview.1 adds `layerkeysort_v4_live_order` to the preserved V3 suite.
 See [V4 Preview.1](V4_PREVIEW1.md) for oracle/failpoint/structural scope. The V3
 coverage and historical validation evidence below remain applicable to the
-coexisting V3 implementation, not proof of future snapshot/comparator features.
+coexisting V3 implementation, with the separate Preview.3 snapshot suite covering the currently implemented export features.
 
 This page describes how the current V3 source is checked. Test coverage and
 past passing runs are evidence, not a formal proof of all workloads.
+
+Preview.3 registers 18 CTest tests when benchmarks and Python are available, including snapshot contract/torture/OOM and snapshot smoke. All six examples are explicitly executed in CI. Distribution consumers cover all 17 snapshot/import APIs through the public header in C/C++ and amalgamation.
 
 ## Local CMake run
 
@@ -20,7 +20,7 @@ cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 
-With benchmarks enabled, CTest registers eight tests: `layerkeysort_v3_core`,
+The historical V3-only configuration registered eight tests: `layerkeysort_v3_core`,
 `layerkeysort_mutation_soak`, `layerkeysort_consumer_roundtrip`,
 `layerkeysort_parser_torture`, `layerkeysort_rc_contract`, and three benchmark
 smoke tests. The smoke tests check harness execution; they are not timing

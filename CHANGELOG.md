@@ -2,6 +2,26 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0-preview.3] - 2026-10-06
+
+Experimental V4 historical-export milestone; Stable remains v3.1.0. API/wire
+compatibility freeze is deferred to Preview.5.
+
+- Add immutable snapshots from explicit and managed live order, with one copied
+  namespace and per-occurrence associations; no item/handle/topology retention.
+- Add lazy private atomic source markers and revision-based currentness, with
+  historical lifetime independent of source destruction.
+- Add canonical domain-scoped LS1 keys and exact LKS4SNP1 caller-buffer persistence.
+- Add fresh-order resolver restore through an O(N) private ordered bulk builder,
+  and strict published V3 LK1 parse/sort/import without changing V3 formats.
+- Add golden vectors, truncation/corruption torture, callback guards, marker
+  capacity/lifetime, OOM and bulk-boundary validation; public persistence example
+  and C/C++/amalgamation consumers.
+- Add separate capture/export-frequency/restore/import smoke evidence. Full
+  export is O(N+A), retains row metadata and association capacity, and is not free.
+- Preserve live Preview.2 mutation architecture. No Group/Batch integration,
+  incremental export, database adapter, locking, crypto or API freeze in this Preview.
+
 ## [4.0.0-preview.2] - 2026-10-06
 
 Experimental V4 prerelease; Stable remains v3.1.0. V4 APIs are provisional.

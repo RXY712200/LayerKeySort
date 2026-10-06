@@ -2,6 +2,7 @@
 #define LAYERKEYSORT_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 /* LayerKeySort public API. LKS_VERSION_* describes the current API generation. */
 #ifdef __cplusplus
@@ -11,8 +12,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 4
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.2"
-#define LKS_VERSION_STRING "4.0.0-preview.2"
+#define LKS_VERSION_PRERELEASE "preview.3"
+#define LKS_VERSION_STRING "4.0.0-preview.3"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -31,7 +32,8 @@ typedef enum LksStatus {
     LKS_STATUS_ALREADY_EXISTS,
     LKS_STATUS_CAPACITY_LIMIT, /* V4 count/revision capacity; published values unchanged */
     LKS_STATUS_INVALIDATED, /* revision-checked cursor after an actual mutation */
-    LKS_STATUS_REENTRANT /* same-container access from a managed comparator */
+    LKS_STATUS_REENTRANT, /* same-container access from an external callback */
+    LKS_STATUS_DOMAIN_MISMATCH /* snapshot keys belong to different namespaces */
 } LksStatus;
 
 /* Generic item comparison: negative / zero / positive means before / equal /
@@ -499,6 +501,69 @@ LksStatus lks_managed_order_cursor_create(const LksManagedOrder *order, int reve
 LksStatus lks_order_cursor_next(LksOrderCursor *cursor,
     const LksOrderHandle **out_handle);
 void lks_order_cursor_destroy(LksOrderCursor *cursor);
+
+/* Experimental V4 historical export, separate from contextual live handles.
+ * See docs/V4_PREVIEW3.md for the exact provisional LS1/wire contracts.
+ * Completed snapshots own copied bytes, never items or live handles. */
+typedef struct LksSnapshot LksSnapshot;
+typedef LksStatus (*LksSnapshotAssociationFn)(void *item, uint64_t ordinal,
+    void *context, const void **out_data, size_t *out_size);
+typedef struct LksSnapshotOptions {
+    const void *namespace_data;
+    size_t namespace_size;
+    LksSnapshotAssociationFn association;
+    void *context;
+} LksSnapshotOptions;
+/* Namespace: 1..UINT32_MAX bytes, copied. Callback runs once per occurrence;
+ * returned span must remain valid through the immediate copy after return.
+ * Nonzero size requires data. No callback means empty associations. Same-source
+ * access is rejected while callback runs; callbacks must return normally.
+ * Capture/failure do not change revision or invalidate handles/cursors.
+ * Required outputs are cleared before work; caller destroys successful result. */
+LksStatus lks_order_snapshot_capture(LksOrder *order,
+    const LksSnapshotOptions *options, LksSnapshot **out_snapshot);
+LksStatus lks_managed_order_snapshot_capture(LksManagedOrder *order,
+    const LksSnapshotOptions *options, LksSnapshot **out_snapshot);
+/* False on NULL, callback reentry, loaded snapshots or different source identity.
+ * Same source/revision only: successful no-ops and failures remain current. */
+int lks_order_snapshot_is_current(const LksOrder *order, const LksSnapshot *snapshot);
+int lks_managed_order_snapshot_is_current(const LksManagedOrder *order,
+    const LksSnapshot *snapshot);
+/* NULL destroy is harmless; NULL count/length/size queries return zero.
+ * Views are borrowed until destruction; required view outputs cleared on error.
+ * Snapshot reads may run concurrently if its lifetime is externally protected. */
+void lks_snapshot_destroy(LksSnapshot *snapshot);
+size_t lks_snapshot_count(const LksSnapshot *snapshot);
+LksStatus lks_snapshot_namespace(const LksSnapshot *snapshot,
+    const void **out_data, size_t *out_size);
+LksStatus lks_snapshot_association(const LksSnapshot *snapshot, size_t row,
+    const void **out_data, size_t *out_size);
+size_t lks_snapshot_key_length(const LksSnapshot *snapshot);
+LksStatus lks_snapshot_key_format(const LksSnapshot *snapshot, size_t row,
+    char *buffer, size_t buffer_size);
+LksStatus lks_snapshot_key_validate(const char *key);
+/* Validates both keys; domain mismatch is an error. Required output cleared. */
+LksStatus lks_snapshot_key_compare(const char *left, const char *right, int *out_order);
+size_t lks_snapshot_serialized_size(const LksSnapshot *snapshot);
+/* Caller-buffer serialization allocates nothing; undersized output unchanged.
+ * Deserialize strictly validates the whole borrowed blob before allocation.
+ * Loaded snapshot has no live provenance; output NULL on any failure. */
+LksStatus lks_snapshot_serialize(const LksSnapshot *snapshot,
+    void *buffer, size_t buffer_size);
+LksStatus lks_snapshot_deserialize(const void *buffer, size_t buffer_size,
+    LksSnapshot **out_snapshot);
+typedef LksStatus (*LksSnapshotResolveFn)(const void *association,
+    size_t association_size, uint64_t ordinal, void *context, void **out_item);
+/* Resolver required for nonempty input; OK requires non-NULL borrowed item.
+ * Duplicate items allowed. Resolve first, then unpublished O(N) bulk build.
+ * Caller owns successful fresh order; failure never frees resolved items. */
+LksStatus lks_snapshot_restore_order(const LksSnapshot *snapshot,
+    LksSnapshotResolveFn resolve, void *context, LksOrder **out_order);
+typedef struct LksV3Lk1ImportEntry { const char *key; void *item; } LksV3Lk1ImportEntry;
+/* Strict published LK1 parsing and Path sorting; duplicate coordinates rejected.
+ * Empty import permits NULL entries. Output NULL on failure; no Paths retained. */
+LksStatus lks_order_import_v3_lk1(const LksV3Lk1ImportEntry *entries,
+    size_t count, LksOrder **out_order);
 
 #ifdef __cplusplus
 }

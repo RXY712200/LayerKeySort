@@ -124,6 +124,8 @@ def main():
                 raise RuntimeError("ZIP membership differs from package directory")
         amalgam_fixture = work / "amalgamation-consumer"
         shutil.copytree(ROOT / "tests" / "distribution" / "amalgamation", amalgam_fixture)
+        shutil.copyfile(ROOT / "tests" / "distribution" / "consumer" / "snapshot_usage.h",
+                        amalgam_fixture / "snapshot_usage.h")
         amalgam_build = work / "amalgamation-build"
         configure(amalgam_fixture, amalgam_build, f"-DLKS_AMALGAM_DIR={first_dir}")
         build(amalgam_build)

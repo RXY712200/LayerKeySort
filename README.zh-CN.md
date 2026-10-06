@@ -1,9 +1,12 @@
 # LayerKeySort
 
-此分支为实验性 `v4.0.0-preview.2`：新增保留句柄的移动、比较器管理顺序和修订检查游标。
-参见 [Preview.2 指南](docs/V4_PREVIEW2.md)、[显式顺序示例](examples/live_order.c)
-和[管理顺序示例](examples/managed_order.c)。快照、导出和持久化尚未实现，V4 API 尚未冻结。
-最新公开稳定版仍为 `v3.1.0`；下文的 Path 介绍适用于保留的 V3 实现。
+此分支为实验性 `v4.0.0-preview.3`。实时顺序使用上下文中的稳定驻留句柄；
+历史导出使用独立的不可变快照、复制的应用关联字节和命名空间内可排序的 LS1 键。
+现已支持捕获、序列化/加载、恢复到全新顺序，以及严格的 V3 LK1 导入。
+参见 [Preview.3 指南](docs/V4_PREVIEW3.md) 和[公开快照示例](examples/snapshot.c)。
+全量导出仍需 O(N+A) 工作，不是免费操作。V4 API/线格式尚未冻结；Group/Batch
+集成留到 Preview.4，最终兼容性冻结留到 Preview.5。最新稳定版仍为 `v3.1.0`；
+下文的 Path 介绍适用于保留的 V3 实现。
 
 [English](README.md) | 简体中文
 
