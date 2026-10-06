@@ -1,4 +1,3 @@
-#include "lks_legacy_internal.h"
 /* Deterministic application-shaped synthetic traces. Identity and the flat
  * oracle are independent of the library representation. Validation and model
  * maintenance are outside foreground timers; process/cache interference still
@@ -6,7 +5,7 @@
 #ifndef _WIN32
 #define _POSIX_C_SOURCE 200809L
 #endif
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 #include "lks_order_internal.h"
 #include "lks_alloc_internal.h"
 #include "lks_tree_internal.h"

@@ -1,11 +1,10 @@
-#include "lks_legacy_internal.h"
 /* Comparable V3/V4 immutable operations. Monotonic timing; independent stable
  * oracle orders by key then original occurrence ID. Application arrays excluded
  * from requested library byte counts. */
 #ifndef _WIN32
 #define _POSIX_C_SOURCE 200809L
 #endif
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 #include "lks_alloc_internal.h"
 #include <stdio.h>
 #include <stdlib.h>
