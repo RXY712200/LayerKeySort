@@ -2,6 +2,29 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0] - 2026-10-06
+
+V4.0.0 is the current recommended Stable release after the Preview.1–5 freeze
+and independently reviewed RC.1. This is a **major source-level break from V3**;
+v3.1.0 remains a valid historical Stable for Path/Tree applications.
+
+- Contextual live order with stable resident handles, relative moves and comparator-
+  managed order; no live Path/LK1 coordinate rewrite or public physical topology.
+- Flat immutable Group/Batch with stable build, base/incoming and chunk precedence.
+- Immutable historical snapshots, sortable LS1 version 1 keys, canonical LKS4SNP1
+  persistence, fresh-handle restoration and strict published V3 LK1 migration.
+- Frozen 64-function / 14-type source contract and exact status/wire values.
+- Strong failure atomicity and allocation-free contracts retained; x86/x64,
+  GCC/MSVC/Clang/AppleClang, sanitizers and C17/C++17 integration validated.
+- Deterministic two-file source distribution with a five-member ZIP and checksums.
+- Release-only promotion: no production algorithm, fixture, test or block-policy change
+  after RC.1. See [Stable record](docs/V4_STABLE.md).
+
+Costs remain: per-record allocation, block slack/local writes, comparator/callback
+cost, full O(N+A) snapshot/export, retained-history memory, Group scratch and
+caller-managed lifetimes/serialization. No universal operation latency, binary ABI
+or whole-library formal bound is promised. No new performance run or tuning.
+
 ## [4.0.0-rc.1] - 2026-10-06
 
 Release Candidate 1, not Stable. v3.1.0 remains the recommended Stable release.

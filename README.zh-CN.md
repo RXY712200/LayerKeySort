@@ -3,8 +3,8 @@
 [English](README.md) | 简体中文
 
 C17 动态集合排序：实时位置使用容器内句柄，历史与持久化顺序使用不可变快照键。
-当前为 v4.0.0-rc.1，V4 的第一个 Release Candidate；不是 Stable。
-正常使用仍推荐 v3.1.0。当前进入 Stage 5 — Release Candidate，没有 Preview.6。
+当前推荐 Stable 为 **v4.0.0**，V4 的 Preview.1–5 / RC.1 开发周期已完成。
+V3.1.0 仍是有效的历史 Stable，适用于依赖 Path/Tree 契约的应用；V4 不是源码兼容升级。
 
 LksOrder 用于相对排序/移动，LksManagedOrder 用于比较器排序，LksGroup/Batch
 用于不可变平面序列，LksSnapshot 提供 LS1/LKS4SNP1 持久化。
@@ -14,4 +14,4 @@ V4 主头文件移除 V3 Path/Tree API；业务身份仍由应用维护，句柄
 见 [英文快速开始](README.md)、[冻结契约](docs/V4_FREEZE.md)、
 [迁移指南](docs/MIGRATION_V3_V4.md)、[七个公开示例](examples/README.md)。
 
-[RC.1 验证记录](docs/V4_RC1.md)。Stable 阶段须经过独立 RC 审查。
+[Stable 发布记录](docs/V4_STABLE.md)、[RC.1 验证记录](docs/V4_RC1.md)。

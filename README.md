@@ -7,10 +7,12 @@ sortable immutable snapshot keys.
 
 **Live order: contextual handles. Historical/persistent order: immutable snapshot keys.**
 
-This branch is **v4.0.0-rc.1**, V4 Release Candidate 1, not Stable.
+**v4.0.0 is the current recommended Stable release.**
 [V4_FREEZE](docs/V4_FREEZE.md) freezes the V4.0 API, LS1 and LKS4SNP1 contracts.
-**v3.1.0 remains recommended for normal use.** Stable is next only after independent RC review. No Preview.6.
-[RC validation record](docs/V4_RC1.md).
+V4 completes the fixed Preview.1–5 / RC.1 development cycle.
+[Stable release record](docs/V4_STABLE.md), [RC validation record](docs/V4_RC1.md).
+V3.1.0 remains a historical Stable release for applications requiring Path/Tree contracts;
+V4 is a major source break, not a drop-in upgrade.
 
 ## Choose a workflow
 
@@ -69,7 +71,7 @@ serialization; items/contexts stay alive, ordering semantics stay consistent.
 Dangling handles cannot safely be tested after removal.
 
 [Preview.4 evidence](benchmarks/results/v4-preview4/README.md) remains the primary
-convergence record; [freeze](docs/V4_FREEZE.md) classifies costs/future debt.
+convergence record; [Stable record](docs/V4_STABLE.md) classifies costs/future debt.
 
 ## Documentation
 

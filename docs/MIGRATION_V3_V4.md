@@ -33,8 +33,8 @@ to caller-owned objects; restore borrows those objects and gives fresh handles.
 Historical snapshot remains after source/item destruction. LS1 is an ordinal
 within a namespace, not live position. Namespace uniqueness belongs to application.
 Full capture/export costs O(N+A). See [freeze](V4_FREEZE.md), [API](API.md) and
-[public snapshot example](../examples/snapshot.c). Stable remains v3.1.0;
-Release Candidate is next, not another Preview.
+[public snapshot example](../examples/snapshot.c). V4.0.0 is current Stable;
+V3.1.0 remains a historical Stable for applications retaining V3 contracts.
 
 ## Complete Preview.4 rename table
 
@@ -109,5 +109,5 @@ The following V3 names are absent from the primary V4 header:
 Old V3 `lks_group_*` names that are reused now implement flat V4 semantics.
 All 57 V3-specific contracts are removed/replaced; only generic sort/status remain.
 
-RC.1 uses the unchanged Preview.5 frozen declarations and formats; see
-[RC validation](V4_RC1.md). Recommended Stable remains v3.1.0.
+V4.0.0 Stable uses the unchanged Preview.5 frozen declarations and formats; see
+[Stable record](V4_STABLE.md). V3.1.0 remains available for legacy Path/Tree applications.

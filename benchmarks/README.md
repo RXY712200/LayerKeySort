@@ -1,8 +1,8 @@
-> Current contracts: final Preview.5 [freeze](../docs/V4_FREEZE.md).
+> Current release: V4.0.0 Stable; [Stable record](../docs/V4_STABLE.md) and [freeze](../docs/V4_FREEZE.md).
 > Measurements below retain historical names; Preview.4 is convergence evidence.
-> Preview.5 performs no new tuning. Old provisional names below are historical.
+> Stable promotion performs no new tuning. Old provisional names below are historical.
 
-# Current benchmark harness (3.1.0 source)
+# Historical V3 benchmark harness (3.1.0 source)
 
 The V3 harness/data below remain preserved. Preview.2 adds separate production
 and diagnostic mutation screens; see [Preview.2 methodology](../docs/V4_PREVIEW2.md). This local V4 Preview.1 branch also

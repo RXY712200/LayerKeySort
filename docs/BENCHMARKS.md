@@ -1,10 +1,10 @@
-> Current contracts: final Preview.5 [freeze](V4_FREEZE.md).
+> Current release: V4.0.0 Stable; [Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
 > Measurements below retain historical names; Preview.4 is convergence evidence.
-> Preview.5 performs no new tuning. Old provisional names below are historical.
+> Stable promotion performs no new tuning. Old provisional names below are historical.
 
 # V3 performance evidence
 
-Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
+Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). V4.0.0 is current Stable. Earlier milestone guides are historical records; Preview.5 froze the API/wire contracts, preserved through RC.1 and Stable.
 
 The local V4 Preview.1 sanity screen is described in [V4 Preview.1](V4_PREVIEW1.md).
 The captured V3 measurements below remain historical evidence and are unchanged;

@@ -1,10 +1,10 @@
 # V4 API reference
 
 Preview.5 froze the V4.0 source contract: 64 functions, 14 public types.
-RC.1 preserves it unchanged. See [RC record](V4_RC1.md).
+V4.0.0 Stable preserves it unchanged. See [Stable record](V4_STABLE.md).
 Include `<layerkeysort.h>` only. [Freeze](V4_FREEZE.md) specifies ownership,
 statuses and persistent compatibility; [migration](MIGRATION_V3_V4.md) covers the
-major source break. v3.1.0 remains recommended Stable.
+major source break. V4.0.0 is recommended Stable; V3.1.0 remains available for legacy contracts.
 
 ## Status / comparator / sort
 

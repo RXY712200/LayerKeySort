@@ -5,7 +5,7 @@ compatibility. Source rebuild supported; no universal cross-toolchain/CRT/archit
 binary ABI. V3 and earlier Preview source compatibility deliberately breaks at
 Preview.5. See [migration](MIGRATION_V3_V4.md). V3.1.0 remains separately available.
 
-## RC.1 symbol model
+## V4.0.0 Stable symbol model
 
 CMake explicitly builds a STATIC library; no shared DLL/SO ABI is shipped, even
 when BUILD_SHARED_LIBS is set. The public header/manifest defines the 64 supported
@@ -18,5 +18,5 @@ regression libraries deliberately contain more code. Installed consumers must
 not declare or call private symbols. A future shared-library integration must
 choose export visibility explicitly; universal dynamic ABI is not promised.
 
-RC.1 preserves the Preview.5 source and wire freeze; Stable requires independent
-RC review. See [validation record](V4_RC1.md).
+V4.0.0 preserves the Preview.5 source and wire freeze after independent RC review.
+See [Stable record](V4_STABLE.md) and [RC validation record](V4_RC1.md).

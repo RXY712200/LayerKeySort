@@ -26,12 +26,12 @@ target_link_libraries(app PRIVATE LayerKeySort::layerkeysort)
 16 production modules in cmake/ProductionSources.cmake; four legacy live modules
 regression-only. Rebuild static package for compiler/architecture/CRT settings.
 Numeric CMake version 4.0.0 uses SameMajorVersion source rebuild compatibility;
-header includes prerelease text. No shared ABI shipped.
+header identifies Stable 4.0.0. No shared ABI shipped.
 
 ZIP contains layerkeysort.h, layerkeysort.c, example.c, LICENSE and README.txt.
 Compile implementation as C17, link C/C++ application. No Python/private header
 requirement for installed/amalgamated consumers; Python only development tools.
 [Freeze](V4_FREEZE.md) defines exact compatibility and package gates.
 
-RC.1 uses the unchanged Preview.5 frozen declarations and formats; see
-[RC validation](V4_RC1.md). Recommended Stable remains v3.1.0.
+V4.0.0 Stable uses the unchanged Preview.5 frozen declarations and formats; see
+[Stable record](V4_STABLE.md). V3.1.0 remains available for legacy Path/Tree applications.
