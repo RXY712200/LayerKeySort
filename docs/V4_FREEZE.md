@@ -3,7 +3,7 @@
 `4.0.0-preview.5` is the final experimental Preview, not RC or Stable.
 Stable remains v3.1.0. Next: Stage 5 — Release Candidate. No Preview.6 exists.
 
-**Freeze commit:** FREEZE_COMMIT_PENDING. The later release tag identifies the
+**Freeze commit:** `5e4fbbf6d02bff6cba1f049b357ddb8bd329e0aa`. The later release tag identifies the
 final docs/packaging candidate, whose API must match this freeze.
 [Manifest](../tests/fixtures/v4_public_api.json): 64 functions, 14 types, explicit
 statuses, callback signatures and public fields. tools/verify_v4_api.py checks
