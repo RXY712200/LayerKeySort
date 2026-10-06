@@ -1,3 +1,7 @@
+> Current contracts: final Preview.5 [freeze](../docs/V4_FREEZE.md).
+> Measurements below retain historical names; Preview.4 is convergence evidence.
+> Preview.5 performs no new tuning. Old provisional names below are historical.
+
 # Current benchmark harness (3.1.0 source)
 
 The V3 harness/data below remain preserved. Preview.2 adds separate production

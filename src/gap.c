@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 #include "lks_policy_internal.h"
 
 static LksStatus validate_before_candidate(

@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include "lks_snapshot_internal.h"
 #include "lks_alloc_internal.h"
 

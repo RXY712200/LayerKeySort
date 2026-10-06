@@ -1,4 +1,4 @@
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 
 static int direction_rank(LksDirection direction)
 {

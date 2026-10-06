@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <string.h>
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 
 /* LK1 payload: direction, zero or more self-delimiting steps, '!'. The
  * constant family/version prefix has no effect on same-version ordering. */

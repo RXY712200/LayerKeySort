@@ -2,14 +2,14 @@
 #define LKS_IMMUTABLE_GROUP_INTERNAL_H
 #include "layerkeysort.h"
 typedef struct LksSourceMarker LksSourceMarker;
-struct LksImmutableGroup {
+struct LksGroup {
     void **items;
     size_t count;
     LksSourceMarker *marker;
     int busy;
 };
-struct LksImmutableGroupBatch {
-    LksImmutableGroup **groups;
+struct LksGroupBatch {
+    LksGroup **groups;
     size_t count, group_count, group_size;
     int busy;
 };

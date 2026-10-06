@@ -1,0 +1,33 @@
+{
+  "base": "b73a9efb5493662509269b8efe6a905dd26fdc26",
+  "api_function_count": 64,
+  "ctest_count": 38,
+  "local": {
+    "gcc_strict_c17_release": "38/38",
+    "msvc_x64_debug": "38/38",
+    "msvc_x64_release_symbols": "38/38",
+    "msvc_x64_asan": "38/38",
+    "msvc_win32_debug": "38/38"
+  },
+  "examples": "7/7 on all five local configurations",
+  "distribution": "GCC and MSVC: C/C++17 source, offline FetchContent, installed, amalgamated, typed all-API linkage",
+  "wire": "same frozen golden corpus passes x64 and Win32",
+  "focused_regression": {
+    "families": [
+      "timeline",
+      "churn",
+      "distant_drag",
+      "equal"
+    ],
+    "steps": 10000,
+    "seed": 7,
+    "timed_runs_per_family": 3,
+    "diagnostic_runs_per_family": 1,
+    "counter_match": "all 16 maintenance/comparison/cleanup counters exactly match Preview.4"
+  },
+  "local_unavailable": [
+    "Clang",
+    "GCC ASan/UBSan runtime libraries"
+  ],
+  "msvc_default_release_anomaly": "external removal unconfirmed; no repository deletion or disabled protection; known-good Release-with-symbols used"
+}

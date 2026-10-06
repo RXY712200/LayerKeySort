@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 /* Explicit export cost placement, not final performance acceptance. */
 #include "layerkeysort.h"
 #include "lks_snapshot_internal.h"

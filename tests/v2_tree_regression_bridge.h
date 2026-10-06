@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #ifndef LKS_V2_TREE_REGRESSION_BRIDGE_H
 #define LKS_V2_TREE_REGRESSION_BRIDGE_H
 

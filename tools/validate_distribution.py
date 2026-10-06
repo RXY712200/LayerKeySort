@@ -64,11 +64,13 @@ def main():
         # not receive examples/tests/install rules by default.
         source_fixture = work / "source-consumer"
         shutil.copytree(ROOT / "tests" / "distribution" / "consumer", source_fixture)
+        shutil.copyfile(ROOT / "tests/v4_api_compile.c", source_fixture / "api_compile.cpp")
         source_build = work / "source-build"
         configure(source_fixture, source_build, f"-DLKS_SOURCE_DIR={ROOT}")
         build(source_build)
         run(executable(source_build, "consumer_c"))
         run(executable(source_build, "consumer_cpp"))
+        run(executable(source_build, "consumer_api_cpp"))
 
         fetch_build = work / "fetchcontent-build"
         configure(source_fixture, fetch_build,
@@ -76,6 +78,7 @@ def main():
         build(fetch_build)
         run(executable(fetch_build, "consumer_c"))
         run(executable(fetch_build, "consumer_cpp"))
+        run(executable(fetch_build, "consumer_api_cpp"))
         # A fresh local static build is installed, then consumed without
         # adding the repository source tree to the consumer project.
         install_build, prefix = work / "install-build", work / "prefix"
@@ -95,11 +98,13 @@ def main():
             raise RuntimeError("private headers escaped into installed package")
         installed_fixture = work / "installed-consumer"
         shutil.copytree(ROOT / "tests" / "distribution" / "consumer", installed_fixture)
+        shutil.copyfile(ROOT / "tests/v4_api_compile.c", installed_fixture / "api_compile.cpp")
         installed_build = work / "installed-build"
         configure(installed_fixture, installed_build, f"-DCMAKE_PREFIX_PATH={prefix}")
         build(installed_build)
         run(executable(installed_build, "consumer_c"))
         run(executable(installed_build, "consumer_cpp"))
+        run(executable(installed_build, "consumer_api_cpp"))
 
         # Two independent generations must have identical sources and ZIP
         # membership/content. The archive itself also has fixed timestamps.
@@ -124,12 +129,15 @@ def main():
                 raise RuntimeError("ZIP membership differs from package directory")
         amalgam_fixture = work / "amalgamation-consumer"
         shutil.copytree(ROOT / "tests" / "distribution" / "amalgamation", amalgam_fixture)
+        shutil.copyfile(ROOT / "tests/v4_api_compile.c", amalgam_fixture / "api_compile.cpp")
         shutil.copyfile(ROOT / "tests" / "distribution" / "consumer" / "snapshot_usage.h",
                         amalgam_fixture / "snapshot_usage.h")
         amalgam_build = work / "amalgamation-build"
         configure(amalgam_fixture, amalgam_build, f"-DLKS_AMALGAM_DIR={first_dir}")
         build(amalgam_build)
         run(executable(amalgam_build, "amalgamation_consumer"))
+        run(executable(amalgam_build, "amalgamation_cpp"))
+        run(executable(amalgam_build, "amalgamation_api_cpp"))
         run(executable(amalgam_build, "amalgamation_package_example"))
         print("distribution validation passed", flush=True)
 

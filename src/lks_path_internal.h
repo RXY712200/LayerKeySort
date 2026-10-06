@@ -2,7 +2,7 @@
 #define LKS_PATH_INTERNAL_H
 
 #include <stddef.h>
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 
 /* Private read-only Path storage inspection for tests and benchmarks. */
 size_t lks_path_internal_capacity(const LksPath *path);

@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1839,7 +1840,7 @@ static int run_tree_insert_item_demo(void)
     return 1;
 }
 static int group_check_order(
-    const LksGroup *group,
+    const LksLegacyGroup *group,
     const LksComparator *comparator,
     const int *expected_values,
     size_t count,
@@ -1852,7 +1853,7 @@ static int group_check_order(
 {
     size_t index;
 
-    if (lks_group_size(group) != count) {
+    if (lks_legacy_group_size(group) != count) {
         printf("%s size mismatch\n", label);
         return 0;
     }
@@ -1863,8 +1864,8 @@ static int group_check_order(
         size_t source_index;
         int found_source;
 
-        item = lks_group_item_at(group, index);
-        path = lks_group_path_at(group, index);
+        item = lks_legacy_group_item_at(group, index);
+        path = lks_legacy_group_path_at(group, index);
         if (item == NULL || path == NULL) {
             return 0;
         }
@@ -1897,14 +1898,14 @@ static int group_check_order(
             int path_order;
             int item_order;
 
-            if (lks_path_compare(lks_group_path_at(group, index - 1), path,
+            if (lks_path_compare(lks_legacy_group_path_at(group, index - 1), path,
                     &path_order) != LKS_STATUS_OK || path_order != -1) {
                 printf("%s Path order failure at %lu\n", label,
                     (unsigned long)index);
                 return 0;
             }
             item_order = comparator->compare(
-                lks_group_item_at(group, index - 1), item,
+                lks_legacy_group_item_at(group, index - 1), item,
                 comparator->context);
             if (item_order > 0) {
                 printf("%s business order failure at %lu\n", label,
@@ -1936,22 +1937,22 @@ static int group_expect_invalid(
     int expect_null_out
 )
 {
-    LksGroup *existing;
-    LksGroup *out_group;
+    LksLegacyGroup *existing;
+    LksLegacyGroup *out_group;
     LksComparator valid_comparator;
     LksStatus status;
 
     valid_comparator.compare = compare_int;
     valid_comparator.context = NULL;
     existing = NULL;
-    if (lks_group_build(NULL, 0, &valid_comparator, &existing) != LKS_STATUS_OK ||
+    if (lks_legacy_group_build(NULL, 0, &valid_comparator, &existing) != LKS_STATUS_OK ||
         existing == NULL) {
-        lks_group_destroy(existing);
+        lks_legacy_group_destroy(existing);
         return 0;
     }
     out_group = existing;
-    status = lks_group_build(items, count, comparator, &out_group);
-    lks_group_destroy(existing);
+    status = lks_legacy_group_build(items, count, comparator, &out_group);
+    lks_legacy_group_destroy(existing);
     return status == LKS_STATUS_INVALID_ARGUMENT &&
         (!expect_null_out || out_group == NULL);
 }
@@ -1978,8 +1979,8 @@ static int run_group_demo(void)
     static const int sorted_g[] = { 10, 20, 30, 40 };
     LksComparator comparator;
     LksComparator invalid_comparator;
-    LksGroup *group;
-    LksGroup *empty_group;
+    LksLegacyGroup *group;
+    LksLegacyGroup *empty_group;
     int single_value;
     int mutable_values[4];
     void *single_items[1];
@@ -1999,26 +2000,26 @@ static int run_group_demo(void)
     comparator.context = NULL;
 
     empty_group = NULL;
-    status = lks_group_build(NULL, 0, &comparator, &empty_group);
+    status = lks_legacy_group_build(NULL, 0, &comparator, &empty_group);
     if (status != LKS_STATUS_OK || empty_group == NULL ||
-        lks_group_size(empty_group) != 0 ||
-        lks_group_item_at(empty_group, 0) != NULL ||
-        lks_group_path_at(empty_group, 0) != NULL) {
-        lks_group_destroy(empty_group);
+        lks_legacy_group_size(empty_group) != 0 ||
+        lks_legacy_group_item_at(empty_group, 0) != NULL ||
+        lks_legacy_group_path_at(empty_group, 0) != NULL) {
+        lks_legacy_group_destroy(empty_group);
         return 0;
     }
-    lks_group_destroy(empty_group);
-    lks_group_destroy(NULL);
+    lks_legacy_group_destroy(empty_group);
+    lks_legacy_group_destroy(NULL);
     printf("Group A empty: OK, size 0, getters NULL\n");
 
     single_value = 100;
     single_items[0] = &single_value;
     group = NULL;
-    status = lks_group_build(single_items, 1, &comparator, &group);
+    status = lks_legacy_group_build(single_items, 1, &comparator, &group);
     valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, single_expected, 1,
             single_paths, &single_value, 1, "Group B", 1);
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2027,11 +2028,11 @@ static int run_group_demo(void)
     for (index = 0; index < 10; ++index) {
         items_c[index] = (void *)&values_c[index];
     }
-    status = lks_group_build(items_c, 10, &comparator, &group);
+    status = lks_legacy_group_build(items_c, 10, &comparator, &group);
     valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_c, 10, paths_c,
             values_c, 10, "Group C", 1);
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2040,11 +2041,11 @@ static int run_group_demo(void)
     for (index = 0; index < 6; ++index) {
         items_d[index] = (void *)&values_d[index];
     }
-    status = lks_group_build(items_d, 6, &comparator, &group);
+    status = lks_legacy_group_build(items_d, 6, &comparator, &group);
     valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_d, 6, NULL,
             values_d, 6, "Group D duplicates", 0);
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2053,11 +2054,11 @@ static int run_group_demo(void)
     for (index = 0; index < 5; ++index) {
         items_e[index] = (void *)&values_e[index];
     }
-    status = lks_group_build(items_e, 5, &comparator, &group);
+    status = lks_legacy_group_build(items_e, 5, &comparator, &group);
     valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_e, 5, paths_e,
             values_e, 5, "Group E ascending", 0);
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2066,11 +2067,11 @@ static int run_group_demo(void)
     for (index = 0; index < 5; ++index) {
         items_f[index] = (void *)&values_f[index];
     }
-    status = lks_group_build(items_f, 5, &comparator, &group);
+    status = lks_legacy_group_build(items_f, 5, &comparator, &group);
     valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, sorted_f, 5, paths_f,
             values_f, 5, "Group F descending", 0);
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     if (!valid) {
         return 0;
     }
@@ -2084,9 +2085,9 @@ static int run_group_demo(void)
     items_g[2] = &mutable_values[2];
     items_g[3] = &mutable_values[3];
     group = NULL;
-    status = lks_group_build(items_g, 4, &comparator, &group);
+    status = lks_legacy_group_build(items_g, 4, &comparator, &group);
     if (status != LKS_STATUS_OK || group == NULL) {
-        lks_group_destroy(group);
+        lks_legacy_group_destroy(group);
         return 0;
     }
     for (index = 0; index < 4; ++index) {
@@ -2097,28 +2098,28 @@ static int run_group_demo(void)
     if (valid) {
         printf("Group H item pointers still refer to original values[]\n");
     }
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     if (!valid) {
         return 0;
     }
 
-    if (lks_group_size(NULL) != 0 || lks_group_item_at(NULL, 0) != NULL ||
-        lks_group_path_at(NULL, 0) != NULL) {
+    if (lks_legacy_group_size(NULL) != 0 || lks_legacy_group_item_at(NULL, 0) != NULL ||
+        lks_legacy_group_path_at(NULL, 0) != NULL) {
         return 0;
     }
     group = NULL;
-    status = lks_group_build(items_e, 5, &comparator, &group);
+    status = lks_legacy_group_build(items_e, 5, &comparator, &group);
     if (status != LKS_STATUS_OK || group == NULL ||
-        lks_group_item_at(group, 5) != NULL || lks_group_path_at(group, 5) != NULL) {
-        lks_group_destroy(group);
+        lks_legacy_group_item_at(group, 5) != NULL || lks_legacy_group_path_at(group, 5) != NULL) {
+        lks_legacy_group_destroy(group);
         return 0;
     }
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     printf("Group I NULL and out-of-range getters: passed\n");
 
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
-    if (lks_group_build(NULL, 0, &comparator, NULL) !=
+    if (lks_legacy_group_build(NULL, 0, &comparator, NULL) !=
             LKS_STATUS_INVALID_ARGUMENT ||
         !group_expect_invalid(single_items, 1, NULL, 1) ||
         !group_expect_invalid(single_items, 1, &invalid_comparator, 1) ||
@@ -2142,27 +2143,27 @@ static int run_group_demo(void)
         large_items[index] = &large_values[index];
     }
     group = NULL;
-    status = lks_group_build(large_items, 1000, &comparator, &group);
+    status = lks_legacy_group_build(large_items, 1000, &comparator, &group);
     valid = status == LKS_STATUS_OK && group != NULL &&
         group_check_order(group, &comparator, large_expected, 1000, NULL,
             NULL, 0, "Group K 1000 elements", 0);
     if (valid) {
         for (index = 1; index < 1000; ++index) {
-            if (comparator.compare(lks_group_item_at(group, index - 1),
-                    lks_group_item_at(group, index), comparator.context) >= 0) {
+            if (comparator.compare(lks_legacy_group_item_at(group, index - 1),
+                    lks_legacy_group_item_at(group, index), comparator.context) >= 0) {
                 valid = 0;
                 break;
             }
         }
     }
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     free(large_items);
     free(large_expected);
     free(large_values);
     return valid;
 }
 static int batch_group_check(
-    const LksGroup *group,
+    const LksLegacyGroup *group,
     const LksComparator *comparator,
     const int *expected_values,
     size_t expected_count,
@@ -2177,7 +2178,7 @@ static int batch_group_check(
     size_t index;
     int saw_first_zero;
 
-    if (group == NULL || lks_group_size(group) != expected_count) {
+    if (group == NULL || lks_legacy_group_size(group) != expected_count) {
         printf("%s size mismatch\n", label);
         return 0;
     }
@@ -2189,8 +2190,8 @@ static int batch_group_check(
         int in_chunk;
         size_t source_index;
 
-        item = lks_group_item_at(group, index);
-        path = lks_group_path_at(group, index);
+        item = lks_legacy_group_item_at(group, index);
+        path = lks_legacy_group_path_at(group, index);
         if (item == NULL || path == NULL) {
             return 0;
         }
@@ -2222,12 +2223,12 @@ static int batch_group_check(
             int path_order;
             int item_order;
 
-            if (lks_path_compare(lks_group_path_at(group, index - 1), path,
+            if (lks_path_compare(lks_legacy_group_path_at(group, index - 1), path,
                     &path_order) != LKS_STATUS_OK || path_order != -1) {
                 printf("%s Path order failure\n", label);
                 return 0;
             }
-            item_order = comparator->compare(lks_group_item_at(group, index - 1),
+            item_order = comparator->compare(lks_legacy_group_item_at(group, index - 1),
                 item, comparator->context);
             if (item_order > 0 || (require_strict && item_order >= 0)) {
                 printf("%s business order failure\n", label);
@@ -2250,27 +2251,27 @@ static int batch_expect_invalid(
 )
 {
     LksComparator valid_comparator;
-    LksGroupBatch *existing;
-    LksGroupBatch *out_batch;
+    LksLegacyGroupBatch *existing;
+    LksLegacyGroupBatch *out_batch;
     LksStatus status;
 
     valid_comparator.compare = compare_int;
     valid_comparator.context = NULL;
     existing = NULL;
-    if (lks_group_batch_build(NULL, 0, 1, &valid_comparator, &existing) !=
+    if (lks_legacy_group_batch_build(NULL, 0, 1, &valid_comparator, &existing) !=
             LKS_STATUS_OK || existing == NULL) {
-        lks_group_batch_destroy(existing);
+        lks_legacy_group_batch_destroy(existing);
         return 0;
     }
     out_batch = existing;
-    status = lks_group_batch_build(items, count, group_size,
+    status = lks_legacy_group_batch_build(items, count, group_size,
         candidate_comparator, &out_batch);
-    lks_group_batch_destroy(existing);
+    lks_legacy_group_batch_destroy(existing);
     return status == LKS_STATUS_INVALID_ARGUMENT && out_batch == NULL;
 }
 
 static int merge_group_expect(
-    const LksGroup *group,
+    const LksLegacyGroup *group,
     void *const *expected_items,
     const char *const *expected_paths,
     size_t count,
@@ -2279,15 +2280,15 @@ static int merge_group_expect(
 {
     size_t index;
 
-    if (group == NULL || lks_group_size(group) != count) {
+    if (group == NULL || lks_legacy_group_size(group) != count) {
         return 0;
     }
     for (index = 0; index < count; ++index) {
         char path_text[128];
 
-        if (lks_group_item_at(group, index) != expected_items[index] ||
+        if (lks_legacy_group_item_at(group, index) != expected_items[index] ||
             (expected_paths != NULL &&
-             (lks_path_format(lks_group_path_at(group, index), path_text,
+             (lks_path_format(lks_legacy_group_path_at(group, index), path_text,
                 sizeof(path_text)) != LKS_STATUS_OK ||
               strcmp(path_text, expected_paths[index]) != 0))) {
             return 0;
@@ -2295,11 +2296,11 @@ static int merge_group_expect(
         if (index > 0) {
             int path_order;
 
-            if (lks_path_compare(lks_group_path_at(group, index - 1),
-                    lks_group_path_at(group, index), &path_order) !=
+            if (lks_path_compare(lks_legacy_group_path_at(group, index - 1),
+                    lks_legacy_group_path_at(group, index), &path_order) !=
                     LKS_STATUS_OK || path_order != -1 ||
-                comparator->compare(lks_group_item_at(group, index - 1),
-                    lks_group_item_at(group, index), comparator->context) > 0) {
+                comparator->compare(lks_legacy_group_item_at(group, index - 1),
+                    lks_legacy_group_item_at(group, index), comparator->context) > 0) {
                 return 0;
             }
         }
@@ -2338,13 +2339,13 @@ static int run_group_merge_demo(void)
     const char *e_result_paths[] = { "000", "0A0", "0A0/A0" };
     LksComparator comparator;
     LksComparator counted_comparator;
-    LksGroup *a_base = NULL;
-    LksGroup *a_incoming = NULL;
-    LksGroup *a_result = NULL;
-    LksGroup *base = NULL;
-    LksGroup *incoming = NULL;
-    LksGroup *result = NULL;
-    LksGroup *empty = NULL;
+    LksLegacyGroup *a_base = NULL;
+    LksLegacyGroup *a_incoming = NULL;
+    LksLegacyGroup *a_result = NULL;
+    LksLegacyGroup *base = NULL;
+    LksLegacyGroup *incoming = NULL;
+    LksLegacyGroup *result = NULL;
+    LksLegacyGroup *empty = NULL;
     void *base_snapshot[10];
     char base_path_snapshot[10][128];
     void *incoming_snapshot[10];
@@ -2355,56 +2356,56 @@ static int run_group_merge_demo(void)
 
     comparator.compare = compare_int;
     comparator.context = NULL;
-    if (lks_group_build(a_base_items, 3, &comparator, &a_base) != LKS_STATUS_OK ||
-        lks_group_build(a_in_items, 4, &comparator, &a_incoming) != LKS_STATUS_OK) {
+    if (lks_legacy_group_build(a_base_items, 3, &comparator, &a_base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(a_in_items, 4, &comparator, &a_incoming) != LKS_STATUS_OK) {
         goto cleanup;
     }
-    if (lks_path_format(lks_group_path_at(a_incoming, 0),
+    if (lks_path_format(lks_legacy_group_path_at(a_incoming, 0),
             base_path_snapshot[0], sizeof(base_path_snapshot[0])) != LKS_STATUS_OK ||
         strcmp(base_path_snapshot[0], "000") != 0) {
         goto cleanup;
     }
-    for (index = 0; index < lks_group_size(a_base); ++index) {
-        base_snapshot[index] = lks_group_item_at(a_base, index);
-        if (lks_path_format(lks_group_path_at(a_base, index),
+    for (index = 0; index < lks_legacy_group_size(a_base); ++index) {
+        base_snapshot[index] = lks_legacy_group_item_at(a_base, index);
+        if (lks_path_format(lks_legacy_group_path_at(a_base, index),
                 base_path_snapshot[index], sizeof(base_path_snapshot[index])) !=
                 LKS_STATUS_OK) {
             goto cleanup;
         }
     }
-    for (index = 0; index < lks_group_size(a_incoming); ++index) {
-        incoming_snapshot[index] = lks_group_item_at(a_incoming, index);
-        if (lks_path_format(lks_group_path_at(a_incoming, index),
+    for (index = 0; index < lks_legacy_group_size(a_incoming); ++index) {
+        incoming_snapshot[index] = lks_legacy_group_item_at(a_incoming, index);
+        if (lks_path_format(lks_legacy_group_path_at(a_incoming, index),
                 incoming_path_snapshot[index], sizeof(incoming_path_snapshot[index])) !=
                 LKS_STATUS_OK) {
             goto cleanup;
         }
     }
-    status = lks_group_merge(a_base, a_incoming, &comparator, &a_result);
+    status = lks_legacy_group_merge(a_base, a_incoming, &comparator, &a_result);
     if (status != LKS_STATUS_OK || a_result == NULL ||
         !merge_group_expect(a_result, a_result_items, a_result_paths, 7, &comparator)) {
         goto cleanup;
     }
-    for (index = 0; index < lks_group_size(a_base); ++index) {
+    for (index = 0; index < lks_legacy_group_size(a_base); ++index) {
         int path_order;
 
-        if (lks_group_item_at(a_base, index) != base_snapshot[index] ||
-            lks_path_compare(lks_group_path_at(a_base, index),
-                lks_group_path_at(a_result, index == 0 ? 1 : index == 1 ? 3 : 5),
+        if (lks_legacy_group_item_at(a_base, index) != base_snapshot[index] ||
+            lks_path_compare(lks_legacy_group_path_at(a_base, index),
+                lks_legacy_group_path_at(a_result, index == 0 ? 1 : index == 1 ? 3 : 5),
                 &path_order) != LKS_STATUS_OK || path_order != 0) {
             goto cleanup;
         }
-        if (lks_path_format(lks_group_path_at(a_base, index),
+        if (lks_path_format(lks_legacy_group_path_at(a_base, index),
                 incoming_path_snapshot[9], sizeof(incoming_path_snapshot[9])) != LKS_STATUS_OK ||
             strcmp(incoming_path_snapshot[9], base_path_snapshot[index]) != 0) {
             goto cleanup;
         }
     }
-    for (index = 0; index < lks_group_size(a_incoming); ++index) {
+    for (index = 0; index < lks_legacy_group_size(a_incoming); ++index) {
         char path_text[128];
 
-        if (lks_group_item_at(a_incoming, index) != incoming_snapshot[index] ||
-            lks_path_format(lks_group_path_at(a_incoming, index), path_text,
+        if (lks_legacy_group_item_at(a_incoming, index) != incoming_snapshot[index] ||
+            lks_path_format(lks_legacy_group_path_at(a_incoming, index), path_text,
                 sizeof(path_text)) != LKS_STATUS_OK ||
             strcmp(path_text, incoming_path_snapshot[index]) != 0) {
             goto cleanup;
@@ -2412,44 +2413,44 @@ static int run_group_merge_demo(void)
     }
     printf("Merge A: 50/1A1, 100/1A0, 150/1A0/A0, 200/000, 250/000/A0, 300/0A0, 350/0A0/A0\n");
     printf("Merge A: Base Paths retained; Incoming 50 re-encoded from 000 to 1A1; inputs unchanged\n");
-    lks_group_destroy(a_base);
+    lks_legacy_group_destroy(a_base);
     a_base = NULL;
-    lks_group_destroy(a_incoming);
+    lks_legacy_group_destroy(a_incoming);
     a_incoming = NULL;
     if (!merge_group_expect(a_result, a_result_items, a_result_paths, 7, &comparator)) {
         goto cleanup;
     }
     printf("Merge H: Result remains readable after both input Groups are destroyed\n");
 
-    if (lks_group_build(b_base_items, 2, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(b_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
-        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
+    if (lks_legacy_group_build(b_base_items, 2, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(b_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_legacy_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
         !merge_group_expect(result, b_result_items, b_result_paths, 5, &comparator)) {
         goto cleanup;
     }
     printf("Merge B: 100/000, 110/000/A0, 120/000/A1, 130/000/A2, 200/0A0\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_destroy(incoming); incoming = NULL;
-    lks_group_destroy(base); base = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(incoming); incoming = NULL;
+    lks_legacy_group_destroy(base); base = NULL;
 
-    if (lks_group_build(c_base_items, 4, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(c_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
-        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
+    if (lks_legacy_group_build(c_base_items, 4, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(c_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_legacy_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
         !merge_group_expect(result, c_result_items, NULL, 7, &comparator)) {
         goto cleanup;
     }
     printf("Merge C: equal values retain Base A/B before Incoming A/B; order stable within each input\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_destroy(incoming); incoming = NULL;
-    lks_group_destroy(base); base = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(incoming); incoming = NULL;
+    lks_legacy_group_destroy(base); base = NULL;
 
     for (index = 0; index < 10; ++index) {
         d_base_items[index] = &d_base_values[index];
     }
-    if (lks_group_build(d_base_items, 10, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(NULL, 0, &comparator, &empty) != LKS_STATUS_OK ||
-        lks_group_merge(base, empty, &comparator, &result) != LKS_STATUS_OK ||
-        result == base || lks_group_size(result) != 10) {
+    if (lks_legacy_group_build(d_base_items, 10, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(NULL, 0, &comparator, &empty) != LKS_STATUS_OK ||
+        lks_legacy_group_merge(base, empty, &comparator, &result) != LKS_STATUS_OK ||
+        result == base || lks_legacy_group_size(result) != 10) {
         goto cleanup;
     }
     for (index = 0; index < 10; ++index) {
@@ -2457,43 +2458,43 @@ static int run_group_merge_demo(void)
         size_t result_index;
 
         for (result_index = 0; result_index < 10; ++result_index) {
-            if (lks_group_item_at(result, result_index) ==
-                lks_group_item_at(base, index)) {
+            if (lks_legacy_group_item_at(result, result_index) ==
+                lks_legacy_group_item_at(base, index)) {
                 break;
             }
         }
-        if (result_index == 10 || lks_path_compare(lks_group_path_at(base, index),
-                lks_group_path_at(result, result_index), &path_order) !=
+        if (result_index == 10 || lks_path_compare(lks_legacy_group_path_at(base, index),
+                lks_legacy_group_path_at(result, result_index), &path_order) !=
                 LKS_STATUS_OK || path_order != 0) {
             goto cleanup;
         }
     }
     printf("Merge D: empty Incoming creates an independent copy; all 10 Base Paths preserved\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_destroy(empty); empty = NULL;
-    lks_group_destroy(base); base = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(empty); empty = NULL;
+    lks_legacy_group_destroy(base); base = NULL;
 
-    if (lks_group_build(NULL, 0, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(e_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
-        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
+    if (lks_legacy_group_build(NULL, 0, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(e_in_items, 3, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_legacy_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
         !merge_group_expect(result, e_result_items, e_result_paths, 3, &comparator)) {
         goto cleanup;
     }
     printf("Merge E: empty Base re-encodes Incoming as 000, 0A0, 0A0/A0\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_destroy(incoming); incoming = NULL;
-    lks_group_destroy(base); base = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(incoming); incoming = NULL;
+    lks_legacy_group_destroy(base); base = NULL;
 
-    if (lks_group_build(NULL, 0, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(NULL, 0, &comparator, &incoming) != LKS_STATUS_OK ||
-        lks_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
-        result == NULL || lks_group_size(result) != 0) {
+    if (lks_legacy_group_build(NULL, 0, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(NULL, 0, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_legacy_group_merge(base, incoming, &comparator, &result) != LKS_STATUS_OK ||
+        result == NULL || lks_legacy_group_size(result) != 0) {
         goto cleanup;
     }
     printf("Merge F: empty + empty returns a valid empty Group\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_destroy(incoming); incoming = NULL;
-    lks_group_destroy(base); base = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(incoming); incoming = NULL;
+    lks_legacy_group_destroy(base); base = NULL;
 
     {
         int complex_base_values[] = { 100, 50, 150, 125, 75, 25, 175, 160, 170, 165 };
@@ -2507,17 +2508,17 @@ static int run_group_merge_demo(void)
         for (index = 0; index < 5; ++index) {
             complex_incoming_items[index] = &complex_incoming_values[index];
         }
-        status = lks_group_build(complex_base_items, 10, &comparator, &base);
+        status = lks_legacy_group_build(complex_base_items, 10, &comparator, &base);
         if (status != LKS_STATUS_OK) {
             printf("Merge I Base build failed: %s\n", lks_status_string(status));
             goto cleanup;
         }
-        status = lks_group_build(complex_incoming_items, 5, &comparator, &incoming);
+        status = lks_legacy_group_build(complex_incoming_items, 5, &comparator, &incoming);
         if (status != LKS_STATUS_OK) {
             printf("Merge I Incoming build failed: %s\n", lks_status_string(status));
             goto cleanup;
         }
-        status = lks_group_merge(base, incoming, &comparator, &result);
+        status = lks_legacy_group_merge(base, incoming, &comparator, &result);
         if (status != LKS_STATUS_OK) {
             printf("Merge I merge failed: %s\n", lks_status_string(status));
             goto cleanup;
@@ -2526,24 +2527,24 @@ static int run_group_merge_demo(void)
             size_t result_index;
             int path_order;
 
-            for (result_index = 0; result_index < lks_group_size(result); ++result_index) {
-                if (lks_group_item_at(result, result_index) ==
-                    lks_group_item_at(base, index)) {
+            for (result_index = 0; result_index < lks_legacy_group_size(result); ++result_index) {
+                if (lks_legacy_group_item_at(result, result_index) ==
+                    lks_legacy_group_item_at(base, index)) {
                     break;
                 }
             }
-            if (result_index == lks_group_size(result) ||
-                lks_path_compare(lks_group_path_at(base, index),
-                    lks_group_path_at(result, result_index), &path_order) !=
+            if (result_index == lks_legacy_group_size(result) ||
+                lks_path_compare(lks_legacy_group_path_at(base, index),
+                    lks_legacy_group_path_at(result, result_index), &path_order) !=
                 LKS_STATUS_OK || path_order != 0) {
                 char old_text[128] = "<none>";
                 char new_text[128] = "<none>";
-                if (index < lks_group_size(base)) {
-                    lks_path_format(lks_group_path_at(base, index), old_text,
+                if (index < lks_legacy_group_size(base)) {
+                    lks_path_format(lks_legacy_group_path_at(base, index), old_text,
                         sizeof(old_text));
                 }
-                if (result_index < lks_group_size(result)) {
-                    lks_path_format(lks_group_path_at(result, result_index), new_text,
+                if (result_index < lks_legacy_group_size(result)) {
+                    lks_path_format(lks_legacy_group_path_at(result, result_index), new_text,
                         sizeof(new_text));
                 }
                 printf("Merge I Base Path mismatch at base index %lu, result index %lu, order %d\n",
@@ -2553,38 +2554,38 @@ static int run_group_merge_demo(void)
             }
         }
         printf("Merge I: all 10 complex Base Paths preserved\n");
-        lks_group_destroy(result); result = NULL;
-        lks_group_destroy(incoming); incoming = NULL;
-        lks_group_destroy(base); base = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_destroy(incoming); incoming = NULL;
+        lks_legacy_group_destroy(base); base = NULL;
     }
 
-    if (lks_group_build(NULL, 0, &comparator, &empty) != LKS_STATUS_OK) {
+    if (lks_legacy_group_build(NULL, 0, &comparator, &empty) != LKS_STATUS_OK) {
         goto cleanup;
     }
     {
         LksComparator invalid_comparator = comparator;
-        LksGroup *invalid_result = NULL;
+        LksLegacyGroup *invalid_result = NULL;
 
         invalid_comparator.compare = NULL;
         invalid_result = empty;
-        if (lks_group_merge(NULL, empty, &comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
+        if (lks_legacy_group_merge(NULL, empty, &comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL) {
             goto cleanup;
         }
         invalid_result = empty;
-        if (lks_group_merge(empty, NULL, &comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
+        if (lks_legacy_group_merge(empty, NULL, &comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL) {
             goto cleanup;
         }
         invalid_result = empty;
-        if (lks_group_merge(empty, empty, NULL, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
+        if (lks_legacy_group_merge(empty, empty, NULL, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL) {
             goto cleanup;
         }
         invalid_result = empty;
-        if (lks_group_merge(empty, empty, &invalid_comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
+        if (lks_legacy_group_merge(empty, empty, &invalid_comparator, &invalid_result) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_result != NULL ||
-            lks_group_merge(empty, empty, &comparator, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
+            lks_legacy_group_merge(empty, empty, &comparator, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
             goto cleanup;
         }
     }
@@ -2593,13 +2594,13 @@ static int run_group_merge_demo(void)
     valid = 1;
 
 cleanup:
-    lks_group_destroy(result);
-    lks_group_destroy(incoming);
-    lks_group_destroy(base);
-    lks_group_destroy(empty);
-    lks_group_destroy(a_result);
-    lks_group_destroy(a_incoming);
-    lks_group_destroy(a_base);
+    lks_legacy_group_destroy(result);
+    lks_legacy_group_destroy(incoming);
+    lks_legacy_group_destroy(base);
+    lks_legacy_group_destroy(empty);
+    lks_legacy_group_destroy(a_result);
+    lks_legacy_group_destroy(a_incoming);
+    lks_legacy_group_destroy(a_base);
     if (!valid) {
         return 0;
     }
@@ -2610,9 +2611,9 @@ cleanup:
         void *base_items[500];
         void *incoming_items[500];
         CompareCounter merge_counter;
-        LksGroup *large_base = NULL;
-        LksGroup *large_incoming = NULL;
-        LksGroup *large_result = NULL;
+        LksLegacyGroup *large_base = NULL;
+        LksLegacyGroup *large_incoming = NULL;
+        LksLegacyGroup *large_result = NULL;
         int large_valid = 1;
 
         merge_counter.calls = 0;
@@ -2622,32 +2623,32 @@ cleanup:
             base_items[index] = &base_values[index];
             incoming_items[index] = &incoming_values[index];
         }
-        if (lks_group_build(base_items, 500, &comparator, &large_base) != LKS_STATUS_OK ||
-            lks_group_build(incoming_items, 500, &comparator, &large_incoming) != LKS_STATUS_OK) {
+        if (lks_legacy_group_build(base_items, 500, &comparator, &large_base) != LKS_STATUS_OK ||
+            lks_legacy_group_build(incoming_items, 500, &comparator, &large_incoming) != LKS_STATUS_OK) {
             large_valid = 0;
         }
         counted_comparator.compare = compare_int_counted;
         counted_comparator.context = &merge_counter;
-        if (large_valid && lks_group_merge(large_base, large_incoming,
+        if (large_valid && lks_legacy_group_merge(large_base, large_incoming,
                 &counted_comparator, &large_result) != LKS_STATUS_OK) {
             large_valid = 0;
         }
-        if (large_valid && lks_group_size(large_result) != 1000) {
+        if (large_valid && lks_legacy_group_size(large_result) != 1000) {
             large_valid = 0;
         }
         for (index = 0; large_valid && index < 1000; ++index) {
             int expected = (int)index;
-            if (lks_group_item_at(large_result, index) == NULL ||
-                *(int *)lks_group_item_at(large_result, index) != expected) {
+            if (lks_legacy_group_item_at(large_result, index) == NULL ||
+                *(int *)lks_legacy_group_item_at(large_result, index) != expected) {
                 large_valid = 0;
             }
         }
         for (index = 0; large_valid && index < 500; ++index) {
             size_t result_index = index * 2;
             int path_order;
-            if (lks_group_item_at(large_result, result_index) != base_items[index] ||
-                lks_path_compare(lks_group_path_at(large_base, index),
-                    lks_group_path_at(large_result, result_index), &path_order) !=
+            if (lks_legacy_group_item_at(large_result, result_index) != base_items[index] ||
+                lks_path_compare(lks_legacy_group_path_at(large_base, index),
+                    lks_legacy_group_path_at(large_result, result_index), &path_order) !=
                     LKS_STATUS_OK || path_order != 0) {
                 large_valid = 0;
             }
@@ -2657,9 +2658,9 @@ cleanup:
         }
         printf("Merge J: 500 + 500 -> 1000 ordered items; merge comparator calls %lu; 500 Base Paths preserved\n",
             (unsigned long)merge_counter.calls);
-        lks_group_destroy(large_result);
-        lks_group_destroy(large_incoming);
-        lks_group_destroy(large_base);
+        lks_legacy_group_destroy(large_result);
+        lks_legacy_group_destroy(large_incoming);
+        lks_legacy_group_destroy(large_base);
         return large_valid;
     }
 }
@@ -2677,11 +2678,11 @@ static int run_group_batch_demo(void)
     static const int sorted_f[] = { 10, 20, 30 };
     LksComparator comparator;
     LksComparator invalid_comparator;
-    LksGroupBatch *batch;
-    LksGroupBatch *empty_batch;
-    LksGroupBatch *one_batch;
-    LksGroupBatch *big_batch;
-    LksGroupBatch *remainder_batch;
+    LksLegacyGroupBatch *batch;
+    LksLegacyGroupBatch *empty_batch;
+    LksLegacyGroupBatch *one_batch;
+    LksLegacyGroupBatch *big_batch;
+    LksLegacyGroupBatch *remainder_batch;
     void *items_b[4];
     void *items_c[10];
     void *items_e[4];
@@ -2700,31 +2701,31 @@ static int run_group_batch_demo(void)
     comparator.context = NULL;
 
     empty_batch = NULL;
-    status = lks_group_batch_build(NULL, 0, 100, &comparator, &empty_batch);
+    status = lks_legacy_group_batch_build(NULL, 0, 100, &comparator, &empty_batch);
     if (status != LKS_STATUS_OK || empty_batch == NULL ||
-        lks_group_batch_total_size(empty_batch) != 0 ||
-        lks_group_batch_group_count(empty_batch) != 0 ||
-        lks_group_batch_group_size(empty_batch) != 100 ||
-        lks_group_batch_group_at(empty_batch, 0) != NULL) {
-        lks_group_batch_destroy(empty_batch);
+        lks_legacy_group_batch_total_size(empty_batch) != 0 ||
+        lks_legacy_group_batch_group_count(empty_batch) != 0 ||
+        lks_legacy_group_batch_group_size(empty_batch) != 100 ||
+        lks_legacy_group_batch_group_at(empty_batch, 0) != NULL) {
+        lks_legacy_group_batch_destroy(empty_batch);
         return 0;
     }
-    lks_group_batch_destroy(empty_batch);
-    lks_group_batch_destroy(NULL);
+    lks_legacy_group_batch_destroy(empty_batch);
+    lks_legacy_group_batch_destroy(NULL);
     printf("Batch A empty: total 0, groups 0, configured size 100\n");
 
     for (index = 0; index < 4; ++index) {
         items_b[index] = (void *)&values_b[index];
     }
     one_batch = NULL;
-    status = lks_group_batch_build(items_b, 4, 4, &comparator, &one_batch);
+    status = lks_legacy_group_batch_build(items_b, 4, 4, &comparator, &one_batch);
     valid = status == LKS_STATUS_OK && one_batch != NULL &&
-        lks_group_batch_group_count(one_batch) == 1 &&
-        lks_group_batch_total_size(one_batch) == 4 &&
-        lks_group_batch_group_size(one_batch) == 4 &&
-        batch_group_check(lks_group_batch_group_at(one_batch, 0), &comparator,
+        lks_legacy_group_batch_group_count(one_batch) == 1 &&
+        lks_legacy_group_batch_total_size(one_batch) == 4 &&
+        lks_legacy_group_batch_group_size(one_batch) == 4 &&
+        batch_group_check(lks_legacy_group_batch_group_at(one_batch, 0), &comparator,
             sorted_b, 4, values_b, 0, 4, 1, 0, "Batch B group 0");
-    lks_group_batch_destroy(one_batch);
+    lks_legacy_group_batch_destroy(one_batch);
     if (!valid) {
         return 0;
     }
@@ -2734,18 +2735,18 @@ static int run_group_batch_demo(void)
         items_c[index] = (void *)&values_c[index];
     }
     batch = NULL;
-    status = lks_group_batch_build(items_c, 10, 4, &comparator, &batch);
+    status = lks_legacy_group_batch_build(items_c, 10, 4, &comparator, &batch);
     if (status != LKS_STATUS_OK || batch == NULL ||
-        lks_group_batch_group_count(batch) != 3 ||
-        lks_group_batch_total_size(batch) != 10 ||
-        lks_group_batch_group_size(batch) != 4 ||
-        !batch_group_check(lks_group_batch_group_at(batch, 0), &comparator,
+        lks_legacy_group_batch_group_count(batch) != 3 ||
+        lks_legacy_group_batch_total_size(batch) != 10 ||
+        lks_legacy_group_batch_group_size(batch) != 4 ||
+        !batch_group_check(lks_legacy_group_batch_group_at(batch, 0), &comparator,
             sorted_c0, 4, values_c, 0, 4, 1, 1, "Batch C group 0") ||
-        !batch_group_check(lks_group_batch_group_at(batch, 1), &comparator,
+        !batch_group_check(lks_legacy_group_batch_group_at(batch, 1), &comparator,
             sorted_c1, 4, values_c, 4, 4, 1, 1, "Batch C group 1") ||
-        !batch_group_check(lks_group_batch_group_at(batch, 2), &comparator,
+        !batch_group_check(lks_legacy_group_batch_group_at(batch, 2), &comparator,
             sorted_c2, 2, values_c, 8, 2, 1, 1, "Batch C group 2")) {
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     printf("Batch C chunks: [90 10 70 30] -> 10 30 70 90; ");
@@ -2755,16 +2756,16 @@ static int run_group_batch_demo(void)
     for (index = 0; index < 10; ++index) {
         items_c[index] = NULL;
     }
-    valid = batch_group_check(lks_group_batch_group_at(batch, 0), &comparator,
+    valid = batch_group_check(lks_legacy_group_batch_group_at(batch, 0), &comparator,
                 sorted_c0, 4, values_c, 0, 4, 1, 1, "Batch G group 0") &&
-        batch_group_check(lks_group_batch_group_at(batch, 1), &comparator,
+        batch_group_check(lks_legacy_group_batch_group_at(batch, 1), &comparator,
                 sorted_c1, 4, values_c, 4, 4, 1, 1, "Batch G group 1") &&
-        batch_group_check(lks_group_batch_group_at(batch, 2), &comparator,
+        batch_group_check(lks_legacy_group_batch_group_at(batch, 2), &comparator,
                 sorted_c2, 2, values_c, 8, 2, 1, 1, "Batch G group 2");
     if (valid) {
         printf("Batch G/H: items[] cleared; values and original item addresses remain available\n");
     }
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_batch_destroy(batch);
     if (!valid) {
         return 0;
     }
@@ -2773,50 +2774,50 @@ static int run_group_batch_demo(void)
         items_e[index] = (void *)&values_e[index];
     }
     batch = NULL;
-    status = lks_group_batch_build(items_e, 4, 1, &comparator, &batch);
+    status = lks_legacy_group_batch_build(items_e, 4, 1, &comparator, &batch);
     if (status != LKS_STATUS_OK || batch == NULL ||
-        lks_group_batch_group_count(batch) != 4 ||
-        lks_group_batch_total_size(batch) != 4) {
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_group_count(batch) != 4 ||
+        lks_legacy_group_batch_total_size(batch) != 4) {
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     for (index = 0; index < 4; ++index) {
-        const LksGroup *group;
+        const LksLegacyGroup *group;
         char path_text[32];
 
-        group = lks_group_batch_group_at(batch, index);
-        if (group == NULL || lks_group_size(group) != 1 ||
-            lks_group_item_at(group, 0) != &values_e[index] ||
-            lks_path_format(lks_group_path_at(group, 0), path_text,
+        group = lks_legacy_group_batch_group_at(batch, index);
+        if (group == NULL || lks_legacy_group_size(group) != 1 ||
+            lks_legacy_group_item_at(group, 0) != &values_e[index] ||
+            lks_path_format(lks_legacy_group_path_at(group, 0), path_text,
                 sizeof(path_text)) != LKS_STATUS_OK ||
             strcmp(path_text, "000") != 0) {
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_batch_destroy(batch);
             return 0;
         }
     }
     printf("Batch E GroupSize 1: 4 singleton Groups, each Path 000\n");
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_batch_destroy(batch);
 
     for (index = 0; index < 3; ++index) {
         items_f[index] = (void *)&values_f[index];
     }
     batch = NULL;
-    status = lks_group_batch_build(items_f, 3, 100, &comparator, &batch);
+    status = lks_legacy_group_batch_build(items_f, 3, 100, &comparator, &batch);
     valid = status == LKS_STATUS_OK && batch != NULL &&
-        lks_group_batch_group_count(batch) == 1 &&
-        lks_group_batch_total_size(batch) == 3 &&
-        lks_group_batch_group_size(batch) == 100 &&
-        batch_group_check(lks_group_batch_group_at(batch, 0), &comparator,
+        lks_legacy_group_batch_group_count(batch) == 1 &&
+        lks_legacy_group_batch_total_size(batch) == 3 &&
+        lks_legacy_group_batch_group_size(batch) == 100 &&
+        batch_group_check(lks_legacy_group_batch_group_at(batch, 0), &comparator,
             sorted_f, 3, values_f, 0, 3, 1, 1, "Batch F larger GroupSize");
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_batch_destroy(batch);
     if (!valid) {
         return 0;
     }
 
-    if (lks_group_batch_total_size(NULL) != 0 ||
-        lks_group_batch_group_count(NULL) != 0 ||
-        lks_group_batch_group_size(NULL) != 0 ||
-        lks_group_batch_group_at(NULL, 0) != NULL) {
+    if (lks_legacy_group_batch_total_size(NULL) != 0 ||
+        lks_legacy_group_batch_group_count(NULL) != 0 ||
+        lks_legacy_group_batch_group_size(NULL) != 0 ||
+        lks_legacy_group_batch_group_at(NULL, 0) != NULL) {
         return 0;
     }
 
@@ -2832,24 +2833,24 @@ static int run_group_batch_demo(void)
         items_1000[index] = &values_1000[index];
     }
     big_batch = NULL;
-    status = lks_group_batch_build(items_1000, 1000, 100, &comparator,
+    status = lks_legacy_group_batch_build(items_1000, 1000, 100, &comparator,
         &big_batch);
     valid = status == LKS_STATUS_OK && big_batch != NULL &&
-        lks_group_batch_group_count(big_batch) == 10 &&
-        lks_group_batch_total_size(big_batch) == 1000 &&
-        lks_group_batch_group_size(big_batch) == 100;
+        lks_legacy_group_batch_group_count(big_batch) == 10 &&
+        lks_legacy_group_batch_total_size(big_batch) == 1000 &&
+        lks_legacy_group_batch_group_size(big_batch) == 100;
     for (group_index = 0; valid && group_index < 10; ++group_index) {
-        const LksGroup *group;
+        const LksLegacyGroup *group;
 
-        group = lks_group_batch_group_at(big_batch, group_index);
-        valid = lks_group_size(group) == 100 &&
+        group = lks_legacy_group_batch_group_at(big_batch, group_index);
+        valid = lks_legacy_group_size(group) == 100 &&
             batch_group_check(group, &comparator, NULL, 100, values_1000,
                 group_index * 100, 100, 1, 1, "Batch I chunk");
     }
-    if (valid && lks_group_batch_group_at(big_batch, 10) != NULL) {
+    if (valid && lks_legacy_group_batch_group_at(big_batch, 10) != NULL) {
         valid = 0;
     }
-    lks_group_batch_destroy(big_batch);
+    lks_legacy_group_batch_destroy(big_batch);
     free(items_1000);
     free(values_1000);
     if (!valid) {
@@ -2866,25 +2867,25 @@ static int run_group_batch_demo(void)
         items_103[index] = &values_103[index];
     }
     remainder_batch = NULL;
-    status = lks_group_batch_build(items_103, 103, 20, &comparator,
+    status = lks_legacy_group_batch_build(items_103, 103, 20, &comparator,
         &remainder_batch);
     valid = status == LKS_STATUS_OK && remainder_batch != NULL &&
-        lks_group_batch_group_count(remainder_batch) == 6 &&
-        lks_group_batch_total_size(remainder_batch) == 103 &&
-        lks_group_batch_group_size(remainder_batch) == 20;
+        lks_legacy_group_batch_group_count(remainder_batch) == 6 &&
+        lks_legacy_group_batch_total_size(remainder_batch) == 103 &&
+        lks_legacy_group_batch_group_size(remainder_batch) == 20;
     size_sum = 0;
     for (group_index = 0; valid && group_index < 6; ++group_index) {
         size_t expected_size;
 
         expected_size = group_index < 5 ? 20 : 3;
-        if (lks_group_size(lks_group_batch_group_at(remainder_batch,
+        if (lks_legacy_group_size(lks_legacy_group_batch_group_at(remainder_batch,
                 group_index)) != expected_size) {
             valid = 0;
         } else {
             size_sum += expected_size;
         }
     }
-    lks_group_batch_destroy(remainder_batch);
+    lks_legacy_group_batch_destroy(remainder_batch);
     free(items_103);
     if (!valid || size_sum != 103) {
         return 0;
@@ -2893,7 +2894,7 @@ static int run_group_batch_demo(void)
 
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
-    if (lks_group_batch_build(NULL, 0, 10, &comparator, NULL) !=
+    if (lks_legacy_group_batch_build(NULL, 0, 10, &comparator, NULL) !=
             LKS_STATUS_INVALID_ARGUMENT ||
         !batch_expect_invalid(NULL, 0, 0, &comparator) ||
         !batch_expect_invalid(NULL, 0, 10, NULL) ||
@@ -2904,14 +2905,14 @@ static int run_group_batch_demo(void)
     printf("Batch K invalid parameters and NULL/out-of-range getters: passed\n");
 
     batch = NULL;
-    status = lks_group_batch_build(NULL, 0, 1, &comparator, &batch);
+    status = lks_legacy_group_batch_build(NULL, 0, 1, &comparator, &batch);
     if (status != LKS_STATUS_OK || batch == NULL ||
-        lks_group_batch_group_at(batch,
-            lks_group_batch_group_count(batch)) != NULL) {
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_group_at(batch,
+            lks_legacy_group_batch_group_count(batch)) != NULL) {
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_batch_destroy(batch);
     return 1;
 }
 
@@ -2929,8 +2930,8 @@ static int run_group_batch_merge_demo(void)
     void *eight_expected[16];
     LksComparator comparator;
     LksComparator invalid_comparator;
-    LksGroupBatch *batch = NULL;
-    LksGroup *result = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *result = NULL;
     LksStatus status;
     size_t index;
     int valid = 0;
@@ -2938,32 +2939,32 @@ static int run_group_batch_merge_demo(void)
     comparator.compare = compare_int;
     comparator.context = NULL;
 
-    status = lks_group_batch_build(NULL, 0, 3, &comparator, &batch);
+    status = lks_legacy_group_batch_build(NULL, 0, 3, &comparator, &batch);
     if (status != LKS_STATUS_OK || batch == NULL ||
-        lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
-        result == NULL || lks_group_size(result) != 0) {
+        lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        result == NULL || lks_legacy_group_size(result) != 0) {
         goto cleanup;
     }
     printf("Merge all empty Batch: independent empty Group returned\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_batch_destroy(batch); batch = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_batch_destroy(batch); batch = NULL;
 
     {
         int values4[] = { 10, 20, 30, 40 };
         void *items4[] = { &values4[0], &values4[1], &values4[2], &values4[3] };
         void *expected4[] = { &values4[0], &values4[1], &values4[2], &values4[3] };
         const char *paths4[] = { "000", "0A0", "0A0/A0", "0A0/A0//A0" };
-        if (lks_group_batch_build(items4, 4, 1, &comparator, &batch) != LKS_STATUS_OK ||
-            lks_group_batch_group_count(batch) != 4 ||
-            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        if (lks_legacy_group_batch_build(items4, 4, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_group_count(batch) != 4 ||
+            lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             !merge_group_expect(result, expected4, paths4, 4, &comparator)) {
             goto cleanup;
         }
         for (index = 0; index < 4; ++index) {
             printf("Merge all 4 singleton: %d -> %s\n", values4[index], paths4[index]);
         }
-        lks_group_destroy(result); result = NULL;
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -2973,17 +2974,17 @@ static int run_group_batch_merge_demo(void)
         const char *paths5[] = { "000", "0A0", "0A0/A0", "0A0/A0//A0",
             "0A0/A0//A0///A0" };
         char carried_path[32];
-        const LksGroup *last_original;
+        const LksLegacyGroup *last_original;
 
-        if (lks_group_batch_build(items5, 5, 1, &comparator, &batch) != LKS_STATUS_OK) {
+        if (lks_legacy_group_batch_build(items5, 5, 1, &comparator, &batch) != LKS_STATUS_OK) {
             goto cleanup;
         }
-        last_original = lks_group_batch_group_at(batch, 4);
-        if (lks_path_format(lks_group_path_at(last_original, 0), carried_path,
+        last_original = lks_legacy_group_batch_group_at(batch, 4);
+        if (lks_path_format(lks_legacy_group_path_at(last_original, 0), carried_path,
                 sizeof(carried_path)) != LKS_STATUS_OK || strcmp(carried_path, "000") != 0 ||
-            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             !merge_group_expect(result, expected5, paths5, 5, &comparator) ||
-            lks_path_format(lks_group_path_at(last_original, 0), carried_path,
+            lks_path_format(lks_legacy_group_path_at(last_original, 0), carried_path,
                 sizeof(carried_path)) != LKS_STATUS_OK || strcmp(carried_path, "000") != 0) {
             goto cleanup;
         }
@@ -2991,8 +2992,8 @@ static int run_group_batch_merge_demo(void)
             printf("Merge all 5 singleton: %d -> %s\n", values5[index], paths5[index]);
         }
         printf("Merge all 5 singleton: G4 stayed at 000 in original Batch during carry\n");
-        lks_group_destroy(result); result = NULL;
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -3001,20 +3002,20 @@ static int run_group_batch_merge_demo(void)
             &values6[3], &values6[4], &values6[5] };
         int expected6[] = { 1, 2, 3, 4, 5, 6 };
 
-        if (lks_group_batch_build(items6, 6, 1, &comparator, &batch) != LKS_STATUS_OK ||
-            lks_group_batch_group_count(batch) != 6 ||
-            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
-            lks_group_size(result) != 6) {
+        if (lks_legacy_group_batch_build(items6, 6, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_group_count(batch) != 6 ||
+            lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_legacy_group_size(result) != 6) {
             goto cleanup;
         }
         for (index = 0; index < 6; ++index) {
-            if (*(int *)lks_group_item_at(result, index) != expected6[index]) {
+            if (*(int *)lks_legacy_group_item_at(result, index) != expected6[index]) {
                 goto cleanup;
             }
         }
         printf("Merge all 6 singleton: 1 2 3 4 5 6; size 6, no lost or duplicate items\n");
-        lks_group_destroy(result); result = NULL;
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -3022,26 +3023,26 @@ static int run_group_batch_merge_demo(void)
         void *items_equal5[] = { &values_equal5[0], &values_equal5[1],
             &values_equal5[2], &values_equal5[3], &values_equal5[4] };
 
-        if (lks_group_batch_build(items_equal5, 5, 1, &comparator, &batch) != LKS_STATUS_OK ||
-            lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
-            lks_group_size(result) != 5) {
+        if (lks_legacy_group_batch_build(items_equal5, 5, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_legacy_group_size(result) != 5) {
             goto cleanup;
         }
         for (index = 0; index < 5; ++index) {
-            if (lks_group_item_at(result, index) != &values_equal5[index]) {
+            if (lks_legacy_group_item_at(result, index) != &values_equal5[index]) {
                 goto cleanup;
             }
         }
         printf("Merge all 5 equal singleton items: origins 0,1,2,3,4 retained by pointer\n");
-        lks_group_destroy(result); result = NULL;
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
     }
 
     {
         int values10[] = { 90, 10, 70, 30, 80, 20, 60, 40, 100, 50 };
         void *items10[10];
         int expected10[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
-        const LksGroup *g0;
+        const LksLegacyGroup *g0;
         void *g0_items[4];
         const LksPath *g0_paths[4];
         void *batch_items_snapshot[3][4];
@@ -3051,17 +3052,17 @@ static int run_group_batch_merge_demo(void)
         for (index = 0; index < 10; ++index) {
             items10[index] = &values10[index];
         }
-        if (lks_group_batch_build(items10, 10, 4, &comparator, &batch) != LKS_STATUS_OK ||
-            lks_group_batch_group_count(batch) != 3) {
+        if (lks_legacy_group_batch_build(items10, 10, 4, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_group_count(batch) != 3) {
             goto cleanup;
         }
-        g0 = lks_group_batch_group_at(batch, 0);
+        g0 = lks_legacy_group_batch_group_at(batch, 0);
         for (group_index = 0; group_index < 3; ++group_index) {
-            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
-            size_t group_size = lks_group_size(group);
+            const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
+            size_t group_size = lks_legacy_group_size(group);
             for (index = 0; index < group_size; ++index) {
-                batch_items_snapshot[group_index][index] = lks_group_item_at(group, index);
-                if (lks_path_format(lks_group_path_at(group, index),
+                batch_items_snapshot[group_index][index] = lks_legacy_group_item_at(group, index);
+                if (lks_path_format(lks_legacy_group_path_at(group, index),
                         batch_path_snapshot[group_index][index],
                         sizeof(batch_path_snapshot[group_index][index])) != LKS_STATUS_OK) {
                     goto cleanup;
@@ -3069,15 +3070,15 @@ static int run_group_batch_merge_demo(void)
             }
         }
         for (index = 0; index < 4; ++index) {
-            g0_items[index] = lks_group_item_at(g0, index);
-            g0_paths[index] = lks_group_path_at(g0, index);
+            g0_items[index] = lks_legacy_group_item_at(g0, index);
+            g0_paths[index] = lks_legacy_group_path_at(g0, index);
         }
-        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
-            lks_group_size(result) != 10) {
+        if (lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            lks_legacy_group_size(result) != 10) {
             goto cleanup;
         }
         for (index = 0; index < 10; ++index) {
-            if (*(int *)lks_group_item_at(result, index) != expected10[index]) {
+            if (*(int *)lks_legacy_group_item_at(result, index) != expected10[index]) {
                 goto cleanup;
             }
         }
@@ -3088,12 +3089,12 @@ static int run_group_batch_merge_demo(void)
             char path_text[128];
 
             for (result_index = 0; result_index < 10; ++result_index) {
-                if (lks_group_item_at(result, result_index) == g0_items[index]) {
+                if (lks_legacy_group_item_at(result, result_index) == g0_items[index]) {
                     break;
                 }
             }
             if (result_index == 10 || lks_path_compare(g0_paths[index],
-                    lks_group_path_at(result, result_index), &path_order) !=
+                    lks_legacy_group_path_at(result, result_index), &path_order) !=
                     LKS_STATUS_OK || path_order != 0 ||
                 lks_path_format(g0_paths[index], path_text, sizeof(path_text)) != LKS_STATUS_OK) {
                 goto cleanup;
@@ -3101,11 +3102,11 @@ static int run_group_batch_merge_demo(void)
             printf("G0 item %d Path retained: %s\n", *(int *)g0_items[index], path_text);
         }
         for (group_index = 0; group_index < 3; ++group_index) {
-            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
-            for (index = 0; index < lks_group_size(group); ++index) {
+            const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
+            for (index = 0; index < lks_legacy_group_size(group); ++index) {
                 char path_text[128];
-                if (lks_group_item_at(group, index) != batch_items_snapshot[group_index][index] ||
-                    lks_path_format(lks_group_path_at(group, index), path_text,
+                if (lks_legacy_group_item_at(group, index) != batch_items_snapshot[group_index][index] ||
+                    lks_path_format(lks_legacy_group_path_at(group, index), path_text,
                         sizeof(path_text)) != LKS_STATUS_OK ||
                     strcmp(path_text, batch_path_snapshot[group_index][index]) != 0) {
                     goto cleanup;
@@ -3113,8 +3114,8 @@ static int run_group_batch_merge_demo(void)
             }
         }
         printf("Merge all: input Batch items and Paths unchanged\n");
-        lks_group_destroy(result); result = NULL;
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
     }
 
     {
@@ -3122,7 +3123,7 @@ static int run_group_batch_merge_demo(void)
         void **items1024 = (void **)malloc(1024 * sizeof(*items1024));
         CompareCounter merge_counter;
         LksComparator merge_comparator;
-        const LksGroup *original_g0;
+        const LksLegacyGroup *original_g0;
         const LksPath *original_item0_path;
         char item0_path_text[32];
         int big_valid = 1;
@@ -3136,14 +3137,14 @@ static int run_group_batch_merge_demo(void)
             values1024[index] = (int)index;
             items1024[index] = &values1024[index];
         }
-        if (lks_group_batch_build(items1024, 1024, 1, &comparator, &batch) != LKS_STATUS_OK ||
-            lks_group_batch_group_count(batch) != 1024) {
+        if (lks_legacy_group_batch_build(items1024, 1024, 1, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_group_count(batch) != 1024) {
             free(items1024);
             free(values1024);
             goto cleanup;
         }
-        original_g0 = lks_group_batch_group_at(batch, 0);
-        original_item0_path = lks_group_path_at(original_g0, 0);
+        original_g0 = lks_legacy_group_batch_group_at(batch, 0);
+        original_item0_path = lks_legacy_group_path_at(original_g0, 0);
         if (lks_path_format(original_item0_path, item0_path_text,
                 sizeof(item0_path_text)) != LKS_STATUS_OK ||
             strcmp(item0_path_text, "000") != 0) {
@@ -3154,15 +3155,15 @@ static int run_group_batch_merge_demo(void)
         merge_counter.calls = 0;
         merge_comparator.compare = compare_int_counted;
         merge_comparator.context = &merge_counter;
-        if (lks_group_batch_merge_all(batch, &merge_comparator, &result) != LKS_STATUS_OK ||
-            result == NULL || lks_group_size(result) != 1024) {
+        if (lks_legacy_group_batch_merge_all(batch, &merge_comparator, &result) != LKS_STATUS_OK ||
+            result == NULL || lks_legacy_group_size(result) != 1024) {
             big_valid = 0;
         }
         for (index = 0; big_valid && index < 1024; ++index) {
             int path_order;
-            if (lks_group_item_at(result, index) != &values1024[index] ||
-                (index > 0 && (lks_path_compare(lks_group_path_at(result, index - 1),
-                    lks_group_path_at(result, index), &path_order) != LKS_STATUS_OK ||
+            if (lks_legacy_group_item_at(result, index) != &values1024[index] ||
+                (index > 0 && (lks_path_compare(lks_legacy_group_path_at(result, index - 1),
+                    lks_legacy_group_path_at(result, index), &path_order) != LKS_STATUS_OK ||
                     path_order != -1))) {
                 big_valid = 0;
             }
@@ -3170,8 +3171,8 @@ static int run_group_batch_merge_demo(void)
         if (big_valid) {
             int path_order;
             if (lks_path_compare(original_item0_path,
-                    lks_group_path_at(result, 0), &path_order) != LKS_STATUS_OK ||
-                path_order != 0 || lks_path_format(lks_group_path_at(result, 0),
+                    lks_legacy_group_path_at(result, 0), &path_order) != LKS_STATUS_OK ||
+                path_order != 0 || lks_path_format(lks_legacy_group_path_at(result, 0),
                     item0_path_text, sizeof(item0_path_text)) != LKS_STATUS_OK ||
                 strcmp(item0_path_text, "000") != 0) {
                 big_valid = 0;
@@ -3179,8 +3180,8 @@ static int run_group_batch_merge_demo(void)
         }
         printf("Merge all 1024 singleton Groups: size 1024, order 0..1023, comparisons %lu, item 0 Path %s\n",
             (unsigned long)merge_counter.calls, item0_path_text);
-        lks_group_destroy(result); result = NULL;
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_destroy(result); result = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
         free(items1024);
         free(values1024);
         if (!big_valid || merge_counter.calls >= 30000) {
@@ -3191,22 +3192,22 @@ static int run_group_batch_merge_demo(void)
     for (index = 0; index < 10; ++index) {
         odd_items[index] = &odd_values[index];
     }
-    if (lks_group_batch_build(odd_items, 10, 2, &comparator, &batch) != LKS_STATUS_OK ||
-        lks_group_batch_group_count(batch) != 5) {
+    if (lks_legacy_group_batch_build(odd_items, 10, 2, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_legacy_group_batch_group_count(batch) != 5) {
         goto cleanup;
     }
     {
-        const LksGroup *first_group = lks_group_batch_group_at(batch, 0);
+        const LksLegacyGroup *first_group = lks_legacy_group_batch_group_at(batch, 0);
         void *first_items[2];
         void *batch_items_snapshot[5][2];
         char batch_paths_snapshot[5][2][128];
         size_t group_index;
 
         for (group_index = 0; group_index < 5; ++group_index) {
-            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+            const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
             for (index = 0; index < 2; ++index) {
-                batch_items_snapshot[group_index][index] = lks_group_item_at(group, index);
-                if (lks_path_format(lks_group_path_at(group, index),
+                batch_items_snapshot[group_index][index] = lks_legacy_group_item_at(group, index);
+                if (lks_path_format(lks_legacy_group_path_at(group, index),
                         batch_paths_snapshot[group_index][index],
                         sizeof(batch_paths_snapshot[group_index][index])) != LKS_STATUS_OK) {
                     goto cleanup;
@@ -3214,9 +3215,9 @@ static int run_group_batch_merge_demo(void)
             }
         }
         for (index = 0; index < 2; ++index) {
-            first_items[index] = lks_group_item_at(first_group, index);
+            first_items[index] = lks_legacy_group_item_at(first_group, index);
         }
-        status = lks_group_batch_merge_all(batch, &comparator, &result);
+        status = lks_legacy_group_batch_merge_all(batch, &comparator, &result);
         if (status != LKS_STATUS_OK || result == NULL ||
             !merge_group_expect(result, odd_expected, NULL, 10, &comparator)) {
             goto cleanup;
@@ -3226,24 +3227,24 @@ static int run_group_batch_merge_demo(void)
             int path_order;
 
             for (result_index = 0; result_index < 10; ++result_index) {
-                if (lks_group_item_at(result, result_index) == first_items[index]) {
+                if (lks_legacy_group_item_at(result, result_index) == first_items[index]) {
                     break;
                 }
             }
             if (result_index == 10 ||
-                lks_path_compare(lks_group_path_at(first_group, index),
-                    lks_group_path_at(result, result_index), &path_order) !=
+                lks_path_compare(lks_legacy_group_path_at(first_group, index),
+                    lks_legacy_group_path_at(result, result_index), &path_order) !=
                     LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
         for (group_index = 0; group_index < 5; ++group_index) {
-            const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+            const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
             for (index = 0; index < 2; ++index) {
                 char path_text[128];
-                if (lks_group_item_at(group, index) !=
+                if (lks_legacy_group_item_at(group, index) !=
                         batch_items_snapshot[group_index][index] ||
-                    lks_path_format(lks_group_path_at(group, index), path_text,
+                    lks_path_format(lks_legacy_group_path_at(group, index), path_text,
                         sizeof(path_text)) != LKS_STATUS_OK ||
                     strcmp(path_text, batch_paths_snapshot[group_index][index]) != 0) {
                     goto cleanup;
@@ -3252,28 +3253,28 @@ static int run_group_batch_merge_demo(void)
         }
     }
     printf("Merge all 5 groups: balanced pairs with odd carry; sorted 0..9; G0 Paths unchanged; Batch readable\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_batch_destroy(batch); batch = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_batch_destroy(batch); batch = NULL;
 
     for (index = 0; index < 16; ++index) {
         eight_values[index] = (int)(15 - index);
         eight_items[index] = &eight_values[index];
         eight_expected[index] = &eight_values[15 - index];
     }
-    if (lks_group_batch_build(eight_items, 16, 2, &comparator, &batch) != LKS_STATUS_OK ||
-        lks_group_batch_group_count(batch) != 8) {
+    if (lks_legacy_group_batch_build(eight_items, 16, 2, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_legacy_group_batch_group_count(batch) != 8) {
         goto cleanup;
     }
     {
-        const LksGroup *first_group = lks_group_batch_group_at(batch, 0);
+        const LksLegacyGroup *first_group = lks_legacy_group_batch_group_at(batch, 0);
         const LksPath *old_paths[2];
         void *first_group_items[2];
 
         for (index = 0; index < 2; ++index) {
-            old_paths[index] = lks_group_path_at(first_group, index);
-            first_group_items[index] = lks_group_item_at(first_group, index);
+            old_paths[index] = lks_legacy_group_path_at(first_group, index);
+            first_group_items[index] = lks_legacy_group_item_at(first_group, index);
         }
-        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        if (lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             !merge_group_expect(result, eight_expected, NULL, 16, &comparator)) {
             goto cleanup;
         }
@@ -3281,74 +3282,74 @@ static int run_group_batch_merge_demo(void)
             size_t result_index;
             int path_order;
             for (result_index = 0; result_index < 16; ++result_index) {
-                if (lks_group_item_at(result, result_index) == first_group_items[index]) {
+                if (lks_legacy_group_item_at(result, result_index) == first_group_items[index]) {
                     break;
                 }
             }
             if (result_index == 16 || lks_path_compare(old_paths[index],
-                    lks_group_path_at(result, result_index), &path_order) !=
+                    lks_legacy_group_path_at(result, result_index), &path_order) !=
                     LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
     }
     printf("Merge all 8 groups: G0 remains on left Base lineage across rounds\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_batch_destroy(batch); batch = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_batch_destroy(batch); batch = NULL;
 
     for (index = 0; index < 8; ++index) {
         equal_items[index] = &equal_values[index];
     }
-    if (lks_group_batch_build(equal_items, 8, 2, &comparator, &batch) != LKS_STATUS_OK ||
-        lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
-        lks_group_size(result) != 8) {
+    if (lks_legacy_group_batch_build(equal_items, 8, 2, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        lks_legacy_group_size(result) != 8) {
         goto cleanup;
     }
     for (index = 0; index < 8; ++index) {
-        if (lks_group_item_at(result, index) != equal_items[index]) {
+        if (lks_legacy_group_item_at(result, index) != equal_items[index]) {
             goto cleanup;
         }
     }
     printf("Merge all equal keys: original Group order and in-Group order retained\n");
-    lks_group_destroy(result); result = NULL;
-    lks_group_batch_destroy(batch); batch = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
+    lks_legacy_group_batch_destroy(batch); batch = NULL;
 
     {
         int single_values[] = { 3, 1, 2 };
         void *single_items[] = { &single_values[0], &single_values[1], &single_values[2] };
-        const LksGroup *source;
+        const LksLegacyGroup *source;
         void *snapshot_items[3];
         const LksPath *snapshot_paths[3];
 
-        if (lks_group_batch_build(single_items, 3, 3, &comparator, &batch) != LKS_STATUS_OK) {
+        if (lks_legacy_group_batch_build(single_items, 3, 3, &comparator, &batch) != LKS_STATUS_OK) {
             goto cleanup;
         }
-        source = lks_group_batch_group_at(batch, 0);
+        source = lks_legacy_group_batch_group_at(batch, 0);
         for (index = 0; index < 3; ++index) {
-            snapshot_items[index] = lks_group_item_at(source, index);
-            snapshot_paths[index] = lks_group_path_at(source, index);
+            snapshot_items[index] = lks_legacy_group_item_at(source, index);
+            snapshot_paths[index] = lks_legacy_group_path_at(source, index);
         }
-        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
-            result == source || lks_group_size(result) != 3) {
+        if (lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+            result == source || lks_legacy_group_size(result) != 3) {
             goto cleanup;
         }
         for (index = 0; index < 3; ++index) {
             int path_order;
-            if (lks_group_item_at(result, index) != snapshot_items[index] ||
-                lks_path_compare(snapshot_paths[index], lks_group_path_at(result, index),
+            if (lks_legacy_group_item_at(result, index) != snapshot_items[index] ||
+                lks_path_compare(snapshot_paths[index], lks_legacy_group_path_at(result, index),
                     &path_order) != LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
-        lks_group_batch_destroy(batch); batch = NULL;
-        if (lks_group_item_at(result, 0) != &single_values[1] ||
-            lks_group_item_at(result, 1) != &single_values[2] ||
-            lks_group_item_at(result, 2) != &single_values[0]) {
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
+        if (lks_legacy_group_item_at(result, 0) != &single_values[1] ||
+            lks_legacy_group_item_at(result, 1) != &single_values[2] ||
+            lks_legacy_group_item_at(result, 2) != &single_values[0]) {
             goto cleanup;
         }
         printf("Merge all one Group: independent Path-preserving clone survives Batch destruction\n");
     }
-    lks_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
 
     {
         int single_values[] = { 40, 10, 30, 20 };
@@ -3356,41 +3357,41 @@ static int run_group_batch_merge_demo(void)
             &single_values[2], &single_values[3] };
         void *expected_items[] = { &single_values[1], &single_values[3],
             &single_values[2], &single_values[0] };
-        const LksGroup *source;
+        const LksLegacyGroup *source;
         const LksPath *source_paths[4];
         char source_text[4][128];
         const char *expected_paths[4];
 
-        if (lks_group_batch_build(single_items, 4, 100, &comparator, &batch) != LKS_STATUS_OK ||
-            lks_group_batch_group_count(batch) != 1) {
+        if (lks_legacy_group_batch_build(single_items, 4, 100, &comparator, &batch) != LKS_STATUS_OK ||
+            lks_legacy_group_batch_group_count(batch) != 1) {
             goto cleanup;
         }
-        source = lks_group_batch_group_at(batch, 0);
+        source = lks_legacy_group_batch_group_at(batch, 0);
         for (index = 0; index < 4; ++index) {
-            source_paths[index] = lks_group_path_at(source, index);
+            source_paths[index] = lks_legacy_group_path_at(source, index);
             if (lks_path_format(source_paths[index], source_text[index],
                     sizeof(source_text[index])) != LKS_STATUS_OK) {
                 goto cleanup;
             }
             expected_paths[index] = source_text[index];
         }
-        if (lks_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
+        if (lks_legacy_group_batch_merge_all(batch, &comparator, &result) != LKS_STATUS_OK ||
             result == source || !merge_group_expect(result, expected_items,
                 expected_paths, 4, &comparator)) {
             goto cleanup;
         }
         for (index = 0; index < 4; ++index) {
             int path_order;
-            if (lks_path_compare(source_paths[index], lks_group_path_at(result, index),
+            if (lks_path_compare(source_paths[index], lks_legacy_group_path_at(result, index),
                     &path_order) != LKS_STATUS_OK || path_order != 0) {
                 goto cleanup;
             }
         }
-        lks_group_batch_destroy(batch); batch = NULL;
+        lks_legacy_group_batch_destroy(batch); batch = NULL;
         for (index = 0; index < 4; ++index) {
             char result_text[128];
-            if (lks_group_item_at(result, index) != expected_items[index] ||
-                lks_path_format(lks_group_path_at(result, index), result_text,
+            if (lks_legacy_group_item_at(result, index) != expected_items[index] ||
+                lks_path_format(lks_legacy_group_path_at(result, index), result_text,
                     sizeof(result_text)) != LKS_STATUS_OK ||
                 strcmp(result_text, expected_paths[index]) != 0) {
                 goto cleanup;
@@ -3398,28 +3399,28 @@ static int run_group_batch_merge_demo(void)
         }
         printf("Merge all one GroupSize 100: 10 20 30 40 Paths cloned exactly; Result survives Batch destruction\n");
     }
-    lks_group_destroy(result); result = NULL;
+    lks_legacy_group_destroy(result); result = NULL;
 
-    if (lks_group_batch_build(equal_items, 8, 2, &comparator, &batch) != LKS_STATUS_OK) {
+    if (lks_legacy_group_batch_build(equal_items, 8, 2, &comparator, &batch) != LKS_STATUS_OK) {
         goto cleanup;
     }
     invalid_comparator = comparator;
     invalid_comparator.compare = NULL;
     {
-        LksGroup *invalid_output = (LksGroup *)lks_group_batch_group_at(batch, 0);
-        if (lks_group_batch_merge_all(NULL, &comparator, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
+        LksLegacyGroup *invalid_output = (LksLegacyGroup *)lks_legacy_group_batch_group_at(batch, 0);
+        if (lks_legacy_group_batch_merge_all(NULL, &comparator, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_output != NULL) {
             goto cleanup;
         }
-        invalid_output = (LksGroup *)lks_group_batch_group_at(batch, 0);
-        if (lks_group_batch_merge_all(batch, NULL, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
+        invalid_output = (LksLegacyGroup *)lks_legacy_group_batch_group_at(batch, 0);
+        if (lks_legacy_group_batch_merge_all(batch, NULL, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_output != NULL) {
             goto cleanup;
         }
-        invalid_output = (LksGroup *)lks_group_batch_group_at(batch, 0);
-        if (lks_group_batch_merge_all(batch, &invalid_comparator, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
+        invalid_output = (LksLegacyGroup *)lks_legacy_group_batch_group_at(batch, 0);
+        if (lks_legacy_group_batch_merge_all(batch, &invalid_comparator, &invalid_output) != LKS_STATUS_INVALID_ARGUMENT ||
             invalid_output != NULL ||
-            lks_group_batch_merge_all(batch, &comparator, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
+            lks_legacy_group_batch_merge_all(batch, &comparator, NULL) != LKS_STATUS_INVALID_ARGUMENT) {
             goto cleanup;
         }
     }
@@ -3427,8 +3428,8 @@ static int run_group_batch_merge_demo(void)
     printf("Merge all invalid arguments: passed; output reset to NULL\n");
 
 cleanup:
-    lks_group_destroy(result);
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result);
+    lks_legacy_group_batch_destroy(batch);
     return valid;
 }
 

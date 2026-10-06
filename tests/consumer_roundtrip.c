@@ -1,3 +1,5 @@
+/* Historical V3 regression using private declarations; not the V4 public consumer. */
+#include "lks_legacy_internal.h"
 #include <stdio.h>
 #include <string.h>
 #include "layerkeysort.h"

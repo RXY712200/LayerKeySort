@@ -1,22 +1,17 @@
-# Public examples
+# Public V4 examples
 
-All examples include only `layerkeysort.h`; caller owns item payloads. Build with
-`LKS_BUILD_EXAMPLES=ON` (default for a standalone checkout).
+All include only layerkeysort.h, check errors and preserve item ownership.
 
-| Source | Target | Purpose |
-|---|---|---|
-| immutable_group.c | layerkeysort_group_snapshot_example | V4 flat Groups, stable merge and historical LS1 snapshot |
-| basic.c | layerkeysort_example | Stable V3 sort/Group basics |
-| ordered_tree.c | layerkeysort_ordered_example | Stable V3 comparator-managed coordinate Tree |
-| layer_list.c | layerkeysort_layer_list_example | Stable V3 manual layer coordinates |
-| live_order.c | layerkeysort_order_example | Experimental V4 explicit residence order |
-| managed_order.c | layerkeysort_managed_order_example | Experimental V4 comparator-managed residence order |
-| snapshot.c | layerkeysort_snapshot_example | Experimental V4 historical IDs, LS1, blob and fresh restore |
+| Source / target | Purpose |
+|---|---|
+| basic.c / layerkeysort_example | Minimal create/insert/query/remove/destroy |
+| ordered_tree.c / layerkeysort_ordered_example | Managed comparison; filename historical |
+| layer_list.c / layerkeysort_layer_list_example | Editable relative layers |
+| live_order.c / layerkeysort_order_example | Handles / traversal |
+| managed_order.c / layerkeysort_managed_order_example | Managed equality/removal |
+| immutable_group.c / layerkeysort_group_snapshot_example | Final flat Group/Batch snapshot |
+| snapshot.c / layerkeysort_snapshot_example | LS1/wire/restore/migration |
 
-The snapshot example captures business IDs, formats keys, serializes, changes and
-destroys its source, reads historical associations, loads and resolves a fresh
-order. Its four-byte namespace is illustrative, not a global uniqueness scheme.
-Read [Preview.3 contracts](../docs/V4_PREVIEW3.md) before choosing namespaces or
-persistence associations. Stable recommendation remains v3.1.0.
-
-Preview.4 Group/Batch APIs are additive and provisional; [contracts and measurements](../docs/V4_PREVIEW4.md). This example uses no internal headers.
+Run named executable after CMake build (Debug directory for MSVC).
+ZIP includes basic.c as example.c. demo/main.c is a private historical regression
+runner, not V4 first-use surface. [Freeze](../docs/V4_FREEZE.md).

@@ -52,6 +52,9 @@
     <ClInclude Include="src\lks_alloc_internal.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\lks_legacy_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\lks_path_internal.h">
       <Filter>头文件</Filter>
     </ClInclude>

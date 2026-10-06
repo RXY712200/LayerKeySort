@@ -1,25 +1,25 @@
 #include <stdlib.h>
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 #include "lks_alloc_internal.h"
 #include "lks_group_internal.h"
 #include "lks_bulk_internal.h"
 #include "lks_sort_internal.h"
 #include "lks_tree_internal.h"
 
-struct LksGroupBatch {
-    LksGroup **groups;
+struct LksLegacyGroupBatch {
+    LksLegacyGroup **groups;
     size_t group_count;
     size_t total_count;
     size_t group_size;
 };
 
-struct LksGroup {
+struct LksLegacyGroup {
     LksTree *tree;
     const LksTreeNode **ordered_nodes;
     size_t count;
 };
 
-const LksTree *lks_group_internal_tree(const LksGroup *group)
+const LksTree *lks_legacy_group_internal_tree(const LksLegacyGroup *group)
 {
     return group == NULL ? NULL : group->tree;
 }
@@ -59,7 +59,7 @@ static LksStatus validate_ordered_nodes(
     return LKS_STATUS_OK;
 }
 
-static LksStatus group_build_ordered_nodes(const LksGroup *group,
+static LksStatus group_build_ordered_nodes(const LksLegacyGroup *group,
     const LksComparator *comparator, const LksTreeNode ***out_ordered_nodes)
 {
     const LksTreeNode **ordered_nodes;
@@ -92,7 +92,7 @@ static LksStatus group_build_ordered_nodes(const LksGroup *group,
     return LKS_STATUS_OK;
 }
 
-static LksStatus group_build_ordered_view(LksGroup *group,
+static LksStatus group_build_ordered_view(LksLegacyGroup *group,
     const LksComparator *comparator)
 {
     const LksTreeNode **ordered_nodes;
@@ -103,14 +103,14 @@ static LksStatus group_build_ordered_view(LksGroup *group,
 }
 
 static LksStatus group_from_sorted(void *const *items, size_t count,
-    const LksComparator *comparator, LksGroup **out_group)
+    const LksComparator *comparator, LksLegacyGroup **out_group)
 {
-    LksGroup *group;
+    LksLegacyGroup *group;
     LksStatus status;
     LksTree *tree = NULL;
     status = lks_bulk_build_tree(items, count, &tree);
     if (status != LKS_STATUS_OK) return status;
-    group = (LksGroup *)lks_alloc_tagged(sizeof(*group), LKS_ALLOC_TAG_GROUP_OBJECT);
+    group = (LksLegacyGroup *)lks_alloc_tagged(sizeof(*group), LKS_ALLOC_TAG_GROUP_OBJECT);
     if (group == NULL) {
         lks_tree_destroy(tree);
         return LKS_STATUS_OUT_OF_MEMORY;
@@ -120,15 +120,15 @@ static LksStatus group_from_sorted(void *const *items, size_t count,
     group->count = count;
     status = group_build_ordered_view(group, comparator);
     if (status != LKS_STATUS_OK) {
-        lks_group_destroy(group);
+        lks_legacy_group_destroy(group);
         return status;
     }
     *out_group = group;
     return LKS_STATUS_OK;
 }
 
-LksStatus lks_group_build(void *const *items, size_t count,
-    const LksComparator *comparator, LksGroup **out_group)
+LksStatus lks_legacy_group_build(void *const *items, size_t count,
+    const LksComparator *comparator, LksLegacyGroup **out_group)
 {
     void **sorted = NULL;
     LksStatus status;
@@ -142,7 +142,7 @@ LksStatus lks_group_build(void *const *items, size_t count,
     return status;
 }
 
-void lks_group_destroy(LksGroup *group)
+void lks_legacy_group_destroy(LksLegacyGroup *group)
 {
     if (group == NULL) {
         return;
@@ -152,12 +152,12 @@ void lks_group_destroy(LksGroup *group)
     lks_free(group);
 }
 
-size_t lks_group_size(const LksGroup *group)
+size_t lks_legacy_group_size(const LksLegacyGroup *group)
 {
     return group == NULL ? 0 : group->count;
 }
 
-void *lks_group_item_at(const LksGroup *group, size_t index)
+void *lks_legacy_group_item_at(const LksLegacyGroup *group, size_t index)
 {
     if (group == NULL || index >= group->count) {
         return NULL;
@@ -165,7 +165,7 @@ void *lks_group_item_at(const LksGroup *group, size_t index)
     return lks_tree_node_item(group->ordered_nodes[index]);
 }
 
-const LksPath *lks_group_path_at(const LksGroup *group, size_t index)
+const LksPath *lks_legacy_group_path_at(const LksLegacyGroup *group, size_t index)
 {
     if (group == NULL || index >= group->count) {
         return NULL;
@@ -185,8 +185,8 @@ static void group_destroy_planned_paths(LksPath **planned_paths, size_t count)
 }
 
 /* Shared 6.1 monotonic Base/Incoming path planner. Incoming Paths are never read. */
-static LksStatus group_plan_incoming_paths(const LksGroup *base,
-    const LksGroup *incoming, const LksComparator *comparator,
+static LksStatus group_plan_incoming_paths(const LksLegacyGroup *base,
+    const LksLegacyGroup *incoming, const LksComparator *comparator,
     LksPath ***out_planned_paths)
 {
     LksPath **planned_paths = NULL;
@@ -195,8 +195,8 @@ static LksStatus group_plan_incoming_paths(const LksGroup *base,
     LksStatus status = LKS_STATUS_OK;
     if (out_planned_paths == NULL) return LKS_STATUS_INVALID_ARGUMENT;
     *out_planned_paths = NULL;
-    base_count = lks_group_size(base);
-    incoming_count = lks_group_size(incoming);
+    base_count = lks_legacy_group_size(base);
+    incoming_count = lks_legacy_group_size(incoming);
     if (base_count > (size_t)-1 - incoming_count) return LKS_STATUS_OUT_OF_MEMORY;
     if (incoming_count == 0) return LKS_STATUS_OK;
     if (incoming_count > (size_t)-1 / sizeof(*planned_paths))
@@ -208,18 +208,18 @@ static LksStatus group_plan_incoming_paths(const LksGroup *base,
 
     base_index = 0;
     for (index = 0; index < incoming_count; ++index) {
-        void *incoming_item = lks_group_item_at(incoming, index);
+        void *incoming_item = lks_legacy_group_item_at(incoming, index);
         const LksPath *right_path;
         LksPath *new_path = NULL;
         while (base_index < base_count) {
-            void *base_item = lks_group_item_at(base, base_index);
+            void *base_item = lks_legacy_group_item_at(base, base_index);
             int order = comparator->compare(base_item, incoming_item, comparator->context);
             if (order > 0) break;
-            left_path = lks_group_path_at(base, base_index);
+            left_path = lks_legacy_group_path_at(base, base_index);
             if (left_path == NULL) { status = LKS_STATUS_INTERNAL_ERROR; goto fail; }
             ++base_index;
         }
-        right_path = base_index < base_count ? lks_group_path_at(base, base_index) : NULL;
+        right_path = base_index < base_count ? lks_legacy_group_path_at(base, base_index) : NULL;
         if (left_path == NULL && right_path != NULL) status = lks_path_before(right_path, &new_path);
         else if (left_path != NULL && right_path != NULL)
             status = lks_path_between(left_path, right_path, &new_path);
@@ -242,11 +242,11 @@ fail:
 
 #endif
 
-LksStatus lks_group_merge(
-    const LksGroup *base,
-    const LksGroup *incoming,
+LksStatus lks_legacy_group_merge(
+    const LksLegacyGroup *base,
+    const LksLegacyGroup *incoming,
     const LksComparator *comparator,
-    LksGroup **out_group
+    LksLegacyGroup **out_group
 )
 {
     void **merged;
@@ -257,8 +257,8 @@ LksStatus lks_group_merge(
     if (base == NULL || incoming == NULL || comparator == NULL ||
         comparator->compare == NULL)
         return LKS_STATUS_INVALID_ARGUMENT;
-    base_count = lks_group_size(base);
-    incoming_count = lks_group_size(incoming);
+    base_count = lks_legacy_group_size(base);
+    incoming_count = lks_legacy_group_size(incoming);
     if (base_count > (size_t)-1 - incoming_count ||
         base_count + incoming_count > (size_t)-1 / sizeof(*merged))
         return LKS_STATUS_OUT_OF_MEMORY;
@@ -272,8 +272,8 @@ LksStatus lks_group_merge(
         {
             size_t left = 0, right = 0, output = 0;
             while (left < base_count && right < incoming_count) {
-                void *base_item = lks_group_item_at(base, left);
-                void *incoming_item = lks_group_item_at(incoming, right);
+                void *base_item = lks_legacy_group_item_at(base, left);
+                void *incoming_item = lks_legacy_group_item_at(incoming, right);
                 if (comparator->compare(base_item, incoming_item,
                         comparator->context) <= 0) {
                     merged[output++] = base_item;
@@ -283,9 +283,9 @@ LksStatus lks_group_merge(
                     ++right;
                 }
             }
-            while (left < base_count) merged[output++] = lks_group_item_at(base, left++);
+            while (left < base_count) merged[output++] = lks_legacy_group_item_at(base, left++);
             while (right < incoming_count)
-                merged[output++] = lks_group_item_at(incoming, right++);
+                merged[output++] = lks_legacy_group_item_at(incoming, right++);
         }
     }
     status = group_from_sorted(merged, total_count, comparator, out_group);
@@ -294,10 +294,10 @@ LksStatus lks_group_merge(
 }
 
 #ifdef LKS_ENABLE_V1_REGRESSION_HELPERS
-LksStatus lks_group_merge_into_owned_base(LksGroup **inout_base,
-    const LksGroup *incoming, const LksComparator *comparator)
+LksStatus lks_legacy_group_merge_into_owned_base(LksLegacyGroup **inout_base,
+    const LksLegacyGroup *incoming, const LksComparator *comparator)
 {
-    LksGroup *base;
+    LksLegacyGroup *base;
     LksPath **planned_paths = NULL;
     const LksTreeNode **new_ordered_nodes = NULL;
     const LksTreeNode **old_ordered_nodes;
@@ -324,7 +324,7 @@ LksStatus lks_group_merge_into_owned_base(LksGroup **inout_base,
 
     for (index = 0; index < incoming_count; ++index) {
         status = lks_tree_insert(base->tree, planned_paths[index],
-            lks_group_item_at(incoming, index), NULL);
+            lks_legacy_group_item_at(incoming, index), NULL);
         if (status == LKS_STATUS_NOT_FOUND || status == LKS_STATUS_ALREADY_EXISTS)
             status = LKS_STATUS_INTERNAL_ERROR;
         if (status != LKS_STATUS_OK) goto consume_base;
@@ -344,21 +344,21 @@ LksStatus lks_group_merge_into_owned_base(LksGroup **inout_base,
 consume_base:
     lks_free(new_ordered_nodes);
     group_destroy_planned_paths(planned_paths, incoming_count);
-    lks_group_destroy(base);
+    lks_legacy_group_destroy(base);
     *inout_base = NULL;
     return status;
 }
 #endif
 
-LksStatus lks_group_batch_build(
+LksStatus lks_legacy_group_batch_build(
     void *const *items,
     size_t count,
     size_t group_size,
     const LksComparator *comparator,
-    LksGroupBatch **out_batch
+    LksLegacyGroupBatch **out_batch
 )
 {
-    LksGroupBatch *batch;
+    LksLegacyGroupBatch *batch;
     size_t index;
     size_t offset;
 
@@ -371,7 +371,7 @@ LksStatus lks_group_batch_build(
         return LKS_STATUS_INVALID_ARGUMENT;
     }
 
-    batch = (LksGroupBatch *)lks_alloc_tagged(sizeof(*batch), LKS_ALLOC_TAG_BATCH_OBJECT);
+    batch = (LksLegacyGroupBatch *)lks_alloc_tagged(sizeof(*batch), LKS_ALLOC_TAG_BATCH_OBJECT);
     if (batch == NULL) {
         return LKS_STATUS_OUT_OF_MEMORY;
     }
@@ -388,7 +388,7 @@ LksStatus lks_group_batch_build(
             lks_free(batch);
             return LKS_STATUS_OUT_OF_MEMORY;
         }
-        batch->groups = (LksGroup **)lks_alloc_tagged(
+        batch->groups = (LksLegacyGroup **)lks_alloc_tagged(
             batch->group_count * sizeof(*batch->groups), LKS_ALLOC_TAG_BATCH_GROUP_ARRAY);
         if (batch->groups == NULL) {
             lks_free(batch);
@@ -407,14 +407,14 @@ LksStatus lks_group_batch_build(
 
         remaining = count - offset;
         current_count = remaining < group_size ? remaining : group_size;
-        status = lks_group_build(items + offset, current_count, comparator,
+        status = lks_legacy_group_build(items + offset, current_count, comparator,
             &batch->groups[index]);
         if (status != LKS_STATUS_OK) {
             size_t cleanup_index;
 
             for (cleanup_index = 0; cleanup_index < batch->group_count;
                     ++cleanup_index) {
-                lks_group_destroy(batch->groups[cleanup_index]);
+                lks_legacy_group_destroy(batch->groups[cleanup_index]);
             }
             lks_free(batch->groups);
             lks_free(batch);
@@ -427,7 +427,7 @@ LksStatus lks_group_batch_build(
     return LKS_STATUS_OK;
 }
 
-void lks_group_batch_destroy(LksGroupBatch *batch)
+void lks_legacy_group_batch_destroy(LksLegacyGroupBatch *batch)
 {
     size_t index;
 
@@ -435,29 +435,29 @@ void lks_group_batch_destroy(LksGroupBatch *batch)
         return;
     }
     for (index = 0; index < batch->group_count; ++index) {
-        lks_group_destroy(batch->groups[index]);
+        lks_legacy_group_destroy(batch->groups[index]);
     }
     lks_free(batch->groups);
     lks_free(batch);
 }
 
-size_t lks_group_batch_total_size(const LksGroupBatch *batch)
+size_t lks_legacy_group_batch_total_size(const LksLegacyGroupBatch *batch)
 {
     return batch == NULL ? 0 : batch->total_count;
 }
 
-size_t lks_group_batch_group_count(const LksGroupBatch *batch)
+size_t lks_legacy_group_batch_group_count(const LksLegacyGroupBatch *batch)
 {
     return batch == NULL ? 0 : batch->group_count;
 }
 
-size_t lks_group_batch_group_size(const LksGroupBatch *batch)
+size_t lks_legacy_group_batch_group_size(const LksLegacyGroupBatch *batch)
 {
     return batch == NULL ? 0 : batch->group_size;
 }
 
-const LksGroup *lks_group_batch_group_at(
-    const LksGroupBatch *batch,
+const LksLegacyGroup *lks_legacy_group_batch_group_at(
+    const LksLegacyGroupBatch *batch,
     size_t index
 )
 {
@@ -467,10 +467,10 @@ const LksGroup *lks_group_batch_group_at(
     return batch->groups[index];
 }
 
-LksStatus lks_group_batch_merge_all(
-    const LksGroupBatch *batch,
+LksStatus lks_legacy_group_batch_merge_all(
+    const LksLegacyGroupBatch *batch,
     const LksComparator *comparator,
-    LksGroup **out_group
+    LksLegacyGroup **out_group
 )
 {
     void **source = NULL;
@@ -497,11 +497,11 @@ LksStatus lks_group_batch_merge_all(
     }
     offset = 0;
     for (index = 0; index < run_count; ++index) {
-        const LksGroup *group = batch->groups[index];
+        const LksLegacyGroup *group = batch->groups[index];
         size_t item_index;
         run_sizes[index] = group->count;
         for (item_index = 0; item_index < group->count; ++item_index)
-            source[offset++] = lks_group_item_at(group, item_index);
+            source[offset++] = lks_legacy_group_item_at(group, item_index);
     }
     if (offset != total) { status = LKS_STATUS_INTERNAL_ERROR; goto cleanup; }
     while (run_count > 1) {

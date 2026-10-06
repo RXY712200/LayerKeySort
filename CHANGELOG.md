@@ -2,6 +2,22 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0-preview.5] - 2026-10-06
+
+Final experimental V4 Preview, not RC/Stable; v3.1.0 remains recommended Stable.
+
+- Freeze pure 64-function V4 primary header, removing V3 live Path/Tree/OrderedTree
+  and Path-based Groups. Keep private strict LK1 migration/regression sources.
+- Rename flat types to LksGroup/LksGroupBatch, all 14 calls to lks_group_*;
+  no transitional aliases. Freeze explicit statuses, layouts, lifetime/callback/thread contracts.
+- Freeze LS1/LKS4SNP1 and enforce API manifest, exact wire corpus, Windows x86 CI,
+  typed compile/link and public C/C++17 integration tests.
+- Supply deterministic two-file source ZIP/SHA256SUMS; validate membership,
+  reproducibility and tamper rejection. Rewrite V4 API/migration/examples.
+- B64/live algorithms and persistent bytes unchanged; no new tuning/features.
+  RC fixes may preserve freeze; incompatible fixes require freeze revocation.
+- Next: Stage 5 — Release Candidate. No Preview.6.
+
 ## [4.0.0-preview.4] - 2026-10-06
 
 Experimental integration/performance-convergence prerelease; Stable remains

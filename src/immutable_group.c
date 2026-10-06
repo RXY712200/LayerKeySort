@@ -4,27 +4,27 @@
 #include "lks_sort_internal.h"
 #include <string.h>
 
-static LksImmutableGroup *ig_new(size_t count)
+static LksGroup *ig_new(size_t count)
 {
-    LksImmutableGroup *g;
+    LksGroup *g;
     if (count > SIZE_MAX/sizeof(void *)) return NULL;
-    g = (LksImmutableGroup *)lks_alloc(sizeof(*g));
+    g = (LksGroup *)lks_alloc(sizeof(*g));
     if (g) { memset(g, 0, sizeof(*g)); g->count = count; }
     return g;
 }
-void lks_immutable_group_destroy(LksImmutableGroup *g)
+void lks_group_destroy(LksGroup *g)
 {
     if (!g || g->busy) return;
     lks_source_marker_release(g->marker); lks_free(g->items); lks_free(g);
 }
-size_t lks_immutable_group_size(const LksImmutableGroup *g)
+size_t lks_group_size(const LksGroup *g)
 { return g && !g->busy ? g->count : 0; }
-void *lks_immutable_group_item_at(const LksImmutableGroup *g, size_t at)
+void *lks_group_item_at(const LksGroup *g, size_t at)
 { return g && !g->busy && at < g->count ? g->items[at] : NULL; }
-LksStatus lks_immutable_group_build(void *const *items, size_t count,
-    const LksComparator *comparator, LksImmutableGroup **out)
+LksStatus lks_group_build(void *const *items, size_t count,
+    const LksComparator *comparator, LksGroup **out)
 {
-    LksImmutableGroup *g; LksStatus status; size_t i; LksComparator descriptor;
+    LksGroup *g; LksStatus status; size_t i; LksComparator descriptor;
     if (out) *out = NULL;
     if (!out || !comparator || !comparator->compare || (count && !items) ||
         count > SIZE_MAX/sizeof(void *)) return LKS_STATUS_INVALID_ARGUMENT;
@@ -32,14 +32,14 @@ LksStatus lks_immutable_group_build(void *const *items, size_t count,
     descriptor = *comparator;
     g = ig_new(count); if (!g) return LKS_STATUS_OUT_OF_MEMORY;
     status = lks_stable_sort_copy(items, count, &descriptor, &g->items);
-    if (status != LKS_STATUS_OK) { lks_immutable_group_destroy(g); return status; }
+    if (status != LKS_STATUS_OK) { lks_group_destroy(g); return status; }
     *out = g; return LKS_STATUS_OK;
 }
-LksStatus lks_immutable_group_merge(const LksImmutableGroup *base,
-    const LksImmutableGroup *incoming, const LksComparator *comparator,
-    LksImmutableGroup **out)
+LksStatus lks_group_merge(const LksGroup *base,
+    const LksGroup *incoming, const LksComparator *comparator,
+    LksGroup **out)
 {
-    LksImmutableGroup *g, *a = (LksImmutableGroup *)base, *b = (LksImmutableGroup *)incoming;
+    LksGroup *g, *a = (LksGroup *)base, *b = (LksGroup *)incoming;
     size_t count; LksComparator descriptor;
     if (out) *out = NULL;
     if (!a || !b || !out || !comparator || !comparator->compare) return LKS_STATUS_INVALID_ARGUMENT;
@@ -50,59 +50,59 @@ LksStatus lks_immutable_group_merge(const LksImmutableGroup *base,
     g = ig_new(count); if (!g) return LKS_STATUS_OUT_OF_MEMORY;
     if (count) {
         g->items = (void **)lks_alloc(count*sizeof(*g->items));
-        if (!g->items) { lks_immutable_group_destroy(g); return LKS_STATUS_OUT_OF_MEMORY; }
+        if (!g->items) { lks_group_destroy(g); return LKS_STATUS_OUT_OF_MEMORY; }
     }
     a->busy = b->busy = 1;
     lks_merge_sorted_pointers(a->items, a->count, b->items, b->count, &descriptor, g->items);
     a->busy = b->busy = 0; *out = g; return LKS_STATUS_OK;
 }
-void lks_immutable_group_batch_destroy(LksImmutableGroupBatch *b)
+void lks_group_batch_destroy(LksGroupBatch *b)
 {
     size_t i;
     if (!b || b->busy) return;
     /* A borrowed chunk may currently be executing an association callback. */
     for (i = 0; i < b->group_count; ++i) if (b->groups[i]->busy) return;
-    for (i = 0; i < b->group_count; ++i) lks_immutable_group_destroy(b->groups[i]);
+    for (i = 0; i < b->group_count; ++i) lks_group_destroy(b->groups[i]);
     lks_free(b->groups); lks_free(b);
 }
-LksStatus lks_immutable_group_batch_build(void *const *items, size_t count,
-    size_t group_size, const LksComparator *comparator, LksImmutableGroupBatch **out)
+LksStatus lks_group_batch_build(void *const *items, size_t count,
+    size_t group_size, const LksComparator *comparator, LksGroupBatch **out)
 {
-    LksImmutableGroupBatch *b; size_t groups, i, at = 0; LksStatus status;
+    LksGroupBatch *b; size_t groups, i, at = 0; LksStatus status;
     LksComparator descriptor;
     if (out) *out = NULL;
     if (!out || !group_size || !comparator || !comparator->compare || (count && !items) ||
         count > SIZE_MAX/sizeof(void *)) return LKS_STATUS_INVALID_ARGUMENT;
     descriptor = *comparator; groups = count/group_size+(count%group_size != 0);
-    if (groups > SIZE_MAX/sizeof(LksImmutableGroup *)) return LKS_STATUS_INVALID_ARGUMENT;
-    b = (LksImmutableGroupBatch *)lks_alloc(sizeof(*b));
+    if (groups > SIZE_MAX/sizeof(LksGroup *)) return LKS_STATUS_INVALID_ARGUMENT;
+    b = (LksGroupBatch *)lks_alloc(sizeof(*b));
     if (!b) return LKS_STATUS_OUT_OF_MEMORY;
     memset(b, 0, sizeof(*b)); b->count = count; b->group_size = group_size;
     if (groups) {
-        b->groups = (LksImmutableGroup **)lks_alloc(groups*sizeof(*b->groups));
+        b->groups = (LksGroup **)lks_alloc(groups*sizeof(*b->groups));
         if (!b->groups) { lks_free(b); return LKS_STATUS_OUT_OF_MEMORY; }
     }
     for (i = 0; i < groups; ++i) {
         size_t n = count-at < group_size ? count-at : group_size;
-        status = lks_immutable_group_build(items+at, n, &descriptor, &b->groups[i]);
-        if (status != LKS_STATUS_OK) { lks_immutable_group_batch_destroy(b); return status; }
+        status = lks_group_build(items+at, n, &descriptor, &b->groups[i]);
+        if (status != LKS_STATUS_OK) { lks_group_batch_destroy(b); return status; }
         ++b->group_count; at += n;
     }
     *out = b; return LKS_STATUS_OK;
 }
-size_t lks_immutable_group_batch_size(const LksImmutableGroupBatch *b)
+size_t lks_group_batch_size(const LksGroupBatch *b)
 { return b && !b->busy ? b->count : 0; }
-size_t lks_immutable_group_batch_group_count(const LksImmutableGroupBatch *b)
+size_t lks_group_batch_group_count(const LksGroupBatch *b)
 { return b && !b->busy ? b->group_count : 0; }
-size_t lks_immutable_group_batch_group_size(const LksImmutableGroupBatch *b)
+size_t lks_group_batch_group_size(const LksGroupBatch *b)
 { return b && !b->busy ? b->group_size : 0; }
-const LksImmutableGroup *lks_immutable_group_batch_group_at(const LksImmutableGroupBatch *b, size_t i)
+const LksGroup *lks_group_batch_group_at(const LksGroupBatch *b, size_t i)
 { return b && !b->busy && i < b->group_count ? b->groups[i] : NULL; }
-LksStatus lks_immutable_group_batch_merge_all(const LksImmutableGroupBatch *batch,
-    const LksComparator *comparator, LksImmutableGroup **out)
+LksStatus lks_group_batch_merge_all(const LksGroupBatch *batch,
+    const LksComparator *comparator, LksGroup **out)
 {
-    LksImmutableGroupBatch *b = (LksImmutableGroupBatch *)batch;
-    LksImmutableGroup *g; void **scratch = NULL, **from, **to;
+    LksGroupBatch *b = (LksGroupBatch *)batch;
+    LksGroup *g; void **scratch = NULL, **from, **to;
     size_t i, at = 0, width; LksComparator descriptor;
     if (out) *out = NULL;
     if (!b || !out || !comparator || !comparator->compare) return LKS_STATUS_INVALID_ARGUMENT;
@@ -139,20 +139,20 @@ LksStatus lks_immutable_group_batch_merge_all(const LksImmutableGroupBatch *batc
     for (i = 0; i < b->group_count; ++i) b->groups[i]->busy = 0;
     b->busy = 0; lks_free(scratch); *out = g; return LKS_STATUS_OK;
 oom:
-    lks_free(scratch); lks_immutable_group_destroy(g); return LKS_STATUS_OUT_OF_MEMORY;
+    lks_free(scratch); lks_group_destroy(g); return LKS_STATUS_OUT_OF_MEMORY;
 }
-typedef struct IgIterator { const LksImmutableGroup *group; size_t index; } IgIterator;
+typedef struct IgIterator { const LksGroup *group; size_t index; } IgIterator;
 static void *ig_next(void *context)
 { IgIterator *it = (IgIterator *)context; return it->group->items[it->index++]; }
-LksStatus lks_immutable_group_snapshot_capture(const LksImmutableGroup *group,
+LksStatus lks_group_snapshot_capture(const LksGroup *group,
     const LksSnapshotOptions *options, LksSnapshot **out)
 {
-    LksImmutableGroup *g = (LksImmutableGroup *)group; IgIterator it;
+    LksGroup *g = (LksGroup *)group; IgIterator it;
     if (out) *out = NULL;
     if (!g || !out) return LKS_STATUS_INVALID_ARGUMENT;
     it.group = g; it.index = 0;
     return lks_snapshot_capture_sequence(g->count, ig_next, &it, &g->busy,
         &g->marker, 0, options, out);
 }
-int lks_immutable_group_snapshot_is_current(const LksImmutableGroup *g, const LksSnapshot *s)
+int lks_group_snapshot_is_current(const LksGroup *g, const LksSnapshot *s)
 { return g && s && !g->busy && s->marker && g->marker == s->marker && s->revision == 0; }

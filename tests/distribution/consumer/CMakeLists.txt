@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
 project(LayerKeySortExternalConsumer LANGUAGES C CXX)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(DEFINED LKS_SOURCE_DIR OR DEFINED LKS_FETCHCONTENT_SOURCE_DIR)
     if(DEFINED LKS_FETCHCONTENT_SOURCE_DIR)
@@ -31,3 +35,6 @@ add_executable(consumer_c consumer.c)
 target_link_libraries(consumer_c PRIVATE ${LKS_CONSUMER_TARGET})
 add_executable(consumer_cpp consumer.cpp)
 target_link_libraries(consumer_cpp PRIVATE ${LKS_CONSUMER_CPP_TARGET})
+
+add_executable(consumer_api_cpp api_compile.cpp)
+target_link_libraries(consumer_api_cpp PRIVATE ${LKS_CONSUMER_CPP_TARGET})

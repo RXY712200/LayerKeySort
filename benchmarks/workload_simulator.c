@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 /* Synthetic application-like evidence, not user traces. Production and
  * diagnostic builds execute the same trace; only the latter times instrumented
  * library calls. The independent flat model and profiling stay outside timers. */

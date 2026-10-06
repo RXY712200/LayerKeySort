@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 /* Deterministic application-shaped synthetic traces. Identity and the flat
  * oracle are independent of the library representation. Validation and model
  * maintenance are outside foreground timers; process/cache interference still

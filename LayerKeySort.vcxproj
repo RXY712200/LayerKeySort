@@ -88,7 +88,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -106,7 +106,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -126,7 +126,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -144,7 +144,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -164,7 +164,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ASan|x64'">
     <ClCompile>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;LKS_ENABLE_ALLOC_DIAGNOSTICS;LKS_ENABLE_V1_REGRESSION_HELPERS;LKS_V2_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -192,6 +192,7 @@
     <ClCompile Include="src\gap.c" />
     <ClInclude Include="include\layerkeysort.h" />
     <ClInclude Include="src\lks_alloc_internal.h" />
+    <ClInclude Include="src\lks_legacy_internal.h" />
     <ClInclude Include="src\lks_path_internal.h" />
     <ClInclude Include="src\lks_slot_codec_internal.h" />
     <ClInclude Include="src\lks_group_internal.h" />

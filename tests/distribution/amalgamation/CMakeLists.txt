@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(LayerKeySortAmalgamationConsumer LANGUAGES C)
+project(LayerKeySortAmalgamationConsumer LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
@@ -22,3 +22,14 @@ else()
     target_compile_options(amalgamation_package_example PRIVATE
         -Wall -Wextra -Wpedantic -Werror)
 endif()
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_library(amalgamation_library STATIC "${LKS_AMALGAM_DIR}/layerkeysort.c")
+add_executable(amalgamation_cpp consumer.cpp)
+target_include_directories(amalgamation_cpp PRIVATE "${LKS_AMALGAM_DIR}")
+target_link_libraries(amalgamation_cpp PRIVATE amalgamation_library)
+
+add_executable(amalgamation_api_cpp api_compile.cpp)
+target_include_directories(amalgamation_api_cpp PRIVATE "${LKS_AMALGAM_DIR}")
+target_link_libraries(amalgamation_api_cpp PRIVATE amalgamation_library)

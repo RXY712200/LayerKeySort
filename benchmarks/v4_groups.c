@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 /* Comparable V3/V4 immutable operations. Monotonic timing; independent stable
  * oracle orders by key then original occurrence ID. Application arrays excluded
  * from requested library byte counts. */
@@ -45,31 +46,31 @@ int main(int argc,char **argv)
     for(i=0;i<n;++i) { items[i].id=i;items[i].key=equal?0:(uint32_t)(i*2654435761u);input[i]=expected[i]=&items[i]; }
     qsort(expected,n,sizeof(*expected),oracle);
     for(v=3;v<=4;++v) {
-        LksGroup *a=NULL,*b=NULL,*g=NULL;LksGroupBatch *batch=NULL;
-        LksImmutableGroup *ia=NULL,*ib=NULL,*ig=NULL;LksImmutableGroupBatch *ibatch=NULL;
+        LksLegacyGroup *a=NULL,*b=NULL,*g=NULL;LksLegacyGroupBatch *batch=NULL;
+        LksGroup *ia=NULL,*ib=NULL,*ig=NULL;LksGroupBatch *ibatch=NULL;
         LksAllocStats before;double t;const char *version=v==3?"V3":"V4";
         CHECK(!lks_alloc_stats_reset());before=lks_alloc_stats_get();calls=0;t=now();
-        CHECK((v==3?lks_group_build(input,n,&cmp,&g):lks_immutable_group_build(input,n,&cmp,&ig))==LKS_STATUS_OK);
-        t=now()-t;for(i=0;i<n;++i) { CHECK((v==3?lks_group_item_at(g,i):lks_immutable_group_item_at(ig,i))==expected[i]); }
+        CHECK((v==3?lks_legacy_group_build(input,n,&cmp,&g):lks_group_build(input,n,&cmp,&ig))==LKS_STATUS_OK);
+        t=now()-t;for(i=0;i<n;++i) { CHECK((v==3?lks_legacy_group_item_at(g,i):lks_group_item_at(ig,i))==expected[i]); }
         emit(version,"build",n,equal,run,t,before);
         if(v==4) {
             LksSnapshot *snapshot=NULL;unsigned char ns[]={1,4};LksSnapshotOptions opt={ns,2,NULL,NULL};
-            before=lks_alloc_stats_get();calls=0;t=now();CHECK(lks_immutable_group_snapshot_capture(ig,&opt,&snapshot)==LKS_STATUS_OK);t=now()-t;
+            before=lks_alloc_stats_get();calls=0;t=now();CHECK(lks_group_snapshot_capture(ig,&opt,&snapshot)==LKS_STATUS_OK);t=now()-t;
             CHECK(!calls && lks_snapshot_count(snapshot)==n);emit(version,"capture",n,equal,run,t,before);lks_snapshot_destroy(snapshot);
         }
-        lks_group_destroy(g);lks_immutable_group_destroy(ig);g=NULL;ig=NULL;
-        if(v==3) { CHECK(lks_group_build(input,n/2,&cmp,&a)==LKS_STATUS_OK && lks_group_build(input+n/2,n-n/2,&cmp,&b)==LKS_STATUS_OK); }
-        else { CHECK(lks_immutable_group_build(input,n/2,&cmp,&ia)==LKS_STATUS_OK && lks_immutable_group_build(input+n/2,n-n/2,&cmp,&ib)==LKS_STATUS_OK); }
-        before=lks_alloc_stats_get();calls=0;t=now();CHECK((v==3?lks_group_merge(a,b,&cmp,&g):lks_immutable_group_merge(ia,ib,&cmp,&ig))==LKS_STATUS_OK);t=now()-t;
-        for(i=0;i<n;++i) { CHECK((v==3?lks_group_item_at(g,i):lks_immutable_group_item_at(ig,i))==expected[i]); }
+        lks_legacy_group_destroy(g);lks_group_destroy(ig);g=NULL;ig=NULL;
+        if(v==3) { CHECK(lks_legacy_group_build(input,n/2,&cmp,&a)==LKS_STATUS_OK && lks_legacy_group_build(input+n/2,n-n/2,&cmp,&b)==LKS_STATUS_OK); }
+        else { CHECK(lks_group_build(input,n/2,&cmp,&ia)==LKS_STATUS_OK && lks_group_build(input+n/2,n-n/2,&cmp,&ib)==LKS_STATUS_OK); }
+        before=lks_alloc_stats_get();calls=0;t=now();CHECK((v==3?lks_legacy_group_merge(a,b,&cmp,&g):lks_group_merge(ia,ib,&cmp,&ig))==LKS_STATUS_OK);t=now()-t;
+        for(i=0;i<n;++i) { CHECK((v==3?lks_legacy_group_item_at(g,i):lks_group_item_at(ig,i))==expected[i]); }
         emit(version,"merge",n,equal,run,t,before);
-        lks_group_destroy(a);lks_group_destroy(b);lks_group_destroy(g);lks_immutable_group_destroy(ia);lks_immutable_group_destroy(ib);lks_immutable_group_destroy(ig);g=NULL;ig=NULL;
+        lks_legacy_group_destroy(a);lks_legacy_group_destroy(b);lks_legacy_group_destroy(g);lks_group_destroy(ia);lks_group_destroy(ib);lks_group_destroy(ig);g=NULL;ig=NULL;
         CHECK(!lks_alloc_stats_reset());before=lks_alloc_stats_get();calls=0;t=now();
-        CHECK((v==3?lks_group_batch_build(input,n,1024,&cmp,&batch):lks_immutable_group_batch_build(input,n,1024,&cmp,&ibatch))==LKS_STATUS_OK);t=now()-t;emit(version,"batch_build",n,equal,run,t,before);
-        before=lks_alloc_stats_get();calls=0;t=now();CHECK((v==3?lks_group_batch_merge_all(batch,&cmp,&g):lks_immutable_group_batch_merge_all(ibatch,&cmp,&ig))==LKS_STATUS_OK);t=now()-t;
-        for(i=0;i<n;++i) { CHECK((v==3?lks_group_item_at(g,i):lks_immutable_group_item_at(ig,i))==expected[i]); }
+        CHECK((v==3?lks_legacy_group_batch_build(input,n,1024,&cmp,&batch):lks_group_batch_build(input,n,1024,&cmp,&ibatch))==LKS_STATUS_OK);t=now()-t;emit(version,"batch_build",n,equal,run,t,before);
+        before=lks_alloc_stats_get();calls=0;t=now();CHECK((v==3?lks_legacy_group_batch_merge_all(batch,&cmp,&g):lks_group_batch_merge_all(ibatch,&cmp,&ig))==LKS_STATUS_OK);t=now()-t;
+        for(i=0;i<n;++i) { CHECK((v==3?lks_legacy_group_item_at(g,i):lks_group_item_at(ig,i))==expected[i]); }
         emit(version,"batch_merge",n,equal,run,t,before);
-        calls=0;t=now();lks_group_destroy(g);lks_group_batch_destroy(batch);lks_immutable_group_destroy(ig);lks_immutable_group_batch_destroy(ibatch);t=now()-t;
+        calls=0;t=now();lks_legacy_group_destroy(g);lks_legacy_group_batch_destroy(batch);lks_group_destroy(ig);lks_group_batch_destroy(ibatch);t=now()-t;
         CHECK(!lks_alloc_stats_get().live_bytes && !lks_alloc_stats_get().live_blocks);emit(version,"cleanup",n,equal,run,t,lks_alloc_stats_get());
     }
     free(items);free(input);free(expected);return 0;

@@ -1,71 +1,13 @@
-# V3 architecture
+# V4 architecture
 
-Current V4 scope is **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
+Contextual live order owns occurrence records in locally repaired B64 blocks and
+balanced block index. Handles address occurrences, not coordinates; moves preserve
+handles. ManagedOrder binds comparison semantics to the same core. No second
+engine, public rank/physical navigation or live Path.
 
-This page describes the preserved V3 implementation. The experimental V4 Preview.2
-core is documented in [V4 Preview.2](V4_PREVIEW2.md) and derives from the
-[V4 design](design/V4_ARCHITECTURE.md). The separate historical/export layer is implemented in [V4 Preview.3](V4_PREVIEW3.md); flat immutable Group/Batch integration is implemented in [Preview.4](V4_PREVIEW4.md). The Stage-3 design record remains historical.
-
-This describes the 3.1.0 source implementation, whose ordering code is unchanged
-from `v3.0.0`. The [API reference](API.md)
-and [3.x compatibility contract](COMPATIBILITY.md) define public behavior;
-physical AVL shape, generated coordinates, and policy thresholds remain private.
-
-## Two Tree models
-
-`LksTree` is a manual coordinate container. Callers select Paths for explicit
-insertion and rekey. It does not enforce a comparator invariant. `LksOrderedTree`
-copies a comparator descriptor at creation and owns a private `LksTree` index.
-It chooses and, when needed, changes Paths to preserve comparator order. It
-does not expose arbitrary Path insertion or rekey. Both models borrow item
-objects and own their nodes and Path copies. The ordered model also borrows
-the comparator context; the callback, context, and resident items must retain
-their comparison semantics while the Tree lives.
-
-Both models use a Path-keyed AVL index. Physical parent and child links are
-index structure, not Path-prefix relationships or logical item order. In-order
-traversal follows `lks_path_compare()`. Physical navigation is a transient
-implementation-defined view. No subtree-size index is maintained.
-
-## Managed insertion and relabel
-
-Ordered insertion finds the comparator upper bound, so equal items are placed
-after existing equal items. It first tries to generate a coordinate directly
-between neighboring Paths. Endpoint insertion can carry a saturated slot
-into an ancestor: append advances an ordinary slot (the negative root runs
-in reverse slot order), while prepend can allocate a new negative-root
-coordinate and carry a full root slot to the next level. The first 64
-successful inserts in one endpoint run use spacing ten; later inserts use
-spacing one. An interior insert or successful removal resets the run hint;
-failed operations leave it unchanged. A direct
-candidate beyond the preferred depth can trigger adaptive relabel. Current
-private policy prefers depth at most six, permits open-end direct depth up to
-sixteen, starts relabel with eight logical neighbors, and doubles the window
-as necessary. These are tuning choices, not validity or compatibility limits.
-
-Relabel operates on a contiguous logical-order region. For a bounded region,
-gap generation prepares replacement Paths; a region covering the entire Tree
-uses sparse bulk Path generation. The plan prepares all Paths, scratch space,
-and the new node before it changes the Tree. It verifies strict Path increase
-and exterior bounds. Commit replaces existing Path pointers in unchanged
-in-order ranks, links the new node, balances the AVL, and frees old Paths
-without fallible allocation. Failure during preparation leaves the Tree
-unchanged. A full-range relabel may replace all `n` resident coordinates and
-temporarily hold old and new Paths and scratch storage.
-
-The V3 online path does not reconstruct the physical Tree as a fallback.
-Balanced index search visits `O(log n)` nodes, but each visit may inspect a
-Path and invoke a caller comparator. Candidate generation depends on Path
-depth. A relabel may prepare `n + 1` Paths, and failed windows also cost work.
-Complete managed insertion has no claimed worst-case `O(log n)` time or
-formal amortized bound. See [current measurements](BENCHMARKS.md) and
-[validation](VALIDATION.md).
-
-## Representation boundaries
-
-A Path is an ordering coordinate, not an item ID. Display text is readable
-and parseable; the separately versioned LK1 key persists and bytewise-sorts
-one coordinate. Neither representation serializes a Tree or caller payloads.
-The exact display and LK1 grammars are specified in [API.md](API.md).
-Historical design alternatives and V2 policy decisions are retained in
-[design history](history/DESIGN_HISTORY.md).
+Group owns flat borrowed-pointer sequence. Shared snapshot capture prepares copied
+namespace/association rows, then publishes provenance; atomic marker lifetime does
+not supply locking. Snapshots are historical, independent of live/application data.
+Private strict Path/LK1 migration remains. Legacy live Tree/Group/gap/bulk modules
+are historical regression/benchmark infrastructure, not production/amalgamation.
+No private header installed. [Freeze](V4_FREEZE.md) is implementation-independent.

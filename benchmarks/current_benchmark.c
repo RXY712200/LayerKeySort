@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 /* Reproducible public-API timing harness. Build against either the current
  * library or Preview.3 (-DLKS_BENCH_PREVIEW3 for unavailable newer APIs). */
 #include <stdint.h>
@@ -353,8 +354,8 @@ static int run_once(const char *operation, const char *distribution,
     LksComparator comparator = {compare_item, NULL};
     LksTree *tree = NULL;
     LksOrderedTree *ordered = NULL;
-    LksGroup *group = NULL, *result = NULL;
-    LksGroupBatch *batch = NULL;
+    LksLegacyGroup *group = NULL, *result = NULL;
+    LksLegacyGroupBatch *batch = NULL;
     size_t i;
     double start, end;
     int good = 1;
@@ -402,56 +403,56 @@ static int run_once(const char *operation, const char *distribution,
         if (good) good = validate_tree(lks_ordered_tree_internal_index(ordered), count);
     } else if (strcmp(operation, "group") == 0) {
         start = now_ms();
-        good = lks_group_build(pointers, count, &comparator, &group) == LKS_STATUS_OK;
+        good = lks_legacy_group_build(pointers, count, &comparator, &group) == LKS_STATUS_OK;
         end = now_ms();
         if (good) {
-            for (i = 0; i < count; ++i) pointers[i] = lks_group_item_at(group, i);
+            for (i = 0; i < count; ++i) pointers[i] = lks_legacy_group_item_at(group, i);
             good = sorted_items(pointers, count, 1);
         }
     } else if (strcmp(operation, "batch") == 0) {
         start = now_ms();
-        good = lks_group_batch_build(pointers, count, 128, &comparator, &batch) == LKS_STATUS_OK;
+        good = lks_legacy_group_batch_build(pointers, count, 128, &comparator, &batch) == LKS_STATUS_OK;
         end = now_ms();
         if (good) {
-            size_t j, groups = lks_group_batch_group_count(batch);
-            good = lks_group_batch_total_size(batch) == count;
+            size_t j, groups = lks_legacy_group_batch_group_count(batch);
+            good = lks_legacy_group_batch_total_size(batch) == count;
             for (i = 0; good && i < groups; ++i) {
-                const LksGroup *part = lks_group_batch_group_at(batch, i);
-                size_t size = lks_group_size(part);
+                const LksLegacyGroup *part = lks_legacy_group_batch_group_at(batch, i);
+                size_t size = lks_legacy_group_size(part);
                 for (j = 1; j < size; ++j) {
-                    const Item *a = (const Item *)lks_group_item_at(part, j - 1);
-                    const Item *b = (const Item *)lks_group_item_at(part, j);
+                    const Item *a = (const Item *)lks_legacy_group_item_at(part, j - 1);
+                    const Item *b = (const Item *)lks_legacy_group_item_at(part, j);
                     if (a->key > b->key || (a->key == b->key &&
                             a->serial > b->serial)) { good = 0; break; }
                 }
             }
         }
     } else if (strcmp(operation, "batch_merge") == 0) {
-        if (lks_group_batch_build(pointers, count, 128, &comparator, &batch) != LKS_STATUS_OK) {
+        if (lks_legacy_group_batch_build(pointers, count, 128, &comparator, &batch) != LKS_STATUS_OK) {
             good = 0; goto done;
         }
         start = now_ms();
-        good = lks_group_batch_merge_all(batch, &comparator, &result) == LKS_STATUS_OK;
+        good = lks_legacy_group_batch_merge_all(batch, &comparator, &result) == LKS_STATUS_OK;
         end = now_ms();
         if (good) {
-            for (i = 0; i < count; ++i) pointers[i] = lks_group_item_at(result, i);
+            for (i = 0; i < count; ++i) pointers[i] = lks_legacy_group_item_at(result, i);
             good = sorted_items(pointers, count, 1);
         }
     } else if (strcmp(operation, "group_merge") == 0) {
         size_t half = count / 2;
-        if (lks_group_build(pointers, half, &comparator, &group) != LKS_STATUS_OK ||
-            lks_group_build(pointers + half, count - half, &comparator, &result) != LKS_STATUS_OK) {
+        if (lks_legacy_group_build(pointers, half, &comparator, &group) != LKS_STATUS_OK ||
+            lks_legacy_group_build(pointers + half, count - half, &comparator, &result) != LKS_STATUS_OK) {
             good = 0; goto done;
         }
-        { LksGroup *merged = NULL;
+        { LksLegacyGroup *merged = NULL;
             start = now_ms();
-            good = lks_group_merge(group, result, &comparator, &merged) == LKS_STATUS_OK;
+            good = lks_legacy_group_merge(group, result, &comparator, &merged) == LKS_STATUS_OK;
             end = now_ms();
             if (good) {
-                for (i = 0; i < count; ++i) pointers[i] = lks_group_item_at(merged, i);
+                for (i = 0; i < count; ++i) pointers[i] = lks_legacy_group_item_at(merged, i);
                 good = sorted_items(pointers, count, 1);
             }
-            lks_group_destroy(merged);
+            lks_legacy_group_destroy(merged);
         }
     } else if (strcmp(operation, "sort") == 0) {
         start = now_ms();
@@ -520,8 +521,8 @@ static int run_once(const char *operation, const char *distribution,
     } else { good = 0; goto done; }
     if (good) { *out_ms = end - start; sink += count; }
 done:
-    lks_group_destroy(group); lks_group_destroy(result);
-    lks_group_batch_destroy(batch); lks_tree_destroy(tree);
+    lks_legacy_group_destroy(group); lks_legacy_group_destroy(result);
+    lks_legacy_group_batch_destroy(batch); lks_tree_destroy(tree);
     lks_ordered_tree_destroy(ordered);
     free(pointers); free(items);
     return good;

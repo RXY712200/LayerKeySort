@@ -33,7 +33,7 @@ static int equal_compare(const void *a,const void *b,void *ctx)
 static int run(int group_source)
 {
     size_t i,j,started=0; int item=1,result=0; void *items[128]; Worker workers[THREADS];
-    LksImmutableGroup *g=NULL; LksSnapshot *shared=NULL; unsigned char ns[]={0,255};
+    LksGroup *g=NULL; LksSnapshot *shared=NULL; unsigned char ns[]={0,255};
     LksSnapshotOptions opt={ns,2,NULL,NULL};
     LksOrder *order=lks_order_create(); const LksOrderHandle *h;
 #ifdef _WIN32
@@ -46,14 +46,14 @@ static int run(int group_source)
     if(!order) return 1;
     for(i=0;i<128;++i) if(lks_order_insert_back(order,items[i],&h)!=LKS_STATUS_OK) return 2;
     memset(workers,0,sizeof(workers));
-    if(group_source && lks_immutable_group_build(items,128,&cmp,&g)!=LKS_STATUS_OK) return 3;
-    if((group_source ? lks_immutable_group_snapshot_capture(g,&opt,&shared) :
+    if(group_source && lks_group_build(items,128,&cmp,&g)!=LKS_STATUS_OK) return 3;
+    if((group_source ? lks_group_snapshot_capture(g,&opt,&shared) :
         lks_order_snapshot_capture(order,&opt,&shared))!=LKS_STATUS_OK) return 3;
     for(i=0;i<THREADS;++i) {
         workers[i].shared=shared;
-        for(j=0;j<EACH;++j) if((group_source ? lks_immutable_group_snapshot_capture(g,&opt,&workers[i].owned[j]) : lks_order_snapshot_capture(order,&opt,&workers[i].owned[j]))!=LKS_STATUS_OK) return 4;
+        for(j=0;j<EACH;++j) if((group_source ? lks_group_snapshot_capture(g,&opt,&workers[i].owned[j]) : lks_order_snapshot_capture(order,&opt,&workers[i].owned[j]))!=LKS_STATUS_OK) return 4;
     }
-    lks_order_destroy(order); lks_immutable_group_destroy(g);
+    lks_order_destroy(order); lks_group_destroy(g);
     for(i=0;i<THREADS;++i) {
 #ifdef _WIN32
         threads[i]=CreateThread(NULL,0,entry,&workers[i],0,NULL); if(!threads[i]) { result=5;break; }

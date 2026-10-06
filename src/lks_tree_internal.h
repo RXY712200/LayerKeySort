@@ -2,7 +2,7 @@
 #define LKS_TREE_INTERNAL_H
 
 #include <stddef.h>
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 
 typedef struct LksTreeInternalProfile {
     size_t real_node_count;

@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include <errno.h>
 #include <limits.h>
 #include <stdint.h>

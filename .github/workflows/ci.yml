@@ -7,10 +7,14 @@ on:
 jobs:
   windows-msvc:
     runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        architecture: [x64, Win32]
     steps:
       - uses: actions/checkout@v4
       - name: Configure
-        run: cmake -S . -B build -A x64 -DLKS_BUILD_BENCHMARKS=ON
+        run: cmake -S . -B build -A ${{ matrix.architecture }} -DLKS_BUILD_BENCHMARKS=ON
       - name: Build
         run: cmake --build build --config Debug --parallel
       - name: Test
@@ -32,8 +36,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Frozen V4 public API manifest
+        run: python tools/verify_v4_api.py
       - name: Distribution consumers and reproducible amalgamation
-        run: python tools/validate_distribution.py
+        run: python tools/validate_distribution.py --architecture ${{ matrix.architecture }}
 
   ubuntu:
     runs-on: ubuntu-latest
@@ -72,6 +78,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Frozen V4 public API manifest
+        run: python tools/verify_v4_api.py
       - name: Distribution consumers and reproducible amalgamation
         run: python3 tools/validate_distribution.py
       - name: Verify release asset wrapper
@@ -109,5 +117,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Frozen V4 public API manifest
+        run: python tools/verify_v4_api.py
       - name: Distribution consumers and reproducible amalgamation
         run: python3 tools/validate_distribution.py

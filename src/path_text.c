@@ -1,4 +1,4 @@
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 #include "lks_slot_codec_internal.h"
 #include <stdint.h>
 #include <string.h>

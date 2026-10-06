@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

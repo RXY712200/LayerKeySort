@@ -32,7 +32,8 @@ def sources():
         not re.fullmatch(r"src/[A-Za-z0-9_]+\.c", name) for name in names
     ):
         raise ValueError("invalid or duplicated production source in manifest")
-    actual = {p.relative_to(ROOT).as_posix() for p in (ROOT / "src").glob("*.c")}
+    regression = {"src/gap.c", "src/tree.c", "src/group.c", "src/bulk.c"}
+    actual = {p.relative_to(ROOT).as_posix() for p in (ROOT / "src").glob("*.c")} - regression
     if set(names) != actual:
         raise ValueError(f"production manifest mismatch: missing={sorted(actual-set(names))}, "
                          f"unexpected={sorted(set(names)-actual)}")
@@ -46,7 +47,7 @@ def sources():
             if node.tag.rsplit("}", 1)[-1] == "ClCompile"
             and node.attrib.get("Include", "").replace("\\", "/").startswith("src/")
         }
-        if listed != set(names):
+        if listed != set(names) | regression:
             raise ValueError(f"{project_file} production sources differ from manifest: "
                              f"missing={sorted(set(names)-listed)}, "
                              f"unexpected={sorted(listed-set(names))}")

@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -207,7 +208,7 @@ static void property_make_dataset(
         input[index]->original_index = (unsigned int)index;
 }
 
-static int property_paths_strictly_increase(const LksGroup *group,
+static int property_paths_strictly_increase(const LksLegacyGroup *group,
     size_t count, LksPropertyCounts *counts)
 {
     size_t index;
@@ -215,8 +216,8 @@ static int property_paths_strictly_increase(const LksGroup *group,
 
     for (index = 1; index < count; ++index) {
         int order = 0;
-        LksStatus status = lks_path_compare(lks_group_path_at(group, index - 1),
-            lks_group_path_at(group, index), &order);
+        LksStatus status = lks_path_compare(lks_legacy_group_path_at(group, index - 1),
+            lks_legacy_group_path_at(group, index), &order);
 
         if (status != LKS_STATUS_OK || order >= 0) {
             ++counts->path_order_failures;
@@ -230,16 +231,16 @@ static int property_paths_strictly_increase(const LksGroup *group,
     return valid;
 }
 
-static int property_group_matches_oracle(const LksGroup *group,
+static int property_group_matches_oracle(const LksLegacyGroup *group,
     LksPropertyItem *const *expected, size_t count,
     LksPropertyCounts *counts)
 {
     size_t index;
     int valid = 1;
 
-    if (lks_group_size(group) != count) return 0;
+    if (lks_legacy_group_size(group) != count) return 0;
     for (index = 0; index < count; ++index) {
-        if (lks_group_item_at(group, index) != expected[index]) valid = 0;
+        if (lks_legacy_group_item_at(group, index) != expected[index]) valid = 0;
         if (index > 0 && expected[index - 1]->key == expected[index]->key &&
             expected[index - 1]->original_index > expected[index]->original_index)
             valid = 0;
@@ -248,17 +249,17 @@ static int property_group_matches_oracle(const LksGroup *group,
     return valid;
 }
 
-static int property_snapshot_group(const LksGroup *group,
+static int property_snapshot_group(const LksLegacyGroup *group,
     LksPropertyGroupSnapshot *snapshot)
 {
     size_t index;
 
     memset(snapshot, 0, sizeof(*snapshot));
-    snapshot->count = lks_group_size(group);
+    snapshot->count = lks_legacy_group_size(group);
     if (snapshot->count > LKS_PROPERTY_MAX_ITEMS) return 0;
     for (index = 0; index < snapshot->count; ++index) {
-        snapshot->items[index] = lks_group_item_at(group, index);
-        snapshot->paths[index] = lks_path_clone(lks_group_path_at(group, index));
+        snapshot->items[index] = lks_legacy_group_item_at(group, index);
+        snapshot->paths[index] = lks_path_clone(lks_legacy_group_path_at(group, index));
         if (snapshot->items[index] == NULL || snapshot->paths[index] == NULL) {
             return 0;
         }
@@ -266,16 +267,16 @@ static int property_snapshot_group(const LksGroup *group,
     return 1;
 }
 
-static int property_group_matches_snapshot(const LksGroup *group,
+static int property_group_matches_snapshot(const LksLegacyGroup *group,
     const LksPropertyGroupSnapshot *snapshot)
 {
     size_t index;
 
-    if (lks_group_size(group) != snapshot->count) return 0;
+    if (lks_legacy_group_size(group) != snapshot->count) return 0;
     for (index = 0; index < snapshot->count; ++index) {
         int order;
-        if (lks_group_item_at(group, index) != snapshot->items[index] ||
-            lks_path_compare(lks_group_path_at(group, index),
+        if (lks_legacy_group_item_at(group, index) != snapshot->items[index] ||
+            lks_path_compare(lks_legacy_group_path_at(group, index),
                 snapshot->paths[index], &order) != LKS_STATUS_OK || order != 0) {
             return 0;
         }
@@ -293,29 +294,29 @@ static void property_destroy_group_snapshot(LksPropertyGroupSnapshot *snapshot)
     snapshot->count = 0;
 }
 
-static int property_snapshot_batch(const LksGroupBatch *batch,
+static int property_snapshot_batch(const LksLegacyGroupBatch *batch,
     LksPropertyBatchSnapshot *snapshot)
 {
     size_t group_index;
     size_t offset = 0;
 
     memset(snapshot, 0, sizeof(*snapshot));
-    snapshot->group_count = lks_group_batch_group_count(batch);
-    snapshot->item_count = lks_group_batch_total_size(batch);
+    snapshot->group_count = lks_legacy_group_batch_group_count(batch);
+    snapshot->item_count = lks_legacy_group_batch_total_size(batch);
     if (snapshot->group_count > LKS_PROPERTY_MAX_ITEMS ||
         snapshot->item_count > LKS_PROPERTY_MAX_ITEMS) return 0;
 
     for (group_index = 0; group_index < snapshot->group_count; ++group_index) {
-        const LksGroup *group = lks_group_batch_group_at(batch, group_index);
-        size_t group_size = lks_group_size(group);
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
+        size_t group_size = lks_legacy_group_size(group);
         size_t item_index;
 
         if (group == NULL || offset + group_size > snapshot->item_count) return 0;
         snapshot->group_sizes[group_index] = group_size;
         for (item_index = 0; item_index < group_size; ++item_index) {
-            snapshot->items[offset] = lks_group_item_at(group, item_index);
+            snapshot->items[offset] = lks_legacy_group_item_at(group, item_index);
             snapshot->paths[offset] = lks_path_clone(
-                lks_group_path_at(group, item_index));
+                lks_legacy_group_path_at(group, item_index));
             if (snapshot->items[offset] == NULL || snapshot->paths[offset] == NULL)
                 return 0;
             ++offset;
@@ -324,25 +325,25 @@ static int property_snapshot_batch(const LksGroupBatch *batch,
     return offset == snapshot->item_count;
 }
 
-static int property_batch_matches_snapshot(const LksGroupBatch *batch,
+static int property_batch_matches_snapshot(const LksLegacyGroupBatch *batch,
     const LksPropertyBatchSnapshot *snapshot)
 {
     size_t group_index;
     size_t offset = 0;
 
-    if (lks_group_batch_group_count(batch) != snapshot->group_count ||
-        lks_group_batch_total_size(batch) != snapshot->item_count) return 0;
+    if (lks_legacy_group_batch_group_count(batch) != snapshot->group_count ||
+        lks_legacy_group_batch_total_size(batch) != snapshot->item_count) return 0;
 
     for (group_index = 0; group_index < snapshot->group_count; ++group_index) {
-        const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
         size_t group_size = snapshot->group_sizes[group_index];
         size_t item_index;
 
-        if (group == NULL || lks_group_size(group) != group_size) return 0;
+        if (group == NULL || lks_legacy_group_size(group) != group_size) return 0;
         for (item_index = 0; item_index < group_size; ++item_index) {
             int order;
-            if (lks_group_item_at(group, item_index) != snapshot->items[offset] ||
-                lks_path_compare(lks_group_path_at(group, item_index),
+            if (lks_legacy_group_item_at(group, item_index) != snapshot->items[offset] ||
+                lks_path_compare(lks_legacy_group_path_at(group, item_index),
                     snapshot->paths[offset], &order) != LKS_STATUS_OK || order != 0)
                 return 0;
             ++offset;
@@ -361,11 +362,11 @@ static void property_destroy_batch_snapshot(LksPropertyBatchSnapshot *snapshot)
     snapshot->item_count = 0;
 }
 
-static int property_tree_profile_matches(const LksGroup *group,
+static int property_tree_profile_matches(const LksLegacyGroup *group,
     size_t count, LksPropertyCounts *counts)
 {
     LksTreeInternalProfile profile;
-    const LksTree *tree = lks_group_internal_tree(group);
+    const LksTree *tree = lks_legacy_group_internal_tree(group);
     int valid;
 
     ++counts->tree_profile_checks;
@@ -419,13 +420,13 @@ static int property_path_snapshot_unchanged(const LksPath *path,
     return lks_path_compare(path, snapshot, &order) == LKS_STATUS_OK && order == 0;
 }
 
-static void property_check_gap_constructions(const LksGroup *group,
+static void property_check_gap_constructions(const LksLegacyGroup *group,
     size_t count, LksPropertyCounts *counts)
 {
     size_t index;
 
     for (index = 0; index < count; ++index) {
-        const LksPath *path = lks_group_path_at(group, index);
+        const LksPath *path = lks_legacy_group_path_at(group, index);
 
         if (counts->before_checks < LKS_PROPERTY_GAP_TARGET) {
             LksPath *snapshot = lks_path_clone(path);
@@ -456,7 +457,7 @@ static void property_check_gap_constructions(const LksGroup *group,
         }
 
         if (index + 1 < count && counts->between_checks < LKS_PROPERTY_GAP_TARGET) {
-            const LksPath *right = lks_group_path_at(group, index + 1);
+            const LksPath *right = lks_legacy_group_path_at(group, index + 1);
             LksPath *left_snapshot = lks_path_clone(path);
             LksPath *right_snapshot = lks_path_clone(right);
             LksPath *between = NULL;
@@ -487,7 +488,7 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
     LksPropertyItem *input[LKS_PROPERTY_MAX_ITEMS];
     LksPropertyItem *expected[LKS_PROPERTY_MAX_ITEMS];
     LksComparator comparator = { property_compare_key, NULL };
-    LksGroup *group = NULL;
+    LksLegacyGroup *group = NULL;
     size_t index;
     int valid = 1;
     char label[64];
@@ -499,7 +500,7 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
     for (index = 0; index < count; ++index) expected[index] = input[index];
     property_stable_insertion_sort(expected, count);
 
-    if (lks_group_build((void *const *)input, count, &comparator, &group) !=
+    if (lks_legacy_group_build((void *const *)input, count, &comparator, &group) !=
             LKS_STATUS_OK || group == NULL ||
         !property_group_matches_oracle(group, expected, count, counts)) {
         valid = 0;
@@ -507,7 +508,7 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
         if (group != NULL) {
             for (index = 0; index < count; ++index) {
                 LksPropertyItem *actual =
-                    (LksPropertyItem *)lks_group_item_at(group, index);
+                    (LksPropertyItem *)lks_legacy_group_item_at(group, index);
                 if (actual != NULL && actual != expected[index] &&
                     actual->key == expected[index]->key) {
                     ++counts->equal_stability_failures;
@@ -521,7 +522,7 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
         ++counts->all_equal_cases;
         if (group != NULL) {
             for (index = 0; index < count; ++index) {
-                if (lks_group_item_at(group, index) != input[index]) {
+                if (lks_legacy_group_item_at(group, index) != input[index]) {
                     ++counts->equal_stability_failures;
                     valid = 0;
                     break;
@@ -534,7 +535,7 @@ static int property_run_group_case(size_t seed_index, uint32_t seed,
         ++counts->group_stable_oracle_cases;
         property_check_gap_constructions(group, count, counts);
     }
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     property_check_case_allocator(counts, label);
     if (!valid) printf("GroupOracleFailure seed=0x%08X N=%zu family=%s "
         "GroupSize=NA split=NA\n", (unsigned int)seed, count,
@@ -575,8 +576,8 @@ static int property_run_batch_case(size_t seed_index,
     }
 
     for (index = 0; index < group_size_count; ++index) {
-        LksGroupBatch *batch = NULL;
-        LksGroup *result = NULL;
+        LksLegacyGroupBatch *batch = NULL;
+        LksLegacyGroup *result = NULL;
         LksPropertyBatchSnapshot snapshot;
         size_t group_size = group_sizes[index];
     int snapshot_ok = 0;
@@ -591,14 +592,14 @@ static int property_run_batch_case(size_t seed_index,
             continue;
         }
         memset(&snapshot, 0, sizeof(snapshot));
-        if (lks_group_batch_build((void *const *)input, count, group_size,
+        if (lks_legacy_group_batch_build((void *const *)input, count, group_size,
                 &comparator, &batch) != LKS_STATUS_OK || batch == NULL ||
             !property_snapshot_batch(batch, &snapshot)) {
             config_valid = 0;
             ++counts->batch_oracle_failures;
         } else {
             snapshot_ok = 1;
-            if (lks_group_batch_merge_all(batch, &comparator, &result) !=
+            if (lks_legacy_group_batch_merge_all(batch, &comparator, &result) !=
                     LKS_STATUS_OK || result == NULL ||
                 !property_group_matches_oracle(result, expected, count, counts)) {
                 config_valid = 0;
@@ -610,7 +611,7 @@ static int property_run_batch_case(size_t seed_index,
             }
         }
 
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         property_destroy_batch_snapshot(&snapshot);
         if (result != NULL && snapshot_ok) {
             if (!property_tree_profile_matches(result, count, counts)) {
@@ -619,7 +620,7 @@ static int property_run_batch_case(size_t seed_index,
             {
                 LksAllocStats result_stats = lks_alloc_stats_get();
                 LksTreeInternalProfile result_profile;
-                if (lks_tree_internal_profile(lks_group_internal_tree(result),
+                if (lks_tree_internal_profile(lks_legacy_group_internal_tree(result),
                         &result_profile) != LKS_STATUS_OK ||
                     result_stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
                     result_stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks != 0) {
@@ -629,7 +630,7 @@ static int property_run_batch_case(size_t seed_index,
             }
             ++counts->batch_oracle_cases;
         }
-        lks_group_destroy(result);
+        lks_legacy_group_destroy(result);
         property_check_case_allocator(counts, label);
         if (!config_valid) {
             if (valid) printf("BatchOracleFailure seed-index=%zu distribution=%u "
@@ -651,11 +652,11 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
     void *base_items[LKS_PROPERTY_MAX_ITEMS];
     void *incoming_items[LKS_PROPERTY_MAX_ITEMS];
     LksComparator comparator = { property_compare_key, NULL };
-    LksGroup *base = NULL;
-    LksGroup *incoming = NULL;
-    LksGroup *public_result = NULL;
-    LksGroup *owned_base = NULL;
-    LksGroup *incoming2 = NULL;
+    LksLegacyGroup *base = NULL;
+    LksLegacyGroup *incoming = NULL;
+    LksLegacyGroup *public_result = NULL;
+    LksLegacyGroup *owned_base = NULL;
+    LksLegacyGroup *incoming2 = NULL;
     LksPropertyGroupSnapshot base_snapshot;
     LksPropertyGroupSnapshot incoming_snapshot;
     LksPropertyGroupSnapshot incoming2_snapshot;
@@ -677,8 +678,8 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
     memset(&base_snapshot, 0, sizeof(base_snapshot));
     memset(&incoming_snapshot, 0, sizeof(incoming_snapshot));
     memset(&incoming2_snapshot, 0, sizeof(incoming2_snapshot));
-    if (lks_group_build(base_items, split, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(incoming_items, count - split, &comparator,
+    if (lks_legacy_group_build(base_items, split, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(incoming_items, count - split, &comparator,
             &incoming) != LKS_STATUS_OK) {
         valid = 0;
         ++counts->public_merge_oracle_failures;
@@ -690,7 +691,7 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
         ++counts->public_merge_oracle_failures;
         goto cleanup;
     }
-    if (lks_group_merge(base, incoming, &comparator, &public_result) !=
+    if (lks_legacy_group_merge(base, incoming, &comparator, &public_result) !=
             LKS_STATUS_OK || public_result == NULL ||
         !property_group_matches_oracle(public_result, expected, count, counts)) {
         valid = 0;
@@ -702,24 +703,24 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
         ++counts->public_input_mutation_failures;
     }
 
-    if (lks_group_build(base_items, split, &comparator, &owned_base) != LKS_STATUS_OK ||
-        lks_group_build(incoming_items, count - split, &comparator,
+    if (lks_legacy_group_build(base_items, split, &comparator, &owned_base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(incoming_items, count - split, &comparator,
             &incoming2) != LKS_STATUS_OK ||
         !property_snapshot_group(incoming2, &incoming2_snapshot)) {
         valid = 0;
         ++counts->private_merge_differential_failures;
         goto cleanup;
     }
-    if (lks_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
+    if (lks_legacy_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
             LKS_STATUS_OK || owned_base == NULL || public_result == NULL ||
         !property_group_matches_oracle(owned_base, expected, count, counts) ||
-        lks_group_size(public_result) != lks_group_size(owned_base)) {
+        lks_legacy_group_size(public_result) != lks_legacy_group_size(owned_base)) {
         valid = 0;
         ++counts->private_merge_differential_failures;
     } else {
         for (index = 0; index < count; ++index) {
-            if (lks_group_item_at(public_result, index) !=
-                    lks_group_item_at(owned_base, index)) {
+            if (lks_legacy_group_item_at(public_result, index) !=
+                    lks_legacy_group_item_at(owned_base, index)) {
                 valid = 0;
                 ++counts->private_merge_differential_failures;
                 break;
@@ -737,14 +738,14 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
 
     if (distribution == LKS_PROPERTY_ALL_EQUAL && valid) {
         for (index = 0; index < split; ++index) {
-            if (lks_group_item_at(public_result, index) != input[index]) {
+            if (lks_legacy_group_item_at(public_result, index) != input[index]) {
                 ++counts->equal_stability_failures;
                 valid = 0;
                 break;
             }
         }
         for (index = split; valid && index < count; ++index) {
-            if (lks_group_item_at(public_result, index) != input[index]) {
+            if (lks_legacy_group_item_at(public_result, index) != input[index]) {
                 ++counts->equal_stability_failures;
                 valid = 0;
                 break;
@@ -753,11 +754,11 @@ static int property_run_merge_case(size_t case_index, uint32_t seed,
     }
 
 cleanup:
-    lks_group_destroy(owned_base);
-    lks_group_destroy(incoming2);
-    lks_group_destroy(public_result);
-    lks_group_destroy(incoming);
-    lks_group_destroy(base);
+    lks_legacy_group_destroy(owned_base);
+    lks_legacy_group_destroy(incoming2);
+    lks_legacy_group_destroy(public_result);
+    lks_legacy_group_destroy(incoming);
+    lks_legacy_group_destroy(base);
     property_destroy_group_snapshot(&incoming2_snapshot);
     property_destroy_group_snapshot(&incoming_snapshot);
     property_destroy_group_snapshot(&base_snapshot);
@@ -898,8 +899,8 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
     LksPropertyItem *expected[LKS_PROPERTY_MAX_ITEMS];
     LksPropertyRandom random;
     LksComparator comparator = { property_compare_key, NULL };
-    LksGroupBatch *batch = NULL;
-    LksGroup *result = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *result = NULL;
     LksPropertyBatchSnapshot snapshot;
     size_t index;
     int snapshot_ok = 0;
@@ -918,14 +919,14 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
     for (index = 0; index < count; ++index) expected[index] = input[index];
     property_stable_insertion_sort(expected, count);
 
-    if (lks_group_batch_build((void *const *)input, count, group_size,
+    if (lks_legacy_group_batch_build((void *const *)input, count, group_size,
             &comparator, &batch) != LKS_STATUS_OK || batch == NULL ||
         !property_snapshot_batch(batch, &snapshot)) {
         valid = 0;
         ++counts->batch_oracle_failures;
     } else {
         snapshot_ok = 1;
-        if (lks_group_batch_merge_all(batch, &comparator, &result) !=
+        if (lks_legacy_group_batch_merge_all(batch, &comparator, &result) !=
                 LKS_STATUS_OK || result == NULL ||
             !property_group_matches_oracle(result, expected, count, counts)) {
             valid = 0;
@@ -933,7 +934,7 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
         }
         if (distribution == LKS_PROPERTY_ALL_EQUAL && count > 0 && result != NULL) {
             for (index = 0; index < count; ++index) {
-                if (lks_group_item_at(result, index) != input[index]) {
+                if (lks_legacy_group_item_at(result, index) != input[index]) {
                     ++counts->equal_stability_failures;
                     valid = 0;
                     break;
@@ -946,14 +947,14 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
         }
     }
 
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_batch_destroy(batch);
     property_destroy_batch_snapshot(&snapshot);
     if (result != NULL && snapshot_ok) {
         if (!property_tree_profile_matches(result, count, counts)) valid = 0;
         {
             LksTreeInternalProfile profile;
             LksAllocStats stats = lks_alloc_stats_get();
-            if (lks_tree_internal_profile(lks_group_internal_tree(result),
+            if (lks_tree_internal_profile(lks_legacy_group_internal_tree(result),
                     &profile) != LKS_STATUS_OK ||
                 stats.tags[LKS_ALLOC_TAG_TREE_NODE].live_blocks != count ||
                 stats.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_blocks != 0) {
@@ -963,7 +964,7 @@ static int property_run_batch_stress_case(size_t seed_index, uint32_t seed,
         }
         if (valid) ++counts->batch_oracle_cases;
     }
-    lks_group_destroy(result);
+    lks_legacy_group_destroy(result);
     property_check_case_allocator(counts, label);
     if (!valid) {
         printf("StressFailure seed=0x%08X N=%zu family=%s GroupSize=%zu "
@@ -1242,8 +1243,8 @@ static int property_build_equal_tree(LksTree **out_tree,
     return 1;
 }
 
-static int property_build_equal_merge_fixture(LksGroup **base,
-    LksGroup **incoming, LksPropertyItem *storage,
+static int property_build_equal_merge_fixture(LksLegacyGroup **base,
+    LksLegacyGroup **incoming, LksPropertyItem *storage,
     LksPropertyItem **all_items, const LksComparator *comparator)
 {
     static const int keys[] = { 1, 2, 2, 2, 4, 4, 2, 2, 3, 4, 4, 4 };
@@ -1257,17 +1258,17 @@ static int property_build_equal_merge_fixture(LksGroup **base,
         if (index < 6u) base_items[index] = &storage[index];
         else incoming_items[index - 6u] = &storage[index];
     }
-    return lks_group_build(base_items, 6u, comparator, base) == LKS_STATUS_OK &&
-        lks_group_build(incoming_items, 6u, comparator, incoming) == LKS_STATUS_OK;
+    return lks_legacy_group_build(base_items, 6u, comparator, base) == LKS_STATUS_OK &&
+        lks_legacy_group_build(incoming_items, 6u, comparator, incoming) == LKS_STATUS_OK;
 }
 
-static int property_group_equals_expected(const LksGroup *group,
+static int property_group_equals_expected(const LksLegacyGroup *group,
     LksPropertyItem **expected, size_t count)
 {
     size_t index;
-    if (group == NULL || lks_group_size(group) != count) return 0;
+    if (group == NULL || lks_legacy_group_size(group) != count) return 0;
     for (index = 0; index < count; ++index)
-        if (lks_group_item_at(group, index) != expected[index]) return 0;
+        if (lks_legacy_group_item_at(group, index) != expected[index]) return 0;
     return 1;
 }
 
@@ -1390,7 +1391,7 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
     LksPropertyItem *items[12];
     LksPropertyItem *expected[12];
     LksComparator comparator = { property_compare_key, NULL };
-    LksGroup *base = NULL, *incoming = NULL, *result = NULL;
+    LksLegacyGroup *base = NULL, *incoming = NULL, *result = NULL;
     LksPropertyGroupSnapshot base_snapshot, incoming_snapshot;
     LksStatus status;
     LksAllocStats before;
@@ -1410,10 +1411,10 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
         !property_build_equal_merge_fixture(&base, &incoming, storage, items,
             &comparator)) return 0;
     lks_alloc_test_reset_attempt_counter();
-    status = lks_group_merge(base, incoming, &comparator, &result);
+    status = lks_legacy_group_merge(base, incoming, &comparator, &result);
     k = lks_alloc_test_get_attempt_count();
     if (status != LKS_STATUS_OK || k == 0u) valid = 0;
-    lks_group_destroy(result); lks_group_destroy(incoming); lks_group_destroy(base);
+    lks_legacy_group_destroy(result); lks_legacy_group_destroy(incoming); lks_legacy_group_destroy(base);
     if (!valid) return 0;
     *out_k = k;
     for (fail_index = 1; fail_index <= k; ++fail_index) {
@@ -1430,7 +1431,7 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
         }
         before = lks_alloc_stats_get();
         lks_alloc_test_fail_on_attempt(fail_index);
-        status = lks_group_merge(base, incoming, &comparator, &result);
+        status = lks_legacy_group_merge(base, incoming, &comparator, &result);
         triggered = lks_alloc_test_failure_triggered();
         lks_alloc_test_disable_failure();
         if (status != LKS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
@@ -1454,7 +1455,7 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
         }
         property_destroy_group_snapshot(&base_snapshot);
         property_destroy_group_snapshot(&incoming_snapshot);
-        lks_group_destroy(result); lks_group_destroy(incoming); lks_group_destroy(base);
+        lks_legacy_group_destroy(result); lks_legacy_group_destroy(incoming); lks_legacy_group_destroy(base);
         if (lks_alloc_stats_get().live_bytes != 0 ||
             lks_alloc_stats_get().live_blocks != 0) ++*leaks;
         ++*out_passed;
@@ -1466,15 +1467,15 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
             !property_build_equal_merge_fixture(&base, &incoming, storage,
                 items, &comparator)) return 0;
         lks_alloc_test_fail_on_attempt(k + 1u);
-        status = lks_group_merge(base, incoming, &comparator, &result);
+        status = lks_legacy_group_merge(base, incoming, &comparator, &result);
         triggered = lks_alloc_test_failure_triggered();
         if (status != LKS_STATUS_OK || triggered ||
             !property_group_equals_expected(result, expected, 12u)) {
             printf("OOM EqualHeavyPublicMerge K+1 status=%s triggered=%d size=%zu\n",
                 lks_status_string(status), triggered,
-                result == NULL ? 0u : lks_group_size(result));
+                result == NULL ? 0u : lks_legacy_group_size(result));
             if (result != NULL) for (i = 0; i < 12u; ++i) {
-                LksPropertyItem *actual = (LksPropertyItem *)lks_group_item_at(result, i);
+                LksPropertyItem *actual = (LksPropertyItem *)lks_legacy_group_item_at(result, i);
                 LksPropertyItem *wanted = expected[i];
                 if (actual != wanted) printf("  sequence[%zu]=%u expected=%u\n",
                     i, actual->original_index, wanted->original_index);
@@ -1482,7 +1483,7 @@ static int property_oom_public_merge(size_t *out_k, size_t *out_passed,
             ++*state_failures;
         }
         lks_alloc_test_disable_failure();
-        lks_group_destroy(result); lks_group_destroy(incoming); lks_group_destroy(base);
+        lks_legacy_group_destroy(result); lks_legacy_group_destroy(incoming); lks_legacy_group_destroy(base);
     }
     return valid;
 }
@@ -1495,7 +1496,7 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
     LksPropertyItem *items[12];
     LksPropertyItem *expected[12];
     LksComparator comparator = { property_compare_key, NULL };
-    LksGroup *base = NULL, *incoming = NULL;
+    LksLegacyGroup *base = NULL, *incoming = NULL;
     LksPropertyGroupSnapshot incoming_snapshot;
     LksStatus status;
     LksAllocStats incoming_footprint, before;
@@ -1516,10 +1517,10 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
             &comparator) || !property_snapshot_group(incoming, &incoming_snapshot))
         return 0;
     lks_alloc_test_reset_attempt_counter();
-    status = lks_group_merge_into_owned_base(&base, incoming, &comparator);
+    status = lks_legacy_group_merge_into_owned_base(&base, incoming, &comparator);
     k = lks_alloc_test_get_attempt_count();
     if (status != LKS_STATUS_OK || k == 0u || base == NULL) valid = 0;
-    lks_group_destroy(base); lks_group_destroy(incoming);
+    lks_legacy_group_destroy(base); lks_legacy_group_destroy(incoming);
     property_destroy_group_snapshot(&incoming_snapshot);
     if (!valid) return 0;
     *out_k = k;
@@ -1535,19 +1536,19 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
                 items, &comparator) || !property_snapshot_group(incoming, &snapshot)) {
             valid = 0; break;
         }
-        lks_group_destroy(base);
+        lks_legacy_group_destroy(base);
         base = NULL;
         incoming_footprint = lks_alloc_stats_get();
         for (j = 0; j < 6u; ++j) base_items[j] = items[j];
-        if (lks_group_build(base_items, 6u, &comparator, &base) != LKS_STATUS_OK) {
+        if (lks_legacy_group_build(base_items, 6u, &comparator, &base) != LKS_STATUS_OK) {
             ++*state_failures;
             property_destroy_group_snapshot(&snapshot);
-            lks_group_destroy(incoming);
+            lks_legacy_group_destroy(incoming);
             break;
         }
         before = lks_alloc_stats_get();
         lks_alloc_test_fail_on_attempt(fail_index);
-        status = lks_group_merge_into_owned_base(&base, incoming, &comparator);
+        status = lks_legacy_group_merge_into_owned_base(&base, incoming, &comparator);
         triggered = lks_alloc_test_failure_triggered();
         lks_alloc_test_disable_failure();
         if (status != LKS_STATUS_OUT_OF_MEMORY) ++*wrong_status;
@@ -1568,7 +1569,7 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
             }
         }
         property_destroy_group_snapshot(&snapshot);
-        lks_group_destroy(base); lks_group_destroy(incoming);
+        lks_legacy_group_destroy(base); lks_legacy_group_destroy(incoming);
         if (lks_alloc_stats_get().live_bytes != 0 ||
             lks_alloc_stats_get().live_blocks != 0) ++*leaks;
         ++*out_passed;
@@ -1583,15 +1584,15 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
                 items, &comparator) || !property_snapshot_group(incoming, &snapshot))
             return 0;
         lks_alloc_test_fail_on_attempt(k + 1u);
-        status = lks_group_merge_into_owned_base(&base, incoming, &comparator);
+        status = lks_legacy_group_merge_into_owned_base(&base, incoming, &comparator);
         triggered = lks_alloc_test_failure_triggered();
         if (status != LKS_STATUS_OK || triggered ||
             !property_group_equals_expected(base, expected, 12u)) {
             printf("OOM EqualHeavyPrivateMerge K+1 status=%s triggered=%d size=%zu\n",
                 lks_status_string(status), triggered,
-                base == NULL ? 0u : lks_group_size(base));
+                base == NULL ? 0u : lks_legacy_group_size(base));
             if (base != NULL) for (i = 0; i < 12u; ++i) {
-                LksPropertyItem *actual = (LksPropertyItem *)lks_group_item_at(base, i);
+                LksPropertyItem *actual = (LksPropertyItem *)lks_legacy_group_item_at(base, i);
                 LksPropertyItem *wanted = expected[i];
                 if (actual != wanted) printf("  sequence[%zu]=%u expected=%u\n",
                     i, actual->original_index, wanted->original_index);
@@ -1602,7 +1603,7 @@ static int property_oom_private_merge(size_t *out_k, size_t *out_passed,
         if (!property_group_matches_snapshot(incoming, &snapshot))
             ++*ownership_failures;
         property_destroy_group_snapshot(&snapshot);
-        lks_group_destroy(base); lks_group_destroy(incoming);
+        lks_legacy_group_destroy(base); lks_legacy_group_destroy(incoming);
     }
     return valid;
 }

@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 /* Preliminary application-operation sanity screen, not a tuning/ranking suite.
  * Shared neighbor intents, flat oracle bookkeeping outside timed intervals.
  * V3 owns explicit Path keys in the application; V4 owns contextual records.

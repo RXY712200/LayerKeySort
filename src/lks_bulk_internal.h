@@ -1,7 +1,7 @@
 #ifndef LKS_BULK_INTERNAL_H
 #define LKS_BULK_INTERNAL_H
 
-#include "layerkeysort.h"
+#include "lks_legacy_internal.h"
 
 /* Input is already sorted. The returned Tree owns Paths, not items. */
 LksStatus lks_bulk_build_tree(void *const *sorted, size_t count,

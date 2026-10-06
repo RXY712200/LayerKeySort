@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include <stdint.h>
 #include <float.h>
 #include <math.h>
@@ -174,23 +175,23 @@ static int benchmark_collect_path(
 }
 
 static int benchmark_collect_batch_paths(
-    const LksGroupBatch *batch,
+    const LksLegacyGroupBatch *batch,
     BenchmarkPathStats *stats
 )
 {
     size_t group_index;
 
     for (group_index = 0;
-         group_index < lks_group_batch_group_count(batch);
+         group_index < lks_legacy_group_batch_group_count(batch);
          ++group_index) {
-        const LksGroup *group = lks_group_batch_group_at(batch, group_index);
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, group_index);
         size_t item_index;
 
         if (group == NULL) {
             return 0;
         }
-        for (item_index = 0; item_index < lks_group_size(group); ++item_index) {
-            if (!benchmark_collect_path(lks_group_path_at(group, item_index), stats)) {
+        for (item_index = 0; item_index < lks_legacy_group_size(group); ++item_index) {
+            if (!benchmark_collect_path(lks_legacy_group_path_at(group, item_index), stats)) {
                 return 0;
             }
         }
@@ -199,26 +200,26 @@ static int benchmark_collect_batch_paths(
 }
 
 static int benchmark_validate_final(
-    const LksGroup *group,
+    const LksLegacyGroup *group,
     size_t count,
     BenchmarkPathStats *stats
 )
 {
     size_t index;
 
-    if (lks_group_size(group) != count) {
+    if (lks_legacy_group_size(group) != count) {
         return 0;
     }
     for (index = 0; index < count; ++index) {
-        void *item = lks_group_item_at(group, index);
+        void *item = lks_legacy_group_item_at(group, index);
         if (item == NULL || *(const int *)item != (int)index ||
-            !benchmark_collect_path(lks_group_path_at(group, index), stats)) {
+            !benchmark_collect_path(lks_legacy_group_path_at(group, index), stats)) {
             return 0;
         }
         if (index > 0) {
             int path_order;
-            if (lks_path_compare(lks_group_path_at(group, index - 1),
-                    lks_group_path_at(group, index), &path_order) != LKS_STATUS_OK ||
+            if (lks_path_compare(lks_legacy_group_path_at(group, index - 1),
+                    lks_legacy_group_path_at(group, index), &path_order) != LKS_STATUS_OK ||
                 path_order != -1) {
                 return 0;
             }
@@ -272,8 +273,8 @@ int lks_run_group_size_benchmark(void)
     for (index = 0; index < sizeof(benchmark_group_sizes) /
             sizeof(benchmark_group_sizes[0]); ++index) {
         BenchmarkRow *row = &rows[index];
-        LksGroupBatch *batch = NULL;
-        LksGroup *final_group = NULL;
+        LksLegacyGroupBatch *batch = NULL;
+        LksLegacyGroup *final_group = NULL;
         clock_t begin;
         clock_t end;
         LksStatus status;
@@ -283,37 +284,37 @@ int lks_run_group_size_benchmark(void)
         counter.comparison_count = 0;
         counter.overflowed = 0;
         begin = clock();
-        status = lks_group_batch_build(items, LKS_BENCHMARK_ITEM_COUNT,
+        status = lks_legacy_group_batch_build(items, LKS_BENCHMARK_ITEM_COUNT,
             row->group_size, &comparator, &batch);
         end = clock();
         if (status != LKS_STATUS_OK || batch == NULL || counter.overflowed ||
             !benchmark_elapsed_ms(begin, end, &row->build_ms)) {
             printf("BENCHMARK FAILED GroupSize=%lu: Batch build failed\n",
                 (unsigned long)row->group_size);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_batch_destroy(batch);
             return 1;
         }
         row->build_comparisons = counter.comparison_count;
-        row->groups = lks_group_batch_group_count(batch);
-        if (lks_group_batch_total_size(batch) != LKS_BENCHMARK_ITEM_COUNT ||
+        row->groups = lks_legacy_group_batch_group_count(batch);
+        if (lks_legacy_group_batch_total_size(batch) != LKS_BENCHMARK_ITEM_COUNT ||
             !benchmark_collect_batch_paths(batch, &row->local_stats)) {
             printf("BENCHMARK FAILED GroupSize=%lu: local Group validation/statistics failed\n",
                 (unsigned long)row->group_size);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_batch_destroy(batch);
             return 1;
         }
 
         counter.comparison_count = 0;
         counter.overflowed = 0;
         begin = clock();
-        status = lks_group_batch_merge_all(batch, &comparator, &final_group);
+        status = lks_legacy_group_batch_merge_all(batch, &comparator, &final_group);
         end = clock();
         if (status != LKS_STATUS_OK || final_group == NULL || counter.overflowed ||
             !benchmark_elapsed_ms(begin, end, &row->merge_ms)) {
             printf("BENCHMARK FAILED GroupSize=%lu: merge_all failed\n",
                 (unsigned long)row->group_size);
-            lks_group_destroy(final_group);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_destroy(final_group);
+            lks_legacy_group_batch_destroy(batch);
             return 1;
         }
         row->merge_comparisons = counter.comparison_count;
@@ -321,8 +322,8 @@ int lks_run_group_size_benchmark(void)
             !benchmark_add_size(&row->total_comparisons, row->merge_comparisons)) {
             printf("BENCHMARK FAILED GroupSize=%lu: comparison count overflow\n",
                 (unsigned long)row->group_size);
-            lks_group_destroy(final_group);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_destroy(final_group);
+            lks_legacy_group_batch_destroy(batch);
             return 1;
         }
         row->total_ms = row->build_ms + row->merge_ms;
@@ -331,8 +332,8 @@ int lks_run_group_size_benchmark(void)
                 &row->final_stats)) {
             printf("BENCHMARK FAILED GroupSize=%lu: Final Group incorrect\n",
                 (unsigned long)row->group_size);
-            lks_group_destroy(final_group);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_destroy(final_group);
+            lks_legacy_group_batch_destroy(batch);
             return 1;
         }
 
@@ -353,8 +354,8 @@ int lks_run_group_size_benchmark(void)
             (unsigned long)row->final_stats.max_level,
             (double)row->final_stats.total_text_length / LKS_BENCHMARK_ITEM_COUNT);
 
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
     }
 
     printf("PathStructureProxy,GroupSize,LocalTotalDepth,LocalAvgDepth,LocalMaxDepth,LocalTotalTextLength,LocalAvgTextLength,LocalMaxTextLength,LocalMaxLevel,FinalTotalDepth,FinalAvgDepth,FinalMaxDepth,FinalTotalTextLength,FinalAvgTextLength,FinalMaxTextLength,FinalMaxLevel\n");
@@ -425,8 +426,8 @@ static int benchmark_run_robustness_sample(
     size_t *out_groups
 )
 {
-    LksGroupBatch *batch = NULL;
-    LksGroup *final_group = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     clock_t begin;
@@ -446,45 +447,45 @@ static int benchmark_run_robustness_sample(
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = lks_group_batch_build(items, LKS_BENCHMARK_ITEM_COUNT,
+    status = lks_legacy_group_batch_build(items, LKS_BENCHMARK_ITEM_COUNT,
         group_size, comparator, &batch);
     end = clock();
     if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->build_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: Batch build failed\n",
             (unsigned long)seed, (unsigned long)group_size);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->build_comparisons = counter->comparison_count;
-    *out_groups = lks_group_batch_group_count(batch);
-    if (lks_group_batch_total_size(batch) != LKS_BENCHMARK_ITEM_COUNT ||
+    *out_groups = lks_legacy_group_batch_group_count(batch);
+    if (lks_legacy_group_batch_total_size(batch) != LKS_BENCHMARK_ITEM_COUNT ||
         !benchmark_collect_batch_paths(batch, &sample->local_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: local Group validation/statistics failed\n",
             (unsigned long)seed, (unsigned long)group_size);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = lks_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_legacy_group_batch_merge_all(batch, comparator, &final_group);
     end = clock();
     if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->merge_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: merge_all failed\n",
             (unsigned long)seed, (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->merge_comparisons = counter->comparison_count;
     if (sample->build_comparisons > (size_t)-1 - sample->merge_comparisons) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: comparison count overflow\n",
             (unsigned long)seed, (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->total_comparisons = sample->build_comparisons +
@@ -494,13 +495,13 @@ static int benchmark_run_robustness_sample(
             &sample->final_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX GroupSize=%lu: Final Group incorrect\n",
             (unsigned long)seed, (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
 
-    lks_group_destroy(final_group);
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(final_group);
+    lks_legacy_group_batch_destroy(batch);
     return 1;
 }
 
@@ -786,8 +787,8 @@ static int benchmark_run_scale_sample(
     size_t *out_groups
 )
 {
-    LksGroupBatch *batch = NULL;
-    LksGroup *final_group = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     clock_t begin;
@@ -798,39 +799,39 @@ static int benchmark_run_scale_sample(
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = lks_group_batch_build(items, count, group_size, comparator, &batch);
+    status = lks_legacy_group_batch_build(items, count, group_size, comparator, &batch);
     end = clock();
     if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->build_ms)) {
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: Batch build failed (%s)\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size, lks_status_string(status));
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->build_comparisons = counter->comparison_count;
-    *out_groups = lks_group_batch_group_count(batch);
-    if (lks_group_batch_total_size(batch) != count ||
+    *out_groups = lks_legacy_group_batch_group_count(batch);
+    if (lks_legacy_group_batch_total_size(batch) != count ||
         !benchmark_collect_batch_paths(batch, &sample->local_stats)) {
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: local Path statistics failed\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = lks_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_legacy_group_batch_merge_all(batch, comparator, &final_group);
     end = clock();
     if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->merge_ms)) {
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: merge_all failed (%s)\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size, lks_status_string(status));
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->merge_comparisons = counter->comparison_count;
@@ -838,8 +839,8 @@ static int benchmark_run_scale_sample(
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: comparison count overflow\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->total_comparisons = sample->build_comparisons +
@@ -849,13 +850,13 @@ static int benchmark_run_scale_sample(
         printf("BENCHMARK FAILED N=%lu seed=0x%08lX GroupSize=%lu: Final Group or adjacent Path order incorrect\n",
             (unsigned long)count, (unsigned long)seed,
             (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
 
-    lks_group_destroy(final_group);
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(final_group);
+    lks_legacy_group_batch_destroy(batch);
     return 1;
 }
 
@@ -1362,12 +1363,12 @@ static int benchmark_predict_merge_upper(
 }
 
 static int benchmark_predict_batch_merge_upper(
-    const LksGroupBatch *batch,
+    const LksLegacyGroupBatch *batch,
     size_t total_items,
     BenchmarkMergePrediction *prediction
 )
 {
-    size_t group_count = lks_group_batch_group_count(batch);
+    size_t group_count = lks_legacy_group_batch_group_count(batch);
     size_t sizes[LKS_GROUP_COUNT_MAX_GROUPS];
     size_t index;
 
@@ -1375,11 +1376,11 @@ static int benchmark_predict_batch_merge_upper(
         return 0;
     }
     for (index = 0; index < group_count; ++index) {
-        const LksGroup *group = lks_group_batch_group_at(batch, index);
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, index);
         if (group == NULL) {
             return 0;
         }
-        sizes[index] = lks_group_size(group);
+        sizes[index] = lks_legacy_group_size(group);
     }
     return benchmark_predict_merge_upper(sizes, group_count, total_items,
         prediction);
@@ -1396,8 +1397,8 @@ static int benchmark_run_group_count_sample(
     BenchmarkMergePrediction *prediction
 )
 {
-    LksGroupBatch *batch = NULL;
-    LksGroup *final_group = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     clock_t begin;
@@ -1408,7 +1409,7 @@ static int benchmark_run_group_count_sample(
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = lks_group_batch_build(items, LKS_GROUP_COUNT_ITEMS, group_size,
+    status = lks_legacy_group_batch_build(items, LKS_GROUP_COUNT_ITEMS, group_size,
         comparator, &batch);
     end = clock();
     if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed ||
@@ -1416,24 +1417,24 @@ static int benchmark_run_group_count_sample(
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: build failed (%s)\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, lks_status_string(status));
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->build_comparisons = counter->comparison_count;
-    *out_groups = lks_group_batch_group_count(batch);
+    *out_groups = lks_legacy_group_batch_group_count(batch);
     if (*out_groups != target_groups) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu ActualGroups=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, (unsigned long)*out_groups);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
-    if (lks_group_batch_total_size(batch) != LKS_GROUP_COUNT_ITEMS ||
+    if (lks_legacy_group_batch_total_size(batch) != LKS_GROUP_COUNT_ITEMS ||
         !benchmark_collect_batch_paths(batch, &sample->local_stats)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: local Path statistics failed\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     if (!benchmark_predict_batch_merge_upper(batch, LKS_GROUP_COUNT_ITEMS,
@@ -1441,22 +1442,22 @@ static int benchmark_run_group_count_sample(
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: theoretical merge prediction overflow/invalid sizes\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
     begin = clock();
-    status = lks_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_legacy_group_batch_merge_all(batch, comparator, &final_group);
     end = clock();
     if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed ||
         !benchmark_elapsed_ms(begin, end, &sample->merge_ms)) {
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: merge failed (%s)\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, lks_status_string(status));
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->merge_comparisons = counter->comparison_count;
@@ -1466,8 +1467,8 @@ static int benchmark_run_group_count_sample(
             (unsigned long)group_size,
             (unsigned long)sample->merge_comparisons,
             (unsigned long)prediction->upper_bound);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->predicted_merge_upper = prediction->upper_bound;
@@ -1479,8 +1480,8 @@ static int benchmark_run_group_count_sample(
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: comparison count overflow\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     sample->total_comparisons = sample->build_comparisons +
@@ -1491,12 +1492,12 @@ static int benchmark_run_group_count_sample(
         printf("BENCHMARK FAILED seed=0x%08lX TargetGroups=%lu GroupSize=%lu: result size/order/adjacent Path validation failed\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
-    lks_group_destroy(final_group);
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(final_group);
+    lks_legacy_group_batch_destroy(batch);
     return 1;
 }
 
@@ -1870,7 +1871,7 @@ static int benchmark_run_single_group_build(
     size_t *out_comparisons
 )
 {
-    LksGroup *group = NULL;
+    LksLegacyGroup *group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     BenchmarkPathStats path_stats;
@@ -1886,12 +1887,12 @@ static int benchmark_run_single_group_build(
     }
     counter->comparison_count = 0;
     counter->overflowed = 0;
-    status = lks_group_build(items, count, comparator, &group);
+    status = lks_legacy_group_build(items, count, comparator, &group);
     if (status != LKS_STATUS_OK || group == NULL || counter->overflowed) {
         printf("BENCHMARK FAILED single Group Build size=%lu seed=0x%08lX: %s\n",
             (unsigned long)count, (unsigned long)seed,
             lks_status_string(status));
-        lks_group_destroy(group);
+        lks_legacy_group_destroy(group);
         return 0;
     }
     *out_comparisons = counter->comparison_count;
@@ -1899,10 +1900,10 @@ static int benchmark_run_single_group_build(
     if (!benchmark_validate_final(group, count, &path_stats)) {
         printf("BENCHMARK FAILED single Group Build size=%lu seed=0x%08lX: size/order/adjacent Path validation failed\n",
             (unsigned long)count, (unsigned long)seed);
-        lks_group_destroy(group);
+        lks_legacy_group_destroy(group);
         return 0;
     }
-    lks_group_destroy(group);
+    lks_legacy_group_destroy(group);
     return 1;
 }
 
@@ -2066,7 +2067,7 @@ static BenchmarkErrorMetrics benchmark_model_metrics(
 }
 
 static int benchmark_predict_batch_build(
-    const LksGroupBatch *batch,
+    const LksLegacyGroupBatch *batch,
     const BenchmarkBuildModel *model,
     int quadratic,
     double *out_prediction
@@ -2079,15 +2080,15 @@ static int benchmark_predict_batch_build(
     if (batch == NULL || model == NULL || out_prediction == NULL) {
         return 0;
     }
-    groups = lks_group_batch_group_count(batch);
+    groups = lks_legacy_group_batch_group_count(batch);
     for (index = 0; index < groups; ++index) {
-        const LksGroup *group = lks_group_batch_group_at(batch, index);
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, index);
         size_t group_size;
         double value;
         if (group == NULL) {
             return 0;
         }
-        group_size = lks_group_size(group);
+        group_size = lks_legacy_group_size(group);
         value = benchmark_build_model_predict(model, group_size, quadratic);
         if (value != value || value > 1.0e300 || value < -1.0e300) {
             return 0;
@@ -2142,8 +2143,8 @@ static int benchmark_run_stage76_batch_sample(
     size_t seed_index
 )
 {
-    LksGroupBatch *batch = NULL;
-    LksGroup *final_group = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *final_group = NULL;
     BenchmarkCompareContext *counter =
         (BenchmarkCompareContext *)comparator->context;
     BenchmarkMergePrediction merge_prediction;
@@ -2156,19 +2157,19 @@ static int benchmark_run_stage76_batch_sample(
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
-    status = lks_group_batch_build(items, LKS_STAGE76_MAX_ITEMS, group_size,
+    status = lks_legacy_group_batch_build(items, LKS_STAGE76_MAX_ITEMS, group_size,
         comparator, &batch);
     if (status != LKS_STATUS_OK || batch == NULL || counter->overflowed) {
         printf("BENCHMARK FAILED BatchBuild seed=0x%08lX Groups=%lu GroupSize=%lu: %s\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, lks_status_string(status));
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     build_comparisons = counter->comparison_count;
-    groups = lks_group_batch_group_count(batch);
+    groups = lks_legacy_group_batch_group_count(batch);
     if (groups != target_groups ||
-        lks_group_batch_total_size(batch) != LKS_STAGE76_MAX_ITEMS ||
+        lks_legacy_group_batch_total_size(batch) != LKS_STAGE76_MAX_ITEMS ||
         !benchmark_predict_batch_merge_upper(batch, LKS_STAGE76_MAX_ITEMS,
             &merge_prediction) ||
         !benchmark_predict_batch_build(batch, model_l, 0,
@@ -2178,7 +2179,7 @@ static int benchmark_run_stage76_batch_sample(
         printf("BENCHMARK FAILED Batch structure/prediction seed=0x%08lX TargetGroups=%lu GroupSize=%lu ActualGroups=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, (unsigned long)groups);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     if (seed_index == 0) {
@@ -2195,19 +2196,19 @@ static int benchmark_run_stage76_batch_sample(
         printf("BENCHMARK FAILED batch structure changed seed=0x%08lX TargetGroups=%lu GroupSize=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
 
     counter->comparison_count = 0;
     counter->overflowed = 0;
-    status = lks_group_batch_merge_all(batch, comparator, &final_group);
+    status = lks_legacy_group_batch_merge_all(batch, comparator, &final_group);
     if (status != LKS_STATUS_OK || final_group == NULL || counter->overflowed) {
         printf("BENCHMARK FAILED BatchMerge seed=0x%08lX TargetGroups=%lu GroupSize=%lu: %s\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size, lks_status_string(status));
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     memset(&path_stats, 0, sizeof(path_stats));
@@ -2216,16 +2217,16 @@ static int benchmark_run_stage76_batch_sample(
         printf("BENCHMARK FAILED BatchMerge validation seed=0x%08lX TargetGroups=%lu GroupSize=%lu\n",
             (unsigned long)seed, (unsigned long)target_groups,
             (unsigned long)group_size);
-        lks_group_destroy(final_group);
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(final_group);
+        lks_legacy_group_batch_destroy(batch);
         return 0;
     }
     row->samples[seed_index].build_comparisons = build_comparisons;
     row->samples[seed_index].merge_comparisons = counter->comparison_count;
     row->samples[seed_index].total_comparisons = build_comparisons +
         counter->comparison_count;
-    lks_group_destroy(final_group);
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(final_group);
+    lks_legacy_group_batch_destroy(batch);
     return 1;
 }
 
@@ -2888,7 +2889,7 @@ int lks_run_stage8_1_tests(void)
     {
         int group_values[100];
         void *group_items[100];
-        LksGroup *group = NULL;
+        LksLegacyGroup *group = NULL;
         size_t build_live_bytes;
         size_t build_peak_bytes;
         size_t build_live_blocks;
@@ -2896,19 +2897,19 @@ int lks_run_stage8_1_tests(void)
             group_values[index] = (int)(99 - index);
             group_items[index] = &group_values[index];
         }
-        status = lks_group_build(group_items, 100, &comparator, &group);
+        status = lks_legacy_group_build(group_items, 100, &comparator, &group);
         stats = lks_alloc_stats_get();
         build_live_bytes = stats.live_bytes;
         build_peak_bytes = stats.peak_live_bytes;
         build_live_blocks = stats.live_blocks;
         if (status != LKS_STATUS_OK || group == NULL ||
-            lks_group_size(group) != 100 || build_live_bytes == 0 ||
+            lks_legacy_group_size(group) != 100 || build_live_bytes == 0 ||
             !benchmark_validate_final(group, 100, &(BenchmarkPathStats){ 0 })) {
-            lks_group_destroy(group);
+            lks_legacy_group_destroy(group);
             printf("Group lifecycle test failed: build/validation\n");
             return 1;
         }
-        lks_group_destroy(group);
+        lks_legacy_group_destroy(group);
         stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("Group lifecycle test failed: live bytes=%lu blocks=%lu\n",
@@ -2928,8 +2929,8 @@ int lks_run_stage8_1_tests(void)
     {
         int batch_values[1000];
         void *batch_items[1000];
-        LksGroupBatch *batch = NULL;
-        LksGroup *result = NULL;
+        LksLegacyGroupBatch *batch = NULL;
+        LksLegacyGroup *result = NULL;
         size_t after_batch_build;
         size_t after_merge_all;
         size_t after_destroy_batch;
@@ -2939,11 +2940,11 @@ int lks_run_stage8_1_tests(void)
             batch_values[index] = (int)((index * 613u) % 1000u);
             batch_items[index] = &batch_values[index];
         }
-        status = lks_group_batch_build(batch_items, 1000, 100,
+        status = lks_legacy_group_batch_build(batch_items, 1000, 100,
             &comparator, &batch);
         if (status != LKS_STATUS_OK || batch == NULL ||
-            lks_group_batch_group_count(batch) != 10) {
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_batch_group_count(batch) != 10) {
+            lks_legacy_group_batch_destroy(batch);
             printf("GroupBatch lifecycle test failed: Batch build\n");
             return 1;
         }
@@ -2951,36 +2952,36 @@ int lks_run_stage8_1_tests(void)
         after_batch_build = stats.live_bytes;
         counter.comparison_count = 0;
         counter.overflowed = 0;
-        status = lks_group_batch_merge_all(batch, &comparator, &result);
+        status = lks_legacy_group_batch_merge_all(batch, &comparator, &result);
         if (status != LKS_STATUS_OK || result == NULL ||
-            lks_group_size(result) != 1000) {
-            lks_group_destroy(result);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_size(result) != 1000) {
+            lks_legacy_group_destroy(result);
+            lks_legacy_group_batch_destroy(batch);
             printf("GroupBatch lifecycle test failed: MergeAll\n");
             return 1;
         }
         memset(&path_stats, 0, sizeof(path_stats));
         if (!benchmark_validate_final(result, 1000, &path_stats)) {
-            lks_group_destroy(result);
-            lks_group_batch_destroy(batch);
+            lks_legacy_group_destroy(result);
+            lks_legacy_group_batch_destroy(batch);
             printf("GroupBatch lifecycle test failed: Result invalid\n");
             return 1;
         }
         stats = lks_alloc_stats_get();
         after_merge_all = stats.live_bytes;
         peak_live_bytes = stats.peak_live_bytes;
-        lks_group_batch_destroy(batch);
+        lks_legacy_group_batch_destroy(batch);
         stats = lks_alloc_stats_get();
         after_destroy_batch = stats.live_bytes;
         if (after_batch_build == 0 || after_merge_all == 0 ||
-            after_destroy_batch == 0 || lks_group_size(result) != 1000 ||
-            lks_group_item_at(result, 0) == NULL ||
-            *(const int *)lks_group_item_at(result, 0) != 0) {
-            lks_group_destroy(result);
+            after_destroy_batch == 0 || lks_legacy_group_size(result) != 1000 ||
+            lks_legacy_group_item_at(result, 0) == NULL ||
+            *(const int *)lks_legacy_group_item_at(result, 0) != 0) {
+            lks_legacy_group_destroy(result);
             printf("GroupBatch lifecycle test failed: result lifetime after Batch destroy\n");
             return 1;
         }
-        lks_group_destroy(result);
+        lks_legacy_group_destroy(result);
         stats = lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&stats)) {
             printf("GroupBatch lifecycle test failed: final live bytes=%lu blocks=%lu\n",
@@ -3184,8 +3185,8 @@ static int stage82_run_sample(int *values, void **items, size_t count,
 {
     LksComparator comparator;
     BenchmarkCompareContext compare_context;
-    LksGroupBatch *batch = NULL;
-    LksGroup *result = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *result = NULL;
     LksStatus status;
     LksAllocStats before_merge;
     size_t i;
@@ -3204,7 +3205,7 @@ static int stage82_run_sample(int *values, void **items, size_t count,
     comparator.compare = benchmark_compare_int;
     comparator.context = &compare_context;
     build_start = clock();
-    status = lks_group_batch_build(items, count, group_size, &comparator, &batch);
+    status = lks_legacy_group_batch_build(items, count, group_size, &comparator, &batch);
     build_end = clock();
     if (status != LKS_STATUS_OK || batch == NULL) goto cleanup;
     sample->build_comparisons = compare_context.comparison_count;
@@ -3213,16 +3214,16 @@ static int stage82_run_sample(int *values, void **items, size_t count,
     sample->after_batch = lks_alloc_stats_get();
     if (!stage83_tag_accounting_valid(&sample->after_batch, "AfterBatchBuild") ||
         !stage83_other_is_empty(&sample->after_batch, "AfterBatchBuild")) goto cleanup;
-    sample->groups = lks_group_batch_group_count(batch);
+    sample->groups = lks_legacy_group_batch_group_count(batch);
     sample->group_size = group_size;
     if (sample->groups != target_groups ||
         !benchmark_collect_batch_paths(batch, &sample->local_paths)) goto cleanup;
     for (i = 0; i < sample->groups; ++i) {
-        const LksGroup *group = lks_group_batch_group_at(batch, i);
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, i);
         size_t j;
         if (group == NULL) goto cleanup;
-        for (j = 0; j < lks_group_size(group); ++j) {
-            const LksPath *path = lks_group_path_at(group, j);
+        for (j = 0; j < lks_legacy_group_size(group); ++j) {
+            const LksPath *path = lks_legacy_group_path_at(group, j);
             size_t depth, capacity, storage;
             if (path == NULL) goto cleanup;
             depth = lks_path_depth(path);
@@ -3242,7 +3243,7 @@ static int stage82_run_sample(int *values, void **items, size_t count,
         sample->after_batch.tags[LKS_ALLOC_TAG_PATH_STEPS].live_blocks !=
             sample->batch_path_count - sample->batch_zero_depth_count) goto cleanup;
     merge_start = clock();
-    status = lks_group_batch_merge_all(batch, &comparator, &result);
+    status = lks_legacy_group_batch_merge_all(batch, &comparator, &result);
     merge_end = clock();
     if (status != LKS_STATUS_OK || result == NULL) goto cleanup;
     sample->total_comparisons = compare_context.comparison_count;
@@ -3257,9 +3258,9 @@ static int stage82_run_sample(int *values, void **items, size_t count,
         sample->after_merge.tags[LKS_ALLOC_TAG_MERGE_SCRATCH].live_blocks != 0) goto cleanup;
     memset(&sample->final_paths, 0, sizeof(sample->final_paths));
     if (!benchmark_validate_final(result, count, &sample->final_paths)) goto cleanup;
-    sample->result_path_count = lks_group_size(result);
+    sample->result_path_count = lks_legacy_group_size(result);
     for (i = 0; i < sample->result_path_count; ++i) {
-        const LksPath *path = lks_group_path_at(result, i);
+        const LksPath *path = lks_legacy_group_path_at(result, i);
         size_t depth, capacity, storage;
         if (path == NULL) goto cleanup;
         depth = lks_path_depth(path);
@@ -3271,7 +3272,7 @@ static int stage82_run_sample(int *values, void **items, size_t count,
             !benchmark_add_size(&sample->result_storage_bytes, storage)) goto cleanup;
         if (depth == 0) ++sample->result_zero_depth_count;
     }
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_batch_destroy(batch);
     batch = NULL;
     sample->result_only = lks_alloc_stats_get();
     if (!stage83_tag_accounting_valid(&sample->result_only, "ResultOnly") ||
@@ -3306,7 +3307,7 @@ static int stage82_run_sample(int *values, void **items, size_t count,
             (unsigned long)sample->after_merge.failed_calls);
         goto cleanup;
     }
-    lks_group_destroy(result);
+    lks_legacy_group_destroy(result);
     result = NULL;
     sample->final = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&sample->final) || sample->final.failed_calls != 0 ||
@@ -3321,8 +3322,8 @@ static int stage82_run_sample(int *values, void **items, size_t count,
     success = 1;
 
 cleanup:
-    lks_group_destroy(result);
-    lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result);
+    lks_legacy_group_batch_destroy(batch);
     if (!success && verbose_failure) {
         before_merge = lks_alloc_stats_get();
         printf("Stage 8.2 sample failed: seed=%08lX Groups=%lu GroupSize=%lu status=%s current bytes=%lu blocks=%lu failed=%lu\n",
@@ -4140,24 +4141,24 @@ static int stage91_profile_path(Stage91Profile *profile, const LksPath *path)
 }
 
 static int stage91_profile_batch(Stage91Profile *profile,
-    const LksGroupBatch *batch)
+    const LksLegacyGroupBatch *batch)
 {
     size_t group_index;
-    for (group_index=0; group_index<lks_group_batch_group_count(batch); ++group_index) {
-        const LksGroup *group=lks_group_batch_group_at(batch,group_index);
+    for (group_index=0; group_index<lks_legacy_group_batch_group_count(batch); ++group_index) {
+        const LksLegacyGroup *group=lks_legacy_group_batch_group_at(batch,group_index);
         size_t item;
         if (group==NULL) return 0;
-        for(item=0;item<lks_group_size(group);++item)
-            if(!stage91_profile_path(profile,lks_group_path_at(group,item))) return 0;
+        for(item=0;item<lks_legacy_group_size(group);++item)
+            if(!stage91_profile_path(profile,lks_legacy_group_path_at(group,item))) return 0;
     }
     return 1;
 }
 
-static int stage91_profile_result(Stage91Profile *profile,const LksGroup *result)
+static int stage91_profile_result(Stage91Profile *profile,const LksLegacyGroup *result)
 {
     size_t item;
-    for(item=0;item<lks_group_size(result);++item)
-        if(!stage91_profile_path(profile,lks_group_path_at(result,item))) return 0;
+    for(item=0;item<lks_legacy_group_size(result);++item)
+        if(!stage91_profile_path(profile,lks_legacy_group_path_at(result,item))) return 0;
     return 1;
 }
 
@@ -4195,8 +4196,8 @@ static int stage91_run_sample(int config, int *values, void **items)
 {
     LksComparator comparator;
     BenchmarkCompareContext compare_context = {0,0};
-    LksGroupBatch *batch=NULL;
-    LksGroup *result=NULL;
+    LksLegacyGroupBatch *batch=NULL;
+    LksLegacyGroup *result=NULL;
     LksStatus status=LKS_STATUS_OK;
     size_t i,groups=stage91_groups[config];
     size_t group_size=LKS_STAGE91_PATH_COUNT/groups+
@@ -4214,23 +4215,23 @@ static int stage91_run_sample(int config, int *values, void **items)
     for(i=0;i<LKS_STAGE91_PATH_COUNT;++i) items[i]=&values[i];
     comparator.compare=benchmark_compare_int;
     comparator.context=&compare_context;
-    status=lks_group_batch_build(items,LKS_STAGE91_PATH_COUNT,group_size,
+    status=lks_legacy_group_batch_build(items,LKS_STAGE91_PATH_COUNT,group_size,
         &comparator,&batch);
-    if(status!=LKS_STATUS_OK||batch==NULL||lks_group_batch_group_count(batch)!=groups) goto cleanup;
+    if(status!=LKS_STATUS_OK||batch==NULL||lks_legacy_group_batch_group_count(batch)!=groups) goto cleanup;
     sample->group_size=group_size;
     sample->after_batch=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&sample->after_batch,"9.1 AfterBatchBuild")||
         !stage83_other_is_empty(&sample->after_batch,"9.1 AfterBatchBuild")||
         !stage91_profile_batch(batch_profile,batch)||
         !stage91_validate_profile(batch_profile,&sample->after_batch,"Batch")) goto cleanup;
-    status=lks_group_batch_merge_all(batch,&comparator,&result);
+    status=lks_legacy_group_batch_merge_all(batch,&comparator,&result);
     if(status!=LKS_STATUS_OK||result==NULL) goto cleanup;
     sample->after_merge=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&sample->after_merge,"9.1 PostMerge")||
         !stage83_other_is_empty(&sample->after_merge,"9.1 PostMerge")) goto cleanup;
     memset(&final_paths,0,sizeof(final_paths));
     if(!benchmark_validate_final(result,LKS_STAGE91_PATH_COUNT,&final_paths)) goto cleanup;
-    lks_group_batch_destroy(batch); batch=NULL;
+    lks_legacy_group_batch_destroy(batch); batch=NULL;
     sample->result_only=lks_alloc_stats_get();
     if(!stage83_tag_accounting_valid(&sample->result_only,"9.1 ResultOnly")||
         !stage83_other_is_empty(&sample->result_only,"9.1 ResultOnly")||
@@ -4242,15 +4243,15 @@ static int stage91_run_sample(int config, int *values, void **items)
             sample->result_only.live_bytes ||
         sample->after_merge.live_blocks != sample->after_batch.live_blocks+
             sample->result_only.live_blocks) goto cleanup;
-    lks_group_destroy(result); result=NULL;
+    lks_legacy_group_destroy(result); result=NULL;
     sample->final=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&sample->final)||sample->final.failed_calls!=0||
         !stage83_tag_accounting_valid(&sample->final,"9.1 Final")||
         !stage83_other_is_empty(&sample->final,"9.1 Final")) goto cleanup;
     success=1;
 cleanup:
-    lks_group_batch_destroy(batch);
-    lks_group_destroy(result);
+    lks_legacy_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result);
     if(!success) {
         LksAllocStats now=lks_alloc_stats_get();
         printf("Stage 9.1 sample failed: Groups=%lu GroupSize=%lu status=%s live=%lu/%lu failed=%lu\n",
@@ -5016,17 +5017,17 @@ typedef struct Stage101Pair {
     size_t incoming_count;
 } Stage101Pair;
 
-static int stage101_groups_equivalent(const LksGroup *left,
-    const LksGroup *right)
+static int stage101_groups_equivalent(const LksLegacyGroup *left,
+    const LksLegacyGroup *right)
 {
     size_t i;
-    if (lks_group_size(left) != lks_group_size(right)) return 0;
-    for (i = 0; i < lks_group_size(left); ++i) {
+    if (lks_legacy_group_size(left) != lks_legacy_group_size(right)) return 0;
+    for (i = 0; i < lks_legacy_group_size(left); ++i) {
         int path_order;
-        if (*(const int *)lks_group_item_at(left, i) !=
-                *(const int *)lks_group_item_at(right, i) ||
-            lks_path_compare(lks_group_path_at(left, i),
-                lks_group_path_at(right, i), &path_order) != LKS_STATUS_OK ||
+        if (*(const int *)lks_legacy_group_item_at(left, i) !=
+                *(const int *)lks_legacy_group_item_at(right, i) ||
+            lks_path_compare(lks_legacy_group_path_at(left, i),
+                lks_legacy_group_path_at(right, i), &path_order) != LKS_STATUS_OK ||
             path_order != 0) return 0;
     }
     return 1;
@@ -5051,11 +5052,11 @@ static int stage101_build_pair(const int *base_values, size_t base_count,
 }
 
 static int stage101_group_build_from_pair(const Stage101Pair *pair,
-    int incoming, const LksComparator *comparator, LksGroup **out)
+    int incoming, const LksComparator *comparator, LksLegacyGroup **out)
 {
     void *const *items = incoming ? pair->incoming_items : pair->base_items;
     size_t count = incoming ? pair->incoming_count : pair->base_count;
-    return lks_group_build(items, count, comparator, out) == LKS_STATUS_OK;
+    return lks_legacy_group_build(items, count, comparator, out) == LKS_STATUS_OK;
 }
 
 static int stage101_run_case(const char *name, const int *base_values,
@@ -5067,9 +5068,9 @@ static int stage101_run_case(const char *name, const int *base_values,
     BenchmarkCompareContext public_counter = { 0, 0 }, private_counter = { 0, 0 };
     LksComparator public_comparator = { benchmark_compare_int, &public_counter };
     LksComparator private_comparator = { benchmark_compare_int, &private_counter };
-    LksGroup *public_base = NULL, *public_incoming = NULL, *reference = NULL;
-    LksGroup *owned_base = NULL, *private_incoming = NULL;
-    LksGroup *original_base;
+    LksLegacyGroup *public_base = NULL, *public_incoming = NULL, *reference = NULL;
+    LksLegacyGroup *owned_base = NULL, *private_incoming = NULL;
+    LksLegacyGroup *original_base;
     const LksPath *base_paths_before[10], *incoming_paths_before[10];
     void *base_items_before[10];
     void *public_base_items_before[10], *public_incoming_items_before[10];
@@ -5087,53 +5088,53 @@ static int stage101_run_case(const char *name, const int *base_values,
         goto cleanup;
     original_base = owned_base;
     for (i = 0; i < base_count; ++i) {
-        base_paths_before[i] = lks_group_path_at(owned_base, i);
-        base_items_before[i] = lks_group_item_at(owned_base, i);
-        public_base_items_before[i] = lks_group_item_at(public_base, i);
+        base_paths_before[i] = lks_legacy_group_path_at(owned_base, i);
+        base_items_before[i] = lks_legacy_group_item_at(owned_base, i);
+        public_base_items_before[i] = lks_legacy_group_item_at(public_base, i);
     }
     for (i = 0; i < incoming_count; ++i) {
-        incoming_paths_before[i] = lks_group_path_at(private_incoming, i);
-        public_incoming_items_before[i] = lks_group_item_at(public_incoming, i);
+        incoming_paths_before[i] = lks_legacy_group_path_at(private_incoming, i);
+        public_incoming_items_before[i] = lks_legacy_group_item_at(public_incoming, i);
     }
     public_counter.comparison_count = private_counter.comparison_count = 0;
-    status = lks_group_merge(public_base, public_incoming,
+    status = lks_legacy_group_merge(public_base, public_incoming,
         &public_comparator, &reference);
     if (status != LKS_STATUS_OK) goto cleanup;
-    status = lks_group_merge_into_owned_base(&owned_base, private_incoming,
+    status = lks_legacy_group_merge_into_owned_base(&owned_base, private_incoming,
         &private_comparator);
     if (status != LKS_STATUS_OK || owned_base != original_base ||
         !stage101_groups_equivalent(reference, owned_base)) goto cleanup;
     for (i = 0; i < base_count; ++i) {
         size_t j;
         int path_order;
-        for (j = 0; j < lks_group_size(owned_base); ++j)
-            if (lks_group_item_at(owned_base, j) == base_items_before[i]) break;
-        if (lks_group_item_at(public_base, i) != public_base_items_before[i] ||
-            j == lks_group_size(owned_base) ||
+        for (j = 0; j < lks_legacy_group_size(owned_base); ++j)
+            if (lks_legacy_group_item_at(owned_base, j) == base_items_before[i]) break;
+        if (lks_legacy_group_item_at(public_base, i) != public_base_items_before[i] ||
+            j == lks_legacy_group_size(owned_base) ||
             lks_path_compare(base_paths_before[i],
-                lks_group_path_at(owned_base, j), &path_order) != LKS_STATUS_OK ||
+                lks_legacy_group_path_at(owned_base, j), &path_order) != LKS_STATUS_OK ||
             path_order != 0) goto cleanup;
     }
     for (i = 0; i < incoming_count; ++i) {
         int path_order;
-        if (lks_group_item_at(public_incoming, i) != public_incoming_items_before[i] ||
+        if (lks_legacy_group_item_at(public_incoming, i) != public_incoming_items_before[i] ||
             lks_path_compare(incoming_paths_before[i],
-                lks_group_path_at(private_incoming, i), &path_order) != LKS_STATUS_OK ||
+                lks_legacy_group_path_at(private_incoming, i), &path_order) != LKS_STATUS_OK ||
             path_order != 0) goto cleanup;
     }
     if (expected_count != (size_t)-1) {
-        if (lks_group_size(owned_base) != expected_count) goto cleanup;
+        if (lks_legacy_group_size(owned_base) != expected_count) goto cleanup;
         for (i = 0; i < expected_count; ++i) {
             char text[128];
-            if (lks_path_format(lks_group_path_at(owned_base, i), text,
+            if (lks_path_format(lks_legacy_group_path_at(owned_base, i), text,
                     sizeof(text)) != LKS_STATUS_OK ||
                 strcmp(text, expected_paths[i]) != 0) goto cleanup;
         }
     }
     if (verify_base_equal_first) {
         int saw_incoming_equal = 0;
-        for (i = 0; i < lks_group_size(owned_base); ++i) {
-            void *item = lks_group_item_at(owned_base, i);
+        for (i = 0; i < lks_legacy_group_size(owned_base); ++i) {
+            void *item = lks_legacy_group_item_at(owned_base, i);
             if (item == private_pair.incoming_items[0] ||
                 item == private_pair.incoming_items[1]) {
                 saw_incoming_equal = 1;
@@ -5146,35 +5147,35 @@ static int stage101_run_case(const char *name, const int *base_values,
     if (base_count == 10) {
         for (i = 0; i < base_count; ++i) {
             size_t j;
-            for (j = 0; j < lks_group_size(owned_base); ++j)
-                if (lks_group_item_at(owned_base, j) == private_pair.base_items[i]) break;
-            if (j == lks_group_size(owned_base)) goto cleanup;
+            for (j = 0; j < lks_legacy_group_size(owned_base); ++j)
+                if (lks_legacy_group_item_at(owned_base, j) == private_pair.base_items[i]) break;
+            if (j == lks_legacy_group_size(owned_base)) goto cleanup;
             {
                 size_t k;
-                for (k = 0; k < lks_group_size(public_base); ++k)
-                    if (lks_group_item_at(public_base, k) == public_pair.base_items[i]) break;
-                if (k == lks_group_size(public_base)) goto cleanup;
+                for (k = 0; k < lks_legacy_group_size(public_base); ++k)
+                    if (lks_legacy_group_item_at(public_base, k) == public_pair.base_items[i]) break;
+                if (k == lks_legacy_group_size(public_base)) goto cleanup;
                 {
                     int path_order;
-                    if (lks_path_compare(lks_group_path_at(public_base, k),
-                            lks_group_path_at(owned_base, j), &path_order) != LKS_STATUS_OK ||
+                    if (lks_path_compare(lks_legacy_group_path_at(public_base, k),
+                            lks_legacy_group_path_at(owned_base, j), &path_order) != LKS_STATUS_OK ||
                         path_order != 0) goto cleanup;
                 }
             }
         }
     }
     if (out_comparisons != NULL) *out_comparisons = private_counter.comparison_count;
-    lks_group_destroy(owned_base); owned_base = NULL;
-    if (lks_group_size(private_incoming) != incoming_count) goto cleanup;
+    lks_legacy_group_destroy(owned_base); owned_base = NULL;
+    if (lks_legacy_group_size(private_incoming) != incoming_count) goto cleanup;
     for (i = 0; i < incoming_count; ++i)
-        if (lks_group_item_at(private_incoming, i) != private_pair.incoming_items[i]) goto cleanup;
+        if (lks_legacy_group_item_at(private_incoming, i) != private_pair.incoming_items[i]) goto cleanup;
     valid = 1;
 cleanup:
-    lks_group_destroy(owned_base);
-    lks_group_destroy(private_incoming);
-    lks_group_destroy(reference);
-    lks_group_destroy(public_incoming);
-    lks_group_destroy(public_base);
+    lks_legacy_group_destroy(owned_base);
+    lks_legacy_group_destroy(private_incoming);
+    lks_legacy_group_destroy(reference);
+    lks_legacy_group_destroy(public_incoming);
+    lks_legacy_group_destroy(public_base);
     printf("Stage 10.1 %s: %s\n", name, valid ? "PASS" : "FAIL");
     return valid;
 }
@@ -5193,7 +5194,7 @@ static int stage101_memory_one(int in_place, Stage101MemoryResult *result)
     static void *base_items[HALF], *incoming_items[HALF];
     BenchmarkCompareContext counter = { 0, 0 };
     LksComparator comparator = { benchmark_compare_int, &counter };
-    LksGroup *base = NULL, *incoming = NULL, *merged = NULL;
+    LksLegacyGroup *base = NULL, *incoming = NULL, *merged = NULL;
     LksAllocStats stats;
     size_t i;
     int ok = 0;
@@ -5206,18 +5207,18 @@ static int stage101_memory_one(int in_place, Stage101MemoryResult *result)
         incoming_items[i] = &incoming_values[i];
     }
     if (lks_alloc_stats_reset() != 0 ||
-        lks_group_build(base_items, HALF, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(incoming_items, HALF, &comparator, &incoming) != LKS_STATUS_OK)
+        lks_legacy_group_build(base_items, HALF, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(incoming_items, HALF, &comparator, &incoming) != LKS_STATUS_OK)
         goto cleanup;
     result->pre_bytes = lks_alloc_stats_get().live_bytes;
     result->pre_blocks = lks_alloc_stats_get().live_blocks;
     counter.comparison_count = 0;
     if (in_place) {
-        if (lks_group_merge_into_owned_base(&base, incoming, &comparator) != LKS_STATUS_OK)
+        if (lks_legacy_group_merge_into_owned_base(&base, incoming, &comparator) != LKS_STATUS_OK)
             goto cleanup;
         merged = base;
     } else {
-        if (lks_group_merge(base, incoming, &comparator, &merged) != LKS_STATUS_OK)
+        if (lks_legacy_group_merge(base, incoming, &comparator, &merged) != LKS_STATUS_OK)
             goto cleanup;
     }
     result->comparisons = counter.comparison_count;
@@ -5233,9 +5234,9 @@ static int stage101_memory_one(int in_place, Stage101MemoryResult *result)
         !stage83_other_is_empty(&stats, "10.1 memory peak")) goto cleanup;
     ok = 1;
 cleanup:
-    lks_group_destroy(merged);
-    if (!in_place || merged != base) lks_group_destroy(base);
-    lks_group_destroy(incoming);
+    lks_legacy_group_destroy(merged);
+    if (!in_place || merged != base) lks_legacy_group_destroy(base);
+    lks_legacy_group_destroy(incoming);
     stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&stats, "10.1 memory final") ||
@@ -5264,36 +5265,36 @@ static int stage101_invalid_arguments_test(void)
     BenchmarkCompareContext counter = { 0, 0 };
     LksComparator comparator = { benchmark_compare_int, &counter };
     LksComparator invalid_comparator = { NULL, NULL };
-    LksGroup *base = NULL, *incoming = NULL, *original;
-    LksGroup *null_base = NULL;
+    LksLegacyGroup *base = NULL, *incoming = NULL, *original;
+    LksLegacyGroup *null_base = NULL;
     LksStatus s1, s2, s3, s4;
     int path_order;
-    if (lks_group_build(&base_item, 1, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(&incoming_item, 1, &comparator, &incoming) != LKS_STATUS_OK)
+    if (lks_legacy_group_build(&base_item, 1, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(&incoming_item, 1, &comparator, &incoming) != LKS_STATUS_OK)
         goto fail;
     original = base;
     {
-        const LksPath *base_path = lks_group_path_at(base, 0);
-        s1 = lks_group_merge_into_owned_base(NULL, incoming, &comparator);
-        s2 = lks_group_merge_into_owned_base(&base, NULL, &comparator);
-        s3 = lks_group_merge_into_owned_base(&base, incoming, NULL);
-        s4 = lks_group_merge_into_owned_base(&base, incoming, &invalid_comparator);
-        if (lks_group_merge_into_owned_base(&null_base, incoming,
+        const LksPath *base_path = lks_legacy_group_path_at(base, 0);
+        s1 = lks_legacy_group_merge_into_owned_base(NULL, incoming, &comparator);
+        s2 = lks_legacy_group_merge_into_owned_base(&base, NULL, &comparator);
+        s3 = lks_legacy_group_merge_into_owned_base(&base, incoming, NULL);
+        s4 = lks_legacy_group_merge_into_owned_base(&base, incoming, &invalid_comparator);
+        if (lks_legacy_group_merge_into_owned_base(&null_base, incoming,
                 &comparator) != LKS_STATUS_INVALID_ARGUMENT) goto fail;
         if (s1 != LKS_STATUS_INVALID_ARGUMENT || s2 != LKS_STATUS_INVALID_ARGUMENT ||
             s3 != LKS_STATUS_INVALID_ARGUMENT || s4 != LKS_STATUS_INVALID_ARGUMENT ||
-            base != original || lks_group_size(base) != 1 ||
-            lks_group_item_at(base, 0) != &base_value ||
-            lks_path_compare(base_path, lks_group_path_at(base, 0), &path_order) != LKS_STATUS_OK ||
+            base != original || lks_legacy_group_size(base) != 1 ||
+            lks_legacy_group_item_at(base, 0) != &base_value ||
+            lks_path_compare(base_path, lks_legacy_group_path_at(base, 0), &path_order) != LKS_STATUS_OK ||
             path_order != 0) goto fail;
     }
-    lks_group_destroy(incoming);
-    lks_group_destroy(base);
+    lks_legacy_group_destroy(incoming);
+    lks_legacy_group_destroy(base);
     printf("Stage 10.1 invalid arguments: rejected without consuming valid Base\n");
     return 1;
 fail:
-    lks_group_destroy(incoming);
-    lks_group_destroy(base);
+    lks_legacy_group_destroy(incoming);
+    lks_legacy_group_destroy(base);
     printf("Stage 10.1 invalid arguments: FAIL\n");
     return 0;
 }
@@ -5331,26 +5332,26 @@ int lks_run_stage10_1_tests(void)
     {
         BenchmarkCompareContext counter = { 0, 0 };
         LksComparator comparator = { benchmark_compare_int, &counter };
-        LksGroup *base = NULL, *incoming = NULL, *reference = NULL;
-        LksGroup *private_base = NULL, *private_incoming = NULL;
-        if (lks_group_build(base_items, 500, &comparator, &base) != LKS_STATUS_OK ||
-            lks_group_build(incoming_items, 500, &comparator, &incoming) != LKS_STATUS_OK ||
-            lks_group_build(base_items, 500, &comparator, &private_base) != LKS_STATUS_OK ||
-            lks_group_build(incoming_items, 500, &comparator, &private_incoming) != LKS_STATUS_OK) return 1;
+        LksLegacyGroup *base = NULL, *incoming = NULL, *reference = NULL;
+        LksLegacyGroup *private_base = NULL, *private_incoming = NULL;
+        if (lks_legacy_group_build(base_items, 500, &comparator, &base) != LKS_STATUS_OK ||
+            lks_legacy_group_build(incoming_items, 500, &comparator, &incoming) != LKS_STATUS_OK ||
+            lks_legacy_group_build(base_items, 500, &comparator, &private_base) != LKS_STATUS_OK ||
+            lks_legacy_group_build(incoming_items, 500, &comparator, &private_incoming) != LKS_STATUS_OK) return 1;
         counter.comparison_count = 0;
-        if (lks_group_merge(base, incoming, &comparator, &reference) != LKS_STATUS_OK) return 1;
+        if (lks_legacy_group_merge(base, incoming, &comparator, &reference) != LKS_STATUS_OK) return 1;
         public_count = counter.comparison_count; counter.comparison_count = 0;
-        if (lks_group_merge_into_owned_base(&private_base, private_incoming, &comparator) != LKS_STATUS_OK) return 1;
+        if (lks_legacy_group_merge_into_owned_base(&private_base, private_incoming, &comparator) != LKS_STATUS_OK) return 1;
         private_count = counter.comparison_count;
         if (private_base == NULL || !stage101_groups_equivalent(reference, private_base)) return 1;
         for (i = 0; i < 1000; ++i)
-            if (*(int *)lks_group_item_at(private_base, i) != (int)i) return 1;
-        lks_group_destroy(private_base); private_base = NULL;
-        if (lks_group_size(private_incoming) != 500) return 1;
+            if (*(int *)lks_legacy_group_item_at(private_base, i) != (int)i) return 1;
+        lks_legacy_group_destroy(private_base); private_base = NULL;
+        if (lks_legacy_group_size(private_incoming) != 500) return 1;
         for (i = 0; i < 500; ++i)
-            if (lks_group_item_at(private_incoming, i) != incoming_items[i]) return 1;
-        lks_group_destroy(private_incoming); lks_group_destroy(reference);
-        lks_group_destroy(incoming); lks_group_destroy(base);
+            if (lks_legacy_group_item_at(private_incoming, i) != incoming_items[i]) return 1;
+        lks_legacy_group_destroy(private_incoming); lks_legacy_group_destroy(reference);
+        lks_legacy_group_destroy(incoming); lks_legacy_group_destroy(base);
     }
     printf("Stage 10.1 G 500+500: public=%lu private=%lu; Path equivalence=1000/1000; output=0..999\n",
         (unsigned long)public_count, (unsigned long)private_count);
@@ -5405,7 +5406,7 @@ int lks_run_stage10_1_tests(void)
 }
 
 typedef struct Stage102Entry {
-    LksGroup *group;
+    LksLegacyGroup *group;
     int owned;
 } Stage102Entry;
 
@@ -5427,25 +5428,25 @@ typedef struct Stage102MemorySample {
     LksAllocStats peak_stats;
 } Stage102MemorySample;
 
-static LksStatus stage102_reference_merge_all(const LksGroupBatch *batch,
-    const LksComparator *comparator, LksGroup **out_group)
+static LksStatus stage102_reference_merge_all(const LksLegacyGroupBatch *batch,
+    const LksComparator *comparator, LksLegacyGroup **out_group)
 {
     Stage102Entry *current = NULL, *next = NULL;
     size_t current_count, next_count = 0, i;
     LksStatus status = LKS_STATUS_OK;
-    LksGroup *empty = NULL;
+    LksLegacyGroup *empty = NULL;
     if (out_group == NULL) return LKS_STATUS_INVALID_ARGUMENT;
     *out_group = NULL;
     if (batch == NULL || comparator == NULL || comparator->compare == NULL)
         return LKS_STATUS_INVALID_ARGUMENT;
-    current_count = lks_group_batch_group_count(batch);
-    if (current_count == 0) return lks_group_build(NULL, 0, comparator, out_group);
+    current_count = lks_legacy_group_batch_group_count(batch);
+    if (current_count == 0) return lks_legacy_group_build(NULL, 0, comparator, out_group);
     if (current_count == 1) {
-        status = lks_group_build(NULL, 0, comparator, &empty);
+        status = lks_legacy_group_build(NULL, 0, comparator, &empty);
         if (status == LKS_STATUS_OK)
-            status = lks_group_merge(lks_group_batch_group_at(batch, 0),
+            status = lks_legacy_group_merge(lks_legacy_group_batch_group_at(batch, 0),
                 empty, comparator, out_group);
-        lks_group_destroy(empty);
+        lks_legacy_group_destroy(empty);
         return status;
     }
     if (current_count > (size_t)-1 / sizeof(*current)) return LKS_STATUS_OUT_OF_MEMORY;
@@ -5453,7 +5454,7 @@ static LksStatus stage102_reference_merge_all(const LksGroupBatch *batch,
         LKS_ALLOC_TAG_MERGE_SCRATCH);
     if (current == NULL) return LKS_STATUS_OUT_OF_MEMORY;
     for (i = 0; i < current_count; ++i) {
-        current[i].group = (LksGroup *)lks_group_batch_group_at(batch, i);
+        current[i].group = (LksLegacyGroup *)lks_legacy_group_batch_group_at(batch, i);
         current[i].owned = 0;
     }
     while (current_count > 1) {
@@ -5469,13 +5470,13 @@ static LksStatus stage102_reference_merge_all(const LksGroupBatch *batch,
         for (i = 0; i < next_count; ++i) { next[i].group = NULL; next[i].owned = 0; }
         while (ci < current_count) {
             if (ci + 1 < current_count) {
-                LksGroup *merged = NULL;
-                status = lks_group_merge(current[ci].group, current[ci + 1].group,
+                LksLegacyGroup *merged = NULL;
+                status = lks_legacy_group_merge(current[ci].group, current[ci + 1].group,
                     comparator, &merged);
                 if (status != LKS_STATUS_OK) goto cleanup;
                 next[ni].group = merged; next[ni].owned = 1; ++ni;
-                if (current[ci].owned) lks_group_destroy(current[ci].group);
-                if (current[ci + 1].owned) lks_group_destroy(current[ci + 1].group);
+                if (current[ci].owned) lks_legacy_group_destroy(current[ci].group);
+                if (current[ci + 1].owned) lks_legacy_group_destroy(current[ci + 1].group);
                 current[ci].group = NULL; current[ci].owned = 0;
                 current[ci + 1].group = NULL; current[ci + 1].owned = 0;
                 ci += 2;
@@ -5491,39 +5492,39 @@ static LksStatus stage102_reference_merge_all(const LksGroupBatch *batch,
         *out_group = current[0].group;
         current[0].group = NULL; current[0].owned = 0;
     } else {
-        status = lks_group_build(NULL, 0, comparator, &empty);
+        status = lks_legacy_group_build(NULL, 0, comparator, &empty);
         if (status == LKS_STATUS_OK)
-            status = lks_group_merge(current[0].group, empty, comparator, out_group);
-        lks_group_destroy(empty);
+            status = lks_legacy_group_merge(current[0].group, empty, comparator, out_group);
+        lks_legacy_group_destroy(empty);
     }
 cleanup:
     if (next != NULL) {
-        for (i = 0; i < next_count; ++i) if (next[i].owned) lks_group_destroy(next[i].group);
+        for (i = 0; i < next_count; ++i) if (next[i].owned) lks_legacy_group_destroy(next[i].group);
         lks_free(next);
     }
     if (current != NULL) {
-        for (i = 0; i < current_count; ++i) if (current[i].owned) lks_group_destroy(current[i].group);
+        for (i = 0; i < current_count; ++i) if (current[i].owned) lks_legacy_group_destroy(current[i].group);
         lks_free(current);
     }
     return status;
 }
 
-static int stage102_snapshot_batch(const LksGroupBatch *batch,
+static int stage102_snapshot_batch(const LksLegacyGroupBatch *batch,
     Stage102Snapshot *snapshot)
 {
     size_t g, cursor = 0;
-    snapshot->count = lks_group_batch_total_size(batch);
+    snapshot->count = lks_legacy_group_batch_total_size(batch);
     snapshot->items = (void **)malloc(snapshot->count * sizeof(*snapshot->items));
     snapshot->paths = (char **)calloc(snapshot->count, sizeof(*snapshot->paths));
     if (snapshot->count != 0 && (snapshot->items == NULL || snapshot->paths == NULL))
         return 0;
-    for (g = 0; g < lks_group_batch_group_count(batch); ++g) {
-        const LksGroup *group = lks_group_batch_group_at(batch, g);
+    for (g = 0; g < lks_legacy_group_batch_group_count(batch); ++g) {
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, g);
         size_t i;
-        for (i = 0; i < lks_group_size(group); ++i, ++cursor) {
-            const LksPath *path = lks_group_path_at(group, i);
+        for (i = 0; i < lks_legacy_group_size(group); ++i, ++cursor) {
+            const LksPath *path = lks_legacy_group_path_at(group, i);
             size_t text_length = lks_path_text_length(path);
-            snapshot->items[cursor] = lks_group_item_at(group, i);
+            snapshot->items[cursor] = lks_legacy_group_item_at(group, i);
             if (text_length == (size_t)-1 || text_length == (size_t)-2) return 0;
             snapshot->paths[cursor] = (char *)malloc(text_length + 1);
             if (snapshot->paths[cursor] == NULL || lks_path_format(path,
@@ -5533,20 +5534,20 @@ static int stage102_snapshot_batch(const LksGroupBatch *batch,
     return cursor == snapshot->count;
 }
 
-static int stage102_batch_matches_snapshot(const LksGroupBatch *batch,
+static int stage102_batch_matches_snapshot(const LksLegacyGroupBatch *batch,
     const Stage102Snapshot *snapshot)
 {
     size_t g, cursor = 0;
-    if (snapshot->count != lks_group_batch_total_size(batch)) return 0;
-    for (g = 0; g < lks_group_batch_group_count(batch); ++g) {
-        const LksGroup *group = lks_group_batch_group_at(batch, g);
+    if (snapshot->count != lks_legacy_group_batch_total_size(batch)) return 0;
+    for (g = 0; g < lks_legacy_group_batch_group_count(batch); ++g) {
+        const LksLegacyGroup *group = lks_legacy_group_batch_group_at(batch, g);
         size_t i;
-        for (i = 0; i < lks_group_size(group); ++i, ++cursor) {
-            const LksPath *source_path = lks_group_path_at(group, i);
+        for (i = 0; i < lks_legacy_group_size(group); ++i, ++cursor) {
+            const LksPath *source_path = lks_legacy_group_path_at(group, i);
             size_t text_length = lks_path_text_length(source_path);
             char *path;
             int matches;
-            if (lks_group_item_at(group, i) != snapshot->items[cursor]) return 0;
+            if (lks_legacy_group_item_at(group, i) != snapshot->items[cursor]) return 0;
             path = (char *)malloc(text_length + 1);
             if (path == NULL) return 0;
             matches = lks_path_format(source_path, path, text_length + 1) == LKS_STATUS_OK &&
@@ -5558,17 +5559,17 @@ static int stage102_batch_matches_snapshot(const LksGroupBatch *batch,
     return cursor == snapshot->count;
 }
 
-static int stage102_snapshot_group(const LksGroup *group, Stage102Snapshot *snapshot)
+static int stage102_snapshot_group(const LksLegacyGroup *group, Stage102Snapshot *snapshot)
 {
     size_t i;
-    snapshot->count = lks_group_size(group);
+    snapshot->count = lks_legacy_group_size(group);
     snapshot->items = (void **)malloc(snapshot->count * sizeof(*snapshot->items));
     snapshot->paths = (char **)calloc(snapshot->count, sizeof(*snapshot->paths));
     if (snapshot->count != 0 && (snapshot->items == NULL || snapshot->paths == NULL)) return 0;
     for (i = 0; i < snapshot->count; ++i) {
-        const LksPath *path = lks_group_path_at(group, i);
+        const LksPath *path = lks_legacy_group_path_at(group, i);
         size_t text_length = lks_path_text_length(path);
-        snapshot->items[i] = lks_group_item_at(group, i);
+        snapshot->items[i] = lks_legacy_group_item_at(group, i);
         if (text_length == (size_t)-1 || text_length == (size_t)-2) return 0;
         snapshot->paths[i] = (char *)malloc(text_length + 1);
         if (snapshot->paths[i] == NULL || lks_path_format(path,
@@ -5577,20 +5578,20 @@ static int stage102_snapshot_group(const LksGroup *group, Stage102Snapshot *snap
     return 1;
 }
 
-static int stage102_groups_match_snapshots(const LksGroup *group,
+static int stage102_groups_match_snapshots(const LksLegacyGroup *group,
     const Stage102Snapshot *snapshot)
 {
     size_t i;
-    if (lks_group_size(group) != snapshot->count) return 0;
+    if (lks_legacy_group_size(group) != snapshot->count) return 0;
     for (i = 0; i < snapshot->count; ++i) {
-        size_t text_length = lks_path_text_length(lks_group_path_at(group, i));
+        size_t text_length = lks_path_text_length(lks_legacy_group_path_at(group, i));
         char *path;
         int matches;
-        if (lks_group_item_at(group, i) != snapshot->items[i] ||
+        if (lks_legacy_group_item_at(group, i) != snapshot->items[i] ||
             text_length == (size_t)-1 || text_length == (size_t)-2) return 0;
         path = (char *)malloc(text_length + 1);
         if (path == NULL) return 0;
-        matches = lks_path_format(lks_group_path_at(group, i), path,
+        matches = lks_path_format(lks_legacy_group_path_at(group, i), path,
             text_length + 1) == LKS_STATUS_OK && strcmp(path, snapshot->paths[i]) == 0;
         free(path);
         if (!matches) return 0;
@@ -5624,8 +5625,8 @@ static int stage102_compare_batch_case(size_t n, size_t group_size,
     void *items[103];
     BenchmarkCompareContext counter = { 0, 0 };
     LksComparator comparator = { benchmark_compare_int, &counter };
-    LksGroupBatch *batch = NULL;
-    LksGroup *optimized = NULL, *reference = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *optimized = NULL, *reference = NULL;
     Stage102Snapshot before = { 0 }, opt = { 0 }, ref = { 0 };
     LksAllocStats stats;
     size_t i;
@@ -5634,10 +5635,10 @@ static int stage102_compare_batch_case(size_t n, size_t group_size,
     benchmark_shuffle(values, n, seed);
     for (i = 0; i < n; ++i) items[i] = &values[i];
     if (lks_alloc_stats_reset() != 0 ||
-        lks_group_batch_build(items, n, group_size, &comparator, &batch) != LKS_STATUS_OK ||
-        lks_group_batch_group_count(batch) != expected_groups ||
+        lks_legacy_group_batch_build(items, n, group_size, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_legacy_group_batch_group_count(batch) != expected_groups ||
         !stage102_snapshot_batch(batch, &before)) goto cleanup;
-    if (lks_group_batch_merge_all(batch, &comparator, &optimized) != LKS_STATUS_OK ||
+    if (lks_legacy_group_batch_merge_all(batch, &comparator, &optimized) != LKS_STATUS_OK ||
         !stage102_snapshot_group(optimized, &opt) ||
         !stage102_batch_matches_snapshot(batch, &before)) goto cleanup;
     if (stage102_reference_merge_all(batch, &comparator, &reference) != LKS_STATUS_OK ||
@@ -5649,7 +5650,7 @@ static int stage102_compare_batch_case(size_t n, size_t group_size,
         !stage83_other_is_empty(&stats, "10.2 small comparison")) goto cleanup;
     passed = 1;
 cleanup:
-    lks_group_destroy(reference); lks_group_destroy(optimized); lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(reference); lks_legacy_group_destroy(optimized); lks_legacy_group_batch_destroy(batch);
     stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&stats) || stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&stats, "10.2 small final") ||
@@ -5669,8 +5670,8 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
     static void *items[N];
     BenchmarkCompareContext counter = { 0, 0 };
     LksComparator comparator = { benchmark_compare_int, &counter };
-    LksGroupBatch *batch = NULL;
-    LksGroup *result = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *result = NULL;
     LksAllocStats after_batch, after_merge, result_only, final_stats;
     size_t i;
     int valid = 0;
@@ -5682,9 +5683,9 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
     for (i = 0; i < N; ++i) items[i] = &values[i];
     failure_phase = "Batch build/reset";
     if (lks_alloc_stats_reset() != 0 ||
-        lks_group_batch_build(items, N, group_size, &comparator, &batch) != LKS_STATUS_OK ||
-        lks_group_batch_group_count(batch) != expected_groups) goto cleanup;
-    sample->groups = lks_group_batch_group_count(batch);
+        lks_legacy_group_batch_build(items, N, group_size, &comparator, &batch) != LKS_STATUS_OK ||
+        lks_legacy_group_batch_group_count(batch) != expected_groups) goto cleanup;
+    sample->groups = lks_legacy_group_batch_group_count(batch);
     sample->group_size = group_size;
     after_batch = lks_alloc_stats_get();
     failure_phase = "AfterBatchBuild accounting";
@@ -5697,7 +5698,7 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
     failure_phase = reference_mode ? "legacy reference merge/validation/snapshot" :
         "optimized merge/validation/snapshot";
     merge_status = reference_mode ? stage102_reference_merge_all(batch, &comparator, &result) :
-        lks_group_batch_merge_all(batch, &comparator, &result);
+        lks_legacy_group_batch_merge_all(batch, &comparator, &result);
     if (merge_status != LKS_STATUS_OK) goto cleanup;
     final_valid = benchmark_validate_final(result, N, &(BenchmarkPathStats){ 0 });
     if (!final_valid) goto cleanup;
@@ -5716,7 +5717,7 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
         size_t total_group_allocs = after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
         sample->clone_count = total_group_allocs - sample->clone_count;
     } else sample->clone_count = 0;
-    lks_group_batch_destroy(batch); batch = NULL;
+    lks_legacy_group_batch_destroy(batch); batch = NULL;
     result_only = lks_alloc_stats_get();
     failure_phase = "ResultOnly accounting";
     sample->result_only_bytes = result_only.live_bytes;
@@ -5729,7 +5730,7 @@ static int stage102_run_memory_case(size_t group_size, size_t expected_groups,
         !stage83_other_is_empty(&result_only, "10.2 ResultOnly")) goto cleanup;
     valid = 1;
 cleanup:
-    lks_group_destroy(result); lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result); lks_legacy_group_batch_destroy(batch);
     final_stats = lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls != 0 ||
         !stage83_tag_accounting_valid(&final_stats, "10.2 memory final") ||
@@ -5828,18 +5829,18 @@ static int stage102_equal_and_lifecycle_tests(void)
     void *items[10];
     BenchmarkCompareContext counter = { 0, 0 };
     LksComparator comparator = { benchmark_compare_int, &counter };
-    LksGroupBatch *batch = NULL;
-    LksGroup *result = NULL, *reference = NULL;
+    LksLegacyGroupBatch *batch = NULL;
+    LksLegacyGroup *result = NULL, *reference = NULL;
     Stage102Snapshot opt = { 0 }, ref = { 0 }, before = { 0 };
     LksAllocStats after_batch, after_merge, final_stats;
     size_t i, clone_count;
     int passed = 0;
     for (i=0;i<10;++i) { equal_values[i]=7; items[i]=&equal_values[i]; }
     if (lks_alloc_stats_reset()!=0 ||
-        lks_group_batch_build(items,10,2,&comparator,&batch)!=LKS_STATUS_OK ||
-        lks_group_batch_group_count(batch)!=5 || !stage102_snapshot_batch(batch,&before)) goto cleanup;
+        lks_legacy_group_batch_build(items,10,2,&comparator,&batch)!=LKS_STATUS_OK ||
+        lks_legacy_group_batch_group_count(batch)!=5 || !stage102_snapshot_batch(batch,&before)) goto cleanup;
     after_batch=lks_alloc_stats_get();
-    if (lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK ||
+    if (lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK ||
         !stage102_snapshot_group(result,&opt) || !stage102_batch_matches_snapshot(batch,&before)) goto cleanup;
     after_merge=lks_alloc_stats_get();
     clone_count=after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
@@ -5847,28 +5848,28 @@ static int stage102_equal_and_lifecycle_tests(void)
     if (clone_count!=2 || stage102_reference_merge_all(batch,&comparator,&reference)!=LKS_STATUS_OK ||
         !stage102_snapshot_group(reference,&ref) || !stage102_snapshots_equal(&opt,&ref)) goto cleanup;
     for (i=0;i<10;++i)
-        if (lks_group_item_at(result,i)!=items[i]) goto cleanup;
+        if (lks_legacy_group_item_at(result,i)!=items[i]) goto cleanup;
     printf("Stage 10.2 five equal Groups: pointer stability=PASS; G4 borrowed-right clone count=0; total owned-base clones=%lu\n",(unsigned long)clone_count);
-    lks_group_destroy(reference); reference=NULL;
-    lks_group_destroy(result); result=NULL;
-    lks_group_batch_destroy(batch); batch=NULL;
+    lks_legacy_group_destroy(reference); reference=NULL;
+    lks_legacy_group_destroy(result); result=NULL;
+    lks_legacy_group_batch_destroy(batch); batch=NULL;
     final_stats=lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls!=0) goto cleanup;
 
     {
         int six_values[12]; void *six_items[12];
         for (i=0;i<12;++i) { six_values[i]=(int)i; six_items[i]=&six_values[i]; }
-        if (lks_alloc_stats_reset()!=0 || lks_group_batch_build(six_items,12,2,
-                &comparator,&batch)!=LKS_STATUS_OK || lks_group_batch_group_count(batch)!=6) goto cleanup;
+        if (lks_alloc_stats_reset()!=0 || lks_legacy_group_batch_build(six_items,12,2,
+                &comparator,&batch)!=LKS_STATUS_OK || lks_legacy_group_batch_group_count(batch)!=6) goto cleanup;
         after_batch=lks_alloc_stats_get();
-        if (lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK ||
-            lks_group_size(result)!=12) goto cleanup;
+        if (lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK ||
+            lks_legacy_group_size(result)!=12) goto cleanup;
         after_merge=lks_alloc_stats_get();
         clone_count=after_merge.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls-
             after_batch.tags[LKS_ALLOC_TAG_GROUP_OBJECT].alloc_calls;
         if (clone_count!=3) goto cleanup;
-        lks_group_destroy(batch == NULL ? NULL : result); result=NULL;
-        lks_group_batch_destroy(batch); batch=NULL;
+        lks_legacy_group_destroy(batch == NULL ? NULL : result); result=NULL;
+        lks_legacy_group_batch_destroy(batch); batch=NULL;
         final_stats=lks_alloc_stats_get();
         if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls!=0 ||
             !stage83_tag_accounting_valid(&final_stats,"10.2 six-group final") ||
@@ -5877,7 +5878,7 @@ static int stage102_equal_and_lifecycle_tests(void)
     }
     passed=1;
 cleanup:
-    lks_group_destroy(reference); lks_group_destroy(result); lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(reference); lks_legacy_group_destroy(result); lks_legacy_group_batch_destroy(batch);
     stage102_snapshot_free(&before); stage102_snapshot_free(&opt); stage102_snapshot_free(&ref);
     final_stats=lks_alloc_stats_get();
     if (!benchmark_alloc_stats_empty(&final_stats) || final_stats.failed_calls!=0) passed=0;
@@ -5890,27 +5891,27 @@ static int stage102_g0_path_test(void)
     int values[10]={90,10,70,30,80,20,60,40,100,50};
     void *items[10];
     const char *expected[4]={"1A0","1A0//A0","1A0/A0","000"};
-    LksGroupBatch *batch=NULL; LksGroup *result=NULL;
+    LksLegacyGroupBatch *batch=NULL; LksLegacyGroup *result=NULL;
     BenchmarkCompareContext counter={0,0};
     LksComparator comparator={benchmark_compare_int,&counter};
     size_t i,j; int passed=0;
-    const LksGroup *g0;
+    const LksLegacyGroup *g0;
     const LksPath *paths[4]; void *g0_items[4];
     for(i=0;i<10;++i) items[i]=&values[i];
-    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(items,10,4,&comparator,&batch)!=LKS_STATUS_OK) goto cleanup;
-    g0=lks_group_batch_group_at(batch,0);
-    for(i=0;i<4;++i){g0_items[i]=lks_group_item_at(g0,i);paths[i]=lks_group_path_at(g0,i);}
-    if(lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK) goto cleanup;
+    if(lks_alloc_stats_reset()!=0||lks_legacy_group_batch_build(items,10,4,&comparator,&batch)!=LKS_STATUS_OK) goto cleanup;
+    g0=lks_legacy_group_batch_group_at(batch,0);
+    for(i=0;i<4;++i){g0_items[i]=lks_legacy_group_item_at(g0,i);paths[i]=lks_legacy_group_path_at(g0,i);}
+    if(lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK) goto cleanup;
     for(i=0;i<4;++i){
         char text[128]; int order;
-        for(j=0;j<lks_group_size(result);++j) if(lks_group_item_at(result,j)==g0_items[i]) break;
-        if(j==lks_group_size(result)||lks_path_compare(paths[i],lks_group_path_at(result,j),&order)!=LKS_STATUS_OK||order!=0||
-            lks_path_format(lks_group_path_at(result,j),text,sizeof(text))!=LKS_STATUS_OK||strcmp(text,expected[i])!=0) goto cleanup;
+        for(j=0;j<lks_legacy_group_size(result);++j) if(lks_legacy_group_item_at(result,j)==g0_items[i]) break;
+        if(j==lks_legacy_group_size(result)||lks_path_compare(paths[i],lks_legacy_group_path_at(result,j),&order)!=LKS_STATUS_OK||order!=0||
+            lks_path_format(lks_legacy_group_path_at(result,j),text,sizeof(text))!=LKS_STATUS_OK||strcmp(text,expected[i])!=0) goto cleanup;
     }
     passed=1;
     printf("Stage 10.2 G0 lineage Paths retained: 10=1A0, 30=1A0//A0, 70=1A0/A0, 90=000\n");
 cleanup:
-    lks_group_destroy(result);lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);
     {LksAllocStats s=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||!stage83_tag_accounting_valid(&s,"10.2 G0 final"))passed=0;}
     return passed;
 }
@@ -5930,15 +5931,15 @@ int lks_run_stage10_2_tests(void)
     if(!stage102_equal_and_lifecycle_tests()||!stage102_g0_path_test()) return 1;
     {
         int values[1024];void *items[1024];BenchmarkCompareContext counter={0,0};
-        LksComparator comparator={benchmark_compare_int,&counter};LksGroupBatch *batch=NULL;LksGroup *result=NULL;size_t k;int ok=1;
+        LksComparator comparator={benchmark_compare_int,&counter};LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;size_t k;int ok=1;
         for(k=0;k<1024;++k){values[k]=(int)k;items[k]=&values[k];}
-        if(lks_alloc_stats_reset()!=0||lks_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK)return 1;
+        if(lks_alloc_stats_reset()!=0||lks_legacy_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK)return 1;
         counter.comparison_count=0;
-        if(lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||lks_group_size(result)!=1024)ok=0;
-        for(k=0;ok&&k<1024;++k){int po;if(lks_group_item_at(result,k)!=&values[k]||(k>0&&(lks_path_compare(lks_group_path_at(result,k-1),lks_group_path_at(result,k),&po)!=LKS_STATUS_OK||po!=-1)))ok=0;}
+        if(lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||lks_legacy_group_size(result)!=1024)ok=0;
+        for(k=0;ok&&k<1024;++k){int po;if(lks_legacy_group_item_at(result,k)!=&values[k]||(k>0&&(lks_path_compare(lks_legacy_group_path_at(result,k-1),lks_legacy_group_path_at(result,k),&po)!=LKS_STATUS_OK||po!=-1)))ok=0;}
         printf("Stage 10.2 1024 singleton Groups: comparisons=%lu order/path=%s\n",(unsigned long)counter.comparison_count,ok?"PASS":"FAIL");
         if(counter.comparison_count!=14337)ok=0;
-        lks_group_destroy(result);lks_group_batch_destroy(batch);
+        lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);
         {LksAllocStats s=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&s)||s.failed_calls!=0||!stage83_tag_accounting_valid(&s,"10.2 1024 final")||!stage83_other_is_empty(&s,"10.2 1024 final"))ok=0;}
         if(!ok)return 1;
     }
@@ -6081,14 +6082,14 @@ static int stage103_snapshot_store_path(const LksPath *path,Stage103Snapshot *sn
     return 1;
 }
 
-static int stage103_snapshot_capture_group(const LksGroup *group, Stage103Snapshot *snapshot)
+static int stage103_snapshot_capture_group(const LksLegacyGroup *group, Stage103Snapshot *snapshot)
 {
     size_t i,total=0,total_steps=0,step_cursor=0;
-    if(!stage103_snapshot_alloc(snapshot,lks_group_size(group),0))return 0;
+    if(!stage103_snapshot_alloc(snapshot,lks_legacy_group_size(group),0))return 0;
     for(i=0;i<snapshot->count;++i){
-        size_t len=lks_path_text_length(lks_group_path_at(group,i));
+        size_t len=lks_path_text_length(lks_legacy_group_path_at(group,i));
         if(len==(size_t)-1||!benchmark_add_size(&total,len+1))return 0;
-        if(!benchmark_add_size(&total_steps,lks_path_depth(lks_group_path_at(group,i))))return 0;
+        if(!benchmark_add_size(&total_steps,lks_path_depth(lks_legacy_group_path_at(group,i))))return 0;
         snapshot->path_lengths[i]=len;
     }
     if(!stage103_snapshot_alloc_steps(snapshot,total_steps))return 0;
@@ -6096,29 +6097,29 @@ static int stage103_snapshot_capture_group(const LksGroup *group, Stage103Snapsh
     if(snapshot->path_text==NULL)return 0;
     total=0;
     for(i=0;i<snapshot->count;++i){
-        snapshot->items[i]=lks_group_item_at(group,i);
-        if(!stage103_snapshot_store_path(lks_group_path_at(group,i),snapshot,i,&step_cursor))return 0;
+        snapshot->items[i]=lks_legacy_group_item_at(group,i);
+        if(!stage103_snapshot_store_path(lks_legacy_group_path_at(group,i),snapshot,i,&step_cursor))return 0;
         snapshot->path_offsets[i]=total;
-        if(lks_path_format(lks_group_path_at(group,i),snapshot->path_text+total,
+        if(lks_path_format(lks_legacy_group_path_at(group,i),snapshot->path_text+total,
                 snapshot->path_lengths[i]+1)!=LKS_STATUS_OK)return 0;
         total+=snapshot->path_lengths[i]+1;
     }
     return 1;
 }
 
-static int stage103_snapshot_capture_batch(const LksGroupBatch *batch,
+static int stage103_snapshot_capture_batch(const LksLegacyGroupBatch *batch,
     Stage103Snapshot *snapshot)
 {
     size_t g,i,cursor=0,total=0,total_steps=0,step_cursor=0;
-    if(!stage103_snapshot_alloc(snapshot,lks_group_batch_total_size(batch),
-            lks_group_batch_group_count(batch)))return 0;
+    if(!stage103_snapshot_alloc(snapshot,lks_legacy_group_batch_total_size(batch),
+            lks_legacy_group_batch_group_count(batch)))return 0;
     for(g=0;g<snapshot->group_count;++g){
-        const LksGroup *group=lks_group_batch_group_at(batch,g);
-        snapshot->group_sizes[g]=lks_group_size(group);
-        for(i=0;i<lks_group_size(group);++i,++cursor){
-            size_t len=lks_path_text_length(lks_group_path_at(group,i));
+        const LksLegacyGroup *group=lks_legacy_group_batch_group_at(batch,g);
+        snapshot->group_sizes[g]=lks_legacy_group_size(group);
+        for(i=0;i<lks_legacy_group_size(group);++i,++cursor){
+            size_t len=lks_path_text_length(lks_legacy_group_path_at(group,i));
             if(len==(size_t)-1||!benchmark_add_size(&total,len+1))return 0;
-            if(!benchmark_add_size(&total_steps,lks_path_depth(lks_group_path_at(group,i))))return 0;
+            if(!benchmark_add_size(&total_steps,lks_path_depth(lks_legacy_group_path_at(group,i))))return 0;
             snapshot->path_lengths[cursor]=len;
         }
     }
@@ -6128,12 +6129,12 @@ static int stage103_snapshot_capture_batch(const LksGroupBatch *batch,
     if(snapshot->path_text==NULL)return 0;
     cursor=0;total=0;
     for(g=0;g<snapshot->group_count;++g){
-        const LksGroup *group=lks_group_batch_group_at(batch,g);
-        for(i=0;i<lks_group_size(group);++i,++cursor){
-            snapshot->items[cursor]=lks_group_item_at(group,i);
-            if(!stage103_snapshot_store_path(lks_group_path_at(group,i),snapshot,cursor,&step_cursor))return 0;
+        const LksLegacyGroup *group=lks_legacy_group_batch_group_at(batch,g);
+        for(i=0;i<lks_legacy_group_size(group);++i,++cursor){
+            snapshot->items[cursor]=lks_legacy_group_item_at(group,i);
+            if(!stage103_snapshot_store_path(lks_legacy_group_path_at(group,i),snapshot,cursor,&step_cursor))return 0;
             snapshot->path_offsets[cursor]=total;
-            if(lks_path_format(lks_group_path_at(group,i),snapshot->path_text+total,
+            if(lks_path_format(lks_legacy_group_path_at(group,i),snapshot->path_text+total,
                     snapshot->path_lengths[cursor]+1)!=LKS_STATUS_OK)return 0;
             total+=snapshot->path_lengths[cursor]+1;
         }
@@ -6193,25 +6194,25 @@ static int stage103_snapshot_equal(const Stage103Snapshot *a,
     return equal;
 }
 
-static int stage103_batch_matches_snapshot(const LksGroupBatch *batch,
+static int stage103_batch_matches_snapshot(const LksLegacyGroupBatch *batch,
     const Stage103Snapshot *snapshot)
 {
     size_t g,i,cursor=0,maxlen=0;char *buffer;
-    if(lks_group_batch_group_count(batch)!=snapshot->group_count||
-        lks_group_batch_total_size(batch)!=snapshot->count)return 0;
+    if(lks_legacy_group_batch_group_count(batch)!=snapshot->group_count||
+        lks_legacy_group_batch_total_size(batch)!=snapshot->count)return 0;
     for(g=0;g<snapshot->group_count;++g)
-        if(lks_group_size(lks_group_batch_group_at(batch,g))!=snapshot->group_sizes[g])return 0;
+        if(lks_legacy_group_size(lks_legacy_group_batch_group_at(batch,g))!=snapshot->group_sizes[g])return 0;
     for(i=0;i<snapshot->count;++i)if(snapshot->path_lengths[i]>maxlen)maxlen=snapshot->path_lengths[i];
     buffer=(char *)malloc(maxlen+1);if(buffer==NULL)return 0;
     for(g=0;g<snapshot->group_count;++g){
-        const LksGroup *group=lks_group_batch_group_at(batch,g);
-        for(i=0;i<lks_group_size(group);++i,++cursor){
-            const LksPath *path=lks_group_path_at(group,i);size_t step;
-            if(lks_group_item_at(group,i)!=snapshot->items[cursor]||
+        const LksLegacyGroup *group=lks_legacy_group_batch_group_at(batch,g);
+        for(i=0;i<lks_legacy_group_size(group);++i,++cursor){
+            const LksPath *path=lks_legacy_group_path_at(group,i);size_t step;
+            if(lks_legacy_group_item_at(group,i)!=snapshot->items[cursor]||
                 lks_path_direction(path)!=snapshot->path_directions[cursor]||
                 lks_path_depth(path)!=snapshot->step_offsets[cursor+1]-snapshot->step_offsets[cursor]||
-                lks_path_text_length(lks_group_path_at(group,i))!=snapshot->path_lengths[cursor]||
-                lks_path_format(lks_group_path_at(group,i),buffer,maxlen+1)!=LKS_STATUS_OK||
+                lks_path_text_length(lks_legacy_group_path_at(group,i))!=snapshot->path_lengths[cursor]||
+                lks_path_format(lks_legacy_group_path_at(group,i),buffer,maxlen+1)!=LKS_STATUS_OK||
                 strcmp(buffer,snapshot->path_text+snapshot->path_offsets[cursor])!=0){free(buffer);return 0;}
             for(step=0;step<lks_path_depth(path);++step){unsigned int slot=0;size_t level=0;
                 size_t saved=snapshot->step_offsets[cursor]+step;
@@ -6223,20 +6224,20 @@ static int stage103_batch_matches_snapshot(const LksGroupBatch *batch,
     free(buffer);return cursor==snapshot->count;
 }
 
-static int stage103_group_matches_snapshot(const LksGroup *group,
+static int stage103_group_matches_snapshot(const LksLegacyGroup *group,
     const Stage103Snapshot *snapshot)
 {
     size_t i,maxlen=0;char *buffer;
-    if(lks_group_size(group)!=snapshot->count)return 0;
+    if(lks_legacy_group_size(group)!=snapshot->count)return 0;
     for(i=0;i<snapshot->count;++i)if(snapshot->path_lengths[i]>maxlen)maxlen=snapshot->path_lengths[i];
     buffer=(char *)malloc(maxlen+1);if(buffer==NULL)return 0;
     for(i=0;i<snapshot->count;++i){
-        const LksPath *path=lks_group_path_at(group,i);size_t step;
-        if(lks_group_item_at(group,i)!=snapshot->items[i]||
+        const LksPath *path=lks_legacy_group_path_at(group,i);size_t step;
+        if(lks_legacy_group_item_at(group,i)!=snapshot->items[i]||
             lks_path_direction(path)!=snapshot->path_directions[i]||
             lks_path_depth(path)!=snapshot->step_offsets[i+1]-snapshot->step_offsets[i]||
-            lks_path_text_length(lks_group_path_at(group,i))!=snapshot->path_lengths[i]||
-            lks_path_format(lks_group_path_at(group,i),buffer,maxlen+1)!=LKS_STATUS_OK||
+            lks_path_text_length(lks_legacy_group_path_at(group,i))!=snapshot->path_lengths[i]||
+            lks_path_format(lks_legacy_group_path_at(group,i),buffer,maxlen+1)!=LKS_STATUS_OK||
             strcmp(buffer,snapshot->path_text+snapshot->path_offsets[i])!=0){free(buffer);return 0;}
         for(step=0;step<lks_path_depth(path);++step){unsigned int slot=0;size_t level=0;
             size_t saved=snapshot->step_offsets[i]+step;
@@ -6254,11 +6255,11 @@ static void stage112_tree_capture_destroy(Stage112TreeCapture *capture)
     memset(capture,0,sizeof(*capture));
 }
 
-static int stage112_capture_result_tree(const LksGroup *group,
+static int stage112_capture_result_tree(const LksLegacyGroup *group,
     const LksAllocStats *result_stats,size_t item_count,
     Stage112TreeCapture *capture)
 {
-    const LksTree *tree=lks_group_internal_tree(group);
+    const LksTree *tree=lks_legacy_group_internal_tree(group);
     size_t node_size,tree_size,ptr_size,header_size,node_bytes,children_bytes,tree_total;
     size_t required=0,index,node_sum=0;LksStatus status;
     if(tree==NULL||capture==NULL)return 0;
@@ -6424,7 +6425,7 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
 {
     static int values[STAGE103_N];static void *items[STAGE103_N];
     BenchmarkCompareContext counter={0,0};LksComparator comparator={benchmark_compare_int,&counter};
-    LksGroupBatch *batch=NULL;LksGroup *result=NULL;Stage103Snapshot batch_snapshot={0};
+    LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;Stage103Snapshot batch_snapshot={0};
     LksAllocStats after_batch,after_merge,result_only,final_stats;
     size_t i,group_size=n/groups+(n%groups!=0);clock_t begin,end;double ms;
     LksStatus status=LKS_STATUS_OK;int valid=0,batch_unchanged=1;
@@ -6432,10 +6433,10 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
     for(i=0;i<n;++i)values[i]=(int)i;
     benchmark_shuffle(values,n,seed);for(i=0;i<n;++i)items[i]=&values[i];
     begin=clock();
-    status=lks_group_batch_build(items,n,group_size,&comparator,&batch);
+    status=lks_legacy_group_batch_build(items,n,group_size,&comparator,&batch);
     end=clock();
     if(status!=LKS_STATUS_OK||!benchmark_elapsed_ms(begin,end,&ms)||
-        lks_group_batch_group_count(batch)!=groups||
+        lks_legacy_group_batch_group_count(batch)!=groups||
         !stage103_snapshot_capture_batch(batch,&batch_snapshot))goto cleanup;
     sample->build_ms=ms;
     sample->group_size=group_size;sample->build_comparisons=counter.comparison_count;
@@ -6446,7 +6447,7 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
     sample->batch_stats=after_batch;
     begin=clock();
     status=reference_mode?stage102_reference_merge_all(batch,&comparator,&result):
-        lks_group_batch_merge_all(batch,&comparator,&result);
+        lks_legacy_group_batch_merge_all(batch,&comparator,&result);
     end=clock();
     if(status!=LKS_STATUS_OK||!benchmark_elapsed_ms(begin,end,&ms))goto cleanup;
     sample->merge_ms=ms;sample->total_comparisons=counter.comparison_count;
@@ -6463,7 +6464,7 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
     {
         size_t path_index,depth_sum=0,max_depth=0,max_level=0;
         for(path_index=0;path_index<n;++path_index){
-            const LksPath *path=lks_group_path_at(result,path_index);
+            const LksPath *path=lks_legacy_group_path_at(result,path_index);
             size_t depth=lks_path_depth(path),step;
             if(depth>max_depth)max_depth=depth;
             depth_sum+=depth;
@@ -6488,7 +6489,7 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
             sample->observed_owned_inplace=(groups-1)-group_objects;
         else goto cleanup;
     }
-    lks_group_batch_destroy(batch);batch=NULL;
+    lks_legacy_group_batch_destroy(batch);batch=NULL;
     result_only=lks_alloc_stats_get();sample->result_bytes=result_only.live_bytes;
     sample->result_blocks=result_only.live_blocks;
     sample->result_stats=result_only;
@@ -6502,7 +6503,7 @@ static int stage103_run_one_internal(size_t n, size_t groups, uint32_t seed,
         sample->post_blocks!=sample->batch_blocks+result_only.live_blocks)goto cleanup;
     valid=batch_unchanged;
 cleanup:
-    lks_group_destroy(result);lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);
     stage103_snapshot_destroy(&batch_snapshot);
     final_stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls!=0||
@@ -6589,28 +6590,28 @@ static int stage103_compare_pair_samples(const Stage103Sample *reference,
 static int stage103_empty_single_test(void)
 {
     BenchmarkCompareContext counter={0,0};LksComparator comparator={benchmark_compare_int,&counter};
-    LksGroupBatch *empty_batch=NULL,*single_batch=NULL;LksGroup *empty_ref=NULL,*empty_opt=NULL,*single_ref=NULL,*single_opt=NULL;
+    LksLegacyGroupBatch *empty_batch=NULL,*single_batch=NULL;LksLegacyGroup *empty_ref=NULL,*empty_opt=NULL,*single_ref=NULL,*single_opt=NULL;
     int values[3]={3,1,2};void *items[3]={&values[0],&values[1],&values[2]};
     int passed=0;LksAllocStats stats;
-    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(NULL,0,4,&comparator,&empty_batch)!=LKS_STATUS_OK||
+    if(lks_alloc_stats_reset()!=0||lks_legacy_group_batch_build(NULL,0,4,&comparator,&empty_batch)!=LKS_STATUS_OK||
         stage102_reference_merge_all(empty_batch,&comparator,&empty_ref)!=LKS_STATUS_OK||
-        lks_group_batch_merge_all(empty_batch,&comparator,&empty_opt)!=LKS_STATUS_OK||
-        empty_ref==NULL||empty_opt==NULL||empty_ref==empty_opt||lks_group_size(empty_ref)!=0||lks_group_size(empty_opt)!=0)goto cleanup;
-    lks_group_destroy(empty_ref);empty_ref=NULL;lks_group_destroy(empty_opt);empty_opt=NULL;
-    lks_group_batch_destroy(empty_batch);empty_batch=NULL;
-    if(lks_group_batch_build(items,3,3,&comparator,&single_batch)!=LKS_STATUS_OK||
+        lks_legacy_group_batch_merge_all(empty_batch,&comparator,&empty_opt)!=LKS_STATUS_OK||
+        empty_ref==NULL||empty_opt==NULL||empty_ref==empty_opt||lks_legacy_group_size(empty_ref)!=0||lks_legacy_group_size(empty_opt)!=0)goto cleanup;
+    lks_legacy_group_destroy(empty_ref);empty_ref=NULL;lks_legacy_group_destroy(empty_opt);empty_opt=NULL;
+    lks_legacy_group_batch_destroy(empty_batch);empty_batch=NULL;
+    if(lks_legacy_group_batch_build(items,3,3,&comparator,&single_batch)!=LKS_STATUS_OK||
         stage102_reference_merge_all(single_batch,&comparator,&single_ref)!=LKS_STATUS_OK||
-        lks_group_batch_merge_all(single_batch,&comparator,&single_opt)!=LKS_STATUS_OK||
+        lks_legacy_group_batch_merge_all(single_batch,&comparator,&single_opt)!=LKS_STATUS_OK||
         single_ref==NULL||single_opt==NULL||single_ref==single_opt||
-        single_ref==lks_group_batch_group_at(single_batch,0)||single_opt==lks_group_batch_group_at(single_batch,0)||
+        single_ref==lks_legacy_group_batch_group_at(single_batch,0)||single_opt==lks_legacy_group_batch_group_at(single_batch,0)||
         !stage101_groups_equivalent(single_ref,single_opt))goto cleanup;
-    lks_group_batch_destroy(single_batch);single_batch=NULL;
-    if(lks_group_item_at(single_ref,0)!=&values[1]||lks_group_item_at(single_opt,0)!=&values[1])goto cleanup;
+    lks_legacy_group_batch_destroy(single_batch);single_batch=NULL;
+    if(lks_legacy_group_item_at(single_ref,0)!=&values[1]||lks_legacy_group_item_at(single_opt,0)!=&values[1])goto cleanup;
     passed=1;
     printf("Stage 10.3 empty/single Batch: independent empty Results and Path-preserving single clones PASS\n");
 cleanup:
-    lks_group_destroy(single_ref);lks_group_destroy(single_opt);lks_group_batch_destroy(single_batch);
-    lks_group_destroy(empty_ref);lks_group_destroy(empty_opt);lks_group_batch_destroy(empty_batch);
+    lks_legacy_group_destroy(single_ref);lks_legacy_group_destroy(single_opt);lks_legacy_group_batch_destroy(single_batch);
+    lks_legacy_group_destroy(empty_ref);lks_legacy_group_destroy(empty_opt);lks_legacy_group_batch_destroy(empty_batch);
     stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0||
         !stage83_tag_accounting_valid(&stats,"10.3 empty/single final")||!stage83_other_is_empty(&stats,"10.3 empty/single final"))passed=0;
     return passed;
@@ -6819,7 +6820,7 @@ int lks_run_stage10_3_validation(void)
 {
     int valid=1;
     BenchmarkCompareContext counter={0,0};LksComparator comparator={benchmark_compare_int,&counter};
-    LksGroupBatch *batch=NULL;LksGroup *result=NULL;Stage103Snapshot before={0};
+    LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;Stage103Snapshot before={0};
     LksAllocStats stats;size_t i;
     int values[1024];void *items[1024];
     printf("LayerKeySort Stage 10.3: final Reference vs Optimized validation\n");
@@ -6835,9 +6836,9 @@ int lks_run_stage10_3_validation(void)
     if(!stage103_scaling_panel())valid=0;
     if(lks_alloc_stats_reset()!=0)valid=0;
     for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-    if(lks_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK||
+    if(lks_legacy_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK||
         !stage103_snapshot_capture_batch(batch,&before)||
-        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||result==NULL||lks_group_size(result)!=1024){
+        lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||result==NULL||lks_legacy_group_size(result)!=1024){
         valid=0;
     }else{
         stats=lks_alloc_stats_get();
@@ -6849,7 +6850,7 @@ int lks_run_stage10_3_validation(void)
             !stage83_tag_accounting_valid(&stats,"10.3 optimized 1024 peak")||
             !stage83_other_is_empty(&stats,"10.3 optimized 1024 peak"))valid=0;
     }
-    lks_group_destroy(result);lks_group_batch_destroy(batch);result=NULL;batch=NULL;stage103_snapshot_destroy(&before);
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);result=NULL;batch=NULL;stage103_snapshot_destroy(&before);
     stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls!=0)valid=0;
     printf("\nStage10SummaryFacts\nScalingConfigurations=12\nScalingPeakSavingsPercentMinMax=%.4f,%.4f\n",
         stage103_scaling_peak_min,stage103_scaling_peak_max);
@@ -6946,29 +6947,29 @@ static void stage111_print_rank(Stage103Sample samples[][STAGE103_SEEDS],size_t 
 static int stage111_legacy_production_regressions(void)
 {
     int values[10];void *items[10];BenchmarkCompareContext counter={0,0};
-    LksComparator comparator={benchmark_compare_int,&counter};LksGroupBatch *batch=NULL;
-    LksGroup *result=NULL;Stage103Snapshot before={0};LksAllocStats stats;
+    LksComparator comparator={benchmark_compare_int,&counter};LksLegacyGroupBatch *batch=NULL;
+    LksLegacyGroup *result=NULL;Stage103Snapshot before={0};LksAllocStats stats;
     size_t i;int ok=1;
     if(!stage102_g0_path_test())return 0;
     for(i=0;i<10;++i){values[i]=7;items[i]=&values[i];}
-    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(items,10,2,&comparator,&batch)!=LKS_STATUS_OK||
+    if(lks_alloc_stats_reset()!=0||lks_legacy_group_batch_build(items,10,2,&comparator,&batch)!=LKS_STATUS_OK||
         !stage103_snapshot_capture_batch(batch,&before)||
-        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK)ok=0;
-    if(ok){for(i=0;i<10;++i)if(lks_group_item_at(result,i)!=items[i])ok=0;
+        lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK)ok=0;
+    if(ok){for(i=0;i<10;++i)if(lks_legacy_group_item_at(result,i)!=items[i])ok=0;
         if(!stage103_batch_matches_snapshot(batch,&before))ok=0;}
-    lks_group_destroy(result);lks_group_batch_destroy(batch);stage103_snapshot_destroy(&before);
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);stage103_snapshot_destroy(&before);
     stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 equal stability"))ok=0;
     printf("Stage11 equal-value stability production regression: %s\n",ok?"PASS":"FAIL");
     if(!ok)return 0;
-    if(lks_alloc_stats_reset()!=0||lks_group_batch_build(NULL,0,4,&comparator,&batch)!=LKS_STATUS_OK||
-        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||lks_group_size(result)!=0)ok=0;
-    lks_group_destroy(result);result=NULL;lks_group_batch_destroy(batch);batch=NULL;
+    if(lks_alloc_stats_reset()!=0||lks_legacy_group_batch_build(NULL,0,4,&comparator,&batch)!=LKS_STATUS_OK||
+        lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||lks_legacy_group_size(result)!=0)ok=0;
+    lks_legacy_group_destroy(result);result=NULL;lks_legacy_group_batch_destroy(batch);batch=NULL;
     stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls)ok=0;
     if(ok){int one=42;void *one_item=&one;
-        if(lks_alloc_stats_reset()!=0||lks_group_batch_build(&one_item,1,8,&comparator,&batch)!=LKS_STATUS_OK||
-            lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||
-            lks_group_size(result)!=1||lks_group_item_at(result,0)!=&one)ok=0;}
-    lks_group_destroy(result);lks_group_batch_destroy(batch);
+        if(lks_alloc_stats_reset()!=0||lks_legacy_group_batch_build(&one_item,1,8,&comparator,&batch)!=LKS_STATUS_OK||
+            lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||
+            lks_legacy_group_size(result)!=1||lks_legacy_group_item_at(result,0)!=&one)ok=0;}
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);
     stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_tag_accounting_valid(&stats,"11.1 empty/single"))ok=0;
     printf("Stage11 empty/single Batch production regression: %s; final live=%lu/%lu\n",ok?"PASS":"FAIL",(unsigned long)stats.live_bytes,(unsigned long)stats.live_blocks);
     return ok;
@@ -7029,7 +7030,7 @@ int lks_run_stage11_1_baseline(void)
     static const size_t historical_g[2]={32,40};
     static const double stage8_peak[2]={6713960.00,6066334.40},stage8_result[2]={2075712.00,2080899.20};
     static const double stage9_peak[2]={5466921.60,5014424.00},stage9_result[2]={1694112.00,1696857.60};
-    printf("\nLayerKeySort Stage 11.1: Current production baseline only (lks_group_batch_merge_all)\n");
+    printf("\nLayerKeySort Stage 11.1: Current production baseline only (lks_legacy_group_batch_merge_all)\n");
     if(!stage111_legacy_production_regressions())return 1;
     memset(current,0,sizeof(current));memset(scaling,0,sizeof(scaling));
     for(g=0;g<STAGE103_GROUPS;++g)for(s=0;s<STAGE103_SEEDS;++s){Stage103Snapshot result={0};
@@ -7052,15 +7053,15 @@ int lks_run_stage11_1_baseline(void)
         printf("%lu,%lu,%.2f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f,%.6f\n",(unsigned long)n,(unsigned long)stage111_scale_groups[gi],gs/STAGE103_SCALE_SEEDS,(r/STAGE103_SCALE_SEEDS)/n,(p/STAGE103_SCALE_SEEDS)/n,(rpath/STAGE103_SCALE_SEEDS)/n,(rtree/STAGE103_SCALE_SEEDS)/n,(ppath/STAGE103_SCALE_SEEDS)/n,(ptree/STAGE103_SCALE_SEEDS)/n,d/STAGE103_SCALE_SEEDS);}
     /* Optimized singleton baseline, with both instantaneous tag snapshots. */
     {
-        static int values[1024];static void *items[1024];BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};LksGroupBatch *batch=NULL;LksGroup *result=NULL;Stage103Snapshot snap={0};LksAllocStats peak,result_only;size_t i;
+        static int values[1024];static void *items[1024];BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;Stage103Snapshot snap={0};LksAllocStats peak,result_only;size_t i;
         lks_alloc_stats_reset();for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-        if(lks_group_batch_build(items,1024,1,&cmp,&batch)!=LKS_STATUS_OK||!stage103_snapshot_capture_batch(batch,&snap)||lks_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK)valid=0;
+        if(lks_legacy_group_batch_build(items,1024,1,&cmp,&batch)!=LKS_STATUS_OK||!stage103_snapshot_capture_batch(batch,&snap)||lks_legacy_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK)valid=0;
         peak=lks_alloc_stats_get();if(result==NULL||cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0})||!stage103_batch_matches_snapshot(batch,&snap)||!stage83_tag_accounting_valid(&peak,"11.1 singleton peak"))valid=0;
         printf("\nStage11Singleton1024\nComparisonCount=%lu\nPeakBytes=%lu\n",(unsigned long)cc.comparison_count,(unsigned long)peak.peak_live_bytes);
         printf("PeakTagComposition\nTag,Bytes\n");for(i=0;i<STAGE111_TAGS;++i)printf("%s,%lu\n",stage111_tag_names[i],(unsigned long)peak.bytes_at_global_peak[stage111_tags[i]]);
-        lks_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();printf("ResultOnlyBytes=%lu\nResultTagComposition\nTag,Bytes\n",(unsigned long)result_only.live_bytes);
+        lks_legacy_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();printf("ResultOnlyBytes=%lu\nResultTagComposition\nTag,Bytes\n",(unsigned long)result_only.live_bytes);
         for(i=0;i<7;++i)printf("%s,%lu\n",stage111_tag_names[i],(unsigned long)result_only.tags[stage111_tags[i]].live_bytes);
-        lks_group_destroy(result);result=NULL;stage103_snapshot_destroy(&snap);stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 singleton final"))valid=0;
+        lks_legacy_group_destroy(result);result=NULL;stage103_snapshot_destroy(&snap);stats=lks_alloc_stats_get();if(!benchmark_alloc_stats_empty(&stats)||stats.failed_calls||!stage83_other_is_empty(&stats,"11.1 singleton final"))valid=0;
     }
     /* Use the frozen Stage 9 fixture for the dedicated GS100 baseline. */
     if(lks_run_stage11_1_gs100_fixture_check()!=0)valid=0;
@@ -7079,20 +7080,20 @@ int lks_run_stage11_1_gs100_fixture_check(void)
     static int values[1000];static void *items[1000];
     unsigned char seen[1000]={0};BenchmarkCompareContext counter={0,0};
     LksComparator comparator={benchmark_compare_int,&counter};
-    LksGroupBatch *batch=NULL;LksGroup *result=NULL;
+    LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;
     Stage103Snapshot batch_snapshot={0},result_snapshot={0};
     LksAllocStats after_batch,post_merge,result_only,final_stats;
     size_t i,peak_tag_sum=0;int valid=1;
     if(lks_alloc_stats_reset()!=0)return 1;
     for(i=0;i<1000;++i){values[i]=(int)((i*613u)%1000u);items[i]=&values[i];
         if(values[i]<0||values[i]>=1000||seen[values[i]])valid=0;else seen[values[i]]=1;}
-    if(!valid||lks_group_batch_build(items,1000,100,&comparator,&batch)!=LKS_STATUS_OK||
-        batch==NULL||lks_group_batch_group_count(batch)!=10||
+    if(!valid||lks_legacy_group_batch_build(items,1000,100,&comparator,&batch)!=LKS_STATUS_OK||
+        batch==NULL||lks_legacy_group_batch_group_count(batch)!=10||
         !stage103_snapshot_capture_batch(batch,&batch_snapshot))valid=0;
     if(valid){after_batch=lks_alloc_stats_get();
         if(!stage83_tag_accounting_valid(&after_batch,"11.1 GS100 fixed AfterBatch")||
             !stage83_other_is_empty(&after_batch,"11.1 GS100 fixed AfterBatch"))valid=0;}
-    if(valid&&lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK)valid=0;
+    if(valid&&lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK)valid=0;
     if(valid&&(!benchmark_validate_final(result,1000,&(BenchmarkPathStats){0})||
         !stage103_snapshot_capture_group(result,&result_snapshot)||
         !stage103_batch_matches_snapshot(batch,&batch_snapshot)))valid=0;
@@ -7101,7 +7102,7 @@ int lks_run_stage11_1_gs100_fixture_check(void)
             !stage83_other_is_empty(&post_merge,"11.1 GS100 fixed PostMerge"))valid=0;
         for(i=0;i<LKS_ALLOC_TAG_COUNT;++i)peak_tag_sum+=post_merge.bytes_at_global_peak[i];
         if(peak_tag_sum!=post_merge.peak_live_bytes)valid=0;}
-    if(valid){lks_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();
+    if(valid){lks_legacy_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();
         if(!stage103_group_matches_snapshot(result,&result_snapshot)||
             !stage83_tag_accounting_valid(&result_only,"11.1 GS100 fixed ResultOnly")||
             !stage83_other_is_empty(&result_only,"11.1 GS100 fixed ResultOnly")||
@@ -7117,7 +7118,7 @@ int lks_run_stage11_1_gs100_fixture_check(void)
     if(valid)printf("GS100ItemPathOrderAndBatchSnapshot=PASS PostMergeBytesInvariant=%s PostMergeBlocksInvariant=%s\n",
         post_merge.live_bytes==after_batch.live_bytes+result_only.live_bytes?"PASS":"FAIL",
         post_merge.live_blocks==after_batch.live_blocks+result_only.live_blocks?"PASS":"FAIL");
-    lks_group_destroy(result);lks_group_batch_destroy(batch);
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);
     stage103_snapshot_destroy(&batch_snapshot);stage103_snapshot_destroy(&result_snapshot);
     final_stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
@@ -7580,19 +7581,19 @@ static int stage122_run_1024_singletons(void)
 {
     static int values[1024];static void *items[1024];
     BenchmarkCompareContext cc={0,0};LksComparator comparator={benchmark_compare_int,&cc};
-    LksGroupBatch *batch=NULL;LksGroup *result=NULL;LksAllocStats peak,result_only,final_stats;
+    LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;LksAllocStats peak,result_only,final_stats;
     size_t i;int valid=1;
     if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-    if(lks_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK||batch==NULL||
-        lks_group_batch_group_count(batch)!=1024||
-        lks_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||
-        result==NULL||lks_group_size(result)!=1024)valid=0;
+    if(lks_legacy_group_batch_build(items,1024,1,&comparator,&batch)!=LKS_STATUS_OK||batch==NULL||
+        lks_legacy_group_batch_group_count(batch)!=1024||
+        lks_legacy_group_batch_merge_all(batch,&comparator,&result)!=LKS_STATUS_OK||
+        result==NULL||lks_legacy_group_size(result)!=1024)valid=0;
     peak=lks_alloc_stats_get();
     if(valid&&(cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0})||
         !stage83_tag_accounting_valid(&peak,"12.2 1024 singleton peak")||
         !stage83_other_is_empty(&peak,"12.2 1024 singleton peak")))valid=0;
-    lks_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();
+    lks_legacy_group_batch_destroy(batch);batch=NULL;result_only=lks_alloc_stats_get();
     if(valid&&(!stage83_tag_accounting_valid(&result_only,"12.2 1024 singleton result")||
         !stage83_other_is_empty(&result_only,"12.2 1024 singleton result")||
         result_only.live_bytes!=result_only.tags[LKS_ALLOC_TAG_PATH_OBJECT].live_bytes+
@@ -7611,7 +7612,7 @@ static int stage122_run_1024_singletons(void)
         (unsigned long)result_only.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes,
         (unsigned long)result_only.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes,
         (unsigned long)result_only.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes);
-    lks_group_destroy(result);result=NULL;
+    lks_legacy_group_destroy(result);result=NULL;
     final_stats=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final_stats)||final_stats.failed_calls||
         !stage83_tag_accounting_valid(&final_stats,"12.2 1024 singleton final")||
@@ -7971,18 +7972,18 @@ static int stage123_gs100(void)
 {
     static int values[1000];static void *items[1000];
     BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};
-    LksGroupBatch *batch=NULL;LksGroup *result=NULL;LksAllocStats b,p,r,f;
+    LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;LksAllocStats b,p,r,f;
     size_t i;int ok=1;
     memset(&b,0,sizeof(b));memset(&p,0,sizeof(p));memset(&r,0,sizeof(r));
     if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<1000;++i){values[i]=(int)((i*613u)%1000u);items[i]=&values[i];}
-    if(lks_group_batch_build(items,1000,100,&cmp,&batch)!=LKS_STATUS_OK||
-        batch==NULL||lks_group_batch_group_count(batch)!=10)ok=0;
+    if(lks_legacy_group_batch_build(items,1000,100,&cmp,&batch)!=LKS_STATUS_OK||
+        batch==NULL||lks_legacy_group_batch_group_count(batch)!=10)ok=0;
     b=lks_alloc_stats_get();
-    if(ok&&(lks_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK||
+    if(ok&&(lks_legacy_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK||
         !benchmark_validate_final(result,1000,&(BenchmarkPathStats){0})))ok=0;
     if(ok){p=lks_alloc_stats_get();
-        lks_group_batch_destroy(batch);batch=NULL;r=lks_alloc_stats_get();
+        lks_legacy_group_batch_destroy(batch);batch=NULL;r=lks_alloc_stats_get();
         if(b.live_bytes!=115880||p.live_bytes!=249472||r.live_bytes!=133592||
             p.peak_live_bytes!=341984||p.live_bytes!=b.live_bytes+r.live_bytes||
             p.live_blocks!=b.live_blocks+r.live_blocks||
@@ -8003,7 +8004,7 @@ static int stage123_gs100(void)
     printf("Peak,366912,%lu,%ld,%.6f\n",(unsigned long)p.peak_live_bytes,
         (long)366912-(long)p.peak_live_bytes,stage123_percent((double)366912-p.peak_live_bytes,366912));
     printf("Input=values[i]=(i*613u)%%1000; Shuffle=NO; status=%s\n",ok?"PASS":"FAIL");
-    lks_group_destroy(result);lks_group_batch_destroy(batch);f=lks_alloc_stats_get();
+    lks_legacy_group_destroy(result);lks_legacy_group_batch_destroy(batch);f=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&f)||f.failed_calls||!stage83_tag_accounting_valid(&f,"12.3 GS100 final")||
         !stage83_other_is_empty(&f,"12.3 GS100 final"))ok=0;
     printf("Stage12.3_GS100_FinalAllocator=%lu/%lu OTHER=%lu FailedCalls=%lu\n",
@@ -8016,17 +8017,17 @@ static int stage123_singleton_1024(void)
 {
     static int values[1024];static void *items[1024];
     BenchmarkCompareContext cc={0,0};LksComparator cmp={benchmark_compare_int,&cc};
-    LksGroupBatch *batch=NULL;LksGroup *result=NULL;LksAllocStats peak,only,final;
+    LksLegacyGroupBatch *batch=NULL;LksLegacyGroup *result=NULL;LksAllocStats peak,only,final;
     LksTreeInternalProfile profile;size_t i,tree=0,saving=0;int ok=1;
     memset(&profile,0,sizeof(profile));
     if(lks_alloc_stats_reset()!=0)return 0;
     for(i=0;i<1024;++i){values[i]=(int)i;items[i]=&values[i];}
-    if(lks_group_batch_build(items,1024,1,&cmp,&batch)!=LKS_STATUS_OK||
-        lks_group_batch_group_count(batch)!=1024||
-        lks_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK||
-        lks_tree_internal_profile(lks_group_internal_tree(result),&profile)!=LKS_STATUS_OK||
+    if(lks_legacy_group_batch_build(items,1024,1,&cmp,&batch)!=LKS_STATUS_OK||
+        lks_legacy_group_batch_group_count(batch)!=1024||
+        lks_legacy_group_batch_merge_all(batch,&cmp,&result)!=LKS_STATUS_OK||
+        lks_tree_internal_profile(lks_legacy_group_internal_tree(result),&profile)!=LKS_STATUS_OK||
         cc.comparison_count!=14337||!benchmark_validate_final(result,1024,&(BenchmarkPathStats){0}))ok=0;
-    peak=lks_alloc_stats_get();lks_group_batch_destroy(batch);batch=NULL;only=lks_alloc_stats_get();
+    peak=lks_alloc_stats_get();lks_legacy_group_batch_destroy(batch);batch=NULL;only=lks_alloc_stats_get();
     tree=only.tags[LKS_ALLOC_TAG_TREE_OBJECT].live_bytes+only.tags[LKS_ALLOC_TAG_TREE_NODE].live_bytes+
         only.tags[LKS_ALLOC_TAG_TREE_CHILDREN].live_bytes;
     saving=16*profile.leaf_count;
@@ -8041,7 +8042,7 @@ static int stage123_singleton_1024(void)
         (unsigned long)(16*profile.leaf_count),(unsigned long)only.live_bytes,
         (unsigned long)peak.peak_live_bytes,(long)14761200-(long)peak.peak_live_bytes,
         stage123_percent((double)14761200-peak.peak_live_bytes,14761200));
-    lks_group_destroy(result);final=lks_alloc_stats_get();
+    lks_legacy_group_destroy(result);final=lks_alloc_stats_get();
     if(!benchmark_alloc_stats_empty(&final)||final.failed_calls||
         !stage83_tag_accounting_valid(&final,"12.3 singleton final")||
         !stage83_other_is_empty(&final,"12.3 singleton final"))ok=0;
@@ -8478,8 +8479,8 @@ typedef struct Stage132Context {
     size_t item_count, group_size;
     LksPath *path, *left_path, *right_path, *out_path;
     LksTree *tree;
-    LksGroup *group, *base, *incoming, *result;
-    LksGroupBatch *batch;
+    LksLegacyGroup *group, *base, *incoming, *result;
+    LksLegacyGroupBatch *batch;
     const LksTreeNode *out_node;
     LksStatus status;
     Stage132LiveRecord private_incoming_live;
@@ -8573,46 +8574,46 @@ static int stage132_tree_equal(const LksTree *tree, const Stage132TreeRecord *re
         memcmp(&now, record, sizeof(now)) == 0;
 }
 
-static int stage132_group_capture(const LksGroup *group, Stage132GroupRecord *record)
+static int stage132_group_capture(const LksLegacyGroup *group, Stage132GroupRecord *record)
 {
     size_t i;
     const LksTree *tree;
-    if (group == NULL || record == NULL || lks_group_size(group) > STAGE132_MAX_ITEMS)
+    if (group == NULL || record == NULL || lks_legacy_group_size(group) > STAGE132_MAX_ITEMS)
         return 0;
     memset(record, 0, sizeof(*record));
-    record->count = lks_group_size(group);
-    tree = lks_group_internal_tree(group);
+    record->count = lks_legacy_group_size(group);
+    tree = lks_legacy_group_internal_tree(group);
     if (tree == NULL || lks_tree_internal_profile(tree, &record->profile) != LKS_STATUS_OK)
         return 0;
     for (i = 0; i < record->count; ++i) {
-        record->items[i] = lks_group_item_at(group, i);
-        if (!stage132_path_capture(lks_group_path_at(group, i), &record->paths[i])) return 0;
+        record->items[i] = lks_legacy_group_item_at(group, i);
+        if (!stage132_path_capture(lks_legacy_group_path_at(group, i), &record->paths[i])) return 0;
     }
     return 1;
 }
 
-static int stage132_group_equal(const LksGroup *group, const Stage132GroupRecord *record)
+static int stage132_group_equal(const LksLegacyGroup *group, const Stage132GroupRecord *record)
 {
     Stage132GroupRecord now;
     return stage132_group_capture(group, &now) &&
         memcmp(&now, record, sizeof(now)) == 0;
 }
 
-static int stage132_batch_capture(const LksGroupBatch *batch, Stage132BatchRecord *record)
+static int stage132_batch_capture(const LksLegacyGroupBatch *batch, Stage132BatchRecord *record)
 {
     size_t i;
     if (batch == NULL || record == NULL ||
-        lks_group_batch_group_count(batch) > STAGE132_MAX_GROUPS) return 0;
+        lks_legacy_group_batch_group_count(batch) > STAGE132_MAX_GROUPS) return 0;
     memset(record, 0, sizeof(*record));
-    record->groups = lks_group_batch_group_count(batch);
-    record->total = lks_group_batch_total_size(batch);
-    record->group_size = lks_group_batch_group_size(batch);
+    record->groups = lks_legacy_group_batch_group_count(batch);
+    record->total = lks_legacy_group_batch_total_size(batch);
+    record->group_size = lks_legacy_group_batch_group_size(batch);
     for (i = 0; i < record->groups; ++i)
-        if (!stage132_group_capture(lks_group_batch_group_at(batch, i), &record->entries[i])) return 0;
+        if (!stage132_group_capture(lks_legacy_group_batch_group_at(batch, i), &record->entries[i])) return 0;
     return 1;
 }
 
-static int stage132_batch_equal(const LksGroupBatch *batch, const Stage132BatchRecord *record)
+static int stage132_batch_equal(const LksLegacyGroupBatch *batch, const Stage132BatchRecord *record)
 {
     Stage132BatchRecord now;
     return stage132_batch_capture(batch, &now) &&
@@ -8769,27 +8770,27 @@ static int stage132_setup(Stage132Context *c)
         {
             void *left[8], *right[8];
             for (i = 0; i < 8; ++i) { left[i] = &c->values[i]; right[i] = &c->values[i + 8]; c->values[i + 8] = (int)(i * 2 + 1); c->values[i] = (int)(i * 2); }
-            if (lks_group_build(left, 8, &cmp, &c->base) != LKS_STATUS_OK ||
-                lks_group_build(right, 8, &cmp, &c->incoming) != LKS_STATUS_OK) return 0;
+            if (lks_legacy_group_build(left, 8, &cmp, &c->base) != LKS_STATUS_OK ||
+                lks_legacy_group_build(right, 8, &cmp, &c->incoming) != LKS_STATUS_OK) return 0;
         }
         if (c->kind == 16) {
             /* The owned-base contract consumes Base on every runtime failure;
              * preserve the exact Incoming-only live footprint as the target. */
-            lks_group_destroy(c->base);
+            lks_legacy_group_destroy(c->base);
             c->base = NULL;
             c->private_incoming_live = stage132_live_capture();
             /* Rebuild Base to leave the complete operation fixture in place. */
             {
                 void *left[8];
                 for (i = 0; i < 8; ++i) left[i] = &c->values[i];
-                if (lks_group_build(left, 8, &cmp, &c->base) != LKS_STATUS_OK) return 0;
+                if (lks_legacy_group_build(left, 8, &cmp, &c->base) != LKS_STATUS_OK) return 0;
             }
         }
         return 1;
     case 17: case 18:
         stage132_items_init(c, c->kind == 17 ? 25 : 30, 1);
         c->group_size = 5;
-        return lks_group_batch_build(c->items, c->item_count, c->group_size,
+        return lks_legacy_group_batch_build(c->items, c->item_count, c->group_size,
             &cmp, &c->batch) == LKS_STATUS_OK;
     default: return 0;
     }
@@ -8810,11 +8811,11 @@ static LksStatus stage132_run(Stage132Context *c)
     case 8: return lks_path_after(c->left_path, &c->out_path);
     case 9: c->tree = lks_tree_create(); return c->tree ? LKS_STATUS_OK : LKS_STATUS_OUT_OF_MEMORY;
     case 10: case 11: case 12: return lks_tree_insert(c->tree, c->path, &c->values[20], &c->out_node);
-    case 13: return lks_group_build(c->items, c->item_count, &cmp, &c->group);
-    case 14: return lks_group_batch_build(c->items, c->item_count, c->group_size, &cmp, &c->batch);
-    case 15: return lks_group_merge(c->base, c->incoming, &cmp, &c->result);
-    case 16: return lks_group_merge_into_owned_base(&c->base, c->incoming, &cmp);
-    case 17: case 18: return lks_group_batch_merge_all(c->batch, &cmp, &c->result);
+    case 13: return lks_legacy_group_build(c->items, c->item_count, &cmp, &c->group);
+    case 14: return lks_legacy_group_batch_build(c->items, c->item_count, c->group_size, &cmp, &c->batch);
+    case 15: return lks_legacy_group_merge(c->base, c->incoming, &cmp, &c->result);
+    case 16: return lks_legacy_group_merge_into_owned_base(&c->base, c->incoming, &cmp);
+    case 17: case 18: return lks_legacy_group_batch_merge_all(c->batch, &cmp, &c->result);
     default: return LKS_STATUS_INTERNAL_ERROR;
     }
 }
@@ -8825,9 +8826,9 @@ static void stage132_cleanup(Stage132Context *c)
     lks_path_destroy(c->out_path); lks_path_destroy(c->path);
     lks_path_destroy(c->left_path); lks_path_destroy(c->right_path);
     lks_tree_destroy(c->tree);
-    lks_group_destroy(c->group); lks_group_destroy(c->base);
-    lks_group_destroy(c->incoming); lks_group_destroy(c->result);
-    lks_group_batch_destroy(c->batch);
+    lks_legacy_group_destroy(c->group); lks_legacy_group_destroy(c->base);
+    lks_legacy_group_destroy(c->incoming); lks_legacy_group_destroy(c->result);
+    lks_legacy_group_batch_destroy(c->batch);
     c->out_path=NULL; c->path=NULL; c->left_path=NULL; c->right_path=NULL;
     c->tree=NULL; c->group=NULL; c->base=NULL; c->incoming=NULL;
     c->result=NULL; c->batch=NULL;
@@ -8944,12 +8945,12 @@ static int stage132_baseline_contract(Stage132Context *c)
     case 3: case 4: case 5: return c->status == LKS_STATUS_OK && lks_path_depth(c->path) > 0;
     case 9: return c->tree != NULL && lks_tree_size(c->tree) == 0;
     case 10: case 11: case 12: return c->status == LKS_STATUS_OK && lks_tree_size(c->tree) > 0;
-    case 13: return c->group != NULL && lks_group_size(c->group) == c->item_count;
-    case 14: return c->batch != NULL && lks_group_batch_total_size(c->batch) == c->item_count;
-    case 15: return c->result != NULL && lks_group_size(c->result) == 16;
-    case 16: return c->base != NULL && lks_group_size(c->base) == 16;
+    case 13: return c->group != NULL && lks_legacy_group_size(c->group) == c->item_count;
+    case 14: return c->batch != NULL && lks_legacy_group_batch_total_size(c->batch) == c->item_count;
+    case 15: return c->result != NULL && lks_legacy_group_size(c->result) == 16;
+    case 16: return c->base != NULL && lks_legacy_group_size(c->base) == 16;
     case 17: case 18: return c->result != NULL &&
-        lks_group_size(c->result) == c->item_count;
+        lks_legacy_group_size(c->result) == c->item_count;
     default: return 0;
     }
 }
@@ -9447,11 +9448,11 @@ static int stage141_public_private_500_smoke(size_t *out_public_count,
     static void *incoming_items[500];
     BenchmarkCompareContext counter = { 0, 0 };
     LksComparator comparator = { benchmark_compare_int, &counter };
-    LksGroup *base = NULL;
-    LksGroup *incoming = NULL;
-    LksGroup *public_result = NULL;
-    LksGroup *owned_base = NULL;
-    LksGroup *incoming2 = NULL;
+    LksLegacyGroup *base = NULL;
+    LksLegacyGroup *incoming = NULL;
+    LksLegacyGroup *public_result = NULL;
+    LksLegacyGroup *owned_base = NULL;
+    LksLegacyGroup *incoming2 = NULL;
     size_t index;
     int valid = 1;
 
@@ -9465,56 +9466,56 @@ static int stage141_public_private_500_smoke(size_t *out_public_count,
         incoming_items[index] = &values[500 + index];
     }
 
-    if (lks_group_build(base_items, 500, &comparator, &base) != LKS_STATUS_OK ||
-        lks_group_build(incoming_items, 500, &comparator, &incoming) != LKS_STATUS_OK ||
-        lks_group_build(base_items, 500, &comparator, &owned_base) != LKS_STATUS_OK ||
-        lks_group_build(incoming_items, 500, &comparator, &incoming2) != LKS_STATUS_OK) {
+    if (lks_legacy_group_build(base_items, 500, &comparator, &base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(incoming_items, 500, &comparator, &incoming) != LKS_STATUS_OK ||
+        lks_legacy_group_build(base_items, 500, &comparator, &owned_base) != LKS_STATUS_OK ||
+        lks_legacy_group_build(incoming_items, 500, &comparator, &incoming2) != LKS_STATUS_OK) {
         valid = 0;
         goto cleanup;
     }
 
     counter.comparison_count = 0;
-    if (lks_group_merge(base, incoming, &comparator, &public_result) != LKS_STATUS_OK) {
+    if (lks_legacy_group_merge(base, incoming, &comparator, &public_result) != LKS_STATUS_OK) {
         valid = 0;
         goto cleanup;
     }
     *out_public_count = counter.comparison_count;
 
     counter.comparison_count = 0;
-    if (lks_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
+    if (lks_legacy_group_merge_into_owned_base(&owned_base, incoming2, &comparator) !=
             LKS_STATUS_OK || owned_base == NULL) {
         valid = 0;
         goto cleanup;
     }
     *out_private_count = counter.comparison_count;
     if (!stage101_groups_equivalent(public_result, owned_base) ||
-        lks_group_size(owned_base) != 1000 ||
-        lks_group_size(incoming2) != 500) {
+        lks_legacy_group_size(owned_base) != 1000 ||
+        lks_legacy_group_size(incoming2) != 500) {
         valid = 0;
         goto cleanup;
     }
     for (index = 0; index < 1000; ++index) {
         void *expected_item = index % 2 == 0 ?
             base_items[index / 2] : incoming_items[index / 2];
-        if (lks_group_item_at(owned_base, index) != expected_item ||
-            lks_group_item_at(public_result, index) != expected_item) {
+        if (lks_legacy_group_item_at(owned_base, index) != expected_item ||
+            lks_legacy_group_item_at(public_result, index) != expected_item) {
             valid = 0;
             break;
         }
     }
     for (index = 0; valid && index < 500; ++index) {
-        if (lks_group_item_at(incoming2, index) != incoming_items[index]) {
+        if (lks_legacy_group_item_at(incoming2, index) != incoming_items[index]) {
             valid = 0;
         }
     }
     if (*out_public_count != 1998 || *out_private_count != 1998) valid = 0;
 
 cleanup:
-    lks_group_destroy(owned_base);
-    lks_group_destroy(incoming2);
-    lks_group_destroy(public_result);
-    lks_group_destroy(incoming);
-    lks_group_destroy(base);
+    lks_legacy_group_destroy(owned_base);
+    lks_legacy_group_destroy(incoming2);
+    lks_legacy_group_destroy(public_result);
+    lks_legacy_group_destroy(incoming);
+    lks_legacy_group_destroy(base);
     return valid;
 }
 

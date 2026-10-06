@@ -1,3 +1,4 @@
+#include "lks_legacy_internal.h"
 #include "lks_slot_codec_internal.h"
 
 /* ASCII-ordered alphanumerics omit 0/O/o and 1/I/i/L/l to make handwritten

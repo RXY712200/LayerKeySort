@@ -17,7 +17,7 @@ int main(int argc,char **argv)
 {
     size_t n=argc>1?(size_t)strtoull(argv[1],NULL,10):100000,i,first_ids[8],before,marker_bytes;
     size_t *items;void **input;
-    LksOrder *o=NULL;LksImmutableGroup *g=NULL;LksSnapshot *historical[8]={0},*gs=NULL;
+    LksOrder *o=NULL;LksGroup *g=NULL;LksSnapshot *historical[8]={0},*gs=NULL;
     LksComparator cmp={compare,NULL};unsigned char ns[]={4,4};LksSnapshotOptions opt={ns,2,association,NULL};
     const LksOrderHandle *h;LksAllocStats s;unsigned char *x,*y;size_t bytes;
     CHECK(n>=8 && n<SIZE_MAX/sizeof(size_t));
@@ -27,16 +27,16 @@ int main(int argc,char **argv)
     CHECK(lks_order_bulk_build(input,n,&o)==LKS_STATUS_OK && lks_order_internal_valid(o));
     printf("{\"phase\":\"live\",\"n\":%zu,\"record_bytes\":%zu,\"block_index_bytes\":%zu,\"blocks\":%zu,\"container_bytes\":%zu,\"requested_bytes\":%zu}\n",
         n,n*sizeof(LksOrderHandle),o->blocks*sizeof(LksOrderBlock),o->blocks,sizeof(*o),lks_alloc_stats_get().live_bytes);
-    before=lks_alloc_stats_get().live_bytes;CHECK(lks_immutable_group_build(input,n,&cmp,&g)==LKS_STATUS_OK);
+    before=lks_alloc_stats_get().live_bytes;CHECK(lks_group_build(input,n,&cmp,&g)==LKS_STATUS_OK);
     printf("{\"phase\":\"group\",\"n\":%zu,\"flat_array_bytes\":%zu,\"object_bytes\":%zu,\"resident_delta\":%zu}\n",n,n*sizeof(void *),sizeof(*g),lks_alloc_stats_get().live_bytes-before);
     before=lks_alloc_stats_get().live_bytes;CHECK(lks_order_snapshot_capture(o,&opt,&historical[0])==LKS_STATUS_OK);first_ids[0]=0;
     marker_bytes=lks_alloc_stats_get().live_bytes-before-sizeof(LksSnapshot)-n*sizeof(LksSnapshotRow)-2-historical[0]->association_capacity;
-    CHECK(lks_immutable_group_snapshot_capture(g,&opt,&gs)==LKS_STATUS_OK);
+    CHECK(lks_group_snapshot_capture(g,&opt,&gs)==LKS_STATUS_OK);
     bytes=lks_snapshot_serialized_size(gs);x=(unsigned char *)malloc(bytes);y=(unsigned char *)malloc(bytes);CHECK(x && y);
     CHECK(lks_snapshot_serialize(gs,x,bytes)==LKS_STATUS_OK && lks_snapshot_serialize(historical[0],y,bytes)==LKS_STATUS_OK && !memcmp(x,y,bytes));
     printf("{\"phase\":\"snapshot\",\"n\":%zu,\"row_bytes\":%zu,\"association_bytes\":%zu,\"association_capacity\":%zu,\"marker_bytes\":%zu,\"wire_bytes\":%zu,\"ls1_bytes\":%zu,\"group_live_identical\":true}\n",
         n,n*sizeof(LksSnapshotRow),historical[0]->association_size,historical[0]->association_capacity,marker_bytes,bytes,n*lks_snapshot_key_length(gs));
-    free(x);free(y);lks_snapshot_destroy(gs);lks_immutable_group_destroy(g);
+    free(x);free(y);lks_snapshot_destroy(gs);lks_group_destroy(g);
     for(i=1;i<8;++i) {
         h=lks_order_first(o);CHECK(lks_order_move_back(o,h)==LKS_STATUS_OK && lks_order_internal_valid(o));
         first_ids[i]=*(size_t *)lks_order_item(lks_order_first(o));CHECK(lks_order_snapshot_capture(o,&opt,&historical[i])==LKS_STATUS_OK);

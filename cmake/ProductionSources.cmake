@@ -8,8 +8,6 @@ set(LKS_SOURCES
     src/path_order_key.c
     src/slot_codec.c
     src/path_compare.c
-    src/gap.c
-    src/tree.c
     src/order.c
     src/managed_order.c
     src/snapshot.c
@@ -18,7 +16,5 @@ set(LKS_SOURCES
     src/snapshot_restore.c
     src/order_bulk.c
     src/immutable_group.c
-    src/group.c
     src/sort.c
-    src/bulk.c
 )

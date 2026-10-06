@@ -1,3 +1,6 @@
+> Historical Stage-3 design record. Current final API/wire/policy contract is
+> [V4_FREEZE](../V4_FREEZE.md); original provisional names/policies below are historical.
+
 # V4 architecture definition
 
 > Imported by content from commit `3c0373f4bd62287766a84e79e9ee5dbc03194e38`

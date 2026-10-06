@@ -1,29 +1,19 @@
-#include <stdio.h>
+/* Minimal V4 relative ordering. Items are borrowed; handles expire on removal. */
 #include "layerkeysort.h"
-
-typedef struct Item { int key; int original; } Item;
-
-static int compare_items(const void *left, const void *right, void *context)
-{
-    const Item *a = (const Item *)left;
-    const Item *b = (const Item *)right;
-    (void)context;
-    return (a->key > b->key) - (a->key < b->key);
-}
-
+#include <stdio.h>
 int main(void)
 {
-    Item values[] = {{2, 0}, {1, 1}, {2, 2}, {1, 3}};
-    void *items[] = {&values[0], &values[1], &values[2], &values[3]};
-    size_t index;
-    LksStatus status = lks_sort(items, 4, compare_items, NULL);
-    if (status != LKS_STATUS_OK) {
-        fprintf(stderr, "Sort failed: %s\n", lks_status_string(status));
-        return 1;
+    int a=1,b=2; void *removed=NULL;
+    LksOrder *order=lks_order_create(); const LksOrderHandle *first=NULL,*second=NULL;
+    if(!order) return 1;
+    if(lks_order_insert_back(order,&a,&first)!=LKS_STATUS_OK ||
+       lks_order_insert_after(order,first,&b,&second)!=LKS_STATUS_OK) {
+        lks_order_destroy(order); return 2;
     }
-    for (index = 0; index < 4; ++index) {
-        const Item *item = (const Item *)items[index];
-        printf("key=%d original=%d\n", item->key, item->original);
+    printf("First item: %d\n",*(int *)lks_order_item(lks_order_first(order)));
+    if(lks_order_remove(order,second,&removed)!=LKS_STATUS_OK || removed!=&b) {
+        lks_order_destroy(order); return 3;
     }
-    return 0;
+    /* second is expired; first remains valid until source destruction. */
+    lks_order_destroy(order); return 0;
 }
