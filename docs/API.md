@@ -1,6 +1,6 @@
 # API Reference
 
-Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
+Current V4 scope is **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
 ## Header
 
@@ -11,12 +11,12 @@ Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persi
 - `LKS_VERSION_MAJOR` is `4`.
 - `LKS_VERSION_MINOR` is `0`.
 - `LKS_VERSION_PATCH` is `0`.
-- `LKS_VERSION_PRERELEASE` is `"preview.3"`.
-- `LKS_VERSION_STRING` is `"4.0.0-preview.3"`.
+- `LKS_VERSION_PRERELEASE` is `"preview.4"`.
+- `LKS_VERSION_STRING` is `"4.0.0-preview.4"`.
 
-This branch's **4.0.0-preview.3 source** header has 107 public functions:
-48 provisional V4 functions plus all 59 coexisting V3 functions.
-See [V4 Preview.3](V4_PREVIEW3.md), [Preview.2](V4_PREVIEW2.md) and the header for current contracts. DOMAIN_MISMATCH appends status 12; older status numbers are unchanged.
+This branch's **4.0.0-preview.4 source** header has 121 public functions:
+62 provisional V4 functions plus all 59 coexisting V3 functions.
+See [V4 Preview.4](V4_PREVIEW4.md), [Preview.3](V4_PREVIEW3.md), [Preview.2](V4_PREVIEW2.md) and the header for current contracts. DOMAIN_MISMATCH appends status 12; older status numbers are unchanged.
 The Path/Tree/Group reference below describes the preserved V3 API.
 Stable `v3.0.0` and `v3.1.0` expose those 59 V3 functions; historical stable `v2.0.0` has 52.
 `v3.0.0-rc.1` is a historical prerelease.

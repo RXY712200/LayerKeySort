@@ -27,6 +27,8 @@ jobs:
         run: .\build\Debug\layerkeysort_managed_order_example.exe
       - name: V4 snapshot/persistence example
         run: .\build\Debug\layerkeysort_snapshot_example.exe
+      - name: V4 immutable Group snapshot example
+        run: .\build\Debug\layerkeysort_group_snapshot_example.exe
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -65,6 +67,8 @@ jobs:
         run: ./build/layerkeysort_managed_order_example
       - name: V4 snapshot/persistence example
         run: ./build/layerkeysort_snapshot_example
+      - name: V4 immutable Group snapshot example
+        run: ./build/layerkeysort_group_snapshot_example
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -100,6 +104,8 @@ jobs:
         run: ./build/layerkeysort_managed_order_example
       - name: V4 snapshot/persistence example
         run: ./build/layerkeysort_snapshot_example
+      - name: V4 immutable Group snapshot example
+        run: ./build/layerkeysort_group_snapshot_example
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'

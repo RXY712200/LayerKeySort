@@ -17,6 +17,7 @@ set(LKS_SOURCES
     src/snapshot_wire.c
     src/snapshot_restore.c
     src/order_bulk.c
+    src/immutable_group.c
     src/group.c
     src/sort.c
     src/bulk.c

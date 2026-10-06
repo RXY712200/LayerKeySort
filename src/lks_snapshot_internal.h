@@ -12,6 +12,11 @@ struct LksSnapshot {
 /* Used after validated counts/lengths only; all fields initially zero. */
 LksStatus lks_snapshot_new(size_t count, const void *domain, size_t domain_size,
     LksSnapshot **out);
+/* Private traversal adapter: one next-item call per occurrence, no rank search. */
+typedef void *(*LksSnapshotNextItem)(void *iterator);
+LksStatus lks_snapshot_capture_sequence(size_t count, LksSnapshotNextItem next,
+    void *iterator, int *busy, LksSourceMarker **marker, uint64_t revision,
+    const LksSnapshotOptions *options, LksSnapshot **out);
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
 /* Private capacity boundary injection, only with externally serialized tests. */
 void lks_source_marker_test_refs(LksSourceMarker *marker, size_t refs);

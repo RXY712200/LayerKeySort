@@ -1,5 +1,7 @@
 # 使用 LayerKeySort
 
+当前实验分支为 `v4.0.0-preview.4`：新增平坦不可变 Group/Batch 与共享快照；见 [Preview.4 契约及证据](V4_PREVIEW4.md)。V3 API 保留，最新推荐稳定版仍为 `v3.1.0`。下文的 V3 指南不表示 V4 API/线格式已冻结。
+
 [English](USAGE.md) | 简体中文
 
 本文介绍 LayerKeySort 3.1.0 的主要 API 用法。公共函数集合与稳定版 `v3.0.0` 兼容。获取库请看[中文集成指南](INTEGRATION.zh-CN.md)；从 V2 升级请看[英文 V3 迁移指南](V3_MIGRATION.md)。精确函数签名、错误和兼容性约定，以[公共头文件](../include/layerkeysort.h)、[英文 API 参考](API.md)及[英文兼容性约定](COMPATIBILITY.md)为准。

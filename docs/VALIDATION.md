@@ -1,6 +1,6 @@
 # Validation
 
-Current V4 scope is **experimental Preview.3**: [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
+Current V4 scope is **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Stable remains v3.1.0. Earlier milestone guides are historical records; V4 API/wire freeze is deferred to Preview.5.
 
 Local V4 Preview.1 adds `layerkeysort_v4_live_order` to the preserved V3 suite.
 See [V4 Preview.1](V4_PREVIEW1.md) for oracle/failpoint/structural scope. The V3
@@ -10,7 +10,7 @@ coexisting V3 implementation, with the separate Preview.3 snapshot suite coverin
 This page describes how the current V3 source is checked. Test coverage and
 past passing runs are evidence, not a formal proof of all workloads.
 
-Preview.3 registers 18 CTest tests when benchmarks and Python are available, including snapshot contract/torture/OOM and snapshot smoke. All six examples are explicitly executed in CI. Distribution consumers cover all 17 snapshot/import APIs through the public header in C/C++ and amalgamation.
+Preview.4 adds Group/Batch stability/OOM/reentry tests, concurrent marker release/read tests, production semantic-trace smoke campaigns and Group comparison smoke. CI explicitly runs all seven examples. Public C/C++/amalgamation consumers cover all 14 new Group APIs alongside the 17 snapshot/import functions. See the Preview.4 report for the verified test count and local/remote matrix.
 
 ## Local CMake run
 

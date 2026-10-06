@@ -2,6 +2,32 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0-preview.4] - 2026-10-06
+
+Experimental integration/performance-convergence prerelease; Stable remains
+v3.1.0. Preview.5 must decide final V4 API/wire compatibility freeze.
+
+- Add separate provisional flat `LksImmutableGroup` / `LksImmutableGroupBatch`:
+  stable copied-input build, fresh Base-before-Incoming merge, independently
+  sorted chunks and stable pointer-only merge-all. No V3 Group behavior changes.
+- Integrate Group capture/currentness with the existing historical snapshot,
+  lazy atomic source marker, LS1 and LKS4SNP1; no second export format.
+- Add Group/Batch OOM, reentry, lifetime, marker-capacity and equality tests;
+  actual Windows/POSIX concurrent marker releases and protected snapshot reads.
+- Add implementation-independent occurrence traces, production/diagnostic
+  timing/work/allocation separation, grow-shrink/RSS and retained-snapshot
+  evidence, export cadence, fair V3 comparisons and finite B64/B128/B256 screen.
+- Add a public Group integration example explicitly executed in CI; extend
+  external C/C++/FetchContent/install/amalgamation consumer coverage to all 14
+  additive functions. Header total: 121 functions (59 V3 + 62 provisional V4).
+- Apply one bounded private-policy change, B128 to B64, after the predefined
+  10k/100k capacity matrix showed broad timing/local-write improvements with
+  modest added block allocation/storage. Preserve the complete untuned baseline.
+- Preserve live architecture, published LK1, LS1 and LKS4SNP1 bytes. Full export
+  remains O(N+A); record allocation, local writes, block slack and snapshot
+  storage remain costs. Measurements are synthetic workload/platform evidence,
+  not universal speedups or formal complete-operation worst-case guarantees.
+
 ## [4.0.0-preview.3] - 2026-10-06
 
 Experimental V4 historical-export milestone; Stable remains v3.1.0. API/wire
@@ -43,10 +69,10 @@ Experimental V4 prerelease; Stable remains v3.1.0. V4 APIs are provisional.
 - Snapshots, persistence, migration, Group/Batch and final freeze/performance work
   remain later scope. No V3 Path/LK1 or algorithm changes.
 
-## [4.0.0-preview.1] - Unreleased
+## [4.0.0-preview.1] - 2026-10-06
 
 First V4 production implementation, built from audited production main rather
-than research ancestry. Local Preview only; no tag or Release yet.
+than research ancestry. Published experimental prerelease; Stable remains v3.1.0.
 
 - Add provisional `LksOrder` / `LksOrderHandle` explicit-order API: relative and
   endpoint insertion, exact removal, logical traversal, item access and contextual

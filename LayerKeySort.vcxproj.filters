@@ -73,6 +73,9 @@
     <ClCompile Include="src\tree.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\immutable_group.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\group.c">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -138,6 +141,7 @@
     <ClCompile Include="src\snapshot_wire.c"><Filter>源文件</Filter></ClCompile>
     <ClCompile Include="src\snapshot_restore.c"><Filter>源文件</Filter></ClCompile>
     <ClCompile Include="src\order_bulk.c"><Filter>源文件</Filter></ClCompile>
+    <ClInclude Include="src\lks_immutable_group_internal.h"><Filter>头文件</Filter></ClInclude>
     <ClInclude Include="src\lks_snapshot_internal.h"><Filter>头文件</Filter></ClInclude>
     <None Include="tests\v4_snapshot.c"><Filter>示例</Filter></None>
     <None Include="examples\snapshot.c"><Filter>示例</Filter></None>

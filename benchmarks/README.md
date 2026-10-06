@@ -127,3 +127,20 @@ Use `layerkeysort_v4_snapshot_smoke` for separate capture, key formatting, wire,
 load, restore, import and export-cadence measurements. A distinct diagnostic
 executable reports requested allocation/resident-byte counts. Do not mix
 instrumented timing with production. [Captured smoke and methodology](results/v4-preview3-smoke/README.md) are not final V4 performance acceptance.
+
+## V4 Preview.4 production semantic matrix
+
+`v4_trace.c` and `run_v4_matrix.py` use monotonic timers, an independent flat
+occurrence model, separately linked production/diagnostic variants and finite
+B64/B128/B256 screens. They do not merge archived research implementations.
+[Captured matrix and definitions](results/v4-preview4/README.md) explain scales,
+seeds, percentiles, retained snapshots, cadence and RSS limitations. Group/Batch
+comparisons are in `v4_groups.c`. Existing historical tables remain unchanged.
+
+Configure `-DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_CAPACITY_SCREEN=ON`, build Release,
+and run `python benchmarks/run_v4_matrix.py --build build --output build/new-evidence`.
+Use a new output directory; existing captured evidence is not overwritten.
+Normal V4 mutation timing is separate from diagnostic allocation/work counts.
+V3 removal includes comparator lookup because V3 has no stable resident handle;
+this semantic adapter cost is explicit. V3 LK1 formatting also materializes a
+caller-allocated temporary key per row; it is not a direct LS1 size/cost comparison.

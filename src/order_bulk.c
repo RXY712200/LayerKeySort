@@ -24,7 +24,7 @@ LksStatus lks_order_bulk_build(void *const *items, size_t count, LksOrder **out)
     *out = NULL;
     if ((count && !items) || count > UINT64_MAX) return LKS_STATUS_INVALID_ARGUMENT;
     o = lks_order_create(); if (!o) return LKS_STATUS_OUT_OF_MEMORY;
-    blocks = count/128+(count%128 != 0);
+    blocks = count/LKS_ORDER_BLOCK_CAPACITY+(count%LKS_ORDER_BLOCK_CAPACITY != 0);
     base = blocks ? count/blocks : 0; extra = blocks ? count%blocks : 0;
     for (i = 0; i < blocks; ++i) {
         LksOrderBlock *b = (LksOrderBlock *)lks_alloc(sizeof(*b));

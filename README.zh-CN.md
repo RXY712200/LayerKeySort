@@ -1,11 +1,11 @@
 # LayerKeySort
 
-此分支为实验性 `v4.0.0-preview.3`。实时顺序使用上下文中的稳定驻留句柄；
+此分支为实验性 `v4.0.0-preview.4`。实时顺序使用上下文中的稳定驻留句柄；
 历史导出使用独立的不可变快照、复制的应用关联字节和命名空间内可排序的 LS1 键。
 现已支持捕获、序列化/加载、恢复到全新顺序，以及严格的 V3 LK1 导入。
 参见 [Preview.3 指南](docs/V4_PREVIEW3.md) 和[公开快照示例](examples/snapshot.c)。
-全量导出仍需 O(N+A) 工作，不是免费操作。V4 API/线格式尚未冻结；Group/Batch
-集成留到 Preview.4，最终兼容性冻结留到 Preview.5。最新稳定版仍为 `v3.1.0`；
+全量导出仍需 O(N+A) 工作，不是免费操作。V4 API/线格式尚未冻结。Preview.4 已加入平坦不可变 Group/Batch、稳定合并和共享快照；
+见 [Preview.4 指南](docs/V4_PREVIEW4.md) 与[集成示例](examples/immutable_group.c)。最终兼容性冻结留到 Preview.5。最新稳定版仍为 `v3.1.0`；
 下文的 Path 介绍适用于保留的 V3 实现。
 
 [English](README.md) | 简体中文

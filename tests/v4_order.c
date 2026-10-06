@@ -177,8 +177,9 @@ static void boundaries_and_checker(void)
 {
     int item = 1, comparison;
     LksOrder *order = lks_order_create(), *foreign = lks_order_create();
-    const LksOrderHandle *handles[193], *other, *output;
+    const LksOrderHandle *handles[2*LKS_ORDER_BLOCK_CAPACITY+1], *other, *output;
     LksOrderBlock *block;
+    enum { B=LKS_ORDER_BLOCK_CAPACITY, H=LKS_ORDER_BLOCK_MIN };
     size_t i;
     void *removed;
     CHECK(order && foreign && lks_order_internal_valid(order));
@@ -195,18 +196,18 @@ static void boundaries_and_checker(void)
     CHECK(lks_order_compare(order, other, other, &comparison) == LKS_STATUS_INVALID_ARGUMENT && comparison == 0);
     CHECK(lks_order_compare(order, other, other, NULL) == LKS_STATUS_INVALID_ARGUMENT);
     CHECK(lks_order_remove(order, other, &removed) == LKS_STATUS_INVALID_ARGUMENT && !removed);
-    for (i = 0; i < 128; ++i)
+    for (i = 0; i < B; ++i)
         CHECK(lks_order_insert_back(order, &item, &handles[i]) == LKS_STATUS_OK);
-    CHECK(order->blocks == 1 && order->first->count == 128);
-    CHECK(lks_order_insert_back(order, &item, &handles[128]) == LKS_STATUS_OK);
-    CHECK(order->blocks == 2 && order->first->count == 64 && order->last->count == 65);
+    CHECK(order->blocks == 1 && order->first->count == B);
+    CHECK(lks_order_insert_back(order, &item, &handles[B]) == LKS_STATUS_OK);
+    CHECK(order->blocks == 2 && order->first->count == H && order->last->count == (H+1));
     CHECK(lks_order_remove(order, handles[0], NULL) == LKS_STATUS_OK);
-    CHECK(order->work.merges == 1 && order->blocks == 1 && order->first->count == 128);
-    for (i = 129; i < 193; ++i)
+    CHECK(order->work.merges == 1 && order->blocks == 1 && order->first->count == B);
+    for (i = (B+1); i < (B+H+1); ++i)
         CHECK(lks_order_insert_back(order, &item, &handles[i]) == LKS_STATUS_OK);
-    CHECK(order->first->count == 64 && order->last->count == 128);
+    CHECK(order->first->count == H && order->last->count == B);
     CHECK(lks_order_remove(order, handles[1], NULL) == LKS_STATUS_OK);
-    CHECK(order->work.redistributions == 1 && order->first->count == 95 && order->last->count == 96);
+    CHECK(order->work.redistributions == 1 && order->first->count == ((3*H-1)/2) && order->last->count == (3*H/2));
     CHECK(lks_order_internal_valid(order));
     /* Prove checker catches representative non-dangling corruption. */
     block = order->root;
@@ -278,7 +279,7 @@ static void oom(void)
     lks_alloc_test_fail_on_attempt(2);
     order = lks_order_create(); CHECK(order); lks_alloc_test_disable_failure();
     lks_order_destroy(order);
-    failpoint_insert(0, 2, 0); failpoint_insert(1, 1, 0); failpoint_insert(128, 2, 0);
+    failpoint_insert(0, 2, 0); failpoint_insert(1, 1, 0); failpoint_insert(LKS_ORDER_BLOCK_CAPACITY, 2, 0);
     failpoint_insert(4096, 2, 1);
     order = lks_order_create(); CHECK(order);
     for (i = 0; i < 4096; ++i) CHECK(lks_order_insert_back(order, &item, &handle) == LKS_STATUS_OK);
@@ -303,7 +304,7 @@ static void two_child_deletion(void)
     CHECK(order);
     for (i = 0; i < 10000; ++i) CHECK(lks_order_insert_back(order, &item, &handle) == LKS_STATUS_OK);
     CHECK(order->root->left && order->root->right && order->root->previous);
-    CHECK(order->root->count == 64 && order->root->previous->count == 64);
+    CHECK(order->root->count == LKS_ORDER_BLOCK_MIN && order->root->previous->count == LKS_ORDER_BLOCK_MIN);
     survivor = order->root->records[0];
     handle = order->root->previous->records[0];
     CHECK(lks_order_remove(order, handle, NULL) == LKS_STATUS_OK);

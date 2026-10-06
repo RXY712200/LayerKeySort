@@ -7,7 +7,9 @@
 
 /* Private policy, not a coordinate format or ABI guarantee. The extra pointer
  * slot is insertion scratch; committed occupancy never exceeds capacity. */
-#define LKS_ORDER_BLOCK_CAPACITY 128u
+#ifndef LKS_ORDER_BLOCK_CAPACITY
+#define LKS_ORDER_BLOCK_CAPACITY 64u
+#endif
 #define LKS_ORDER_BLOCK_MIN (LKS_ORDER_BLOCK_CAPACITY / 2u)
 typedef struct LksOrderBlock LksOrderBlock;
 typedef struct LksSourceMarker LksSourceMarker;

@@ -117,48 +117,59 @@ static LksStatus snap_append(LksSnapshot *s, size_t row, const void *data, size_
     if (size) memcpy(s->associations+s->association_size, data, size);
     s->association_size = need; return LKS_STATUS_OK;
 }
-LksStatus lks_order_snapshot_capture(LksOrder *o, const LksSnapshotOptions *options,
-    LksSnapshot **out)
+LksStatus lks_snapshot_capture_sequence(size_t count, LksSnapshotNextItem next,
+    void *iterator, int *busy, LksSourceMarker **marker, uint64_t revision,
+    const LksSnapshotOptions *options, LksSnapshot **out)
 {
-    LksSnapshot *s; LksStatus status; LksOrderBlock *b; size_t row = 0;
+    LksSnapshot *s; LksStatus status; size_t row;
     LksSnapshotOptions descriptor;
     if (out) *out = NULL;
-    if (!o || !options || !out) return LKS_STATUS_INVALID_ARGUMENT;
-    if (o->callback_active) return LKS_STATUS_REENTRANT;
-    /* Descriptor is stable even if application callback edits its own options. */
+    if (!options || !out) return LKS_STATUS_INVALID_ARGUMENT;
+    if (*busy) return LKS_STATUS_REENTRANT;
     descriptor = *options; options = &descriptor;
-    status = lks_snapshot_new(o->count, options->namespace_data, options->namespace_size, &s);
+    status = lks_snapshot_new(count, options->namespace_data, options->namespace_size, &s);
     if (status != LKS_STATUS_OK) return status;
-    /* Follow threads once. No rank queries, comparator or coordinate materialization. */
-    for (b = o->first; b; b = b->next) {
-        size_t i;
-        for (i = 0; i < b->count; ++i, ++row) {
-            const void *data = NULL; size_t size = 0;
-            if (options->association) {
-                o->callback_active = 1;
-                status = options->association(b->records[i]->item, (uint64_t)row,
-                    options->context, &data, &size);
-                o->callback_active = 0;
-                if (status != LKS_STATUS_OK) goto fail;
-            }
-            status = snap_append(s, row, data, size);
+    for (row = 0; row < count; ++row) {
+        void *item = next(iterator); const void *data = NULL; size_t size = 0;
+        if (options->association) {
+            *busy = 1;
+            status = options->association(item, (uint64_t)row, options->context, &data, &size);
+            *busy = 0;
             if (status != LKS_STATUS_OK) goto fail;
         }
+        status = snap_append(s, row, data, size);
+        if (status != LKS_STATUS_OK) goto fail;
     }
-    /* Last fallible step; failed first capture has no lasting marker allocation. */
-    if (o->source_marker) {
-        if (!snap_marker_retain(o->source_marker)) {
-            status = LKS_STATUS_CAPACITY_LIMIT; goto fail;
-        }
-        s->marker = o->source_marker;
+    /* Commit provenance only after every row is ready. */
+    if (*marker) {
+        if (!snap_marker_retain(*marker)) { status = LKS_STATUS_CAPACITY_LIMIT; goto fail; }
+        s->marker = *marker;
     } else {
         s->marker = snap_marker_new();
         if (!s->marker) { status = LKS_STATUS_OUT_OF_MEMORY; goto fail; }
-        o->source_marker = s->marker;
+        *marker = s->marker;
     }
-    s->revision = o->revision; *out = s; return LKS_STATUS_OK;
+    s->revision = revision; *out = s; return LKS_STATUS_OK;
 fail:
     lks_snapshot_destroy(s); return status;
+}
+typedef struct SnapLiveIterator { LksOrderBlock *block; size_t local; } SnapLiveIterator;
+static void *snap_live_next(void *context)
+{
+    SnapLiveIterator *it = (SnapLiveIterator *)context;
+    void *item = it->block->records[it->local++]->item;
+    if (it->local == it->block->count) { it->block = it->block->next; it->local = 0; }
+    return item;
+}
+LksStatus lks_order_snapshot_capture(LksOrder *o, const LksSnapshotOptions *options,
+    LksSnapshot **out)
+{
+    SnapLiveIterator it;
+    if (out) *out = NULL;
+    if (!o || !out) return LKS_STATUS_INVALID_ARGUMENT;
+    it.block = o->first; it.local = 0;
+    return lks_snapshot_capture_sequence(o->count, snap_live_next, &it,
+        &o->callback_active, &o->source_marker, o->revision, options, out);
 }
 LksStatus lks_managed_order_snapshot_capture(LksManagedOrder *o,
     const LksSnapshotOptions *options, LksSnapshot **out)

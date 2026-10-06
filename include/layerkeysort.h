@@ -12,8 +12,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 4
 #define LKS_VERSION_MINOR 0
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.3"
-#define LKS_VERSION_STRING "4.0.0-preview.3"
+#define LKS_VERSION_PRERELEASE "preview.4"
+#define LKS_VERSION_STRING "4.0.0-preview.4"
 
 /* Public Path slot range. Slots are ordering coordinates, not durable IDs. */
 #define LKS_PATH_SLOT_MIN 0u
@@ -376,9 +376,9 @@ LksStatus lks_path_between(
     LksPath **out_path
 );
 
-/* V4 Preview.2 explicit live order. Provisional API coexists with the V3 API
- * above; V3 Path/LK1 semantics are unchanged. No V4 snapshots or serialization
- * are provided in this Preview.
+/* V4 explicit live order. Provisional API coexists with the V3 API
+ * above; V3 Path/LK1 semantics are unchanged. Immutable snapshots are described
+ * below and capture explicit historical order.
  *
  * ORDER owns structural storage and borrows non-NULL application item pointers.
  * Each insertion creates an occurrence; the same item may reside more than once.
@@ -564,6 +564,48 @@ typedef struct LksV3Lk1ImportEntry { const char *key; void *item; } LksV3Lk1Impo
  * Empty import permits NULL entries. Output NULL on failure; no Paths retained. */
 LksStatus lks_order_import_v3_lk1(const LksV3Lk1ImportEntry *entries,
     size_t count, LksOrder **out_order);
+
+/* Provisional V4 flat immutable sequences, distinct from preserved V3 LksGroup.
+ * Items remain borrowed; no Paths, handles or comparator/context are retained.
+ * Comparator is borrowed for each operation and must order existing sources
+ * compatibly on merge. Comparator-relevant item changes can violate that rule.
+ * Required output cleared on failure. Empty input allows NULL items, but always
+ * requires a callable comparator. All nonempty entries must be non-NULL.
+ * Build preserves input array and stable equality. Merge takes Base on equality.
+ * Same-source callback reentry returns REENTRANT; getters return zero/NULL and
+ * destroy is ignored during callbacks. Sources remain caller-serialized during
+ * merge/capture. No callback may throw/longjmp across the C operation. */
+typedef struct LksImmutableGroup LksImmutableGroup;
+typedef struct LksImmutableGroupBatch LksImmutableGroupBatch;
+LksStatus lks_immutable_group_build(void *const *items, size_t count,
+    const LksComparator *comparator, LksImmutableGroup **out_group);
+void lks_immutable_group_destroy(LksImmutableGroup *group);
+size_t lks_immutable_group_size(const LksImmutableGroup *group);
+void *lks_immutable_group_item_at(const LksImmutableGroup *group, size_t index);
+LksStatus lks_immutable_group_merge(const LksImmutableGroup *base,
+    const LksImmutableGroup *incoming, const LksComparator *comparator,
+    LksImmutableGroup **out_group);
+/* Independently sorted chunks, preserving original chunk precedence on equality.
+ * Group size > 0. Batch owns its groups; group_at borrows until batch destruction.
+ * Do not destroy a borrowed chunk. merge_all creates a separately owned result. */
+LksStatus lks_immutable_group_batch_build(void *const *items, size_t count,
+    size_t group_size, const LksComparator *comparator,
+    LksImmutableGroupBatch **out_batch);
+void lks_immutable_group_batch_destroy(LksImmutableGroupBatch *batch);
+size_t lks_immutable_group_batch_size(const LksImmutableGroupBatch *batch);
+size_t lks_immutable_group_batch_group_count(const LksImmutableGroupBatch *batch);
+size_t lks_immutable_group_batch_group_size(const LksImmutableGroupBatch *batch);
+const LksImmutableGroup *lks_immutable_group_batch_group_at(
+    const LksImmutableGroupBatch *batch, size_t index);
+LksStatus lks_immutable_group_batch_merge_all(const LksImmutableGroupBatch *batch,
+    const LksComparator *comparator, LksImmutableGroup **out_group);
+/* Same immutable Snapshot/LS1/wire semantics. Logical revision always zero.
+ * Capture changes only a private lazy provenance cache; caller serializes it.
+ * Historical snapshots survive Group destruction; loaded snapshots never current. */
+LksStatus lks_immutable_group_snapshot_capture(const LksImmutableGroup *group,
+    const LksSnapshotOptions *options, LksSnapshot **out_snapshot);
+int lks_immutable_group_snapshot_is_current(const LksImmutableGroup *group,
+    const LksSnapshot *snapshot);
 
 #ifdef __cplusplus
 }

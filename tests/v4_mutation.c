@@ -101,31 +101,32 @@ static void explicit_random(uint32_t seed)
 }
 static void move_boundaries(void)
 {
-    Item items[320]; const LksOrderHandle *seq[320]; size_t i;
+    enum { B=LKS_ORDER_BLOCK_CAPACITY, H=LKS_ORDER_BLOCK_MIN };
+    Item items[(3*B)]; const LksOrderHandle *seq[(3*B)]; size_t i;
     LksOrder *o=lks_order_create(), *foreign=lks_order_create(); const LksOrderHandle *f;
     CHECK(o && foreign && lks_order_insert_back(foreign,&items[0],&f)==LKS_STATUS_OK);
-    for(i=0;i<128;++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
-    move_model(o,seq,128,10,90,2); move_model(o,seq,128,90,10,3);
-    move_model(o,seq,128,0,127,1); move_model(o,seq,128,127,0,0);
-    sequence_check(o,seq,128);
+    for(i=0;i<B;++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
+    move_model(o,seq,B,(B/8),(3*B/4),2); move_model(o,seq,B,(3*B/4),(B/8),3);
+    move_model(o,seq,B,0,(B-1),1); move_model(o,seq,B,(B-1),0,0);
+    sequence_check(o,seq,B);
     CHECK(lks_order_move_before(o,seq[0],f)==LKS_STATUS_INVALID_ARGUMENT);
     CHECK(lks_order_move_front(NULL,seq[0])==LKS_STATUS_INVALID_ARGUMENT);
-    for(i=128;i<192;++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
-    CHECK(o->first->count==64 && o->last->count==128);
-    move_model(o,seq,192,0,191,3); /* split full adjacent destination, repair 63 source with new neighbor */
-    sequence_check(o,seq,192); CHECK(o->work.splits==1 && o->work.merges==1);
-    /* Fresh 64+128 fixture: source 128 -> destination 64 without allocation. */
+    for(i=B;i<(3*H);++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
+    CHECK(o->first->count==H && o->last->count==B);
+    move_model(o,seq,(3*H),0,(3*H-1),3); /* split full adjacent destination, repair the now-underfull source with its new neighbor */
+    sequence_check(o,seq,(3*H)); CHECK(o->work.splits==1 && o->work.merges==1);
+    /* Fresh H+B fixture: source B -> destination H without allocation. */
     lks_order_destroy(o); o=lks_order_create();
-    for(i=0;i<192;++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
-    move_model(o,seq,192,191,0,2); sequence_check(o,seq,192);
-    /* Fresh 64+128+64: move 64 source into nonfull third; source redistributes
+    for(i=0;i<(3*H);++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
+    move_model(o,seq,(3*H),(3*H-1),0,2); sequence_check(o,seq,(3*H));
+    /* Fresh H+B+H: move H source into nonfull third; source redistributes
      * with the untouched full middle, and is not adjacent to destination. */
     lks_order_destroy(o); o=lks_order_create();
-    for(i=0;i<256;++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
-    for(i=0;i<64;++i)move_model(o,seq,256,255,o->first->count,2);
-    CHECK(o->first->count==64 && o->first->next->count==128 && o->last->count==64);
-    move_model(o,seq,256,0,255,1);CHECK(o->work.redistributions==1);
-    sequence_check(o,seq,256);
+    for(i=0;i<(2*B);++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
+    for(i=0;i<H;++i)move_model(o,seq,(2*B),(2*B-1),o->first->count,2);
+    CHECK(o->first->count==H && o->first->next->count==B && o->last->count==H);
+    move_model(o,seq,(2*B),0,(2*B-1),1);CHECK(o->work.redistributions==1);
+    sequence_check(o,seq,(2*B));
     lks_order_destroy(o); lks_order_destroy(foreign);
 }
 static void long_moves(void)
@@ -179,24 +180,25 @@ static void cursor_tests(void)
 }
 static void move_oom(void)
 {
-    Item items[192]; const LksOrderHandle *seq[192],*h; LksOrder *o=lks_order_create();
+    enum { B=LKS_ORDER_BLOCK_CAPACITY, H=LKS_ORDER_BLOCK_MIN };
+    Item items[(3*H)]; const LksOrderHandle *seq[(3*H)],*h; LksOrder *o=lks_order_create();
     LksOrderCursor *c; size_t i; LksAllocStats before,after; LksOrderBlock left,right; uint64_t revision;
     CHECK(o);
-    for(i=0;i<192;++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
+    for(i=0;i<(3*H);++i)CHECK(lks_order_insert_back(o,&items[i],&seq[i])==LKS_STATUS_OK);
     CHECK(lks_order_cursor_create(o,0,&c)==LKS_STATUS_OK);
     left=*o->first;right=*o->last;revision=o->revision;before=lks_alloc_stats_get();
     lks_alloc_test_reset_attempt_counter();lks_alloc_test_fail_on_attempt(1);
     CHECK(lks_order_move_back(o,seq[0])==LKS_STATUS_OUT_OF_MEMORY);
     CHECK(!memcmp(&left,o->first,sizeof(left)) && !memcmp(&right,o->last,sizeof(right)) && o->revision==revision);
     after=lks_alloc_stats_get();CHECK(after.live_blocks==before.live_blocks && after.live_bytes==before.live_bytes);
-    sequence_check(o,seq,192);CHECK(lks_order_cursor_next(c,&h)==LKS_STATUS_OK && h==seq[0]);
-    lks_alloc_test_disable_failure();move_model(o,seq,192,0,191,1);
+    sequence_check(o,seq,(3*H));CHECK(lks_order_cursor_next(c,&h)==LKS_STATUS_OK && h==seq[0]);
+    lks_alloc_test_disable_failure();move_model(o,seq,(3*H),0,(3*H-1),1);
     CHECK(lks_order_cursor_next(c,&h)==LKS_STATUS_INVALIDATED);lks_order_cursor_destroy(c);
     /* Non-full destination and same-block paths allocate nothing. */
     lks_alloc_test_reset_attempt_counter();lks_alloc_test_fail_on_attempt(1);
-    move_model(o,seq,192,191,0,0);move_model(o,seq,192,1,10,2);
+    move_model(o,seq,(3*H),(3*H-1),0,0);move_model(o,seq,(3*H),1,10,2);
     CHECK(!lks_alloc_test_get_attempt_count());lks_alloc_test_disable_failure();
-    sequence_check(o,seq,192);lks_order_destroy(o);puts("move spare OOM + allocation-free moves PASS");
+    sequence_check(o,seq,(3*H));lks_order_destroy(o);puts("move spare OOM + allocation-free moves PASS");
 }
 static void managed_check(LksManagedOrder *o,const LksOrderHandle **seq,size_t n)
 { CHECK(lks_managed_order_size(o)==n);sequence_check(o->core,seq,n); }
@@ -252,9 +254,9 @@ static void managed_oom(void)
         o=lks_managed_order_create(&descriptor);lks_alloc_test_disable_failure();
         CHECK((fail<=2 && !o)||(fail==3 && o));lks_managed_order_destroy(o);
     }
-    for(initial=0;initial<=128;initial=initial==0?1:initial==1?128:129) {
+    for(initial=0;initial<=LKS_ORDER_BLOCK_CAPACITY;initial=initial==0?1:initial==1?LKS_ORDER_BLOCK_CAPACITY:LKS_ORDER_BLOCK_CAPACITY+1) {
         for(fail=1;fail<=3;++fail) {
-            Item items[129];LksManagedOrder *o=lks_managed_order_create(&descriptor);const LksOrderHandle *seq[129],*h=NULL;
+            Item items[LKS_ORDER_BLOCK_CAPACITY+1];LksManagedOrder *o=lks_managed_order_create(&descriptor);const LksOrderHandle *seq[LKS_ORDER_BLOCK_CAPACITY+1],*h=NULL;
             LksAllocStats before,after;LksOrderCursor *c;uint64_t revision;LksStatus status;
             CHECK(o);for(i=0;i<=initial;++i){items[i].key=0;items[i].id=i;}
             for(i=0;i<initial;++i)CHECK(lks_managed_order_insert(o,&items[i],&seq[i])==LKS_STATUS_OK);
