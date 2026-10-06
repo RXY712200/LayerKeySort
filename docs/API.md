@@ -1,6 +1,7 @@
 # V4 API reference
 
-Final Preview.5 freezes the V4.0 RC source contract: 64 functions, 14 public types.
+Preview.5 froze the V4.0 source contract: 64 functions, 14 public types.
+RC.1 preserves it unchanged. See [RC record](V4_RC1.md).
 Include `<layerkeysort.h>` only. [Freeze](V4_FREEZE.md) specifies ownership,
 statuses and persistent compatibility; [migration](MIGRATION_V3_V4.md) covers the
 major source break. v3.1.0 remains recommended Stable.

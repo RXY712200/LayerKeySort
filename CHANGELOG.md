@@ -2,6 +2,23 @@
 
 Notable changes to LayerKeySort are documented here.
 
+## [4.0.0-rc.1] - 2026-10-06
+
+Release Candidate 1, not Stable. v3.1.0 remains the recommended Stable release.
+No feature expansion, policy tuning or frozen API/wire changes.
+
+- Preserved the Preview.5 64-function / 14-type API manifest, status numbers,
+  LS1 and LKS4SNP1 bytes, and strict published V3 LK1 migration.
+- Added deterministic V4 key/wire hostile-input testing, exact accepted-byte
+  round trips, output/cleanup checks and allocation-free export/query checks.
+- Added long mutation mode retaining all oracle and invariant checks, and
+  extended remote Clang ASan/UBSan campaigns.
+- Audited static-library internal symbols and compiler-analysis findings;
+  documented support boundaries and RC validation in docs/V4_RC1.md.
+- Rehearsed C/C++17 integration and reproducible source distribution.
+
+Stable publication requires independent RC review. No Preview.6 exists.
+
 ## [4.0.0-preview.5] - 2026-10-06
 
 Final experimental V4 Preview, not RC/Stable; v3.1.0 remains recommended Stable.

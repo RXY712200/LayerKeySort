@@ -108,3 +108,6 @@ The following V3 names are absent from the primary V4 header:
 
 Old V3 `lks_group_*` names that are reused now implement flat V4 semantics.
 All 57 V3-specific contracts are removed/replaced; only generic sort/status remain.
+
+RC.1 uses the unchanged Preview.5 frozen declarations and formats; see
+[RC validation](V4_RC1.md). Recommended Stable remains v3.1.0.

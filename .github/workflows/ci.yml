@@ -82,6 +82,13 @@ jobs:
         run: python tools/verify_v4_api.py
       - name: Distribution consumers and reproducible amalgamation
         run: python3 tools/validate_distribution.py
+      - name: RC extended sanitizer campaign
+        if: matrix.compiler == 'clang' && matrix.sanitizer == 'ON'
+        run: |
+          ./build/layerkeysort_v4_mutation --long
+          ./build/layerkeysort_v4_rc_torture --long
+          ./build/layerkeysort_v4_trace distant_drag 100001 100000 0 7 1
+          ./build/layerkeysort_v4_trace long_churn 4096 200000 0 17 1
       - name: Verify release asset wrapper
         if: matrix.compiler == 'gcc' && matrix.sanitizer == 'OFF'
         run: python3 tools/validate_release_assets.py

@@ -1,7 +1,7 @@
 # V4 development / RC
 
-Final Preview.5 completes Preview development on PASS. Next Stage 5 — Release
-Candidate, no Preview.6. [Freeze](V4_FREEZE.md) defines permitted changes.
+Preview development is complete. Current stage: Stage 5 — Release Candidate 1,
+no Preview.6. See [RC record](V4_RC1.md). [Freeze](V4_FREEZE.md) defines permitted changes.
 
 Run tools/verify_v4_api.py, strict C17 build/CTest, all seven examples,
 tools/validate_distribution.py and tools/validate_release_assets.py. Legacy V3

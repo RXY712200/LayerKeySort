@@ -32,3 +32,6 @@ ZIP contains layerkeysort.h, layerkeysort.c, example.c, LICENSE and README.txt.
 Compile implementation as C17, link C/C++ application. No Python/private header
 requirement for installed/amalgamated consumers; Python only development tools.
 [Freeze](V4_FREEZE.md) defines exact compatibility and package gates.
+
+RC.1 uses the unchanged Preview.5 frozen declarations and formats; see
+[RC validation](V4_RC1.md). Recommended Stable remains v3.1.0.

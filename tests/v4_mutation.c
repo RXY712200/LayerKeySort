@@ -58,9 +58,9 @@ static void move_model(LksOrder *o, const LksOrderHandle **seq,size_t n,
     }
     work_check(o,height);
 }
-static void explicit_random(uint32_t seed)
+static void explicit_random(uint32_t seed, size_t steps)
 {
-    const size_t steps=30000, capacity=4096;
+    const size_t capacity=4096;
     Item *items=(Item *)calloc(steps+capacity,sizeof(*items));
     const LksOrderHandle **seq=(const LksOrderHandle **)calloc(capacity,sizeof(*seq));
     const LksOrderHandle **registry=(const LksOrderHandle **)calloc(steps+capacity,sizeof(*registry));
@@ -336,16 +336,20 @@ static void managed_interactions(void)
       lks_order_cursor_destroy(r.cursor);lks_managed_order_destroy(r.order); }
     puts("managed cursor, 5000 remove/change/reinsert cycles, comparator reentry PASS");
 }
-int main(void)
+int main(int argc, char **argv)
 {
-    unsigned p;CHECK(lks_alloc_stats_reset()==0);
+    unsigned p;size_t steps=30000;
+    /* Optional long-run mode preserves every existing oracle/invariant check. */
+    if(argc==2 && !strcmp(argv[1],"--long"))steps=200000;
+    else if(argc!=1){fputs("usage: v4_mutation [--long]\n",stderr);return 2;}
+    CHECK(lks_alloc_stats_reset()==0);
     cursor_tests();move_boundaries();move_oom();
-    explicit_random(17);explicit_random(UINT32_C(1779033703));explicit_random(UINT32_C(3144134277));long_moves();
+    explicit_random(17,steps);explicit_random(UINT32_C(1779033703),steps);explicit_random(UINT32_C(3144134277),steps);long_moves();
     for(p=0;p<7;++p)managed_campaign(p,p==3?100001:4096);
     managed_oom();
     managed_interactions();
     printf("move operations=%zu cross=%zu noops=%zu max_assignments=%zu max_arrays=%zu max_index=%zu splits=%zu repairs=%zu\n",move_ops,cross_moves,noops,max_assign,max_arrays,max_index,move_splits,move_repairs);
     printf("managed max_insert_calls=%zu max_locate_calls=%zu\n",max_insert_calls,max_locate_calls);
     CHECK(!lks_alloc_stats_get().live_bytes && !lks_alloc_stats_get().live_blocks);
-    puts("V4 Preview.2 PASS; zero live allocations");return 0;
+    puts("V4 mutation contract PASS; zero live allocations");return 0;
 }

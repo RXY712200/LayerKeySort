@@ -7,9 +7,10 @@ sortable immutable snapshot keys.
 
 **Live order: contextual handles. Historical/persistent order: immutable snapshot keys.**
 
-This branch is **v4.0.0-preview.5**, the final V4 Preview, not RC or Stable.
+This branch is **v4.0.0-rc.1**, V4 Release Candidate 1, not Stable.
 [V4_FREEZE](docs/V4_FREEZE.md) freezes the V4.0 API, LS1 and LKS4SNP1 contracts.
-**v3.1.0 remains recommended for normal use.** Next: Release Candidate. No Preview.6.
+**v3.1.0 remains recommended for normal use.** Stable is next only after independent RC review. No Preview.6.
+[RC validation record](docs/V4_RC1.md).
 
 ## Choose a workflow
 
