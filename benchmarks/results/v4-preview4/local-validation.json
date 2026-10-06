@@ -1,0 +1,22 @@
+{
+  "gcc_c17_strict_release": "34/34",
+  "msvc_x64_debug": "34/34",
+  "msvc_x64_release_with_symbols": "34/34",
+  "msvc_x64_asan": "34/34",
+  "msvc_win32_debug": "34/34",
+  "examples": {
+    "gcc_release": "7/7",
+    "msvc_release_symbols": "7/7",
+    "msvc_asan": "7/7"
+  },
+  "distribution": {
+    "gcc": "C/C++ source, offline FetchContent, installed, amalgamated, reproducible ZIP passed",
+    "msvc": "same passed"
+  },
+  "local_clang": "unavailable",
+  "gcc_asan_ubsan_runtimes": "unavailable",
+  "default_msvc_release": "linked executable disappeared externally, actor unconfirmed; Not Run test disclosed",
+  "marker_concurrency": "live and Group sources: 2 rounds, 8 threads, 10000 protected reads each; 64 independently owned snapshot releases per round; passed",
+  "corrected_group_rows": 264,
+  "corrected_group_cleanup_comparisons": 0
+}

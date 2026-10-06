@@ -1,0 +1,6 @@
+{"phase":"live","n":100000,"record_bytes":3200000,"block_index_bytes":912792,"blocks":1563,"container_bytes":4344,"requested_bytes":4117136}
+{"phase":"group","n":100000,"flat_array_bytes":800000,"object_bytes":32,"resident_delta":800032}
+{"phase":"snapshot","n":100000,"row_bytes":1600000,"association_bytes":800000,"association_capacity":1048576,"marker_bytes":8,"wire_bytes":1600026,"ls1_bytes":2500000,"group_live_identical":true}
+{"phase":"retained","n":100000,"snapshot_count":8,"requested_bytes":25306928,"peak_bytes":25306928}
+{"phase":"empty_with_history","requested_bytes":21193552,"resident_count":0}
+{"phase":"destroyed","live_bytes":0,"live_blocks":0,"oracle":true}

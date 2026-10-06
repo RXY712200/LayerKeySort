@@ -1,0 +1,7 @@
+{
+  "oracle": true,
+  "rows": 456,
+  "group_rows": 264,
+  "reference_and_phase_rows": 456,
+  "cleanup_zero": true
+}
