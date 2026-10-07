@@ -2,7 +2,7 @@
 
 Notable changes to LayerKeySort are documented here.
 
-## [4.0.0] - 2026-10-06
+## [4.0.0] - 2026-10-07
 
 V4.0.0 is the current recommended Stable release after the Preview.1–5 freeze
 and independently reviewed RC.1. This is a **major source-level break from V3**;
