@@ -15,6 +15,7 @@
       <nav aria-label="Primary">
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">README</a>
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文</a>
+        <a href="https://github.com/RXY712200/LayerKeySort/issues/3">Roadmap</a>
         <a href="v3/">V3 visualizer</a>
       </nav>
     </div>
@@ -90,7 +91,7 @@
     <section class="section shell limits" aria-labelledby="limits-title">
       <p class="eyebrow">Before you adopt it</p>
       <h2 id="limits-title">Measure the workload that matters to you</h2>
-      <p>V4 avoids live Path growth and collection-wide coordinate relabel. Local block/index work, allocation and comparator costs remain; full snapshot export and retained history can dominate time and memory. No universal latency guarantee or distributed/CRDT ordering is claimed. Read the <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">benchmark evidence</a> and test your own insertion patterns.</p>
+      <p>V4 avoids live Path growth and collection-wide coordinate relabel. Local block/index work, allocation and comparator costs remain; full snapshot export and retained history can dominate time and memory. The strongest fit is a long-lived editor-like collection with repeated insert/remove/move operations, not one-shot sorting or distributed/CRDT ordering. Read the <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">benchmark evidence</a>, test your own workload, and follow the <a href="https://github.com/RXY712200/LayerKeySort/issues/3">post-v4 roadmap</a>.</p>
     </section>
   </main>
   <footer class="site-footer">
@@ -101,6 +102,7 @@
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/LICENSE">MIT license</a>
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">English README</a>
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文 README</a>
+        <a href="https://github.com/RXY712200/LayerKeySort/issues/3">Roadmap / technical debt</a>
         <a href="v3/">V3 visualizer</a>
         <a href="demo/">Historical V1 visualizer</a>
       </nav>
