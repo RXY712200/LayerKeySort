@@ -1,7 +1,13 @@
-# V3 / Preview.4 to V4 migration
+# V3 to V4 migration
+
+This guide targets **v4.0.0 Stable**.
 
 V4 is a source-breaking major release. Keep v3.1.0 if hierarchical Path/Tree
 contracts are required. Rebuild against the final V4 header; no alias layer.
+
+The migration goal is not to preserve V3's live coordinate model inside V4. It is
+to move applications to contextual live handles while keeping business identity
+application-owned and preserving published V3 LK1 data through strict import.
 
 | Old workflow | V4 replacement |
 |---|---|
@@ -36,7 +42,7 @@ Full capture/export costs O(N+A). See [freeze](V4_FREEZE.md), [API](API.md) and
 [public snapshot example](../examples/snapshot.c). V4.0.0 is current Stable;
 V3.1.0 remains a historical Stable for applications retaining V3 contracts.
 
-## Complete Preview.4 rename table
+## Historical Preview-only rename table
 
 | Preview.4 function | Preview.5 function | Reason |
 |---|---|---|
