@@ -1,8 +1,44 @@
-> Current release: V4.0.0 Stable; [Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
-> Measurements below retain historical names; Preview.4 is convergence evidence.
-> Stable promotion performs no new tuning. Old provisional names below are historical.
+# Benchmark and performance evidence
 
-# V3 performance evidence
+> Current release: V4.0.0 Stable; [Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
+> Historical result files keep the names and terminology that were correct when captured.
+> Stable promotion performs no new algorithm tuning.
+
+## Current V4 evidence
+
+[Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) is the primary
+V4 performance-convergence record.
+
+The important architectural observations are:
+
+- ordinary live mutation no longer performs collection-wide live-coordinate rewrites;
+- move structural work is independent of logical distance in the selected representation;
+- local block/index maintenance remains bounded by the private block policy plus balanced-index work;
+- snapshot/export cost is explicit and separate from live mutation;
+- retained snapshots consume memory proportional to deliberately retained historical state;
+- allocator, comparator, callback, block-slack and local-pointer costs remain real.
+
+One documented Preview.4 large-timeline run used 100k initial residents + 100k operations
+and reported 28.912 ms total on that machine, with observed per-operation maxima of
+95 record-location assignments, 2 local arrays and 15 index-block updates.
+
+These are **measurements, not latency bounds or universal speed claims**.
+
+Stable 4.0.0 did not repeat tuning; focused replay preserved the frozen structural counters.
+
+### What is missing
+
+Current evidence is extensive but mostly deterministic synthetic/application-shaped workload
+evidence.
+
+The next important benchmark input should come from real editor integrations and
+implementation-independent semantic traces. A real repeated-drag/undo/bulk-edit/export
+trace is more valuable for future architecture decisions than adding synthetic workloads
+without a concrete user question.
+
+Track that work in [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
+
+## Historical V3 performance evidence
 
 Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). V4.0.0 is current Stable. Earlier milestone guides are historical records; Preview.5 froze the API/wire contracts, preserved through RC.1 and Stable.
 
