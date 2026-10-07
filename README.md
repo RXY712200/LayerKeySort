@@ -14,6 +14,29 @@ V4 completes the fixed Preview.1–5 / RC.1 development cycle.
 V3.1.0 remains a historical Stable release for applications requiring Path/Tree contracts;
 V4 is a major source break, not a drop-in upgrade.
 
+The active post-v4 roadmap and current technical debt are tracked in
+[Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3). Historical Issue #2
+is closed and preserved as the V2/V3/V4-development record.
+
+## What problem does LayerKeySort solve?
+
+LayerKeySort is **not a replacement for one-shot array sorting** such as `qsort`
+or `std::sort`. It is for collections that stay alive and keep changing order:
+
+- layer stacks and editor object lists,
+- video/audio timelines,
+- CAD/game/node/workflow editors,
+- playlists and local document editors,
+- other long-lived collections with repeated insert/remove/move operations.
+
+The core question is not “sort these N items once”, but “keep this collection in
+order while it is edited for minutes or hours, then capture or persist a historical
+ordering when needed”.
+
+LayerKeySort is usually the wrong tool if all you need is a one-shot sort, a simple
+database `position` column, distributed/CRDT ordering, or persistent business identity.
+Applications own identity and storage; LayerKeySort owns ordering semantics.
+
 ## Choose a workflow
 
 - LksOrder: editable relative order, stable resident handles, before/after moves.
@@ -72,6 +95,8 @@ Dangling handles cannot safely be tested after removal.
 
 [Preview.4 evidence](benchmarks/results/v4-preview4/README.md) remains the primary
 convergence record; [Stable record](docs/V4_STABLE.md) classifies costs/future debt.
+The next evidence priority is real editor integration and implementation-independent
+real workload traces, not a new major version for its own sake.
 
 ## Documentation
 
