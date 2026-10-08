@@ -1,4 +1,4 @@
-# Using Mini v1.0.0-preview.2
+# Using Mini v1.0.0-preview.3
 
 Include `layerkeysort_mini.h` and link `layerkeysort_mini`. The complete runnable
 [basic example](../examples/basic.c) uses only the public header. Build commands
@@ -96,3 +96,7 @@ neighbor or after the immediate previous neighbor returns OK without link writes
 Both handles must belong to the specified order, even for self-movement.
 NULL required arguments are INVALID_ARGUMENT and valid foreign handles/anchors
 are WRONG_ORDER. Errors preserve order/size/handles and comparison output is 0.
+
+Preview.3 preserves the 18 APIs and these usage patterns. The independent model
+and failure tests described in [Development](DEVELOPMENT.md) are test-only; no
+allocator settings or diagnostic APIs are needed by applications.

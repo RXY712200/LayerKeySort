@@ -1,6 +1,6 @@
-# Preview.2 public contract
+# Preview.3 public contract
 
-Version: **v1.0.0-preview.2**. The authoritative declarations are in
+Version: **v1.0.0-preview.3**. The authoritative declarations are in
 [`layerkeysort_mini.h`](../include/layerkeysort_mini.h). All required standard
 types are included by that header. It supports C and C++ linkage; implementation
 is C17. `LksMiniOrder` and `LksMiniHandle` are opaque struct types.
@@ -81,7 +81,8 @@ automatic sorting, random access, snapshot formats or built-in thread locks.
 Applications must synchronize shared order access, especially with mutation or
 destruction. Independently owned orders do not share library mutable state.
 
-All 18 planned public functions are implemented. Preview.3 reliability, RC.1
+All 18 planned public functions remain implemented with unchanged signatures,
+statuses and semantics. Preview.3 adds verification, not functionality. RC.1
 integration and Stable validation remain separate milestones.
 
 ## Movement and comparison guarantees
@@ -102,3 +103,7 @@ arguments return INVALID_ARGUMENT; for any valid foreign operand/anchor return
 WRONG_ORDER. Multiple foreign handles also return WRONG_ORDER. Missing required
 arguments take precedence. Every detectable error leaves sequence, handles and
 size unchanged; non-NULL comparison output is reset to zero.
+
+The reliability evidence and its platform limits are recorded in the
+[development guide](DEVELOPMENT.md). Tests never call through freed handles and
+do not extend this contract to stale-pointer detection.

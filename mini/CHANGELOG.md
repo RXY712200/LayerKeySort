@@ -1,5 +1,19 @@
 # Mini changelog
 
+## v1.0.0-preview.3 — 2026-10-08
+
+- Preserve all 18 public APIs and the production doubly linked list unchanged.
+- Add an independent array model linking the production library: four fixed
+  xorshift32 seeds, 24,000 total operations, three orders, bounded live sizes.
+- Add adversarial sequences, full observable checks and comparison properties.
+- Extend private invariant checks, six-node moves and a live allocation ledger.
+- Add 24 systematic single-allocation failure/recovery cases and a 190-case
+  legal-input error/default/precedence matrix, including synthetic capacity.
+- Record strict Windows GCC Debug/Release, static analysis and extraction checks;
+  ASan/UBSan probe fails due to absent libraries. Other platforms remain unverified.
+- No production correctness defect found; no production algorithm fixes needed.
+- Leave cross-platform CI/integration and Stable validation to later milestones.
+
 ## v1.0.0-preview.2 — 2026-10-08
 
 - Complete the 18-function public surface with four stable-handle move functions

@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-/* v1.0.0-preview.2. Opaque live orders and occurrence handles. */
+/* v1.0.0-preview.3. Opaque live orders and occurrence handles. */
 typedef struct LksMiniOrder LksMiniOrder;
 typedef struct LksMiniHandle LksMiniHandle;
 typedef enum LksMiniStatus {

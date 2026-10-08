@@ -1,4 +1,4 @@
-# Architecture — v1.0.0-preview.2
+# Architecture — v1.0.0-preview.3
 
 The production library consists of one public header and one C17 source file.
 The public types are opaque. A private order holds head, tail and a size_t count;
@@ -46,8 +46,8 @@ Basic operations and movement are O(1); comparison, traversal and destruction
 are O(n). One allocation
 per occurrence and pointer chasing are accepted tradeoffs. There is no random
 access, allocator control, synchronization, persistent identity or stale-pointer
-protection. Full randomized modeling and systematic fault injection belong to a
-later reliability milestone, not this foundation. Movement and comparison are implemented in Preview.2.
+protection. Preview.3 adds independent randomized modeling and systematic
+single-allocation failure testing. The production representation remains unchanged.
 
 ## Movement and comparison
 
@@ -63,3 +63,25 @@ both valid same-order handles imply +1. This O(n) worst-case walk is not an
 invariant scan and maintains no ranks or cached positions. It allocates/frees
 nothing and changes no state. Tests use explicit expected sequences, all-pair
 sign checks, antisymmetry/transitivity and allocation/free counter snapshots.
+
+## Preview.3 reliability evidence
+
+The public-header-only model links the real library and uses a dynamically
+allocated flat array of records (unique test ID, handle, item, test owner).
+Array indices represent expected positions; memmove changes the reference order,
+independently of production links. Deleted records are erased immediately and
+no retired handles are compared or dereferenced. Payloads remain alive.
+
+Private tests retain source inclusion solely for structural access and allocator
+substitution. A test-only live allocation ledger rejects non-Mini or repeated
+frees. Absolute allocation-call failure points exercise each operation's single
+real allocation, with exact snapshots and successful retries. Synthetic SIZE_MAX
+state checks capacity/validation precedence without creating enormous lists;
+the actual size is restored before normal structural verification.
+
+The checker validates bounded forward/reverse traversal, reciprocal links,
+endpoints, owners, uniqueness, exact expected sequence/count and handle identity.
+Six-node movement patterns supplement existing boundary tests. Queries, no-ops,
+errors, movements and comparisons are checked with allocation counters/snapshots.
+The [development record](DEVELOPMENT.md) states executed tools and limitations.
+No production correctness defect was found; no speculative redesign was made.

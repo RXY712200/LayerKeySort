@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(LayerKeySortMini VERSION 1.0.0 LANGUAGES C)
-# Release identity: v1.0.0-preview.2 (CMake VERSION is numeric only).
+# Release identity: v1.0.0-preview.3 (CMake VERSION is numeric only).
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
@@ -34,4 +34,8 @@ if(BUILD_TESTING)
     mini_warnings(lks_mini_internal_tests)
     add_test(NAME mini_internal COMMAND lks_mini_internal_tests)
     add_test(NAME mini_example COMMAND lks_mini_basic)
+    add_executable(lks_mini_model_tests tests/test_model.c)
+    target_link_libraries(lks_mini_model_tests PRIVATE layerkeysort_mini)
+    mini_warnings(lks_mini_model_tests)
+    add_test(NAME mini_model COMMAND lks_mini_model_tests)
 endif()
