@@ -1,13 +1,12 @@
 # LayerKeySort Mini
 
-目标版本：**v1.0.0**（Stable 候选，尚未发布）。Mini 是独立的 C17 顺序维护库，采用
+当前 Stable：**[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)**。Mini 是独立的 C17 顺序维护库，采用
 非侵入式双向链表，适用于编辑器对象序列、任务队列和界面集合等本地可变顺序。
 应用决定元素排列并拥有业务对象；Mini 只管理容器和出现节点。
 
 本阶段完整提供 18 个函数：创建、销毁、大小、首尾查询、前后遍历、载荷查询、
 四种插入、删除、四种移动及当前顺序比较。
-当前为已准备的 Stable 候选；最终提交的验证记录见完成报告。
-尚未发布 GitHub Release，合并和公开发布需要另行授权。
+这是 Mini 的首个 Stable 版本。准确发布提交、最终 CI 和校验值记录在正式 Release 说明中。
 
 每次插入都产生独立的出现实例及稳定句柄，同一个业务指针可以多次插入，
 NULL 载荷也有效。插入或删除其他实例不改变存活句柄。
@@ -16,12 +15,12 @@ Mini 不释放、读取或修改业务对象，也不检测悬空指针。
 
 ## 产品版本与下载方式
 
-Mini 独立使用 v1.0.0 版本号，在共用仓库中计划使用的 Git Tag 为
-`mini-v1.0.0`，**绝不复用**历史 Full 的 `v1.0.0`。当前 Mini Tag 和
-GitHub Release 都尚未创建。Full 与 Mini 之间不存在数字版本兼容关系。
+Mini 独立使用 v1.0.0 版本号，在共用仓库中的 Git Tag 为
+`mini-v1.0.0`，**绝不复用**历史 Full 的 `v1.0.0`。
+Full 与 Mini 之间不存在数字版本兼容关系。
 
-正式发布时，Mini 的主要下载内容应为单独校验过的**仅 Mini 源码 ZIP**及
-SHA-256 校验文件；GitHub 自动生成的 Source code 包是整个多产品仓库快照，
+正式下载：[仅 Mini 源码 ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/mini-v1.0.0/LayerKeySort-Mini-v1.0.0-source.zip)
+及 [SHA-256 校验文件](https://github.com/RXY712200/LayerKeySort/releases/download/mini-v1.0.0/LayerKeySort-Mini-v1.0.0-SHA256SUMS.txt)；GitHub 自动生成的 Source code 包是整个多产品仓库快照，
 不等于 Mini 独立包。解压 Mini-only ZIP 后可按下面的方式独立构建。
 
 ## 独立构建
@@ -52,7 +51,7 @@ Windows MinGW 配置时增加 `-G "MinGW Makefiles"`，并确保编译器和
 - [使用指南](docs/USAGE.md)：插入、删除与遍历示例。
 - [开发指南](docs/DEVELOPMENT.md)：编译要求及验证流程。
 - [架构](docs/ARCHITECTURE.md)：内部结构、不变量与限制。
-- [变更记录](CHANGELOG.md)、[MIT 许可证](LICENSE)、[English](README.md)。
+- [Stable 发布指南](docs/RELEASE_v1.0.0.md)、[变更记录](CHANGELOG.md)、[MIT 许可证](LICENSE)、[English](README.md)。
 
 移动保持句柄地址、业务指针、所有权和大小不变。已在首尾的对应移动、
 移动到自身前后、移动到紧邻后继之前或紧邻前驱之后，均成功且不改变链接。

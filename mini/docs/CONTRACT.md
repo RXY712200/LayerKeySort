@@ -83,8 +83,8 @@ destruction. Independently owned orders do not share library mutable state.
 
 All 18 public functions retain their established signatures, statuses and
 semantics. Compatible 1.x changes must preserve this contract. Private layouts
-are not public ABI. v1.0.0 is the target Stable identity; publication is a
-separate action, not implied by this document.
+are not public ABI. This is the v1.0.0 Stable contract; release provenance
+and download verification are recorded in the release notes.
 
 ## Movement and comparison guarantees
 

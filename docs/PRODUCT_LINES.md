@@ -9,7 +9,7 @@ naming and delivery; each product's own README and API contract remain authorita
 | Product | Sources, build and docs | Public identity | Status on 2026-10-08 |
 | --- | --- | --- | --- |
 | Full | Repository root: `include/`, `src/`, root `CMakeLists.txt`, `docs/` | `LayerKeySort`, `layerkeysort` | v4.0.0 Stable, already published |
-| Mini | Self-contained `mini/` subtree | `LayerKeySort Mini`, `layerkeysort_mini` | v1.0.0 Stable candidate; not published |
+| Mini | Self-contained `mini/` subtree | `LayerKeySort Mini`, `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full and Mini are **alternative implementations for different requirements**,
 not a dependency hierarchy. Full offers larger ordering and snapshot workflows.
@@ -71,6 +71,9 @@ itself. Manual publication requires explicit authorization, completed CI
 for the exact target SHA and review of release notes, manifest, version and
 artifacts. Do not mark an unmerged or untagged candidate as released.
 
+Mini v1.0.0 uses `mini-v1.0.0` and its [own release page](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0).
+Full v4.0.0 remains the repository-wide Latest; Mini is not designated Latest.
+
 ## Development, CI and review
 
 Use one integration branch (`main`) with short-lived feature/release-preparation
@@ -91,14 +94,14 @@ Use product-qualified descriptions on PRs/Issues (`Full:`, `Mini:`, or
 release references remain intact. Do not retroactively rename older releases,
 edit unrelated issue histories or infer that an unimplemented product exists.
 
-## Mini v1.0.0 publication checklist (not yet executed)
+## Publication checklist for Mini releases
 
 1. Reconcile the reviewed candidate with the integration commit and confirm
    the final target SHA; review all changed paths and ensure Full production
    files and frozen API have not changed unintentionally.
 2. Require completed, passing Full and Mini CI and a successful Mini-only
    archive verification at that exact target SHA.
-3. Confirm Mini's own version string is v1.0.0 and tag `mini-v1.0.0` is free;
+3. Confirm the intended Mini version and a new, unused `mini-v*` tag;
    never reuse the historical Full `v1.0.0`.
 4. After explicit authorization only: merge, create an annotated Mini tag
    at the approved SHA, prepare `LayerKeySort Mini v1.0.0` release notes,

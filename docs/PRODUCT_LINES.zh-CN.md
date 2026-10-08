@@ -8,7 +8,7 @@ LayerKeySort 采用**单仓库、多独立产品、独立版本号**。这不是
 | 产品 | 所在目录与构建入口 | 名称 | 当前状态（2026-10-08） |
 | --- | --- | --- | --- |
 | Full | 仓库根目录：`include/`、`src/`、根 `CMakeLists.txt`、`docs/` | `LayerKeySort` / `layerkeysort` | v4.0.0 Stable，已经发布 |
-| Mini | 自包含的 `mini/` 子目录 | `LayerKeySort Mini` / `layerkeysort_mini` | v1.0.0 Stable 候选，尚未发布 |
+| Mini | 自包含的 `mini/` 子目录 | `LayerKeySort Mini` / `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full 与 Mini 是针对不同需求的**并行产品**，不是父子依赖关系。Full 面向更完整的
 顺序管理和快照工作流；Mini 使用独立的简单双向链表实现，冻结 18 个公开函数，不依赖
@@ -58,6 +58,9 @@ Mini 独立包。Mini 应以额外上传的“仅 Mini”源码包作为主要�
 GitHub Release 或公开发行**。正式发布必须另行明确授权，核查准确 SHA 对应的 CI、
 源码包校验值、Release 文案与链接。
 
+Mini v1.0.0 使用 `mini-v1.0.0`，正式入口为[独立 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)。
+仓库级 Latest 保留 Full v4.0.0，Mini 不占用该标识。
+
 ## 日常开发与验证
 
 只使用一个长期集成主分支 `main`，按需使用短期功能/发布准备分支，不采用永久的
@@ -73,12 +76,12 @@ Linux ASan/UBSan，以及独立提取、外部消费者和可选共存。PR 的�
 PR / Issue 描述建议明确写 `Full:`、`Mini:` 或 `Repo:`，并注明受影响接口。
 保留历史 Full 的 Release 与 Issues，不追溯改名，不凭设想建立尚不存在的产品。
 
-## Mini v1.0.0 发布核对表（尚未执行）
+## Mini 发布维护核对表
 
 1. 将审查过的候选与拟集成的提交核对，锁定最终 SHA，确认 Full 生产文件
    和冻结公开 API 没有被意外修改。
 2. 检查最终 SHA 上 Full / Mini CI 均已完成且成功，Mini-only ZIP 经验证。
-3. 确认 Mini 内版本为 v1.0.0，且 `mini-v1.0.0` 未被占用；
+3. 确认拟发布的 Mini 版本及新的 `mini-v*` 标签未被占用；
    不使用历史 Full 的 `v1.0.0`。
 4. **只有取得明确发布授权以后**才合并、对批准的提交创建 Mini Tag、
    编写 `LayerKeySort Mini v1.0.0` Release，上传经验证的 Mini ZIP
