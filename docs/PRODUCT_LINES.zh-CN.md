@@ -47,7 +47,9 @@ Release 标题分别以 `LayerKeySort`（Full）和 `LayerKeySort Mini`（Mini�
 Full 继续保留现有发行工具和历史 Releases。Mini 采用独立的候选打包流程：从指定
 Git 提交中，只提取受到版本控制的 `mini/` 内容，生成以
 `LayerKeySort-Mini-vX.Y.Z/` 为顶层目录的源码 ZIP 和独立 SHA-256 校验文件，
-并逐文件对照该提交验证。这个 ZIP 是跨平台的 C17 源码，不是 Mac/Windows 专属二进制。
+并逐文件对照该提交验证。打包要求支持 `archive --mtime` 的 Git 和 Python 3.9+；
+ZIP 时间戳来自源码提交，文件内容不受本地 LF/CRLF 配置影响。
+这个 ZIP 是跨平台的 C17 源码，不是 Mac/Windows 专属二进制。
 
 GitHub 自动附带的 Source code ZIP / tar.gz 会包含**整个仓库**，不能将它宣传为
 Mini 独立包。Mini 应以额外上传的“仅 Mini”源码包作为主要下载内容。

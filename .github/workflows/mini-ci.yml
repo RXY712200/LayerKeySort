@@ -67,6 +67,7 @@ jobs:
         if: matrix.label == 'GCC'
         shell: bash
         run: |
+          python3 tools/tests/test_mini_release_assets.py
           first="$RUNNER_TEMP/mini-package-first"
           second="$RUNNER_TEMP/mini-package-second"
           python3 tools/mini_release_assets.py --output-dir "$first"

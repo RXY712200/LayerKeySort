@@ -59,7 +59,9 @@ Mini has its own explicit candidate packaging workflow and source-archive script
 Mini's **primary** download is a ZIP whose contents are only the tracked
 `mini/` subtree, rooted at `LayerKeySort-Mini-vX.Y.Z/`, plus a separate
 SHA-256 manifest. These archives are produced reproducibly from an exact Git
-commit; their contents are verified against that commit. GitHub's automatic
+commit; their contents are verified against that commit. Packaging requires Git
+with `archive --mtime` support and Python 3.9+; entry timestamps come from the
+source commit and blob bytes are independent of local LF/CRLF checkout settings. GitHub's automatic
 Source code ZIP/tarball snapshots the *whole repository* and is not the Mini-only
 distribution. The archival ZIP is C17 source, not a platform-specific binary.
 

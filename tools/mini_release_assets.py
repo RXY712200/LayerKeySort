@@ -22,10 +22,10 @@ REQUIRED = {
 }
 
 
-def git(*args: str) -> bytes:
+def git(*args: str, env=None) -> bytes:
     return subprocess.run(
         ["git", "-C", str(ROOT), *args],
-        check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
     ).stdout
 
 
@@ -112,8 +112,13 @@ def build(directory: Path, ref: str):
         staged = Path(temporary) / "assets"
         staged.mkdir()
         archive_path = staged / archive_name
-        git("archive", "--format=zip", f"--prefix={stem}/",
-            f"--output={archive_path}", f"{commit}:mini")
+        # Tree archives otherwise use current time; fix it to the source commit.
+        timestamp = git("show", "-s", "--format=%cI", commit).decode("ascii").strip()
+        # Archive original blobs, independently of caller checkout newline settings.
+        git("-c", "core.autocrlf=false", "-c", "core.eol=lf",
+            "archive", "--format=zip", f"--mtime={timestamp}", f"--prefix={stem}/",
+            f"--output={archive_path}", f"{commit}:mini",
+            env={**os.environ, "TZ": "UTC"})
         digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
         (staged / sums_name).write_bytes(
             f"{digest}  {archive_name}\n".encode("ascii")
