@@ -1,7 +1,7 @@
 name: Mini CI
 on:
   push:
-    branches: [feature/mini-v1.0]
+    branches: [main, feature/mini-v1.0]
   pull_request:
   workflow_dispatch:
 permissions:

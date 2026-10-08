@@ -1,4 +1,4 @@
-# Architecture — v1.0.0-rc.1
+# Architecture — v1.0.0
 
 The production library consists of one public header and one C17 source file.
 The public types are opaque. A private order holds head, tail and a size_t count;

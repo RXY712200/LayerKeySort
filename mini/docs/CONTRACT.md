@@ -1,6 +1,6 @@
-# RC.1 public contract
+# v1.0.0 public contract
 
-Version: **v1.0.0-rc.1**. The authoritative declarations are in
+Version: **v1.0.0**. The authoritative declarations are in
 [`layerkeysort_mini.h`](../include/layerkeysort_mini.h). All required standard
 types are included by that header. It supports C and C++ linkage; implementation
 is C17. `LksMiniOrder` and `LksMiniHandle` are opaque struct types.
@@ -81,9 +81,10 @@ automatic sorting, random access, snapshot formats or built-in thread locks.
 Applications must synchronize shared order access, especially with mutation or
 destruction. Independently owned orders do not share library mutable state.
 
-All 18 planned public functions remain implemented with unchanged signatures,
-statuses and semantics. Preview.3 adds verification, not functionality. Final Stable validation
-and authorized delivery remain separate work.
+All 18 public functions retain their established signatures, statuses and
+semantics. Compatible 1.x changes must preserve this contract. Private layouts
+are not public ABI. v1.0.0 is the target Stable identity; publication is a
+separate action, not implied by this document.
 
 ## Movement and comparison guarantees
 

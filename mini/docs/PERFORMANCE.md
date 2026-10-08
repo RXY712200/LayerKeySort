@@ -85,3 +85,12 @@ Other ABIs may yield different sizeof values. Count allocation calls separately
 from memory consumption: one order allocation plus one allocation per insertion;
 movement/comparison do not allocate. Optional future allocator-inclusive studies
 are measurement improvements, not a claim of an existing defect.
+
+## v1.0.0 applicability
+
+The recorded RC.1 source and benchmark remain unchanged in Stable preparation,
+so this remains the initial reproducible baseline, not a new Stable timing claim.
+The target release identity is v1.0.0; it has not been published. Reexecute the
+commands for observations on another candidate or machine and retain the
+compiler, options and clock limitations. No allocator-inclusive measurement
+or cross-platform performance guarantee is added.

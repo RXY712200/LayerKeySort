@@ -1,4 +1,4 @@
-# Using Mini v1.0.0-rc.1
+# Using Mini v1.0.0
 
 Include `layerkeysort_mini.h` and link `layerkeysort_mini`. The complete runnable
 [basic example](../examples/basic.c) uses only the public header. Build commands

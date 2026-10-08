@@ -1,4 +1,4 @@
-# Development — v1.0.0-rc.1
+# Development — v1.0.0
 
 Requirements: C17 compiler, CMake 3.16 or later and a matching build tool. No
 third-party runtime libraries or sibling project sources are needed. The static
@@ -50,10 +50,10 @@ parent repository, then configure/build/test the copy with a separate build
 directory. Example PowerShell from a parent checkout (use new destination paths):
 
 ```powershell
-Copy-Item -LiteralPath .\mini -Destination C:\Temp\lks-mini-preview1 -Recurse
-cmake -S C:\Temp\lks-mini-preview1 -B C:\Temp\lks-mini-preview1-build -DCMAKE_BUILD_TYPE=Debug
-cmake --build C:\Temp\lks-mini-preview1-build --config Debug
-ctest --test-dir C:\Temp\lks-mini-preview1-build -C Debug --output-on-failure
+Copy-Item -LiteralPath .\mini -Destination C:\Temp\lks-mini-standalone -Recurse
+cmake -S C:\Temp\lks-mini-standalone -B C:\Temp\lks-mini-standalone-build -DCMAKE_BUILD_TYPE=Debug
+cmake --build C:\Temp\lks-mini-standalone-build --config Debug
+ctest --test-dir C:\Temp\lks-mini-standalone-build -C Debug --output-on-failure
 ```
 
 All relative links and source references resolve inside the copied directory.
@@ -63,7 +63,7 @@ The test-only `../src/lks_mini.c` reference stays inside Mini.
 
 Keep production simple, preserve the [contract](CONTRACT.md), and inspect the
 complete diff before committing. Mini implementation changes stay within this independent project directory. Run ordinary and extracted builds/tests; record actual toolchain and
-results. Do not advertise unavailable APIs. The remaining milestone is final Stable validation and authorized delivery. Each requires separate authorization.
+results. Do not advertise unavailable APIs. Preserve v1.0.0 compatibility. Validate the exact final commit before delivery; merging, tagging and publication require separate authorization.
 
 Preview.2 extends public tests with explicit movement sequences, endpoint and
 self/adjacent no-ops, NULL/foreign inputs, payload/handle/size preservation and
@@ -122,11 +122,11 @@ gcc -fsanitize=address,undefined probe.c -o probe.exe
 ```
 
 It failed at link time (exit 1): `cannot find -lasan` and `cannot find -lubsan`.
-Therefore no instrumented suite was run. Allocator accounting supplements memory
-checks; it is not equivalent to ASan/UBSan. MSVC, Clang, other operating systems
-and architectures remain unverified. No production defects were discovered in
+Therefore no locally instrumented Windows suite was run in Preview.3. Allocator accounting supplements memory
+checks; it is not equivalent to ASan/UBSan. At Preview.3, MSVC, Clang, other operating systems
+and architectures had not yet been verified; executed RC.1 coverage is below. No production defects were discovered in
 these tests; this is bounded evidence, not an exhaustive proof. Cross-platform
-CI/integration remain RC.1 work. Accepted O(n) comparison, per-node allocation,
+CI/integration were completed in RC.1, as recorded below. Accepted O(n) comparison, per-node allocation,
 pointer chasing, no random access/persistence/stale detection/internal locks
 remain unchanged. No separate enormous stress campaign is claimed.
 
@@ -238,3 +238,30 @@ where another representative job provides their coverage.
 These results belong to that immutable candidate. Documentation-only follow-up
 commits still require their own final CI verification in the completion report.
 No production portability fix was necessary in the checked environments.
+
+## Final Stable candidate audit
+
+Target identity is v1.0.0; this does not assert an already published release.
+The reviewed RC.1 baseline is cced1cd429e39cf7291129a4e8ad90adb059e1b8.
+The final preparation preserves production source, public signatures and all
+regression coverage. Mini CI accepts pushes to main and feature/mini-v1.0, all
+pull requests and manual dispatch; this prepares future integration without
+merging the branch. Its five compiler/sanitizer jobs remain unchanged.
+
+For every final candidate, run the complete strict Debug/Release suites, GCC
+static analysis, Mini-only extraction with direct and independent CMake
+consumers, optional coexistence and relative-documentation-link validation.
+The fixed model seeds and allocation campaign above are included in ordinary
+CTest. Inspect both Mini and existing repository CI on the exact pushed SHA,
+including actual ASan/UBSan execution; earlier RC.1 runs are historical evidence.
+Final immutable-SHA URLs and local observations belong in the completion report
+after the final push. Do not substitute pending jobs or a workflow definition
+for completed checks.
+
+There are no confirmed supported-operation defects from the reviewed baseline.
+Coverage is bounded: four model seeds, sizes up to 48 in the randomized model,
+synthetic SIZE_MAX capacity, and the checked compiler/ABI environments. Windows
+local sanitizer runtimes are unavailable; Linux CI supplies instrumented evidence.
+Allocator-inclusive memory, other ABIs/toolchains and concurrent application
+behavior are not verified. These limits do not promise stale-pointer detection
+or synchronization.

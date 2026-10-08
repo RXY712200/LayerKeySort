@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(LayerKeySortMini VERSION 1.0.0 LANGUAGES C)
-# Release identity: v1.0.0-rc.1 (CMake VERSION is numeric only).
+# Release identity: v1.0.0 (CMake VERSION is numeric only).
 option(LKS_MINI_STRICT "Treat Mini compiler warnings as errors" OFF)
 option(LKS_MINI_SANITIZERS "Instrument all Mini targets with ASan and UBSan" OFF)
 option(LKS_MINI_BENCHMARKS "Build the optional public-API baseline" OFF)

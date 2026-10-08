@@ -1,5 +1,17 @@
 # Mini changelog
 
+## v1.0.0 — Stable preparation — 2026-10-08
+
+- Prepare the independent Stable candidate; no tag or GitHub Release is published.
+- Audit the complete production implementation and unchanged 18-function contract.
+- Finalize English/Chinese version, compatibility and historical evidence wording.
+- Enable Mini CI pushes on main as well as the development branch; retain the
+  five compiler/sanitizer environments and pull-request verification.
+- Repeat strict regression, model/fault, extraction and consumer validation;
+  final exact-SHA CI outcomes are recorded in the completion report.
+- Preserve linked-list architecture, accepted costs, production source and
+  previous milestone records.
+
 ## v1.0.0-rc.1 — 2026-10-08
 
 - Preserve the 18-function public contract and production linked-list algorithm.

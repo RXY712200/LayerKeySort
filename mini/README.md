@@ -1,6 +1,6 @@
 # LayerKeySort Mini
 
-Current milestone: **v1.0.0-rc.1**. MIT licensed, independent C17 library
+Target release: **v1.0.0** (Stable candidate; not yet published). MIT licensed, independent C17 library
 for local mutable order maintenance with stable live occurrence handles.
 
 Use Mini when an application needs to maintain an explicit sequence, such as
@@ -9,11 +9,12 @@ decides the order and owns its objects. Mini stores opaque `void *` payloads;
 it does not sort, inspect, or free them. NULL payloads and repeated pointers
 are valid. Each insertion creates a distinct occurrence.
 
-RC.1 preserves all 18 planned functions: creation/destruction, size, endpoint
+Mini provides exactly 18 public functions: creation/destruction, size, endpoint
 queries, neighbor traversal, payload lookup, four insertion variants, removal,
 four stable-handle movement operations and live-order comparison.
-This release candidate is not the final Stable release. Final validation and
-publication require the separate Stable milestone.
+This is the prepared Stable candidate. Exact-commit final validation is recorded
+in the completion report; a GitHub Release has not been published. Publication
+and integration require separate authorization.
 
 ## Build and run
 
@@ -69,8 +70,15 @@ Moves preserve the handle, payload, owner and size. Moving to the current
 endpoint, before/after self, before the immediate next neighbor or after the
 immediate previous neighbor succeeds without changing links. Comparison returns
 exactly -1 (before), 0 (same occurrence), or +1 (after), independently of payload.
-All required handles are validated before no-op decisions. Remaining milestones
-are final Stable validation and authorized delivery.
+All required handles are validated before no-op decisions.
+
+## Compatibility
+
+The v1.0.0 contract consists of these 18 functions, three public types and five
+status values. Compatible 1.x updates must preserve existing signatures and
+documented ownership, lifetime, error and ordering semantics. Private structures
+are opaque; their layout is not an ABI promise. Unsupported stale or forged
+handles remain outside the contract. Mini has its own version history.
 
 Preview.3 adds an independent array reference model: four fixed xorshift32 seeds,
 6,000 operations each, three independent orders, and a 48-occurrence per-order
