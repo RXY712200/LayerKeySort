@@ -2,6 +2,17 @@
 
 [English](README.md) | 简体中文
 
+## 产品线选择
+
+本仓库包含独立产品线：
+
+- **Full**：[v4.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)，完整顺序管理、历史快照及进阶工作流。
+- **[Mini](mini/README.zh-CN.md)**：v1.0.0 Stable 候选（**尚未发布**），独立的轻量 C17 顺序维护库。
+
+本仓库采用**多产品独立版本管理**。Full 保留历史 `v*` 标签；Mini 将在另行授权发布后采用 `mini-v*` 标签，首个为 `mini-v1.0.0`。GitHub 仓库级 `Latest` 不等于两个产品各自的最新版本。详见[产品线与发布管理规范](docs/PRODUCT_LINES.zh-CN.md)（[English](docs/PRODUCT_LINES.md)）。
+
+本页其余内容介绍 Full。
+
 LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把一组元素一次排好”，
 而是“一个集合长期存在，并且持续发生插入、删除、移动、遍历、保存历史顺序和恢复”。
 
@@ -119,7 +130,7 @@ LayerKeySort 的长期定位是 **dynamic ordering library**，而不是传统 s
 短期内不应为了版本号立刻开始 V5。下一阶段最重要的是进入真实编辑器类应用，
 收集 implementation-independent 的真实 workload traces。
 
-更长期的 Full / Mini / Embedded 设想属于未来方向，不属于当前 V4 scope。
+Mini 已在独立的 `mini/` 目录形成候选版本，但不属于 Full V4 的 API 契约；Embedded 等其他产品线仍只是未来设想，不代表已经实现。
 详见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
 
 ## 文档
