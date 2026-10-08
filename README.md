@@ -7,9 +7,9 @@ English | [简体中文](README.zh-CN.md)
 This repository contains separate product lines:
 
 - **Full**: [v4.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0), with complete ordering, historical snapshots and advanced workflows.
-- **[Mini](mini/README.md)**: v1.0.0 Stable candidate (**not yet published**), a lightweight independent C17 ordering library with stable live handles.
+- **[Mini](mini/README.md)**: [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0), a lightweight independent C17 ordering library with stable live handles.
 
-Products use **independent versions** in this one repository. Full retains the historical `v*` Git tags; Mini uses `mini-v*` tags (starting with `mini-v1.0.0` only after publication authorization). GitHub's repository-wide Latest release is not a per-product version selector. See [product lines and release policy](docs/PRODUCT_LINES.md) ([简体中文](docs/PRODUCT_LINES.zh-CN.md)).
+Products use **independent versions** in this one repository. Full retains the historical `v*` Git tags; Mini uses `mini-v*` tags (initial Stable: `mini-v1.0.0`). GitHub's repository-wide Latest release is not a per-product version selector. See [product lines and release policy](docs/PRODUCT_LINES.md) ([简体中文](docs/PRODUCT_LINES.zh-CN.md)).
 
 The remainder of this README documents Full.
 

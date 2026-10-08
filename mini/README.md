@@ -1,6 +1,6 @@
 # LayerKeySort Mini
 
-Target release: **v1.0.0** (Stable candidate; not yet published). MIT licensed, independent C17 library
+Current Stable: **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)**. MIT licensed, independent C17 library
 for local mutable order maintenance with stable live occurrence handles.
 
 Use Mini when an application needs to maintain an explicit sequence, such as
@@ -12,19 +12,17 @@ are valid. Each insertion creates a distinct occurrence.
 Mini provides exactly 18 public functions: creation/destruction, size, endpoint
 queries, neighbor traversal, payload lookup, four insertion variants, removal,
 four stable-handle movement operations and live-order comparison.
-This is the prepared Stable candidate. Exact-commit final validation is recorded
-in the completion report; a GitHub Release has not been published. Publication
-and integration require separate authorization.
+This is the first Stable Mini version. The release notes record the immutable
+source commit, final CI evidence and verified download checksums.
 
 ## Release identity
 
 Mini has its **own** v1.0.0 product version. In the shared LayerKeySort
-repository its intended Git tag is `mini-v1.0.0`, **not** the historical
-Full `v1.0.0` tag. Neither a Mini Git tag nor a Mini GitHub Release has
-been published. Full and Mini do not share numeric version compatibility.
+repository its Git tag is `mini-v1.0.0`, **not** the historical
+Full `v1.0.0` tag. Full and Mini do not share numeric version compatibility.
 
-At publication, use the separately verified **Mini-only source ZIP** and
-its SHA-256 checksum manifest; GitHub's automatic Source code download
+Download the [Mini-only source ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/mini-v1.0.0/LayerKeySort-Mini-v1.0.0-source.zip)
+and [SHA-256 manifest](https://github.com/RXY712200/LayerKeySort/releases/download/mini-v1.0.0/LayerKeySort-Mini-v1.0.0-SHA256SUMS.txt); GitHub's automatic Source code download
 contains the entire multi-product repository. An extracted Mini ZIP has
 this directory's standalone layout, with no Full dependency.
 
@@ -75,7 +73,7 @@ persistence, stale-pointer detection or automatic synchronization.
 - [Usage](docs/USAGE.md): insertion, traversal, removal and ownership.
 - [Development](docs/DEVELOPMENT.md): standalone validation and scope.
 - [Architecture](docs/ARCHITECTURE.md): invariants and tradeoffs.
-- [Changelog](CHANGELOG.md) and [license](LICENSE).
+- [Stable release guide](docs/RELEASE_v1.0.0.md), [changelog](CHANGELOG.md) and [license](LICENSE).
 - [简体中文](README.zh-CN.md).
 
 Moves preserve the handle, payload, owner and size. Moving to the current

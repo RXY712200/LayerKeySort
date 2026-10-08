@@ -1,5 +1,17 @@
 # Mini changelog
 
+## v1.0.0 — Stable — 2026-10-08
+
+- First independent Mini Stable release, MIT licensed C17.
+- Preserve the complete 18-function contract and non-intrusive doubly linked list.
+- Publish Mini-only source ZIP and SHA-256 manifest using tag `mini-v1.0.0`;
+  keep Full versions, tags, releases and repository Latest independent.
+- Finalize bilingual entry points, ownership/complexity/limitations and release
+  verification guidance. Exact source SHA, CI and asset digests are in the
+  GitHub Release notes, avoiding self-referential commit/checksum claims.
+
+The following sections are historical development states, not current status.
+
 ## v1.0.0 — Stable preparation — 2026-10-08
 
 - Prepare the independent Stable candidate; no tag or GitHub Release is published.

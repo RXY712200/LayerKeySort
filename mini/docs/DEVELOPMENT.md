@@ -239,9 +239,9 @@ These results belong to that immutable candidate. Documentation-only follow-up
 commits still require their own final CI verification in the completion report.
 No production portability fix was necessary in the checked environments.
 
-## Final Stable candidate audit
+## Historical Stable candidate audit (before publication)
 
-Target identity is v1.0.0; this does not assert an already published release.
+This section records the pre-publication v1.0.0 candidate audit, not its current release status.
 The reviewed RC.1 baseline is cced1cd429e39cf7291129a4e8ad90adb059e1b8.
 The final preparation preserves production source, public signatures and all
 regression coverage. Mini CI accepts pushes to main and feature/mini-v1.0, all
@@ -265,3 +265,14 @@ local sanitizer runtimes are unavailable; Linux CI supplies instrumented evidenc
 Allocator-inclusive memory, other ABIs/toolchains and concurrent application
 behavior are not verified. These limits do not promise stale-pointer detection
 or synchronization.
+
+## Stable release maintenance
+
+v1.0.0 is the first Mini Stable release. See [release guide](RELEASE_v1.0.0.md)
+for public downloads and independent verification. The GitHub release notes
+record the final tag commit and exact-SHA CI runs after publication; historical
+Preview/RC/candidate records above remain unchanged evidence for their commits.
+Preserve the 18-function contract and separate versions. A future release
+requires explicit authorization, a reviewed PR, exact final-main CI, reproducible
+Mini-only assets and verification that the repository Latest remains appropriate.
+Never move an already published tag to repair documentation or artifacts.
