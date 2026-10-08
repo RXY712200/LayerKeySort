@@ -1,4 +1,4 @@
-# Development — v1.0.0-preview.1
+# Development — v1.0.0-preview.2
 
 Requirements: C17 compiler, CMake 3.16 or later and a matching build tool. No
 third-party runtime libraries or sibling project sources are needed. The static
@@ -62,8 +62,14 @@ The test-only `../src/lks_mini.c` reference stays inside Mini.
 ## Contributions
 
 Keep production simple, preserve the [contract](CONTRACT.md), and inspect the
-complete diff before committing. Preview.1 changes are confined to this project
+complete diff before committing. Preview.2 changes are confined to this project
 directory. Run ordinary and extracted builds/tests; record actual toolchain and
-results. Do not advertise unavailable APIs. The fixed next milestone is Preview.2
-(movement and comparison), followed by Preview.3 reliability, RC.1 integration
+results. Do not advertise unavailable APIs. The fixed next milestone is Preview.3
+reliability, followed by RC.1 integration
 and Stable validation. Each requires separate authorization.
+
+Preview.2 extends public tests with explicit movement sequences, endpoint and
+self/adjacent no-ops, NULL/foreign inputs, payload/handle/size preservation and
+all-pair comparison signs including antisymmetry and ordered-triple transitivity.
+Private tests check invariants and zero allocation/free counter deltas across
+actual moves, no-ops, comparisons and errors. Earlier OOM/capacity tests remain.

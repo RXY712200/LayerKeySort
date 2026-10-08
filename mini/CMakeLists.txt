@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(LayerKeySortMini VERSION 1.0.0 LANGUAGES C)
-# Release identity: v1.0.0-preview.1 (CMake VERSION is numeric only).
+# Release identity: v1.0.0-preview.2 (CMake VERSION is numeric only).
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)

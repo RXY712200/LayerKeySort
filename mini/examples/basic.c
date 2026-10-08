@@ -17,6 +17,16 @@ int main(void)
         lks_mini_destroy(order);
         return 1;
     }
+    {
+        int result = 0;
+        if (lks_mini_move_front(order, last) != LKS_MINI_OK ||
+            lks_mini_compare(order, last, first, &result) != LKS_MINI_OK || result != -1 ||
+            lks_mini_move_after(order, last, first) != LKS_MINI_OK ||
+            lks_mini_compare(order, first, last, &result) != LKS_MINI_OK || result != -1) {
+            lks_mini_destroy(order);
+            return 1;
+        }
+    }
     while (cursor) {
         void *item = NULL;
         LksMiniHandle *next = NULL;

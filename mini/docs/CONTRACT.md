@@ -1,6 +1,6 @@
-# Preview.1 public contract
+# Preview.2 public contract
 
-Version: **v1.0.0-preview.1**. The authoritative declarations are in
+Version: **v1.0.0-preview.2**. The authoritative declarations are in
 [`layerkeysort_mini.h`](../include/layerkeysort_mini.h). All required standard
 types are included by that header. It supports C and C++ linkage; implementation
 is C17. `LksMiniOrder` and `LksMiniHandle` are opaque struct types.
@@ -39,6 +39,11 @@ Every function except destroy returns `LksMiniStatus`.
 | `lks_mini_insert_before` | `LksMiniOrder *order, const LksMiniHandle *anchor, void *item, LksMiniHandle **out_handle` | Insert immediately before live anchor |
 | `lks_mini_insert_after` | `LksMiniOrder *order, const LksMiniHandle *anchor, void *item, LksMiniHandle **out_handle` | Insert immediately after live anchor |
 | `lks_mini_remove` | `LksMiniOrder *order, LksMiniHandle *handle` | Unlink and free that occurrence |
+| `lks_mini_move_front` | `LksMiniOrder *order, LksMiniHandle *handle` | Move existing occurrence to head |
+| `lks_mini_move_back` | `LksMiniOrder *order, LksMiniHandle *handle` | Move existing occurrence to tail |
+| `lks_mini_move_before` | `LksMiniOrder *order, LksMiniHandle *handle, const LksMiniHandle *anchor` | Move immediately before anchor |
+| `lks_mini_move_after` | `LksMiniOrder *order, LksMiniHandle *handle, const LksMiniHandle *anchor` | Move immediately after anchor |
+| `lks_mini_compare` | `const LksMiniOrder *order, const LksMiniHandle *a, const LksMiniHandle *b, int *out_result` | Write -1 before, 0 same occurrence, +1 after |
 
 Empty/end queries return OK with NULL; a NULL payload query also returns OK
 with NULL. The status distinguishes these successful results from errors.
@@ -56,7 +61,7 @@ Anchors must be valid live handles; NULL has no endpoint meaning.
 
 Required NULL arguments are checked before ownership; ownership is checked before
 capacity/allocation. Non-NULL outputs are initialized before normal errors:
-order/handle/item outputs to NULL and size to 0. Output storage must be writable
+order/handle/item outputs to NULL, size to 0 and comparison result to 0. Output storage must be writable
 and correctly typed; it must not alias private Mini state. Ordinary caller-local
 in-place traversal (`lks_mini_next(order, cursor, &cursor)`) is supported.
 Outputs are reset on failure, so applications should not pass their sole saved
@@ -69,11 +74,31 @@ invalid pointer use.
 
 ## Complexity and concurrency
 
-Creation, queries, insertion and removal take O(1) time, excluding allocator cost.
+Creation, basic queries, insertion, removal and known-handle movement take O(1)
+time, excluding allocator cost. Arbitrary order comparison takes O(n) worst case.
 Destroy takes O(n); storage is O(n). There are no persistence, business IDs,
 automatic sorting, random access, snapshot formats or built-in thread locks.
 Applications must synchronize shared order access, especially with mutation or
 destruction. Independently owned orders do not share library mutable state.
 
-Only these 13 functions are available. The planned stable API has 18; four move
-functions and comparison are reserved for Preview.2 and are not declared here.
+All 18 planned public functions are implemented. Preview.3 reliability, RC.1
+integration and Stable validation remain separate milestones.
+
+## Movement and comparison guarantees
+
+Movement preserves node address, handle identity, owner, payload and size. It
+cannot transfer nodes between orders and never allocates or frees memory.
+All required arguments and both owners are validated before deciding on a no-op.
+The following return OK without modifying links: front on the head, back on the
+tail, before/after self, before the immediate next neighbor and after the
+immediate previous neighbor. These rules also cover singleton/two-node orders.
+A foreign self-handle remains WRONG_ORDER. NULL anchors are INVALID_ARGUMENT.
+
+Comparison uses current occurrence order, not item values or pointer-address
+ordering. Distinct occurrences with identical or NULL payloads compare by their
+positions. Identical valid handles return 0. Neither comparison nor movement
+allocates or frees anything. Comparison never mutates state. For missing required
+arguments return INVALID_ARGUMENT; for any valid foreign operand/anchor return
+WRONG_ORDER. Multiple foreign handles also return WRONG_ORDER. Missing required
+arguments take precedence. Every detectable error leaves sequence, handles and
+size unchanged; non-NULL comparison output is reset to zero.

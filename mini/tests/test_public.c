@@ -117,7 +117,107 @@ static void errors(void)
     puts("public errors and defaults: PASS");
 }
 
+static void compared_sequence(LksMiniOrder *order, LksMiniHandle **expected, size_t count)
+{
+    sequence(order, expected, count);
+    for (size_t i = 0; i < count; ++i) {
+        for (size_t j = 0; j < count; ++j) {
+            int result = 9, reverse = 9;
+            int want = i < j ? -1 : (i == j ? 0 : 1);
+            OK(lks_mini_compare(order, expected[i], expected[j], &result));
+            OK(lks_mini_compare(order, expected[j], expected[i], &reverse));
+            CHECK(result == want); CHECK(result == -reverse);
+            for (size_t k = j + 1; i < j && k < count; ++k) {
+                int jk = 9, ik = 9;
+                OK(lks_mini_compare(order, expected[j], expected[k], &jk));
+                OK(lks_mini_compare(order, expected[i], expected[k], &ik));
+                CHECK(result == -1 && jk == -1 && ik == -1);
+            }
+        }
+    }
+}
+
+static void movements(void)
+{
+    LksMiniOrder *order = NULL;
+    LksMiniHandle *a = NULL, *b = NULL, *c = NULL, *d = NULL;
+    int value = 17;
+    void *item = NULL;
+    OK(lks_mini_create(&order));
+    BAD(lks_mini_move_front(order, NULL)); BAD(lks_mini_move_back(order, NULL));
+    BAD(lks_mini_move_before(order, NULL, NULL)); BAD(lks_mini_move_after(order, NULL, NULL));
+    OK(lks_mini_insert_back(order, &value, &a));
+    OK(lks_mini_move_front(order, a)); OK(lks_mini_move_back(order, a));
+    OK(lks_mini_move_before(order, a, a)); OK(lks_mini_move_after(order, a, a));
+    compared_sequence(order, (LksMiniHandle *[]){a}, 1);
+    OK(lks_mini_insert_back(order, &value, &b));
+    OK(lks_mini_move_front(order, a)); OK(lks_mini_move_back(order, b));
+    OK(lks_mini_move_before(order, a, b)); OK(lks_mini_move_after(order, b, a));
+    OK(lks_mini_move_before(order, b, b)); OK(lks_mini_move_after(order, a, a));
+    compared_sequence(order, (LksMiniHandle *[]){a,b}, 2);
+    OK(lks_mini_move_before(order, b, a)); compared_sequence(order, (LksMiniHandle *[]){b,a}, 2);
+    OK(lks_mini_move_after(order, b, a)); compared_sequence(order, (LksMiniHandle *[]){a,b}, 2);
+    OK(lks_mini_move_front(order, b)); compared_sequence(order, (LksMiniHandle *[]){b,a}, 2);
+    OK(lks_mini_move_back(order, b)); compared_sequence(order, (LksMiniHandle *[]){a,b}, 2);
+    OK(lks_mini_insert_back(order, NULL, &c)); OK(lks_mini_insert_back(order, &value, &d));
+    compared_sequence(order, (LksMiniHandle *[]){a,b,c,d}, 4);
+    OK(lks_mini_move_front(order, d)); compared_sequence(order, (LksMiniHandle *[]){d,a,b,c}, 4);
+    OK(lks_mini_move_back(order, d)); compared_sequence(order, (LksMiniHandle *[]){a,b,c,d}, 4);
+    OK(lks_mini_move_front(order, c)); compared_sequence(order, (LksMiniHandle *[]){c,a,b,d}, 4);
+    OK(lks_mini_move_back(order, a)); compared_sequence(order, (LksMiniHandle *[]){c,b,d,a}, 4);
+    OK(lks_mini_move_before(order, a, c)); compared_sequence(order, (LksMiniHandle *[]){a,c,b,d}, 4);
+    OK(lks_mini_move_after(order, a, d)); compared_sequence(order, (LksMiniHandle *[]){c,b,d,a}, 4);
+    OK(lks_mini_move_before(order, d, b)); compared_sequence(order, (LksMiniHandle *[]){c,d,b,a}, 4);
+    OK(lks_mini_move_after(order, d, b)); compared_sequence(order, (LksMiniHandle *[]){c,b,d,a}, 4);
+    OK(lks_mini_move_after(order, a, c)); compared_sequence(order, (LksMiniHandle *[]){c,a,b,d}, 4);
+    OK(lks_mini_move_before(order, c, d)); compared_sequence(order, (LksMiniHandle *[]){a,b,c,d}, 4);
+    OK(lks_mini_move_before(order, b, b)); OK(lks_mini_move_after(order, c, c));
+    OK(lks_mini_move_before(order, b, c)); OK(lks_mini_move_after(order, c, b));
+    compared_sequence(order, (LksMiniHandle *[]){a,b,c,d}, 4);
+    OK(lks_mini_item(order, a, &item)); CHECK(item == &value);
+    OK(lks_mini_item(order, b, &item)); CHECK(item == &value);
+    OK(lks_mini_item(order, c, &item)); CHECK(item == NULL);
+    OK(lks_mini_item(order, d, &item)); CHECK(item == &value);
+    lks_mini_destroy(order);
+    puts("public movement, comparison, antisymmetry and transitivity: PASS");
+}
+
+static void movement_errors(void)
+{
+    LksMiniOrder *order = NULL, *other = NULL;
+    LksMiniHandle *a = NULL, *b = NULL, *foreign = NULL;
+    int result = 9;
+    OK(lks_mini_create(&order)); OK(lks_mini_create(&other));
+    OK(lks_mini_insert_back(order, NULL, &a)); OK(lks_mini_insert_back(order, NULL, &b));
+    OK(lks_mini_insert_back(other, NULL, &foreign));
+    BAD(lks_mini_move_front(NULL, a)); BAD(lks_mini_move_front(order, NULL));
+    BAD(lks_mini_move_back(NULL, a)); BAD(lks_mini_move_back(order, NULL));
+    WRONG(lks_mini_move_front(order, foreign)); WRONG(lks_mini_move_back(order, foreign));
+    BAD(lks_mini_move_before(NULL, a, b)); BAD(lks_mini_move_before(order, NULL, b));
+    BAD(lks_mini_move_before(order, a, NULL));
+    BAD(lks_mini_move_after(NULL, a, b)); BAD(lks_mini_move_after(order, NULL, b));
+    BAD(lks_mini_move_after(order, a, NULL));
+    WRONG(lks_mini_move_before(order, foreign, a)); WRONG(lks_mini_move_before(order, a, foreign));
+    WRONG(lks_mini_move_after(order, foreign, a)); WRONG(lks_mini_move_after(order, a, foreign));
+    WRONG(lks_mini_move_before(order, foreign, foreign)); WRONG(lks_mini_move_after(order, foreign, foreign));
+#define COMP_ERROR(expr, status) do { result = 9; CHECK((expr) == (status)); CHECK(result == 0); } while (0)
+    COMP_ERROR(lks_mini_compare(NULL, a, b, &result), LKS_MINI_INVALID_ARGUMENT);
+    COMP_ERROR(lks_mini_compare(order, NULL, b, &result), LKS_MINI_INVALID_ARGUMENT);
+    COMP_ERROR(lks_mini_compare(order, a, NULL, &result), LKS_MINI_INVALID_ARGUMENT);
+    BAD(lks_mini_compare(order, a, b, NULL));
+    COMP_ERROR(lks_mini_compare(order, foreign, a, &result), LKS_MINI_WRONG_ORDER);
+    COMP_ERROR(lks_mini_compare(order, a, foreign, &result), LKS_MINI_WRONG_ORDER);
+    COMP_ERROR(lks_mini_compare(order, foreign, foreign, &result), LKS_MINI_WRONG_ORDER);
+    /* Missing required arguments take precedence over foreign ownership. */
+    BAD(lks_mini_move_before(order, foreign, NULL)); BAD(lks_mini_move_after(order, NULL, foreign));
+    COMP_ERROR(lks_mini_compare(order, foreign, NULL, &result), LKS_MINI_INVALID_ARGUMENT);
+    compared_sequence(order, (LksMiniHandle *[]){a,b}, 2);
+    compared_sequence(other, (LksMiniHandle *[]){foreign}, 1);
+    lks_mini_destroy(order); lks_mini_destroy(other);
+    puts("public movement and comparison errors: PASS");
+}
+
 int main(void)
 {
-    operations(); errors(); return 0;
+    operations(); errors(); movements(); movement_errors(); return 0;
 }

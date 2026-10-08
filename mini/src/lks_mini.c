@@ -174,3 +174,91 @@ LksMiniStatus lks_mini_remove(LksMiniOrder *order, LksMiniHandle *handle)
     free(handle);
     return LKS_MINI_OK;
 }
+
+/* Neither helper changes ownership, payload, size or lifetime. */
+static void unlink_node(LksMiniOrder *order, LksMiniHandle *node)
+{
+    if (node->prev) node->prev->next = node->next;
+    else order->head = node->next;
+    if (node->next) node->next->prev = node->prev;
+    else order->tail = node->prev;
+}
+
+static void link_node(LksMiniOrder *order, LksMiniHandle *node,
+                      LksMiniHandle *prev, LksMiniHandle *next)
+{
+    node->prev = prev;
+    node->next = next;
+    if (prev) prev->next = node;
+    else order->head = node;
+    if (next) next->prev = node;
+    else order->tail = node;
+}
+
+LksMiniStatus lks_mini_move_front(LksMiniOrder *order, LksMiniHandle *handle)
+{
+    LksMiniStatus status = check_handle(order, handle);
+    if (status != LKS_MINI_OK) return status;
+    if (order->head == handle) return LKS_MINI_OK;
+    unlink_node(order, handle);
+    link_node(order, handle, NULL, order->head);
+    return LKS_MINI_OK;
+}
+
+LksMiniStatus lks_mini_move_back(LksMiniOrder *order, LksMiniHandle *handle)
+{
+    LksMiniStatus status = check_handle(order, handle);
+    if (status != LKS_MINI_OK) return status;
+    if (order->tail == handle) return LKS_MINI_OK;
+    unlink_node(order, handle);
+    link_node(order, handle, order->tail, NULL);
+    return LKS_MINI_OK;
+}
+
+static LksMiniStatus check_pair(const LksMiniOrder *order,
+                               const LksMiniHandle *a, const LksMiniHandle *b)
+{
+    if (!order || !a || !b) return LKS_MINI_INVALID_ARGUMENT;
+    if (a->owner != order || b->owner != order) return LKS_MINI_WRONG_ORDER;
+    return LKS_MINI_OK;
+}
+
+LksMiniStatus lks_mini_move_before(LksMiniOrder *order, LksMiniHandle *handle,
+                                  const LksMiniHandle *anchor)
+{
+    LksMiniStatus status = check_pair(order, handle, anchor);
+    if (status != LKS_MINI_OK) return status;
+    if (handle == anchor || handle->next == anchor) return LKS_MINI_OK;
+    unlink_node(order, handle);
+    link_node(order, handle, anchor->prev, (LksMiniHandle *)anchor);
+    return LKS_MINI_OK;
+}
+
+LksMiniStatus lks_mini_move_after(LksMiniOrder *order, LksMiniHandle *handle,
+                                 const LksMiniHandle *anchor)
+{
+    LksMiniStatus status = check_pair(order, handle, anchor);
+    if (status != LKS_MINI_OK) return status;
+    if (handle == anchor || handle->prev == anchor) return LKS_MINI_OK;
+    unlink_node(order, handle);
+    link_node(order, handle, (LksMiniHandle *)anchor, anchor->next);
+    return LKS_MINI_OK;
+}
+
+LksMiniStatus lks_mini_compare(const LksMiniOrder *order,
+                              const LksMiniHandle *a, const LksMiniHandle *b,
+                              int *out_result)
+{
+    const LksMiniHandle *cursor;
+    LksMiniStatus status;
+    if (!out_result) return LKS_MINI_INVALID_ARGUMENT;
+    *out_result = 0;
+    status = check_pair(order, a, b);
+    if (status != LKS_MINI_OK) return status;
+    if (a == b) return LKS_MINI_OK;
+    for (cursor = a->next; cursor; cursor = cursor->next) {
+        if (cursor == b) { *out_result = -1; return LKS_MINI_OK; }
+    }
+    *out_result = 1;
+    return LKS_MINI_OK;
+}

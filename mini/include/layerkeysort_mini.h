@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-/* v1.0.0-preview.1. Opaque live orders and occurrence handles. */
+/* v1.0.0-preview.2. Opaque live orders and occurrence handles. */
 typedef struct LksMiniOrder LksMiniOrder;
 typedef struct LksMiniHandle LksMiniHandle;
 typedef enum LksMiniStatus {
@@ -35,6 +35,13 @@ LksMiniStatus lks_mini_insert_back(LksMiniOrder *order, void *item, LksMiniHandl
 LksMiniStatus lks_mini_insert_before(LksMiniOrder *order, const LksMiniHandle *anchor, void *item, LksMiniHandle **out_handle);
 LksMiniStatus lks_mini_insert_after(LksMiniOrder *order, const LksMiniHandle *anchor, void *item, LksMiniHandle **out_handle);
 LksMiniStatus lks_mini_remove(LksMiniOrder *order, LksMiniHandle *handle);
+/* Moves preserve occurrence identity and allocate/free nothing. */
+LksMiniStatus lks_mini_move_front(LksMiniOrder *order, LksMiniHandle *handle);
+LksMiniStatus lks_mini_move_back(LksMiniOrder *order, LksMiniHandle *handle);
+LksMiniStatus lks_mini_move_before(LksMiniOrder *order, LksMiniHandle *handle, const LksMiniHandle *anchor);
+LksMiniStatus lks_mini_move_after(LksMiniOrder *order, LksMiniHandle *handle, const LksMiniHandle *anchor);
+/* O(n): -1 before, 0 same occurrence, +1 after. Error output defaults to 0. */
+LksMiniStatus lks_mini_compare(const LksMiniOrder *order, const LksMiniHandle *a, const LksMiniHandle *b, int *out_result);
 
 #ifdef __cplusplus
 }

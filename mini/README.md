@@ -1,6 +1,6 @@
 # LayerKeySort Mini
 
-Current milestone: **v1.0.0-preview.1**. MIT licensed, independent C17 library
+Current milestone: **v1.0.0-preview.2**. MIT licensed, independent C17 library
 for local mutable order maintenance with stable live occurrence handles.
 
 Use Mini when an application needs to maintain an explicit sequence, such as
@@ -9,9 +9,9 @@ decides the order and owns its objects. Mini stores opaque `void *` payloads;
 it does not sort, inspect, or free them. NULL payloads and repeated pointers
 are valid. Each insertion creates a distinct occurrence.
 
-Preview.1 provides 13 functions: creation/destruction, size, endpoint queries,
-neighbor traversal, payload lookup, four insertion variants and removal.
-Movement and order comparison are future Preview.2 work and are not available.
+Preview.2 provides all 18 planned functions: creation/destruction, size, endpoint
+queries, neighbor traversal, payload lookup, four insertion variants, removal,
+four stable-handle movement operations and live-order comparison.
 This preview is a foundation milestone, not the final stable release.
 
 ## Build and run
@@ -49,7 +49,9 @@ if (lks_mini_create(&order) == LKS_MINI_OK) {
 }
 ```
 
-All basic operations take O(1) time; destruction takes O(n). Traversal takes
+Known-handle movement and basic operations take O(1) time; destruction and
+arbitrary order comparison take O(n). Movement and comparison allocate/free
+nothing. Traversal takes
 O(n) and each occurrence needs one allocation. There is no random-access index,
 persistence, stale-pointer detection or automatic synchronization.
 
@@ -61,3 +63,10 @@ persistence, stale-pointer detection or automatic synchronization.
 - [Architecture](docs/ARCHITECTURE.md): invariants and tradeoffs.
 - [Changelog](CHANGELOG.md) and [license](LICENSE).
 - [简体中文](README.zh-CN.md).
+
+Moves preserve the handle, payload, owner and size. Moving to the current
+endpoint, before/after self, before the immediate next neighbor or after the
+immediate previous neighbor succeeds without changing links. Comparison returns
+exactly -1 (before), 0 (same occurrence), or +1 (after), independently of payload.
+All required handles are validated before no-op decisions. Remaining milestones
+are Preview.3 reliability, RC.1 integration and Stable validation.

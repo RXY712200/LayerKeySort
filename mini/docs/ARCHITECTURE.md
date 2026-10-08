@@ -1,4 +1,4 @@
-# Architecture — v1.0.0-preview.1
+# Architecture — v1.0.0-preview.2
 
 The production library consists of one public header and one C17 source file.
 The public types are opaque. A private order holds head, tail and a size_t count;
@@ -42,9 +42,24 @@ bounded traversal detects cycles. A synthetic SIZE_MAX count exercises the guard
 and is restored before structural validation. It does not represent a physically
 allocated SIZE_MAX-node order.
 
-All basic operations are O(1); traversal and destruction are O(n). One allocation
+Basic operations and movement are O(1); comparison, traversal and destruction
+are O(n). One allocation
 per occurrence and pointer chasing are accepted tradeoffs. There is no random
 access, allocator control, synchronization, persistent identity or stale-pointer
 protection. Full randomized modeling and systematic fault injection belong to a
-later reliability milestone, not this foundation. Movement and comparison are
-not implemented in Preview.1.
+later reliability milestone, not this foundation. Movement and comparison are implemented in Preview.2.
+
+## Movement and comparison
+
+Small private unlink/link helpers reconnect an existing node after argument and
+ownership validation. They do not alter size, owner, item or lifetime. Endpoints,
+self moves and already-adjacent placement are checked before unlinking so valid
+no-ops write no links. Anchor neighbors are read after unlinking to avoid stale
+adjacency. No fallible work occurs during the link commit.
+
+Comparison first validates both handles, returns zero for identical occurrences,
+then follows next links from a searching for b. Finding b returns -1; otherwise
+both valid same-order handles imply +1. This O(n) worst-case walk is not an
+invariant scan and maintains no ranks or cached positions. It allocates/frees
+nothing and changes no state. Tests use explicit expected sequences, all-pair
+sign checks, antisymmetry/transitivity and allocation/free counter snapshots.

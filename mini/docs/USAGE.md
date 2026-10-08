@@ -1,4 +1,4 @@
-# Using Mini v1.0.0-preview.1
+# Using Mini v1.0.0-preview.2
 
 Include `layerkeysort_mini.h` and link `layerkeysort_mini`. The complete runnable
 [basic example](../examples/basic.c) uses only the public header. Build commands
@@ -66,3 +66,33 @@ Mini only stores pointers, so it cannot enforce business-object lifetime.
 Use separate local output variables when preserving an earlier value matters:
 failed operations reset outputs. Valid foreign-order handles produce WRONG_ORDER;
 freed handles are unsupported. See the [contract](CONTRACT.md) for complete rules.
+
+## Move existing occurrences and compare
+
+After creating the a, b, c sequence above, before its traversal/removal:
+
+```c
+int relation = 0;
+if (lks_mini_move_front(order, c) != LKS_MINI_OK ||
+    lks_mini_move_after(order, a, b) != LKS_MINI_OK ||
+    lks_mini_compare(order, c, a, &relation) != LKS_MINI_OK) {
+    lks_mini_destroy(order);
+    return 1;
+}
+/* Sequence: c, b, a; relation is exactly -1. All handles/items are unchanged. */
+if (lks_mini_move_before(order, a, b) != LKS_MINI_OK ||
+    lks_mini_move_back(order, c) != LKS_MINI_OK) {
+    lks_mini_destroy(order);
+    return 1;
+}
+/* Sequence: a, b, c. Size is unchanged. */
+```
+
+Known-handle moves are O(1); arbitrary comparison is O(n) worst case. Neither
+allocates/frees memory. Comparison yields -1 before, 0 for the identical live
+occurrence, and +1 after, even when payload pointers are duplicates or NULL.
+Moving head to front, tail to back, before/after self, before the immediate next
+neighbor or after the immediate previous neighbor returns OK without link writes.
+Both handles must belong to the specified order, even for self-movement.
+NULL required arguments are INVALID_ARGUMENT and valid foreign handles/anchors
+are WRONG_ORDER. Errors preserve order/size/handles and comparison output is 0.
