@@ -16,6 +16,18 @@ This is the prepared Stable candidate. Exact-commit final validation is recorded
 in the completion report; a GitHub Release has not been published. Publication
 and integration require separate authorization.
 
+## Release identity
+
+Mini has its **own** v1.0.0 product version. In the shared LayerKeySort
+repository its intended Git tag is `mini-v1.0.0`, **not** the historical
+Full `v1.0.0` tag. Neither a Mini Git tag nor a Mini GitHub Release has
+been published. Full and Mini do not share numeric version compatibility.
+
+At publication, use the separately verified **Mini-only source ZIP** and
+its SHA-256 checksum manifest; GitHub's automatic Source code download
+contains the entire multi-product repository. An extracted Mini ZIP has
+this directory's standalone layout, with no Full dependency.
+
 ## Build and run
 
 A C17 compiler, CMake 3.16 or later, and a build tool are required. From the

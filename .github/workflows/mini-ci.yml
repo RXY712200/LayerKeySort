@@ -63,3 +63,24 @@ jobs:
           cmake -S mini/validation -B build-consumer -DMINI_SOURCE="$GITHUB_WORKSPACE/mini" -DFULL_SOURCE="$GITHUB_WORKSPACE" -DCMAKE_BUILD_TYPE=Debug "${args[@]}"
           cmake --build build-consumer --config Debug
           ctest --test-dir build-consumer -C Debug --output-on-failure
+      - name: Package and independently validate Mini-only candidate
+        if: matrix.label == 'GCC'
+        shell: bash
+        run: |
+          first="$RUNNER_TEMP/mini-package-first"
+          second="$RUNNER_TEMP/mini-package-second"
+          python3 tools/mini_release_assets.py --output-dir "$first"
+          python3 tools/mini_release_assets.py --output-dir "$second"
+          diff -qr "$first" "$second"
+          python3 tools/mini_release_assets.py --output-dir "$first" --verify
+          archives=("$first"/*-source.zip)
+          test "${#archives[@]}" -eq 1
+          mkdir -p "$RUNNER_TEMP/mini-unpacked"
+          unzip -q "${archives[0]}" -d "$RUNNER_TEMP/mini-unpacked"
+          mini_dir="$(find "$RUNNER_TEMP/mini-unpacked" -mindepth 1 -maxdepth 1 -type d -name 'LayerKeySort-Mini-v*' -print -quit)"
+          test -n "$mini_dir"
+          test ! -e "$mini_dir/include/layerkeysort.h"
+          test ! -e "$mini_dir/src/layerkeysort.c"
+          cmake -S "$mini_dir" -B "$RUNNER_TEMP/mini-unpacked-build" -DCMAKE_BUILD_TYPE=Debug -DLKS_MINI_STRICT=ON
+          cmake --build "$RUNNER_TEMP/mini-unpacked-build"
+          ctest --test-dir "$RUNNER_TEMP/mini-unpacked-build" --output-on-failure
