@@ -53,7 +53,7 @@ Preview.3 新增独立数组参考模型，采用四个固定 xorshift32 种子�
 6,000 次操作，覆盖三个独立容器，每个容器最多 48 个实例。默认测试包括
 对抗序列、结构不变量、24 个单次分配失败及恢复案例、190 个合法指针错误矩阵案例。
 已执行本地 Windows GCC 16.2.0 严格警告 Debug/Release、提取构建和生产静态分析。
-ASan/UBSan 探测因缺少链接库失败；未宣称 MSVC、Clang 或其他平台已验证。
+本地 Windows ASan/UBSan 探测因缺少链接库失败；这不代表 Linux CI 的情况。
 这些检查未发现生产缺陷；分配计数不能替代 sanitizer。
 复现方法及覆盖边界见[开发指南](docs/DEVELOPMENT.md)。
 
@@ -62,3 +62,8 @@ RC.1 增加独立跨平台 CI、严格警告与 sanitizer 选项、提取项目�
 和 target_link_libraries 集成；准确命令见[开发指南](docs/DEVELOPMENT.md)。
 性能与内存口径见[测量记录](docs/PERFORMANCE.md)。CI 必须按具体候选提交检查，
 存在工作流文件不等于平台测试已经通过。
+
+RC.1 候选 58f19a15 的五个 Mini CI 作业均已通过，包括实际插桩的 Linux
+ASan/UBSan 全套测试；GCC、Clang、MSVC、AppleClang 的 Debug/Release
+各通过 4/4。具体提交、版本及运行链接见[开发指南](docs/DEVELOPMENT.md)。
+后续提交必须重新核对对应 SHA 的结果。

@@ -210,3 +210,31 @@ Local RC.1 checks used strict Windows UCRT64 GCC Debug/Release and separate
 Mini-only direct/CMake consumers plus optional coexistence. Cross-platform CI
 results are reported against immutable candidate SHA in the completion report.
 The benchmark methodology and memory limitations are in [Performance](PERFORMANCE.md).
+
+### Executed RC.1 candidate coverage
+
+Candidate `58f19a15fe2d3b34c25e61d1f24069b3f6f4718c` was actually checked by
+[Mini CI run 37741677713](https://github.com/RXY712200/LayerKeySort/actions/runs/37741677713).
+All five jobs completed successfully; logs were inspected:
+
+| Environment/compiler | Debug | Release | Separate consumer + coexistence |
+| --- | --- | --- | --- |
+| Ubuntu GCC 13.3.0 | 4/4 | 4/4 | 2/2 |
+| Ubuntu Clang 18.1.3 | 4/4 | 4/4 | 2/2 |
+| Windows MSVC 19.51.36260.0 | 4/4 | 4/4 | 2/2 |
+| macOS AppleClang 21.0.0.21000101 | 4/4 | 4/4 | 2/2 |
+| Ubuntu Clang 18.1.3 ASan + UBSan | 4/4 instrumented | intentionally omitted | intentionally omitted |
+
+The GCC extraction suite also passed 4/4 and its directly compiled consumer
+passed. The sanitizer configuration set LKS_MINI_SANITIZERS=ON, instrumenting
+both production source and the separately compiled internal implementation;
+ASAN_OPTIONS enabled leak detection/halt-on-error and UBSAN_OPTIONS enabled
+halt-on-error/stack traces. Actual instrumented CTest passed all four tests in
+6.88 seconds with no reported sanitizer findings. This supplements, rather than
+replaces, the independent model and allocation ledger. It is not a promise about
+all compilers/ABIs or sanitizer runtimes. Optional steps are intentionally skipped
+where another representative job provides their coverage.
+
+These results belong to that immutable candidate. Documentation-only follow-up
+commits still require their own final CI verification in the completion report.
+No production portability fix was necessary in the checked environments.

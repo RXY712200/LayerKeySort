@@ -77,8 +77,8 @@ Preview.3 adds an independent array reference model: four fixed xorshift32 seeds
 bound. Default CTest also checks adversarial sequences, private invariants,
 24 single-allocation failure/recovery cases and a 190-case legal-input matrix.
 Local Windows GCC 16.2.0 checks include strict Debug/Release, extraction and
-production static analysis. ASan/UBSan probing failed because their link libraries
-are absent; no sanitizer or MSVC/Clang/other-platform result is claimed.
+production static analysis. Local Windows ASan/UBSan probing failed because their
+link libraries are absent. This local limitation does not describe Linux CI.
 No production defect was found in these checks. See the [development guide](docs/DEVELOPMENT.md)
 for reproducibility and coverage limits. Allocation accounting is not a sanitizer.
 
@@ -87,3 +87,8 @@ CI matrix, extracted-project verification and external consumers. For exact
 integration commands see [Development](docs/DEVELOPMENT.md); for measured costs
 see [Performance](docs/PERFORMANCE.md). CI results must be checked on the exact
 candidate SHA; a workflow definition alone is not validation.
+
+RC.1 candidate 58f19a15 passed all five Mini CI jobs, including the instrumented
+Linux suite; GCC/Clang/MSVC/AppleClang Debug and Release each passed 4/4.
+The exact candidate, compiler versions and run are recorded in
+[Development](docs/DEVELOPMENT.md). Later changes require their own SHA checks.
