@@ -374,5 +374,6 @@ int main(void)
     printf("internal invariants, OOM, capacity and lifetime: PASS (%zu allocation calls, %zu frees)\n", allocation_calls, free_calls);
     movement_checks();
     complex_structure(); fault_campaign(); error_matrix();
+    printf("sizeof layout: order=%zu node=%zu bytes (excludes allocator and payloads)\n", sizeof(LksMiniOrder), sizeof(LksMiniHandle));
     return 0;
 }

@@ -1,4 +1,4 @@
-# Development — v1.0.0-preview.3
+# Development — v1.0.0-rc.1
 
 Requirements: C17 compiler, CMake 3.16 or later and a matching build tool. No
 third-party runtime libraries or sibling project sources are needed. The static
@@ -62,9 +62,8 @@ The test-only `../src/lks_mini.c` reference stays inside Mini.
 ## Contributions
 
 Keep production simple, preserve the [contract](CONTRACT.md), and inspect the
-complete diff before committing. Preview.3 changes are confined to this project
-directory. Run ordinary and extracted builds/tests; record actual toolchain and
-results. Do not advertise unavailable APIs. The remaining milestones are RC.1 integration and Stable validation. Each requires separate authorization.
+complete diff before committing. Mini implementation changes stay within this independent project directory. Run ordinary and extracted builds/tests; record actual toolchain and
+results. Do not advertise unavailable APIs. The remaining milestone is final Stable validation and authorized delivery. Each requires separate authorization.
 
 Preview.2 extends public tests with explicit movement sequences, endpoint and
 self/adjacent no-ops, NULL/foreign inputs, payload/handle/size preservation and
@@ -130,3 +129,84 @@ these tests; this is bounded evidence, not an exhaustive proof. Cross-platform
 CI/integration remain RC.1 work. Accepted O(n) comparison, per-node allocation,
 pointer chasing, no random access/persistence/stale detection/internal locks
 remain unchanged. No separate enormous stress campaign is claimed.
+
+## RC.1 integration and CI
+
+CMake options (all default OFF): `LKS_MINI_STRICT` enables -Werror or MSVC /WX;
+`LKS_MINI_SANITIZERS` instruments the library and every example/test target,
+including the source-including internal test, with ASan/UBSan on supported
+non-Windows GCC/Clang runtimes. `LKS_MINI_BENCHMARKS` builds the optional baseline.
+Ordinary standalone tests require none of these optional facilities.
+
+```sh
+cmake -S . -B debug -DCMAKE_BUILD_TYPE=Debug -DLKS_MINI_STRICT=ON
+cmake --build debug --config Debug
+ctest --test-dir debug -C Debug --output-on-failure
+cmake -S . -B release -DCMAKE_BUILD_TYPE=Release -DLKS_MINI_STRICT=ON
+cmake --build release --config Release
+ctest --test-dir release -C Release --output-on-failure
+cmake -S . -B sanitized -DCMAKE_C_COMPILER=clang -DCMAKE_BUILD_TYPE=Debug -DLKS_MINI_STRICT=ON -DLKS_MINI_SANITIZERS=ON
+cmake --build sanitized
+ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1:print_stacktrace=1 ctest --test-dir sanitized --output-on-failure -V
+```
+
+The sanitizer command is for supported Unix shells/runtimes. Windows MSVC uses
+its normal multi-configuration generator, C17, /W4 and optional /WX, without
+GCC-only flags. Clang availability does not imply sanitizer runtime availability.
+
+### Separate application
+
+`validation/consumer.c` is a complete application including only the public
+header. It tests lifetime, duplicate/NULL items, movement, comparison, traversal,
+removal and foreign-order errors. From an extracted Mini directory on Unix:
+
+```sh
+cc -std=c17 -I include validation/consumer.c src/lks_mini.c -o direct-consumer
+./direct-consumer
+cmake -S validation -B consumer-build -DMINI_SOURCE="$PWD" -DCMAKE_BUILD_TYPE=Debug
+cmake --build consumer-build --config Debug
+ctest --test-dir consumer-build -C Debug --output-on-failure
+```
+
+MinGW PowerShell from the Mini directory:
+
+```powershell
+gcc -std=c17 -I include validation/consumer.c src/lks_mini.c -o direct-consumer.exe
+.\direct-consumer.exe
+cmake -S validation -B consumer-build -G "MinGW Makefiles" "-DMINI_SOURCE=$((Get-Location).Path)" -DCMAKE_BUILD_TYPE=Debug
+cmake --build consumer-build --config Debug
+ctest --test-dir consumer-build -C Debug --output-on-failure
+```
+
+This integration fixture requires CMake 3.21; the standalone library remains
+CMake 3.16+. No installation or package framework is required. The consumer uses
+add_subdirectory and target_link_libraries, receiving the public include path.
+It can be copied to an independent application directory and given MINI_SOURCE.
+
+### Optional repository coexistence
+
+Only when both separately obtained product sources are available, add
+`-DFULL_SOURCE=<other product source directory>` to the validation configuration.
+This builds `coexistence.c` with both public headers and libraries, checking their
+independent containers, ordering and linkage. It is optional, has no effect on
+ordinary Mini builds, and must never be required for extraction or Mini tests.
+No parent-directory assumption is embedded in Mini's build configuration.
+
+### CI and extraction
+
+The [Mini workflow](https://github.com/RXY712200/LayerKeySort/actions/workflows/mini-ci.yml)
+uses Windows/MSVC, Ubuntu/GCC, Ubuntu/Clang, Ubuntu/Clang with ASan+UBSan and
+macOS/AppleClang. Non-sanitized jobs run Debug and Release suites and external
+consumers; the GCC job additionally copies only Mini into RUNNER_TEMP, builds/tests
+it there and runs a directly compiled consumer. Coexistence is a separate optional
+consumer configuration. No existing workflow or parent build helper is needed.
+Verify actual completed jobs for the exact candidate SHA; do not infer coverage
+from this matrix declaration. The local Windows GCC sanitizer-runtime limitation
+recorded above remains separate from the Linux sanitizer job.
+
+Extraction remains reproducible with the copy/configure/build/CTest commands
+above; also run the example and resolve every relative link in the copied docs.
+Local RC.1 checks used strict Windows UCRT64 GCC Debug/Release and separate
+Mini-only direct/CMake consumers plus optional coexistence. Cross-platform CI
+results are reported against immutable candidate SHA in the completion report.
+The benchmark methodology and memory limitations are in [Performance](PERFORMANCE.md).

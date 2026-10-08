@@ -1,4 +1,4 @@
-# Using Mini v1.0.0-preview.3
+# Using Mini v1.0.0-rc.1
 
 Include `layerkeysort_mini.h` and link `layerkeysort_mini`. The complete runnable
 [basic example](../examples/basic.c) uses only the public header. Build commands
@@ -100,3 +100,8 @@ are WRONG_ORDER. Errors preserve order/size/handles and comparison output is 0.
 Preview.3 preserves the 18 APIs and these usage patterns. The independent model
 and failure tests described in [Development](DEVELOPMENT.md) are test-only; no
 allocator settings or diagnostic APIs are needed by applications.
+
+For complete compilable public-header-only application code, see
+[consumer.c](../validation/consumer.c) and the [integration commands](DEVELOPMENT.md).
+The caller owns payloads, including shared duplicate payloads; removal only
+releases the occurrence, never the business object.

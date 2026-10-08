@@ -1,6 +1,6 @@
-# Preview.3 public contract
+# RC.1 public contract
 
-Version: **v1.0.0-preview.3**. The authoritative declarations are in
+Version: **v1.0.0-rc.1**. The authoritative declarations are in
 [`layerkeysort_mini.h`](../include/layerkeysort_mini.h). All required standard
 types are included by that header. It supports C and C++ linkage; implementation
 is C17. `LksMiniOrder` and `LksMiniHandle` are opaque struct types.
@@ -82,8 +82,8 @@ Applications must synchronize shared order access, especially with mutation or
 destruction. Independently owned orders do not share library mutable state.
 
 All 18 planned public functions remain implemented with unchanged signatures,
-statuses and semantics. Preview.3 adds verification, not functionality. RC.1
-integration and Stable validation remain separate milestones.
+statuses and semantics. Preview.3 adds verification, not functionality. Final Stable validation
+and authorized delivery remain separate work.
 
 ## Movement and comparison guarantees
 

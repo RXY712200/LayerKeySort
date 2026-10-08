@@ -1,0 +1,65 @@
+name: Mini CI
+on:
+  push:
+    branches: [feature/mini-v1.0]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  mini:
+    name: Mini ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {label: GCC, os: ubuntu-latest, cc: gcc, sanitize: 'OFF'}
+          - {label: Clang, os: ubuntu-latest, cc: clang, sanitize: 'OFF'}
+          - {label: Clang-ASan-UBSan, os: ubuntu-latest, cc: clang, sanitize: 'ON'}
+          - {label: MSVC, os: windows-latest, cc: '', sanitize: 'OFF'}
+          - {label: AppleClang, os: macos-latest, cc: clang, sanitize: 'OFF'}
+    runs-on: ${{ matrix.os }}
+    env:
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure Unix
+        if: runner.os != 'Windows'
+        run: cmake -S mini -B build-mini -DCMAKE_C_COMPILER=${{ matrix.cc }} -DCMAKE_BUILD_TYPE=Debug -DLKS_MINI_STRICT=ON -DLKS_MINI_SANITIZERS=${{ matrix.sanitize }}
+      - name: Configure MSVC
+        if: runner.os == 'Windows'
+        run: cmake -S mini -B build-mini -DLKS_MINI_STRICT=ON
+      - name: Build and test
+        run: |
+          cmake --build build-mini --config Debug
+          ctest --test-dir build-mini -C Debug --output-on-failure -V
+      - name: Release configure and test
+        if: matrix.sanitize == 'OFF'
+        shell: bash
+        run: |
+          args=()
+          if [ -n '${{ matrix.cc }}' ]; then args+=('-DCMAKE_C_COMPILER=${{ matrix.cc }}'); fi
+          cmake -S mini -B build-release -DCMAKE_BUILD_TYPE=Release -DLKS_MINI_STRICT=ON "${args[@]}"
+          cmake --build build-release --config Release
+          ctest --test-dir build-release -C Release --output-on-failure
+      - name: Standalone extraction and direct consumer
+        if: matrix.label == 'GCC'
+        shell: bash
+        run: |
+          cp -R mini "$RUNNER_TEMP/mini-only"
+          cmake -S "$RUNNER_TEMP/mini-only" -B "$RUNNER_TEMP/extracted-build" -DCMAKE_BUILD_TYPE=Debug -DLKS_MINI_STRICT=ON
+          cmake --build "$RUNNER_TEMP/extracted-build"
+          ctest --test-dir "$RUNNER_TEMP/extracted-build" --output-on-failure
+          "$RUNNER_TEMP/extracted-build/lks_mini_basic"
+          gcc -std=c17 -Wall -Wextra -Werror -I "$RUNNER_TEMP/mini-only/include" "$RUNNER_TEMP/mini-only/validation/consumer.c" "$RUNNER_TEMP/mini-only/src/lks_mini.c" -o "$RUNNER_TEMP/direct-consumer"
+          "$RUNNER_TEMP/direct-consumer"
+      - name: External consumer and optional coexistence
+        if: matrix.sanitize == 'OFF'
+        shell: bash
+        run: |
+          args=()
+          if [ -n '${{ matrix.cc }}' ]; then args+=('-DCMAKE_C_COMPILER=${{ matrix.cc }}'); fi
+          cmake -S mini/validation -B build-consumer -DMINI_SOURCE="$GITHUB_WORKSPACE/mini" -DFULL_SOURCE="$GITHUB_WORKSPACE" -DCMAKE_BUILD_TYPE=Debug "${args[@]}"
+          cmake --build build-consumer --config Debug
+          ctest --test-dir build-consumer -C Debug --output-on-failure

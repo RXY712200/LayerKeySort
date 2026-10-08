@@ -1,5 +1,16 @@
 # Mini changelog
 
+## v1.0.0-rc.1 — 2026-10-08
+
+- Preserve the 18-function public contract and production linked-list algorithm.
+- Add independent strict-warning and whole-suite ASan/UBSan CMake options.
+- Add Mini-specific GCC, Clang, Linux sanitizer, MSVC and AppleClang CI.
+- Add standalone extraction, direct/CMake external consumers and optional
+  two-library coexistence verification without a standalone dependency.
+- Complete independent integration documentation and record a reproducible
+  performance baseline with explicitly qualified structural memory estimates.
+- Prepare a release candidate; no Stable release, merge, tag or publication.
+
 ## v1.0.0-preview.3 — 2026-10-08
 
 - Preserve all 18 public APIs and the production doubly linked list unchanged.

@@ -2,6 +2,15 @@
 
 English | [简体中文](README.zh-CN.md)
 
+## Product lines
+
+This repository contains separate product lines:
+
+- **Full**: complete ordering capabilities, historical snapshots and advanced workflows.
+- **[Mini](mini/README.md)**: lightweight local ordering with stable live handles, insertion, removal, movement, traversal and comparison.
+
+The remainder of this README documents Full.
+
 Dynamic ordering for changing collections in C17, with stable live handles and
 sortable immutable snapshot keys.
 

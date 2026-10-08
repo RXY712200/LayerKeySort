@@ -1,4 +1,4 @@
-# Architecture — v1.0.0-preview.3
+# Architecture — v1.0.0-rc.1
 
 The production library consists of one public header and one C17 source file.
 The public types are opaque. A private order holds head, tail and a size_t count;
@@ -85,3 +85,18 @@ Six-node movement patterns supplement existing boundary tests. Queries, no-ops,
 errors, movements and comparisons are checked with allocation counters/snapshots.
 The [development record](DEVELOPMENT.md) states executed tools and limitations.
 No production correctness defect was found; no speculative redesign was made.
+
+## RC.1 engineering and debt
+
+The production structures and all 18 API implementations are unchanged. Strict
+warnings, target-specific sanitizers, independent consumers and the optional
+benchmark are build/test facilities, not new runtime behavior. Optional
+coexistence never enters the required standalone target graph.
+
+Accepted costs: O(n) arbitrary comparison, one allocation per occurrence,
+pointer chasing and no indexed access. Deliberate non-goals: persistence,
+automatic sorting, distributed ordering, built-in locking and stale detection.
+No confirmed supported-operation correctness defect is known from executed
+checks. Potential future work includes broader workload/allocator measurements;
+these opportunities are not existing bugs and authorize no redesign.
+[Performance](PERFORMANCE.md) separates measured timing from sizeof estimates.

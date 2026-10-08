@@ -1,6 +1,6 @@
 # LayerKeySort Mini
 
-Current milestone: **v1.0.0-preview.3**. MIT licensed, independent C17 library
+Current milestone: **v1.0.0-rc.1**. MIT licensed, independent C17 library
 for local mutable order maintenance with stable live occurrence handles.
 
 Use Mini when an application needs to maintain an explicit sequence, such as
@@ -9,10 +9,11 @@ decides the order and owns its objects. Mini stores opaque `void *` payloads;
 it does not sort, inspect, or free them. NULL payloads and repeated pointers
 are valid. Each insertion creates a distinct occurrence.
 
-Preview.3 preserves all 18 planned functions: creation/destruction, size, endpoint
+RC.1 preserves all 18 planned functions: creation/destruction, size, endpoint
 queries, neighbor traversal, payload lookup, four insertion variants, removal,
 four stable-handle movement operations and live-order comparison.
-This preview is a foundation milestone, not the final stable release.
+This release candidate is not the final Stable release. Final validation and
+publication require the separate Stable milestone.
 
 ## Build and run
 
@@ -69,7 +70,7 @@ endpoint, before/after self, before the immediate next neighbor or after the
 immediate previous neighbor succeeds without changing links. Comparison returns
 exactly -1 (before), 0 (same occurrence), or +1 (after), independently of payload.
 All required handles are validated before no-op decisions. Remaining milestones
-are RC.1 integration and Stable validation.
+are final Stable validation and authorized delivery.
 
 Preview.3 adds an independent array reference model: four fixed xorshift32 seeds,
 6,000 operations each, three independent orders, and a 48-occurrence per-order
@@ -80,3 +81,9 @@ production static analysis. ASan/UBSan probing failed because their link librari
 are absent; no sanitizer or MSVC/Clang/other-platform result is claimed.
 No production defect was found in these checks. See the [development guide](docs/DEVELOPMENT.md)
 for reproducibility and coverage limits. Allocation accounting is not a sanitizer.
+
+RC.1 adds strict compiler/sanitizer build options, an independent cross-platform
+CI matrix, extracted-project verification and external consumers. For exact
+integration commands see [Development](docs/DEVELOPMENT.md); for measured costs
+see [Performance](docs/PERFORMANCE.md). CI results must be checked on the exact
+candidate SHA; a workflow definition alone is not validation.
