@@ -38,7 +38,7 @@ jobs:
       - name: Record source provenance
         run: |
           echo "Mini-only source candidate, NOT a GitHub Release" >> "$GITHUB_STEP_SUMMARY"
-          echo "Source commit: `$GITHUB_SHA`" >> "$GITHUB_STEP_SUMMARY"
+          printf 'Source commit: `%s`\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
           python3 tools/mini_release_assets.py --output-dir mini-release-assets --verify >> "$GITHUB_STEP_SUMMARY"
       - name: Upload review-only candidate bundle
         uses: actions/upload-artifact@v4
