@@ -1,0 +1,33 @@
+# Authored script: assembling a layered illustration, not a real-user trace.
+help
+size
+list
+create Background
+create Ink
+create Selection
+insert-back 1
+move-front 1
+move-back 1
+compare 1 1
+insert-back 2
+insert-before NULL 2
+insert-after 2 2
+insert-front 3
+list
+list-reverse
+move-before 4 2
+move-after 4 2
+move-before 4 4
+move-after 4 4
+move-front 2
+move-back 5
+compare 2 5
+remove 3
+insert-before NULL 4
+remove 2
+move-front 2
+insert-after 2 1
+size
+list
+list-reverse
+quit

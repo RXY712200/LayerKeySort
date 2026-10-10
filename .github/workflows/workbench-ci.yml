@@ -1,0 +1,74 @@
+name: Layer Order Workbench CI
+on:
+  push:
+    branches: [main, feature/layer-order-workbench-phase1]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  workbench:
+    name: Workbench ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {label: GCC, os: ubuntu-latest, cc: gcc, sanitize: 'OFF', package: false}
+          - {label: Clang, os: ubuntu-latest, cc: clang, sanitize: 'OFF', package: false}
+          - {label: Clang-ASan-UBSan, os: ubuntu-latest, cc: clang, sanitize: 'ON', package: false}
+          - {label: MSVC, os: windows-latest, cc: '', sanitize: 'OFF', package: false}
+          - {label: AppleClang, os: macos-latest, cc: clang, sanitize: 'OFF', package: false}
+          - {label: GCC-Published-Mini-ZIP, os: ubuntu-latest, cc: gcc, sanitize: 'OFF', package: true}
+    runs-on: ${{ matrix.os }}
+    env:
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Fetch and verify official Mini-only package
+        if: matrix.package
+        shell: bash
+        run: python consumers/layer-order-workbench/tests/extract_release.py --output "$RUNNER_TEMP/official-mini"
+      - name: Configure, build and test Debug
+        shell: bash
+        run: |
+          mini="$GITHUB_WORKSPACE/mini"
+          if [ '${{ matrix.package }}' = 'true' ]; then mini="$RUNNER_TEMP/official-mini/LayerKeySort-Mini-v1.0.0"; fi
+          args=()
+          if [ -n '${{ matrix.cc }}' ]; then args+=('-DCMAKE_C_COMPILER=${{ matrix.cc }}'); fi
+          cmake -S consumers/layer-order-workbench -B build-workbench -DMINI_SOURCE="$mini" -DCMAKE_BUILD_TYPE=Debug -DWORKBENCH_SANITIZERS=${{ matrix.sanitize }} "${args[@]}"
+          cmake --build build-workbench --config Debug --parallel 4
+          ctest --test-dir build-workbench -C Debug --output-on-failure -V
+      - name: Configure, build and test Release
+        if: matrix.sanitize == 'OFF'
+        shell: bash
+        run: |
+          mini="$GITHUB_WORKSPACE/mini"
+          if [ '${{ matrix.package }}' = 'true' ]; then mini="$RUNNER_TEMP/official-mini/LayerKeySort-Mini-v1.0.0"; fi
+          args=()
+          if [ -n '${{ matrix.cc }}' ]; then args+=('-DCMAKE_C_COMPILER=${{ matrix.cc }}'); fi
+          cmake -S consumers/layer-order-workbench -B build-workbench-release -DMINI_SOURCE="$mini" -DCMAKE_BUILD_TYPE=Release "${args[@]}"
+          cmake --build build-workbench-release --config Release --parallel 4
+          ctest --test-dir build-workbench-release -C Release --output-on-failure
+      - name: Direct consumer compilation against published Mini target
+        if: matrix.package
+        shell: bash
+        run: |
+          src="$GITHUB_WORKSPACE/consumers/layer-order-workbench/src"
+          mini="$RUNNER_TEMP/official-mini/LayerKeySort-Mini-v1.0.0"
+          gcc -std=c17 -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror -I "$src" -I "$mini/include" "$src/main.c" "$src/command.c" "$src/oracle.c" "$src/workbench.c" "$src/trace.c" build-workbench/mini-dependency/liblayerkeysort_mini.a -o "$RUNNER_TEMP/direct-workbench"
+          "$RUNNER_TEMP/direct-workbench" --replay consumers/layer-order-workbench/scenarios/evidence/layer-composition.trace
+      - name: Preserve generated trace evidence
+        # This step remains after all build/direct-integration checks.
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workbench-evidence-${{ matrix.label }}
+          path: |
+            build-workbench/evidence/
+            build-workbench/Testing/Temporary/LastTest.log
+            build-workbench-release/evidence/
+          if-no-files-found: warn
