@@ -1,0 +1,32 @@
+# Authored script: overlay selection and distant reordering.
+create Canvas
+create Grid
+create Guide
+insert-front 1
+insert-after 2 1
+insert-before 3 2
+insert-back NULL
+insert-back 2
+insert-front NULL
+list
+move-back 6
+move-front 5
+move-before 4 3
+move-after 1 2
+move-before 3 2
+move-after 2 3
+move-front 5
+move-back 6
+compare 4 5
+compare 5 4
+compare 6 6
+list-reverse
+remove 5
+remove 6
+compare 5 4
+insert-front 2
+insert-after NULL 7
+move-before 8 7
+size
+list
+quit

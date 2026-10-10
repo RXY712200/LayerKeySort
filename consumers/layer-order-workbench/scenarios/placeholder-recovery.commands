@@ -1,0 +1,31 @@
+# Authored script: draft placeholders, duplicate objects and input recovery.
+size
+list-reverse
+create Draft
+insert-back NULL
+insert-front 1
+insert-after 1 1
+insert-before NULL 2
+move-after 2 3
+move-before 2 3
+move-before 2 2
+move-after 1 1
+compare 4 2
+remove 3
+compare 3 2
+insert-back 1
+insert-front NULL
+move-back 6
+move-front 5
+insert-before 99 1
+move-after 1 999
+remove -1
+insert-back
+unknown
+remove 2
+insert-before 1 1
+list
+list-reverse
+size
+help
+quit
