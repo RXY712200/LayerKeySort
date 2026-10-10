@@ -24,3 +24,10 @@ for size in SIZES:
 bad=subprocess.run([exe,'unknown','16','isolated'],capture_output=True)
 assert bad.returncode!=0
 print('All workload timing schemas/call counts/bounds and statistics PASS')
+if sys.platform.startswith('linux'):
+    # Reproduce the pre-exec high-water mark trap using a large live launcher.
+    launcher_storage=bytearray(64*1024*1024)
+    result=subprocess.run([sys.argv[2],'16'],check=True,capture_output=True,text=True)
+    memory=list(csv.DictReader(io.StringIO(result.stdout)))
+    assert int(memory[0]['peak_rss_bytes'])<len(launcher_storage), 'Child peak includes pre-exec launcher memory'
+    print('Linux current-address-space peak ignores 64 MiB launcher: PASS')

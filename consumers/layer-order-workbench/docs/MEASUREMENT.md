@@ -112,7 +112,9 @@ Array/public API verification occurs between stages. Every repeat is a fresh pro
   fragmentation. Windows reports usable bytes NA. MSVC/macOS allocation wrapping
   is unsupported; its fields are NA, never a fabricated zero-allocation result.
 - Linux RSS uses /proc/self/statm resident pages × sysconf page size; peak uses
-  getrusage Linux KiB converted to bytes. Windows records current/peak working set
+  current-address-space /proc/self/status VmHWM KiB converted to bytes. Linux
+  getrusage may retain a pre-exec launcher peak and is not used for attribution.
+  Windows records current/peak working set
   through GetProcessMemoryInfo. macOS current RSS is unavailable (0 sentinel),
   getrusage peak bytes available. These OS metrics are not directly comparable
   or library-only memory usage.

@@ -73,7 +73,15 @@ static void rss(size_t *current, size_t *peak)
     long page = sysconf(_SC_PAGESIZE);
     if (!file || page <= 0 || fscanf(file, "%zu %zu", &total, &resident) != 2) abort();
     (void)fclose(file);
-    *current = resident * (size_t)page; *peak = (size_t)usage.ru_maxrss * 1024u;
+    *current = resident * (size_t)page;
+    /* getrusage can retain a pre-exec Python launcher high-water mark. VmHWM
+       belongs to this executable's current address space instead. */
+    file = fopen("/proc/self/status", "r");
+    if (!file) abort();
+    { char line[256]; size_t high;
+      while (fgets(line, sizeof(line), file))
+          if (sscanf(line, "VmHWM: %zu kB", &high) == 1) *peak = high * 1024u; }
+    if (ferror(file) || fclose(file) || !*peak) abort();
 #else
     *peak = (size_t)usage.ru_maxrss; /* macOS bytes; current RSS unavailable. */
 #endif
