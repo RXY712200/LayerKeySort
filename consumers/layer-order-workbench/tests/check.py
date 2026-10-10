@@ -76,6 +76,14 @@ def errors(exe, directory):
     _, cap_output, cap_rows = record_script(exe,cap,directory)
     require(cap_rows[256][7]=='APP_OBJECT_LIMIT' and 'object=256 name=X' in cap_output,
             'Object capacity/ownership boundary failed')
+    boundary = directory/'line-boundary.commands'
+    boundary.write_bytes(b'create Boundary\r\n'+b'size'+b' '*251+b'\r\n'+
+                         b'size'+b' '*252+b'\r\nsize\r\r\nquit\r\n')
+    _, _, boundary_rows = record_script(exe,boundary,directory)
+    require([r[7] for r in boundary_rows]==['OK','OK','APP_LINE_LIMIT','OK','OK'],
+            'CRLF normalized 255/256-byte boundary incorrect')
+    require(bytes.fromhex(boundary_rows[3][10])==b'size\r',
+            'Reader removed more than one line-ending CR')
     return {'commands':len(rows), 'errors_checked':sum(s != 'OK' for s in statuses), 'trace':str(trace)}
 
 def replay_errors(exe, directory):

@@ -18,13 +18,20 @@ int input_line(FILE *file, char *line, size_t capacity, const char **error)
     *error = NULL;
     while ((c = fgetc(file)) != EOF && c != '\n') {
         seen = 1;
+        /* Resolve the line ending before the content-length check. Otherwise a
+           legal 255-byte command followed by CRLF appears to have 256 bytes.
+           Only the final CR is removed; an earlier CR remains input content. */
+        if (c == '\r') {
+            int following = fgetc(file);
+            if (following == '\n' || following == EOF) { c = following; break; }
+            if (ungetc(following, file) == EOF) return -1;
+        }
         if (c == 0) { *error = "APP_INPUT_FORMAT"; continue; }
         if (n + 1u < capacity) line[n++] = (char)c;
         else if (!*error) *error = "APP_LINE_LIMIT";
     }
     if (ferror(file)) return -1;
     if (c == EOF && !seen) return 0;
-    if (n && line[n - 1u] == '\r') --n;
     line[n] = '\0';
     return 1;
 }

@@ -42,6 +42,13 @@ the checker rejects the divergence with expected/actual ID diagnostics. That
 expected unit-test diagnostic is intentional, not a Mini bug. Foreign-order
 tests use a second live Mini order and only supported public API calls.
 
+Final consumer review reproduced an input-reader boundary defect: a valid
+255-byte command followed by CRLF was classified as overlong because CR was
+counted before line-ending normalization. The consumer reader now resolves the
+ending before checking length and removes exactly one final CR. Focused 255-byte,
+256-byte and double-CR cases are part of the errors/replay CTest. This is a
+consumer correction, not a Mini implementation or public-contract change.
+
 ## Allocation-failure method
 
 The official ZIP and SHA-256 manifest were downloaded afresh and checked against
