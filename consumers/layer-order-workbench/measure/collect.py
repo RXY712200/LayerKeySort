@@ -15,6 +15,10 @@ def run(args,**kwargs):
 def git(*args):
     return run(['git','-C',ROOT,*args],capture_output=True,text=True).stdout.strip()
 
+def canonical_digest(data):
+    # Git checkouts can use CRLF on Windows and LF on Linux for identical source.
+    return hashlib.sha256(data.replace(b'\r\n',b'\n')).hexdigest()
+
 def quantiles(values):
     med=statistics.median(values)
     q=statistics.quantiles(values,n=4,method='inclusive')
@@ -41,16 +45,18 @@ def collect(args):
     (out/'workloads').mkdir();(out/'traces').mkdir()
     measure=args.measure.resolve();memory=args.memory.resolve();workbench=args.workbench.resolve()
     run([measure,'--verify-all'],stdout=(out/'correctness.log').open('w',encoding='utf-8'),stderr=subprocess.STDOUT)
-    files={}
+    files={};actual_files={}
     for base in [ROOT/'src',ROOT/'measure']:
         for f in sorted(base.iterdir()):
-            if f.suffix in ['.c','.h','.py']:files[f.relative_to(ROOT).as_posix()]=hashlib.sha256(f.read_bytes()).hexdigest()
-    files['CMakeLists.txt']=hashlib.sha256((ROOT/'CMakeLists.txt').read_bytes()).hexdigest()
+            if f.suffix in ['.c','.h','.py']:
+                key=f.relative_to(ROOT).as_posix()
+                files[key]=canonical_digest(f.read_bytes());actual_files[key]=hashlib.sha256(f.read_bytes()).hexdigest()
+    files['CMakeLists.txt']=canonical_digest((ROOT/'CMakeLists.txt').read_bytes())
     mini=args.mini.resolve()
-    mini_files={f.relative_to(mini).as_posix():hashlib.sha256(f.read_bytes()).hexdigest()
+    mini_files={f.relative_to(mini).as_posix():canonical_digest(f.read_bytes())
                 for base in [mini/'include',mini/'src'] for f in sorted(base.iterdir()) if f.is_file()}
-    expected_mini={'include/layerkeysort_mini.h':'1723852414dc3e0ca5c8987c5626c28d621405bcecf162360f2f923674143225',
-                   'src/lks_mini.c':'a03422ea9d472d95774ced666f613eb365997167c5ef6b24c05ce55f6f97cb18'}
+    expected_mini={'include/layerkeysort_mini.h':'afb6cd39e6dc5cc787e596869bb9d71120aa32637933197f1cbcc871baac5c2f',
+                   'src/lks_mini.c':'206b8a590b8f011c1f7d9d206169f03e7e24ad63db106f5247ba2846eec9eb33'}
     if mini_files!=expected_mini:raise ValueError('Mini public/production files differ from pinned v1.0.0 release')
     cache=(args.build.resolve()/'CMakeCache.txt').read_text(encoding='utf-8')
     flags=[line for line in cache.splitlines() if line.startswith(('CMAKE_C_FLAGS','CMAKE_C_COMPILER:','CMAKE_BUILD_TYPE:','WORKBENCH_SANITIZERS:'))]
@@ -70,6 +76,10 @@ def collect(args):
           'affinity':'not pinned; frequency/governor and concurrent host load uncontrolled'}
     meta['measurement_source_dirty']=bool(git('status','--porcelain','--',str(ROOT/'src'),str(ROOT/'measure'),str(ROOT/'CMakeLists.txt')))
     meta['strict_target_flags']='C17; GCC/Clang -Wall -Wextra -Wpedantic -Wconversion -Wshadow -Werror; MSVC /W4 /WX'
+    meta['source_digest_encoding']='Canonical LF for cross-checkout identity; actual checkout digests separately retained'
+    meta['measurement_actual_checkout_sha256']=actual_files
+    meta['mini_actual_checkout_sha256']={f.relative_to(mini).as_posix():hashlib.sha256(f.read_bytes()).hexdigest()
+                                       for base in [mini/'include',mini/'src'] for f in sorted(base.iterdir()) if f.is_file()}
     (out/'metadata.json').write_text(json.dumps(meta,indent=2),encoding='utf-8')
     rows=[];memory_rows=[]
     for size in SIZES:

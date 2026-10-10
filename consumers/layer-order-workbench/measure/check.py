@@ -1,9 +1,11 @@
 import csv,io,subprocess,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from collect import CASES,SIZES,quantiles
+from collect import CASES,SIZES,quantiles,canonical_digest
 exe=sys.argv[1]
 assert quantiles([1,2,3,4,5])==dict(minimum=1,median=3,maximum=5,mad=1,iqr=2)
+assert canonical_digest(b'a\r\nb\r\n')==canonical_digest(b'a\nb\n')
+assert canonical_digest(b'a\rb')!=canonical_digest(b'a\nb')
 for size in SIZES:
     for case in CASES:
         for mode in ['isolated','pipeline']:
