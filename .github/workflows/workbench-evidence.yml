@@ -1,0 +1,44 @@
+name: Workbench Measurement Evidence
+on:
+  push:
+    branches: [feature/layer-order-workbench-phase2-evidence]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence:
+    name: Evidence ${{ matrix.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {label: Linux-GCC-Release, os: ubuntu-latest, cc: gcc, exe: '', config: ''}
+          - {label: Windows-MSVC-Release, os: windows-latest, cc: '', exe: '.exe', config: '/Release'}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Build and independently validate optimized measurement tools
+        shell: bash
+        run: |
+          args=()
+          if [ -n '${{ matrix.cc }}' ]; then args+=('-DCMAKE_C_COMPILER=${{ matrix.cc }}'); fi
+          cmake -S consumers/layer-order-workbench -B evidence-build -DMINI_SOURCE="$GITHUB_WORKSPACE/mini" -DCMAKE_BUILD_TYPE=Release "${args[@]}"
+          cmake --build evidence-build --config Release --parallel 4
+          ctest --test-dir evidence-build -C Release --output-on-failure
+      - name: Collect 15 independent repeats, warmups, memory and source provenance
+        shell: bash
+        run: |
+          prefix="evidence-build${{ matrix.config }}"
+          python consumers/layer-order-workbench/measure/collect.py --measure "$prefix/workbench_measure${{ matrix.exe }}" --memory "$prefix/workbench_memory${{ matrix.exe }}" --workbench "$prefix/layer_order_workbench${{ matrix.exe }}" --mini mini --build evidence-build --output measurement-evidence --repeats 15
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: measurement-${{ matrix.label }}
+          path: |
+            measurement-evidence/
+            evidence-build/Testing/Temporary/LastTest.log
+          if-no-files-found: error

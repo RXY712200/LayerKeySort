@@ -1,5 +1,9 @@
 # Local Layer Order Workbench — Phase 1
 
+Independent Phase 2 tools now provide [performance/memory evidence](docs/MEASUREMENT.md)
+without changing the interactive consumer or Mini. [Manual experience guide](docs/MANUAL-EXPERIENCE.md)
+prepares future real-operator sessions; automation is not user adoption evidence.
+
 A standalone C17 terminal application using **LayerKeySort Mini v1.0.0** through
 its public header and CMake target. It maintains an editable layer occurrence
 list, checks every command against an independent array oracle, and records and
