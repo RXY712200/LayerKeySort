@@ -1,4 +1,7 @@
-#ifndef _WIN32
+#if defined(__APPLE__)
+/* Darwin's extended rusage fields are hidden by strict POSIX feature selection. */
+#define _DARWIN_C_SOURCE 1
+#elif !defined(_WIN32)
 #define _POSIX_C_SOURCE 200809L
 #endif
 #include "workload.h"
