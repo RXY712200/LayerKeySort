@@ -30,7 +30,9 @@
     ".github/workflows/scope-guard.yml": "repo",
     ".github/workflows/scope-guard-selftest.yml": "repo",
     "tools/scope_guard.py": "repo",
-    "tools/tests/test_scope_guard.py": "repo"
+    "tools/tests/test_scope_guard.py": "repo",
+    "tools/governance_ci_gate.py": "repo",
+    "tools/tests/test_governance_ci_gate.py": "repo"
   },
   "prefixes": [
     {
