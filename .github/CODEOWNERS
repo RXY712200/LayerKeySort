@@ -1,0 +1,25 @@
+# Repository product owners — real GitHub identities only.
+# The two ChatGPT product leads are advisory, NOT independent GitHub reviewers.
+* @RXY712200
+
+# Full
+/src/ @RXY712200
+/include/ @RXY712200
+/tests/ @RXY712200
+/benchmarks/ @RXY712200
+/examples/ @RXY712200
+/cmake/ @RXY712200
+/demo/ @RXY712200
+/docs/ @RXY712200
+/tools/ @RXY712200
+
+# Mini library and consumer
+/mini/ @RXY712200
+/consumers/layer-order-workbench/ @RXY712200
+
+# Shared governance and product-specific actions
+/.github/ @RXY712200
+/docs/governance/ @RXY712200
+/README.md @RXY712200
+/README.zh-CN.md @RXY712200
+/CONTRIBUTING.md @RXY712200
