@@ -4,14 +4,14 @@ Repository-wide **policy**, not a change to either product's public API. The mac
 
 ## Product areas
 
-- `full`: root Full C17 sources, public header, legacy/regression tests, benchmarks, examples, root CMake and Full-specific documentation and CI.
-- `mini`: `mini/**`, two explicitly listed Mini packaging scripts, Mini CI and release candidate workflow.
-- `consumer`: `consumers/layer-order-workbench/**` plus Workbench CI/evidence workflows. A Workbench defect is not automatically a Mini library defect.
-- `repo`: product-family README and navigation, the shared product policy, contribution/license metadata, CODEOWNERS, PR template, governance policy and guard workflows. The special `docs/FULL.*` entry pages and `docs/index.html` are classified `repo` for the initial multi-product navigation migration; **Full retains technical review responsibility for their Full claims**.
+- `full`: root Full C17 sources, public header, legacy/regression tests, benchmarks, examples, root CMake and Full-specific documentation. Full CI and release workflows are technically maintained by Full but belong to the protected **repo** control-plane path class.
+- `mini`: `mini/**`, two explicitly listed Mini packaging scripts, Mini CI and release candidate workflow under the same protected **repo** workflow-control plane (technical owner remains Mini).
+- `consumer`: `consumers/layer-order-workbench/**` ; Workbench CI/evidence workflows remain technically owned by Mini/Workbench but have **repo** path class to prevent product PRs from silently weakening validation. A Workbench defect is not automatically a Mini library defect.
+- `repo`: product-family README and navigation, the shared product policy, contribution/license metadata, CODEOWNERS, PR template, governance policy and **all explicitly listed GitHub Actions workflow definitions**, even when a workflow is technically owned by Full, Mini or Workbench. The special `docs/FULL.*` entry pages and `docs/index.html` are classified `repo` for the initial multi-product navigation migration; **Full retains technical review responsibility for their Full claims**.
 
 Unknown paths, ambiguous/malformed paths, missing changed-file pages, unsafe rename classifications and cross-owner sets without a **previously committed, exact-SHA authorization** are rejected by default. Path ownership is determined by exact match, else the longest matching declared prefix; it is *not* taken from PR title/label/body.
 
-A normal PR should touch files in only one owner class. For exceptionally necessary cross-product PRs, the real repository owner must FIRST approve a separate `repo`-only governance PR adding an exception to `scope-exceptions.json` that binds the exact PR number, head commit, base commit and changed-file inventory. The exception is read from the **protected target branch**, never from the proposed PR. Updating the target branch can invalidate an exception; re-approval then requires a new trusted record.
+A normal PR should touch files in only one owner class. In particular, changing both product source code and its CI workflow is a cross-class change and needs a previously authorized exact-file exception or two separate PRs. For exceptionally necessary cross-product PRs, the real repository owner must FIRST approve a separate `repo`-only governance PR adding an exception to `scope-exceptions.json` that binds the exact PR number, head commit, base commit and changed-file inventory. The exception is read from the **protected target branch**, never from the proposed PR. Updating the target branch can invalidate an exception; re-approval then requires a new trusted record.
 
 ## Trust boundary
 
