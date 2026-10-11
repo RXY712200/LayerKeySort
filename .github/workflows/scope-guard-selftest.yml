@@ -1,0 +1,25 @@
+name: Scope Guard Policy Tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scope-guard-selftest:
+    name: scope-guard-selftest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Adversarial unit tests and all tracked path coverage
+        run: python3 -m unittest discover -s tools/tests -p test_scope_guard.py -v
+      - name: Verify ownership policy syntax and exception schema
+        run: python3 tools/scope_guard.py --self-check
