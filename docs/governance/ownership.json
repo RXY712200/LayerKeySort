@@ -28,7 +28,9 @@
     ".github/workflows/workbench-evidence.yml": "consumer",
     ".github/workflows/governance-baseline-backup.yml": "repo",
     ".github/workflows/scope-guard.yml": "repo",
-    ".github/workflows/scope-guard-selftest.yml": "repo"
+    ".github/workflows/scope-guard-selftest.yml": "repo",
+    "tools/scope_guard.py": "repo",
+    "tools/tests/test_scope_guard.py": "repo"
   },
   "prefixes": [
     {
