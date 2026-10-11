@@ -128,3 +128,29 @@ jobs:
         run: python tools/verify_v4_api.py
       - name: Distribution consumers and reproducible amalgamation
         run: python3 tools/validate_distribution.py
+
+  full-gate:
+    name: full-gate
+    if: ${{ always() }}
+    needs: [windows-msvc, ubuntu, macos-appleclang]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reject failed, cancelled, missing and skipped upstream jobs
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          REQUIRED_JOB_IDS: windows-msvc ubuntu macos-appleclang
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          needed = set(os.environ['REQUIRED_JOB_IDS'].split())
+          upstream = json.loads(os.environ['NEEDS_JSON'])
+          actual = set(upstream)
+          bad = {key: item.get('result') for key, item in upstream.items()
+                 if not isinstance(item, dict) or item.get('result') != 'success'}
+          if actual != needed or bad:
+              print('Gate FAIL: expected', sorted(needed), 'observed',
+                    {key: value.get('result') for key, value in upstream.items()})
+              sys.exit(1)
+          print('Gate PASS: all required upstream jobs actually succeeded:',
+                sorted(needed))
+          PY
