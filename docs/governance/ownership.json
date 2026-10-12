@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "exact": {
+    ".gitignore": "repo",
+    "README.md": "repo",
+    "README.zh-CN.md": "repo",
+    "CONTRIBUTING.md": "repo",
+    "LICENSE": "repo",
+    "CMakeLists.txt": "full",
+    "CHANGELOG.md": "full",
+    "LayerKeySort.slnx": "full",
+    "LayerKeySort.vcxproj": "full",
+    "LayerKeySort.vcxproj.filters": "full",
+    "docs/index.html": "repo",
+    "docs/FULL.md": "repo",
+    "docs/FULL.zh-CN.md": "repo",
+    "docs/PRODUCT_LINES.md": "repo",
+    "docs/PRODUCT_LINES.zh-CN.md": "repo",
+    "tools/mini_release_assets.py": "mini",
+    "tools/tests/test_mini_release_assets.py": "mini",
+    ".github/CODEOWNERS": "repo",
+    ".github/pull_request_template.md": "repo",
+    ".github/workflows/ci.yml": "repo",
+    ".github/workflows/release-assets.yml": "repo",
+    ".github/workflows/mini-ci.yml": "repo",
+    ".github/workflows/mini-release-assets.yml": "repo",
+    ".github/workflows/workbench-ci.yml": "repo",
+    ".github/workflows/workbench-evidence.yml": "repo",
+    ".github/workflows/governance-baseline-backup.yml": "repo",
+    ".github/workflows/scope-guard.yml": "repo",
+    ".github/workflows/scope-guard-selftest.yml": "repo",
+    "tools/scope_guard.py": "repo",
+    "tools/tests/test_scope_guard.py": "repo",
+    "tools/governance_ci_gate.py": "repo",
+    "tools/tests/test_governance_ci_gate.py": "repo"
+  },
+  "prefixes": [
+    {
+      "path": "docs/governance/",
+      "owner": "repo"
+    },
+    {
+      "path": "consumers/layer-order-workbench/",
+      "owner": "consumer"
+    },
+    {
+      "path": "mini/",
+      "owner": "mini"
+    },
+    {
+      "path": "src/",
+      "owner": "full"
+    },
+    {
+      "path": "include/",
+      "owner": "full"
+    },
+    {
+      "path": "tests/",
+      "owner": "full"
+    },
+    {
+      "path": "benchmarks/",
+      "owner": "full"
+    },
+    {
+      "path": "examples/",
+      "owner": "full"
+    },
+    {
+      "path": "cmake/",
+      "owner": "full"
+    },
+    {
+      "path": "demo/",
+      "owner": "full"
+    },
+    {
+      "path": "docs/",
+      "owner": "full"
+    },
+    {
+      "path": "tools/",
+      "owner": "full"
+    }
+  ]
+}

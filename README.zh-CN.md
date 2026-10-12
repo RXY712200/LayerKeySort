@@ -2,145 +2,61 @@
 
 [English](README.md) | 简体中文
 
-## 产品线选择
+**面向持续变化的集合顺序，提供多个彼此独立的 C17 动态顺序维护库。**
 
-本仓库包含独立产品线：
+LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实例的顺序管理问题，而不是 `qsort` 一类的一次性排序。业务对象及业务身份由应用自己管理；每个产品拥有独立的顺序管理契约。
 
-- **Full**：[v4.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)，完整顺序管理、历史快照及进阶工作流。
-- **[Mini](mini/README.zh-CN.md)**：[v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)，独立的轻量 C17 顺序维护库。
+## 选择适合你的产品
 
-本仓库采用**多产品独立版本管理**。Full 保留历史 `v*` 标签；Mini 采用 `mini-v*` 标签，首个 Stable 为 `mini-v1.0.0`。GitHub 仓库级 `Latest` 不等于两个产品各自的最新版本。详见[产品线与发布管理规范](docs/PRODUCT_LINES.zh-CN.md)（[English](docs/PRODUCT_LINES.md)）。
+| | **[Full](docs/FULL.zh-CN.md)** | **[Mini](mini/README.zh-CN.md)** |
+| --- | --- | --- |
+| 当前 Stable | **[v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
+| 主要定位 | 更完整的顺序管理及历史工作流 | 轻量本地可变序列 |
+| 实时顺序管理 | 相对插入/移动、稳定实例句柄、可选比较器管理 | 相对插入/移动、稳定 occurrence 句柄 |
+| 任意两实例实时顺序比较 | 按 Full 契约支持 | 最坏 O(n) |
+| 历史快照与持久化 | 不可变快照、LS1、独立 Wire 格式与恢复 | 不提供 |
+| Group / Batch 工具 | 提供 | 不提供 |
+| 核心实现 | 有界分块与平衡索引 | 独立的非侵入式双向链表 |
+| 公开 API | 64 函数（Full v4） | 18 函数（Mini v1） |
+| 本仓库构建入口 | 根目录 `CMakeLists.txt` | `mini/CMakeLists.txt` |
 
-本页其余内容介绍 Full。
+**Full 与 Mini 是同一个项目家族的独立产品，不存在父子依赖关系。** 二者版本号、公开 API、兼容性要求及发布周期分别管理，互不链接对方的生产源码。
 
-LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把一组元素一次排好”，
-而是“一个集合长期存在，并且持续发生插入、删除、移动、遍历、保存历史顺序和恢复”。
+表格比较的是**能力，不是性能排名**，也不表示任何产品在所有场景下更快。只需 Mini 的轻量功能时选择 Mini；需要更完整的排序管理、快照或批量工具时选择 Full。
 
-**实时顺序使用稳定的容器内句柄；历史/持久化顺序使用不可变快照和 LS1 键。**
+## 从对应产品开始
 
-当前推荐 Stable 为 **v4.0.0**。V4 的 Preview.1–5 → RC.1 → Stable 开发周期已经完成。
-V3.1.0 仍作为历史 Stable 保留给依赖 Path/Tree 契约的应用；V4 是源码级大版本变化，
-不是可以直接替换头文件的兼容升级。
+| 产品 | 入门和使用 | API / 契约 | 正式下载 |
+| --- | --- | --- | --- |
+| Full | [Full 专属 README](docs/FULL.zh-CN.md) · [中文集成](docs/INTEGRATION.zh-CN.md) · [示例](examples/README.md) | [API](docs/API.md) · [V4 冻结契约](docs/V4_FREEZE.md) | [Full v4.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) |
+| Mini | [Mini 专属 README](mini/README.zh-CN.md) · [使用指南](mini/docs/USAGE.md) · [示例](mini/examples/basic.c) | [Mini v1 公开契约](mini/docs/CONTRACT.md) | [Mini v1.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
-当前 post-v4 roadmap 与技术债统一记录在
-[Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
-历史 Issue #2 已关闭但完整保留。
+下载 Mini 时请使用 Release 中的 **Mini-only 源码 ZIP**；GitHub 自动生成的 Source code 压缩包包含**整个仓库**。Full 则另有两文件 amalgamation 分发包。具体集成方法以各自产品文档为准；根目录 CMake 仍默认构建 Full。
 
-## 它适合什么？
+## 仓库目录说明
 
-LayerKeySort 最适合长期维护复杂本地 mutable collection 的软件，例如：
+- `include/`、`src/`、根 `CMakeLists.txt`、`tests/`、`benchmarks/` 和大部分 `docs/`：**Full**。
+- `mini/`：独立的 **Mini** 实现、文档、测试和构建系统。
+- `consumers/layer-order-workbench/`：**Mini 消费者工程及验证程序**，不是 Mini 生产源码，也不是第三套排序库。
+- `.github/`、部分 `tools/` 和[产品线政策](docs/PRODUCT_LINES.zh-CN.md)：仓库治理和产品专属维护工具。
 
-- 图层编辑器；
-- 视频 / 音频时间线；
-- CAD、游戏编辑器；
-- 节点 / 工作流编辑器；
-- 播放列表编辑器；
-- 本地文档编辑系统；
-- 大型 UI / 树结构中的某一层扁平顺序。
+未来可能研究 Embedded/MCU 版本，但**目前只是构想**，没有已发布的 Embedded 产品、API 或交付承诺。
 
-典型操作不是“排序一次”，而是：
+## 版本、兼容性与维护
 
-```text
-把 A 插到 B 前面
-把 C 移到 D 后面
-删除 E
-加入 F
-读取第一个 / 下一个
-捕获当前历史顺序
-保存后恢复并继续编辑
-```
+- Full 的已发布标签使用 `v*`（当前 Stable：`v4.0.0`）。
+- Mini 的已发布标签使用 `mini-v*`（当前 Stable：`mini-v1.0.0`）。
+- GitHub 仓库级 **Latest** 不等于各产品各自的最新版本；请使用上表的独立发布页面。
+- Full 早期版本和 V1–V4 研究属于保留的历史资料，不代表 Mini 的契约。
+- 许可证：[MIT](LICENSE)。各产品独立维护自己的文档及验收标准。
 
-如果你只需要一次性排序、简单 SQL `position` 字段、CRDT/分布式协同顺序，
-或者跨进程长期业务 ID，LayerKeySort 通常不是最合适的工具。
+跨产品修改前请阅读[产品线与发布管理规范](docs/PRODUCT_LINES.zh-CN.md)（[English](docs/PRODUCT_LINES.md)）及[贡献指南](CONTRIBUTING.md)。
 
-## 四个主要入口
+## 路线图与验证资料
 
-- `LksOrder`：显式相对顺序，支持前/后插入、移动、遍历和稳定 resident handle。
-- `LksManagedOrder`：由比较器维护顺序，保证相等元素的稳定插入语义。
-- `LksGroup` / `LksGroupBatch`：不可变平面序列、稳定构建和合并。
-- `LksSnapshot`：历史快照、LS1、LKS4SNP1、序列化和恢复。
+- **Full：** [V4 后续路线与技术债 Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)；[历史问题台账 Issue #4](https://github.com/RXY712200/LayerKeySort/issues/4)。
+- **Mini 与其消费者：** [Mini 路线图 Issue #7](https://github.com/RXY712200/LayerKeySort/issues/7)。
+- **Full 示例与验证：** [Full README](docs/FULL.zh-CN.md) · [验证](docs/VALIDATION.md)。
+- **Mini 示例与验证：** [Mini README](mini/README.zh-CN.md) · [开发与验证](mini/docs/DEVELOPMENT.md)。
 
-业务对象与业务 ID 始终由应用拥有。
-
-**Handle 不是持久化 ID。LS1 也不是 live position。**
-
-## 最小示例
-
-```c
-#include <layerkeysort.h>
-
-int main(void) {
-    int item = 42;
-    const LksOrderHandle *handle = NULL;
-    LksOrder *order = lks_order_create();
-    if (!order) return 1;
-
-    if (lks_order_insert_back(order, &item, &handle) != LKS_STATUS_OK) {
-        lks_order_destroy(order);
-        return 2;
-    }
-
-    lks_order_destroy(order); /* item 仍由应用拥有 */
-    return 0;
-}
-```
-
-完整公开示例见 [examples/README.md](examples/README.md)。
-
-## 集成
-
-支持 CMake `add_subdirectory`、离线 FetchContent、本地安装 +
-`find_package(LayerKeySort CONFIG REQUIRED)`，也提供确定性的两文件 amalgamation。
-
-见：
-
-- [中文集成指南](docs/INTEGRATION.zh-CN.md)
-- [英文完整集成指南](docs/INTEGRATION.md)
-- [API 参考](docs/API.md)
-- [使用指南](docs/USAGE.zh-CN.md)
-- [V3 → V4 迁移](docs/MIGRATION_V3_V4.md)
-
-## 已知成本与边界
-
-V4 不再为 live resident 维护 Path/LK1，因此避免了 V3 的全范围 live-coordinate relabel
-和 live Path 增长；但它仍然有真实成本：
-
-- 每 resident allocation；
-- block slack 和局部指针移动；
-- comparator / callback / allocator / OS 成本；
-- 完整 snapshot/export 是显式 `O(N+A)`；
-- 保留大量历史 snapshot 会占用相应历史内存。
-
-Mutable source 仍由调用方负责串行化；不承诺所有操作的统一硬延迟上界，
-也不承诺 universal binary ABI、CRDT、持久化 live handle 或数据库职责。
-
-主要性能收敛证据见
-[Preview.4 evidence](benchmarks/results/v4-preview4/README.md)；
-Stable 结论见 [V4_STABLE](docs/V4_STABLE.md)。
-
-## 长期方向
-
-LayerKeySort 的长期定位是 **dynamic ordering library**，而不是传统 sorting library。
-核心边界保持在：
-
-1. Mutable Order Engine；
-2. Immutable Historical Representation；
-3. Immutable Batch Utilities。
-
-短期内不应为了版本号立刻开始 V5。下一阶段最重要的是进入真实编辑器类应用，
-收集 implementation-independent 的真实 workload traces。
-
-Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 的 API 契约；Embedded 等其他产品线仍只是未来设想，不代表已经实现。
-详见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
-
-## 文档
-
-- [架构](docs/ARCHITECTURE.md)
-- [API](docs/API.md)
-- [兼容性](docs/COMPATIBILITY.md)
-- [验证](docs/VALIDATION.md)
-- [开发维护](docs/DEVELOPMENT.md)
-- [V4 Stable 记录](docs/V4_STABLE.md)
-- [Changelog](CHANGELOG.md)
-
-License: [MIT](LICENSE)。
+不要从功能表推断实际采用比例、所有平台均受支持或某一产品拥有普遍性能优势。请结合实际操作负载和资源限制选型。

@@ -1,0 +1,64 @@
+name: Governance baseline backup (review only)
+
+on:
+  pull_request:
+    paths:
+      - "README.md"
+      - "README.zh-CN.md"
+      - "docs/FULL.md"
+      - "docs/FULL.zh-CN.md"
+      - "docs/governance/**"
+      - ".github/workflows/governance-baseline-backup.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch immutable pre-governance history
+        uses: actions/checkout@v4
+        with:
+          ref: 7f17331297e88618a71257ebc65b04cb6b4b8c25
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Create and verify restorable Git bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p governance-backup/releases
+          git cat-file -e 7f17331297e88618a71257ebc65b04cb6b4b8c25^{commit}
+          git bundle create governance-backup/LayerKeySort-governance-baseline.bundle --all
+          git bundle verify governance-backup/LayerKeySort-governance-baseline.bundle
+          git clone --mirror governance-backup/LayerKeySort-governance-baseline.bundle "$RUNNER_TEMP/restore-check.git"
+          git -C "$RUNNER_TEMP/restore-check.git" cat-file -e 7f17331297e88618a71257ebc65b04cb6b4b8c25^{commit}
+          git -C "$RUNNER_TEMP/restore-check.git" cat-file -e 80004ae732daf696f7e9192e417de0edb0b2aafa^{commit}
+          git -C "$RUNNER_TEMP/restore-check.git" cat-file -e 3f52798b83b6580aa4b89846b6403b0bd7b15f0a^{commit}
+          git show -s --format='%H %cI %s' 7f17331297e88618a71257ebc65b04cb6b4b8c25 > governance-backup/main-baseline.txt
+          git show-ref > governance-backup/refs.txt
+      - name: Download and verify published Stable release assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          full='https://github.com/RXY712200/LayerKeySort/releases/download/v4.0.0'
+          mini='https://github.com/RXY712200/LayerKeySort/releases/download/mini-v1.0.0'
+          curl --fail --location --retry 3 "$full/LayerKeySort-4.0.0-amalgamation.zip" --output governance-backup/releases/LayerKeySort-4.0.0-amalgamation.zip
+          curl --fail --location --retry 3 "$full/LayerKeySort-4.0.0-SHA256SUMS.txt" --output governance-backup/releases/LayerKeySort-4.0.0-SHA256SUMS.txt
+          curl --fail --location --retry 3 "$mini/LayerKeySort-Mini-v1.0.0-source.zip" --output governance-backup/releases/LayerKeySort-Mini-v1.0.0-source.zip
+          curl --fail --location --retry 3 "$mini/LayerKeySort-Mini-v1.0.0-SHA256SUMS.txt" --output governance-backup/releases/LayerKeySort-Mini-v1.0.0-SHA256SUMS.txt
+          cat > governance-backup/releases/BASELINE-SHA256SUMS.txt <<'SHA256'
+          ed828c547cba05e39d05e28c9f6eaec7ffd325839d291713b7cfe0e47bef1a1d  LayerKeySort-4.0.0-amalgamation.zip
+          0ad427855cde57af7c426dba6168830838b0e7932bfa77c8c5efce84cdbcfee2  LayerKeySort-4.0.0-SHA256SUMS.txt
+          96b21a4d9177a98991e27712063dab7ce4d91a4adc0a76e420e8ab74263089c4  LayerKeySort-Mini-v1.0.0-source.zip
+          722c2d9aa5bace6ce7d15cdb5f876c270d9a0c3105b882f8e1d041db9743141a  LayerKeySort-Mini-v1.0.0-SHA256SUMS.txt
+          SHA256
+          (cd governance-backup/releases && sha256sum -c BASELINE-SHA256SUMS.txt)
+      - name: Upload independent downloadable backup package
+        uses: actions/upload-artifact@v4
+        with:
+          name: layerkeysort-pre-governance-baseline
+          path: governance-backup/
+          if-no-files-found: error
+          retention-days: 30
