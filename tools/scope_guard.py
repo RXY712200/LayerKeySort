@@ -103,14 +103,37 @@ def changed_inventory(files: list, policy: dict) -> tuple[list[str], set[str]]:
     return sorted(inventory), owners
 
 
-def authorize(files: list, policy: dict, exceptions: dict, *,
-              pr_number: int, head_sha: str, base_sha: str) -> tuple[str, int]:
-    validate_policy(policy)
-    if not isinstance(exceptions, dict) or exceptions.get("schema") != 1:
-        raise ScopeError("invalid exception policy schema")
+def validate_exceptions(exceptions: dict) -> list:
+    if not isinstance(exceptions, dict) or set(exceptions) != {"schema", "exceptions"}:
+        raise ScopeError("invalid exception policy object")
+    if exceptions.get("schema") != 1:
+        raise ScopeError("unsupported exception policy schema")
     entries = exceptions.get("exceptions")
     if not isinstance(entries, list):
         raise ScopeError("invalid exception list")
+    seen = set()
+    for entry in entries:
+        if (not isinstance(entry, dict)
+                or set(entry) != {"pr_number", "head_sha", "files"}):
+            raise ScopeError("invalid exception fields; base_sha is not an authorization key")
+        number, head, files = (entry["pr_number"], entry["head_sha"], entry["files"])
+        if (type(number) is not int or number <= 0 or number >= 2**31
+                or not isinstance(head, str) or SHA40.fullmatch(head) is None
+                or not isinstance(files, list) or not 1 <= len(files) <= MAX_FILES
+                or any(not isinstance(f, str) or not f or len(f) > 8192 for f in files)
+                or files != sorted(set(files))):
+            raise ScopeError("invalid exception PR/head/file inventory")
+        key = (number, head)
+        if key in seen:
+            raise ScopeError("duplicate exception for a PR head")
+        seen.add(key)
+    return entries
+
+
+def authorize(files: list, policy: dict, exceptions: dict, *,
+              pr_number: int, head_sha: str) -> tuple[str, int]:
+    validate_policy(policy)
+    entries = validate_exceptions(exceptions)
     inventory, owners = changed_inventory(files, policy)
     if len(owners) == 1:
         return next(iter(owners)), len(files)
@@ -119,13 +142,12 @@ def authorize(files: list, policy: dict, exceptions: dict, *,
         e for e in entries
         if (isinstance(e, dict) and e.get("pr_number") == pr_number
             and e.get("head_sha") == head_sha
-            and e.get("base_sha") == base_sha
             and e.get("files") == inventory)
     ]
     if len(matching) != 1:
         raise ScopeError(
             "cross-product changes require one precommitted trusted-base exception "
-            "for this exact PR, head SHA, base SHA and file inventory: "
+            "for this exact PR, head SHA and file inventory: "
             + ", ".join(sorted(owners))
         )
     return "cross-product (exact trusted-base exception)", len(files)
@@ -203,8 +225,7 @@ def main() -> int:
         exceptions = json.loads(Path(args.exceptions).read_text(encoding="utf-8"))
         validate_policy(policy)
         if args.self_check:
-            if exceptions.get("schema") != 1 or not isinstance(exceptions.get("exceptions"), list):
-                raise ScopeError("invalid exception policy schema")
+            validate_exceptions(exceptions)
             print("Scope Guard policy self-check: PASS")
             return 0
         repository = os.environ.get("GITHUB_REPOSITORY", "")
@@ -220,7 +241,7 @@ def main() -> int:
         n = int(pr_raw)
         files = read_pr_inventory(repository, n, token, head, base, base_ref)
         owner, count = authorize(files, policy, exceptions,
-                                 pr_number=n, head_sha=head, base_sha=base)
+                                 pr_number=n, head_sha=head)
         message = f"PASS: PR #{n} modifies {count} files in {owner}; head {head}"
         print(message)
         summary = os.environ.get("GITHUB_STEP_SUMMARY")

@@ -84,49 +84,86 @@ class ScopeGuardTest(unittest.TestCase):
         ]
         for owner, files in cases:
             result, n = guard.authorize(files, POLICY, EMPTY,
-                                        pr_number=12, head_sha=HEAD, base_sha=BASE)
+                                        pr_number=12, head_sha=HEAD)
             self.assertEqual((owner, len(files)), (result, n))
 
     def test_cross_owner_rejected_even_when_claimed_repo(self):
         # Labels/PR text are deliberately absent from the authorization API.
         with self.assertRaisesRegex(guard.ScopeError, "cross-product"):
             guard.authorize([item("src/order.c"), item("README.md")], POLICY, EMPTY,
-                            pr_number=12, head_sha=HEAD, base_sha=BASE)
+                            pr_number=12, head_sha=HEAD)
 
     def test_exact_preapproved_exception(self):
         files = [item("src/order.c"), item("mini/src/lks_mini.c")]
         inventory, _ = guard.changed_inventory(files, POLICY)
         auth = {"schema": 1, "exceptions": [{
-            "pr_number": 12, "head_sha": HEAD, "base_sha": BASE, "files": inventory
+            "pr_number": 12, "head_sha": HEAD, "files": inventory
         }]}
         status, count = guard.authorize(files, POLICY, auth,
-                                        pr_number=12, head_sha=HEAD, base_sha=BASE)
+                                        pr_number=12, head_sha=HEAD)
         self.assertIn("exact trusted-base", status)
         self.assertEqual(2, count)
         for kw in (
-            {"pr_number": 13, "head_sha": HEAD, "base_sha": BASE},
-            {"pr_number": 12, "head_sha": "c" * 40, "base_sha": BASE},
-            {"pr_number": 12, "head_sha": HEAD, "base_sha": "c" * 40},
+            {"pr_number": 13, "head_sha": HEAD},
+            {"pr_number": 12, "head_sha": "c" * 40},
         ):
             with self.assertRaises(guard.ScopeError):
                 guard.authorize(files, POLICY, auth, **kw)
         with self.assertRaises(guard.ScopeError):
             guard.authorize(files + [item("README.md")], POLICY, auth,
-                            pr_number=12, head_sha=HEAD, base_sha=BASE)
+                            pr_number=12, head_sha=HEAD)
+
+    def test_base_commit_can_advance_after_exception_is_merged(self):
+        # The exception is committed to the target branch separately.
+        # Its SHA cannot pre-commit the future target-branch SHA.
+        files = [item("src/order.c"), item("mini/src/lks_mini.c")]
+        inventory, _ = guard.changed_inventory(files, POLICY)
+        auth = {"schema": 1, "exceptions": [{
+            "pr_number": 12, "head_sha": HEAD, "files": inventory
+        }]}
+        self.assertNotIn("base_sha", auth["exceptions"][0])
+        for base_commit in (BASE, "c" * 40):
+            # Runtime separately checks GitHub PR base identity against event SHA.
+            self.assertEqual(
+                "cross-product (exact trusted-base exception)",
+                guard.authorize(files, POLICY, auth, pr_number=12, head_sha=HEAD)[0],
+            )
+        with self.assertRaises(guard.ScopeError):
+            guard.authorize(files, POLICY, auth, pr_number=12, head_sha="d" * 40)
+
+    def test_invalid_and_legacy_exception_schema_rejected(self):
+        files = [item("src/order.c"), item("mini/src/lks_mini.c")]
+        inventory, _ = guard.changed_inventory(files, POLICY)
+        good = {"pr_number": 12, "head_sha": HEAD, "files": inventory}
+        for entry in (
+            {**good, "base_sha": BASE},
+            {**good, "head_sha": "bad"},
+            {**good, "files": inventory[::-1]},
+            {**good, "files": [inventory[0], inventory[0]]},
+            {**good, "pr_number": True},
+            {**good, "files": []},
+        ):
+            with self.subTest(entry=entry):
+                with self.assertRaises(guard.ScopeError):
+                    guard.authorize(files, POLICY,
+                                    {"schema": 1, "exceptions": [entry]},
+                                    pr_number=12, head_sha=HEAD)
+        with self.assertRaises(guard.ScopeError):
+            guard.validate_exceptions({"schema": 1, "exceptions": [good, good]})
 
     def test_rename_old_and_new_both_checked(self):
         allowed = [item("mini/foo.c", "renamed", "mini/bar.c")]
         result, _ = guard.authorize(allowed, POLICY, EMPTY,
-                                    pr_number=12, head_sha=HEAD, base_sha=BASE)
+                                    pr_number=12, head_sha=HEAD)
         self.assertEqual("mini", result)
         with self.assertRaisesRegex(guard.ScopeError, "cross-product"):
             guard.authorize([item("src/order.c", "renamed", "mini/src/lks_mini.c")],
                             POLICY, EMPTY, pr_number=12,
-                            head_sha=HEAD, base_sha=BASE)
+                            head_sha=HEAD)
         with self.assertRaises(guard.ScopeError):
             guard.authorize([item("mini/x.c", "renamed", "future/x.c")],
                             POLICY, EMPTY, pr_number=12,
-                            head_sha=HEAD, base_sha=BASE)
+                            head_sha=HEAD)
 
     def test_reject_missing_duplicate_and_suspicious_status(self):
         for files in (
@@ -139,7 +176,7 @@ class ScopeGuardTest(unittest.TestCase):
             with self.subTest(files=files):
                 with self.assertRaises(guard.ScopeError):
                     guard.authorize(files, POLICY, EMPTY,
-                                    pr_number=12, head_sha=HEAD, base_sha=BASE)
+                                    pr_number=12, head_sha=HEAD)
 
     def test_forged_policy_and_exceptions_rejected(self):
         for p in ({"schema": 1, "exact": {}, "prefixes": []},
@@ -148,7 +185,7 @@ class ScopeGuardTest(unittest.TestCase):
                 guard.validate_policy(p)
         with self.assertRaises(guard.ScopeError):
             guard.authorize([item("README.md")], POLICY, {"schema": 1, "exceptions": None},
-                            pr_number=12, head_sha=HEAD, base_sha=BASE)
+                            pr_number=12, head_sha=HEAD)
 
     def test_api_pagination_and_stale_pr_prevention(self):
         metadata = {

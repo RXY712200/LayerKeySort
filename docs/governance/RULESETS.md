@@ -25,7 +25,8 @@ GitHub repository → Settings → Rules → Rulesets → New branch ruleset; ta
 5. As a solo maintainer, do not require an unavailable second approver or an unfulfillable CODEOWNER approval.
 6. Ordinary Codex tasks must not have an automatic bypass. A real owner emergency recovery plan, including before/after settings snapshot and reason, is mandatory.
 7. Required workflows are not path-filtered; their final jobs use `always()` and fail unless all listed upstream job IDs really report `success`.
-8. If "Require branches to be up-to-date" is enabled, verify normal merging and CI reruns with PR #9 transition before activation.
+8. **Initially leave "Require branches to be up to date before merging" OFF (loose checks)** while exact HEAD-SHA exceptions are supported. Merging a preauthorization into main advances the base; strict-up-to-date would force a cross-product PR HEAD update, invalidate the preauthorization, and create another authorization cycle. This is a deliberate tradeoff and must be tested with GitHub's actual status-check attribution. If strict freshness is later required, redesign the authorization transport rather than silently making exceptions impossible.
+9. Verify base advancement and SHA freshness using real test PRs; outdated merge commits/required-check ambiguity must block activation, not be waved through.
 
 **Pause before enforcement** if the platform cannot run the trusted `pull_request_target` event or cannot attribute the resulting check correctly. Do not silently select a weaker/self-declared guard as a substitute.
 
@@ -51,6 +52,8 @@ Before enforcing the Ruleset, demonstrate in a test repository or test PRs:
 - A Mini-only PR is accepted; Mini+Full production edits are rejected.
 - A Full-only PR and a Workbench consumer-only PR are accepted.
 - A Repo-only PR cannot authorize product production modifications by adding a PR label.
+- A separately approved `repo` exception containing PR number, HEAD SHA and exact sorted inventory can authorize that unchanged PR **after** the approval has merged into main. It has no `base_sha` field. A changed HEAD/changed file list fails, while changing the current base is validated separately against the live GitHub API.
+- The exception can be exercised without an impossible self-referential base commit SHA and without forcing a strict-up-to-date rebase loop.
 - A PR that weakens Scope Guard cannot supply its own replacement validator to pass; the trusted base supplies the active checker.
 - A missing, cancelled, failed, skipped or neutral **upstream** requirement is rejected by its corresponding fixed CI gate.
 - Workflow changes in the same PR as product source are cross-owner changes and need a separately approved exact-file exception.
