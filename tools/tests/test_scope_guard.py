@@ -123,11 +123,31 @@ class ScopeGuardTest(unittest.TestCase):
         }]}
         self.assertNotIn("base_sha", auth["exceptions"][0])
         for base_commit in (BASE, "c" * 40):
-            # Runtime separately checks GitHub PR base identity against event SHA.
-            self.assertEqual(
-                "cross-product (exact trusted-base exception)",
-                guard.authorize(files, POLICY, auth, pr_number=12, head_sha=HEAD)[0],
-            )
+            # Two successive trusted-base versions can authorize an unchanged
+            # HEAD. The API verification separately checks the actual base SHA.
+            meta = {
+                "number": 12, "state": "open", "changed_files": len(files),
+                "head": {"sha": HEAD},
+                "base": {"sha": base_commit, "ref": "main",
+                         "repo": {"full_name": "RXY712200/LayerKeySort"}},
+            }
+            def api_response(repo, path, token):
+                return files if "/files?" in path else meta
+            with mock.patch.object(guard, "api_json", side_effect=api_response):
+                verified = guard.read_pr_inventory(
+                    "RXY712200/LayerKeySort", 12, "dummy", HEAD,
+                    base_commit, "main"
+                )
+                self.assertEqual(
+                    "cross-product (exact trusted-base exception)",
+                    guard.authorize(verified, POLICY, auth,
+                                    pr_number=12, head_sha=HEAD)[0],
+                )
+                with self.assertRaisesRegex(guard.ScopeError, "changed"):
+                    guard.read_pr_inventory(
+                        "RXY712200/LayerKeySort", 12, "dummy", HEAD,
+                        "d" * 40, "main"
+                    )
         with self.assertRaises(guard.ScopeError):
             guard.authorize(files, POLICY, auth, pr_number=12, head_sha="d" * 40)
 

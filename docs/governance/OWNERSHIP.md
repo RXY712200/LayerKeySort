@@ -33,7 +33,7 @@ GitHub's public-repository event policy may block `pull_request_target` from 202
 
 ## Checks and release constraints
 
-The proposed required merge checks are `full-gate`, `mini-gate`, `workbench-gate` and `scope-guard`. Their upstream matrix jobs must all complete successfully, not merely be skipped. Rulesets are an **additional** platform setting: source files alone do not enforce PR-only merging or protected tags.
+The proposed required merge checks are `full-gate`, `mini-gate`, `workbench-gate` and `scope-guard`. Their existing upstream matrix jobs must complete successfully, not merely be skipped. The initial summary gate checks the upstream matrix-job aggregate, **not an independently frozen matrix-member count**. Matrix-definition changes are therefore classified as `repo` control-plane changes requiring separate review. `Workbench Measurement Evidence` is initially advisory for ordinary PRs (a specific acceptance condition for the measurement-focused PR #9), not part of the always-required `workbench-gate`; see [RULESETS.md](RULESETS.md). Rulesets are an **additional** platform setting: source files alone do not enforce PR-only merging or protected tags.
 
 - Do not touch the frozen Full 4.x public API, LS1 and LKS4SNP1 formats as part of governance.
 - Do not touch Mini 1.x's 18 API functions, source implementation or released contract.

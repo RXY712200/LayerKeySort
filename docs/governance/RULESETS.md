@@ -39,6 +39,19 @@ GitHub repository → Settings → Rules → Rulesets → New tag ruleset. Prote
 - Test restrictions on a disposable throwaway tag in a **separate test repository or isolated controlled namespace**, never by rewriting existing Full/Mini release tags.
 - Record resolved annotated-tag object and peeled commit SHA; do not confuse the tag-object SHA with the underlying source commit.
 
+## Workbench Phase 2 / PR #9 transition
+
+This is a concrete merge order, not permission for the Full lead to modify or merge Mini-owned consumer work:
+
+1. Keep governance PR #11 **Draft** while the Mini lead independently completes PR #9 review. PR #9 currently includes `consumers/layer-order-workbench/**` (consumer) and both `workbench-ci.yml` and new `workbench-evidence.yml` (repo control-plane), so it intentionally **would be rejected** after Scope Guard enforcement without an exception.
+2. Prefer finishing and merging PR #9 **before** merging PR #11 or activating the guard. Require successful ordinary Workbench tests **and** the two-platform Workbench Measurement Evidence workflow for PR #9, plus examination of the uploaded measurement artifacts; PR #9 is a measurement-specific deliverable.
+3. If PR #9 cannot finish first, Mini may split the workflow-only edits into a separately reviewed governance PR and leave the consumer-only code PR intact. Do **not** silently exempt all `consumers/**` from governance checks.
+4. Once PR #9 and neutral-homepage PR #10 are safely merged, update PR #11 against the new main and rerun all relevant tests. The governance PR itself stays `repo`-only.
+5. Merge the reviewed and validated guard to main **without** enabling the mandatory Ruleset yet. On a later real test PR, verify the trusted guard actually reports the required `scope-guard` context against the SHA GitHub requires; update the test PR head and repeat. Include an unauthorized cross-owner test.
+6. Only after tests succeed, enable rules. The human owner must separately complete the external backup and check any existing Classic Branch Protection.
+
+**Current policy choice:** `Workbench Measurement Evidence` is supplemental for ordinary future Workbench PRs, not part of the four fixed always-required gate contexts. For PR #9's Phase 2 performance-evidence deliverable it is a **manual acceptance requirement** because the work specifically produces measurement evidence. If future governance decides the two-platform evidence run is always mandatory, first add an independent stable gate/merge requirement with Mini's approval; do not falsely report it as already enforced by `workbench-gate`.
+
 ## GitHub Release integrity
 
 Existing Full 4.0.0 and Mini 1.0.0 Releases reported `immutable=false` at capture. New Release Immutability is a **future-release setting** and is not retroactive. Preserve the four baseline published SHA-256 hashes in [BASELINE.md](BASELINE.md) when that file is merged; do not edit legacy Release assets as a test.
