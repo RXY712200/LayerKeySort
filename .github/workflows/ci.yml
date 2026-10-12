@@ -128,3 +128,18 @@ jobs:
         run: python tools/verify_v4_api.py
       - name: Distribution consumers and reproducible amalgamation
         run: python3 tools/validate_distribution.py
+
+  full-gate:
+    name: full-gate
+    if: ${{ always() }}
+    needs: [windows-msvc, ubuntu, macos-appleclang]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Fail closed on missing, skipped, cancelled or failed jobs
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          REQUIRED_JOB_IDS: windows-msvc ubuntu macos-appleclang
+        run: python3 tools/governance_ci_gate.py

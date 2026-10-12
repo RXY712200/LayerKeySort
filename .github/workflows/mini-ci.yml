@@ -85,3 +85,18 @@ jobs:
           cmake -S "$mini_dir" -B "$RUNNER_TEMP/mini-unpacked-build" -DCMAKE_BUILD_TYPE=Debug -DLKS_MINI_STRICT=ON
           cmake --build "$RUNNER_TEMP/mini-unpacked-build"
           ctest --test-dir "$RUNNER_TEMP/mini-unpacked-build" --output-on-failure
+
+  mini-gate:
+    name: mini-gate
+    if: ${{ always() }}
+    needs: [mini]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Fail closed on missing, skipped, cancelled or failed jobs
+        env:
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          REQUIRED_JOB_IDS: mini
+        run: python3 tools/governance_ci_gate.py

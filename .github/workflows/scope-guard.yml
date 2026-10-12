@@ -1,0 +1,33 @@
+name: Trusted Scope Guard
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  scope-guard:
+    name: scope-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out ONLY the trusted target-branch commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Fail closed on unauthorized paths and incomplete PR file inventory
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SCOPE_PR_NUMBER: ${{ github.event.pull_request.number }}
+          SCOPE_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          SCOPE_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          SCOPE_BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: python3 tools/scope_guard.py
