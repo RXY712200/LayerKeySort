@@ -1,7 +1,7 @@
 # 本地图层顺序工作台 — Phase 1
 
 Phase 2 独立工具提供[性能/内存测量方法](docs/MEASUREMENT.md)，不改变交互程序或 Mini。
-[人工体验指南](docs/MANUAL-EXPERIENCE.md)供真实操作者后续采集轨迹，自动化不计为用户采用证据。
+[人工体验指南](docs/MANUAL-EXPERIENCE.md)及[Windows 11 真人操作与轨迹回放教程](docs/WINDOWS-HUMAN-EXPERIENCE.zh-CN.md)供实际操作者采集轨迹，自动化不计为用户采用证据。
 
 独立 C17 终端应用，通过 Mini v1.0.0 **公共头文件和 CMake target** 管理图层
 出现实例。支持交互、脚本、语义轨迹与确定性回放，每条命令后使用独立数组
