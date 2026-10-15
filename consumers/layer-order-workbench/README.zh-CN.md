@@ -1,7 +1,7 @@
 # 本地图层顺序工作台 — Phase 1
 
 Phase 2 独立工具提供[性能/内存测量方法](docs/MEASUREMENT.md)，不改变交互程序或 Mini。
-[人工体验指南](docs/MANUAL-EXPERIENCE.md)供真实操作者后续采集轨迹，自动化不计为用户采用证据。
+[人工体验指南](docs/MANUAL-EXPERIENCE.md)及[Windows 11 真人操作与轨迹回放教程](docs/WINDOWS-HUMAN-EXPERIENCE.zh-CN.md)供实际操作者采集轨迹，自动化不计为用户采用证据。
 
 独立 C17 终端应用，通过 Mini v1.0.0 **公共头文件和 CMake target** 管理图层
 出现实例。支持交互、脚本、语义轨迹与确定性回放，每条命令后使用独立数组
@@ -91,5 +91,6 @@ Linux GNU 兼容链接器/MinGW 另有隔离 OOM 测试：仅测试可执行文�
 `-DWORKBENCH_SANITIZERS=ON` 同时插桩 Mini 和消费者；实际平台 CI 结果见 Draft PR
 的准确 SHA 运行记录，不能凭工作流文件宣称通过。
 
-本阶段不测量性能优势、不实现 Full 适配层。真实下游轨迹、代表性统计计时和
-分配器/RSS 内存证据留待后续决定；不会因这个工作台启动 Mini v1.1.0。
+Phase 2 独立工具已提供生成负载的重复计时、RSS/工作集和适用平台的分配请求证据，
+方法与限制见[测量说明](docs/MEASUREMENT.md)。这些不是实际用户负载或完整分配器开销；
+真人会话仍待采集。本工作台不宣称性能优势、不实现 Full 适配层，也不启动 Mini v1.1.0。
