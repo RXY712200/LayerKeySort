@@ -30,7 +30,7 @@ $exe = if (Test-Path .\wb-human\Debug\layer_order_workbench.exe) {
 & $exe --help
 ```
 
-若希望用现有 MSYS2 UCRT64 GCC，可以在 **MSYS2 UCRT64 终端**中采用 `-G "MinGW Makefiles"` 配置到另一构建目录，不能直接复用上述 Visual Studio 构建缓存。保持 CLI 测试与源代码不变。
+若希望用现有 MSYS2 UCRT64 GCC，请在 **Windows PowerShell** 中将已有 UCRT64 的 `bin` 目录加入当前进程的 `PATH`，确保 `gcc` 和 `mingw32-make` 可用，再用 `-G "MinGW Makefiles"` 配置到另一构建目录。该生成器使用 Windows 命令环境，不应切换到 MSYS/Bash 执行本页 PowerShell 命令；也不能复用 Visual Studio 构建缓存。无需另装 IDE 或修改源码。
 
 ## 2. 开始一场真实的人工交互
 
@@ -48,6 +48,13 @@ $trace = Join-Path $traceDir ("human-1-{0}.trace" -f (Get-Date -Format "yyyyMMdd
 例如命令类型有 `create LayerA`、`insert-back 1`、`insert-back NULL`、`list`、`compare 1 2`、`move-front 2`、`remove 1`，但这些只是语法示例，不是一套供复制运行的“真人脚本”。业务对象 ID 与每次插入的新 occurrence ID 不是同一种编号：以程序实际输出为准；不要猜测已经删除的句柄。
 
 三场会话分别聚焦：**初次建立图层顺序、重新排列已有图层、删除与恢复/重复对象/NULL/错误恢复**。每场至少有 **20 条被程序处理的命令**，包括最后的 `quit`；空行或注释行不计数。应由真人实际操作三次，不能将同一轨迹重复回放三次冒充独立会话。
+
+三场合计应覆盖以下语义，由你自行选择操作顺序和程序实际返回的 ID，不要复制预编的 20 条命令脚本：
+
+- 创建业务对象及前/后/相对插入；同一对象 ID 重复插入，另插入 `NULL` 占位实例。
+- 实际交换相邻实例，再将实例跨越多个其他实例移动；用 `list`、`list-reverse` 和 `compare` 核对结果。
+- 合法无操作移动，例如将首实例再次移到首部，或 `move-before OCC OCC`。
+- 删除后用原 occurrence ID 请求移动，观察 `APP_RETIRED_OCCURRENCE`；再插入同一业务对象，使用新 occurrence ID 继续操作。错误后顺序应保持不变。
 
 完成一场后输入 `quit`。正常结束应显示类似 `VERIFIED commands=25 ...`。这里的 `commands` 数量必须不少于 20，并记录是否出现应用错误或不符合预期的行为。若程序提前异常退出，应保留原始失败轨迹，不能修改尾标记假装完成。
 
