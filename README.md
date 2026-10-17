@@ -59,4 +59,8 @@ Read [product-line and release policy](docs/PRODUCT_LINES.md) ([简体中文](do
 - **Full examples and validation:** [Full README](docs/FULL.md) · [Full validation](docs/VALIDATION.md).
 - **Mini examples and validation:** [Mini README](mini/README.md) · [Mini development](mini/docs/DEVELOPMENT.md).
 
+## External project directory
+
+- [Quiveld — author's independent projects directory](https://quiveld.com/projects/independent/).
+
 Do not infer real-world adoption, universal platform support, or performance superiority from a feature table. Evaluate your application's actual ordering and resource requirements.
