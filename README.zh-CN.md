@@ -59,4 +59,8 @@ LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实�
 - **Full 示例与验证：** [Full README](docs/FULL.zh-CN.md) · [验证](docs/VALIDATION.md)。
 - **Mini 示例与验证：** [Mini README](mini/README.zh-CN.md) · [开发与验证](mini/docs/DEVELOPMENT.md)。
 
+## 外部项目目录
+
+- [Quiveld — 作者的独立项目目录](https://quiveld.com/projects/independent/)。
+
 不要从功能表推断实际采用比例、所有平台均受支持或某一产品拥有普遍性能优势。请结合实际操作负载和资源限制选型。
