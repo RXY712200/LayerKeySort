@@ -1,0 +1,36 @@
+{
+  "main": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+  "stable": "80004ae732daf696f7e9192e417de0edb0b2aafa",
+  "tag_object": "83d67d3ef5dacaf6117db320d9bbea68b199e23e",
+  "production_diff": "",
+  "header_sha256": "246557c0ae00462645740f6bafeff3bce5ba7f92be6f611bc1e4630328e760fe",
+  "platform": "Windows build 26300, x64, Ryzen 9 9955HX 16C/32T, 16,304,992,256 bytes RAM",
+  "toolchain": "MSYS2 UCRT64 GCC 16.2.0; MSVC 19.51.36260.0, CMake 4.4.3, Python 3.13.14",
+  "provenance": "generated engineering evidence; no human adoption",
+  "issues": {
+    "1": {
+      "url": "https://github.com/RXY712200/LayerKeySort/issues/1",
+      "updatedAt": "2026-09-29T11:02:07Z",
+      "comments": 1,
+      "body_sha256": "1d5dfa52de88789606376b6f18ac02699aae1bfaedea95e96cc6179cd7be78a2"
+    },
+    "2": {
+      "url": "https://github.com/RXY712200/LayerKeySort/issues/2",
+      "updatedAt": "2026-10-07T04:03:50Z",
+      "comments": 13,
+      "body_sha256": "50e6bfd18ce6f97c59e0e26ac6b2df0765868886d065131b5dc68d5b64be4a6b"
+    },
+    "3": {
+      "url": "https://github.com/RXY712200/LayerKeySort/issues/3",
+      "updatedAt": "2026-10-08T12:04:09Z",
+      "comments": 2,
+      "body_sha256": "38fa0f50da56d1010fcb80c1f6ea357983ba342680f8e8fe465b80a7d2eb07a6"
+    },
+    "4": {
+      "url": "https://github.com/RXY712200/LayerKeySort/issues/4",
+      "updatedAt": "2026-10-08T12:04:10Z",
+      "comments": 0,
+      "body_sha256": "551974c835ede9126d86acb235d37567d2762a1cd5beebbf369ef88f1f195031"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found Python3: C:/Users/rxy71/AppData/Local/Programs/Python/Python313/python.exe (found version "3.13.14") found components: Interpreter
+-- Configuring done (1.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-sanitize
+[  4%] Building C object full/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj
+[  8%] Building C object full/CMakeFiles/layerkeysort.dir/src/lks_base.c.obj
+[ 12%] Building C object full/CMakeFiles/layerkeysort.dir/src/path.c.obj
+[ 16%] Building C object full/CMakeFiles/layerkeysort.dir/src/path_text.c.obj
+[ 20%] Building C object full/CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj
+[ 25%] Building C object full/CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj
+[ 29%] Building C object full/CMakeFiles/layerkeysort.dir/src/path_compare.c.obj
+[ 33%] Building C object full/CMakeFiles/layerkeysort.dir/src/order.c.obj
+[ 37%] Building C object full/CMakeFiles/layerkeysort.dir/src/managed_order.c.obj
+[ 41%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot.c.obj
+[ 45%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj
+[ 50%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj
+[ 54%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj
+[ 58%] Building C object full/CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj
+[ 62%] Building C object full/CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj
+[ 66%] Building C object full/CMakeFiles/layerkeysort.dir/src/sort.c.obj
+[ 70%] Linking C static library liblayerkeysort.a
+[ 70%] Built target layerkeysort
+[ 79%] Building C object CMakeFiles/full_editor.dir/editor.c.obj
+[ 79%] Building C object CMakeFiles/full_contracts.dir/contracts.c.obj
+[ 83%] Building C object CMakeFiles/full_editor.dir/model.c.obj
+[ 87%] Building C object CMakeFiles/full_measure.dir/measure.c.obj
+[ 95%] Linking C executable full_contracts.exe
+[ 95%] Linking C executable full_editor.exe
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lasan: No such file or directory
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lasan: No such file or directory
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lubsan: No such file or directory
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lubsan: No such file or directory
+collect2.exe: error: ld returned 1 exit status
+mingw32-make[2]: *** [CMakeFiles\full_editor.dir\build.make:120: full_editor.exe] Error 1
+collect2.exe: error: ld returned 1 exit status
+mingw32-make[1]: *** [CMakeFiles\Makefile2:112: CMakeFiles/full_editor.dir/all] Error 2
+mingw32-make[1]: *** Waiting for unfinished jobs....
+mingw32-make[2]: *** [CMakeFiles\full_contracts.dir\build.make:103: full_contracts.exe] Error 1
+mingw32-make[1]: *** [CMakeFiles\Makefile2:144: CMakeFiles/full_contracts.dir/all] Error 2
+[100%] Linking C executable full_measure.exe
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lasan: No such file or directory
+D:/msys64/ucrt64/bin/../lib/gcc/x86_64-w64-mingw32/16.2.0/../../../../x86_64-w64-mingw32/bin/ld.exe: cannot find -lubsan: No such file or directory
+collect2.exe: error: ld returned 1 exit status
+mingw32-make[2]: *** [CMakeFiles\full_measure.dir\build.make:103: full_measure.exe] Error 1
+mingw32-make[1]: *** [CMakeFiles\Makefile2:176: CMakeFiles/full_measure.dir/all] Error 2
+mingw32-make: *** [Makefile:100: all] Error 2

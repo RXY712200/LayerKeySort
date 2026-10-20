@@ -1,0 +1,19 @@
+{
+  "provenance": "Codex generated engineering evaluation; not human adoption",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "base_main": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+  "compiler": "gcc (Rev4, Built by MSYS2 project) 16.2.0",
+  "warmups": "one complete discarded run per size",
+  "repeats": 5,
+  "source_sha256": {
+    "allocation.c": "255a27747e5cfbdff9b12f40685063d6056111334b3a4cbe32f7fc3e178d7ca9",
+    "contracts.c": "6b2a89a925bbf49368022ba8e1a618c92cc56b48b87790154bd35c192aaad0d5",
+    "editor.c": "8d53d69954f6db778b620bad950e8f4f134c3ffe44195a1479b2527a0e5415d8",
+    "failures.c": "eb07347ed7b60d9f948231c105f97c04d838ee9158ce9fbbaa4ca6fcfb8167cb",
+    "measure.c": "f5830180944fb0a5f89497418b6398fe5b046ba8668fb6fea961ba64513c75a0",
+    "model.c": "55a0c595b474fc3a9905f440ca0b37e14a4eb2fc59384aa26b9fac5ffc3d6f31"
+  },
+  "post_capture_note": "Final contracts.c change removes only an extra blank line at EOF after capture; measurement driver, library and behavior unchanged. source_sha256 preserves original collection-time bytes.",
+  "final_contracts_sha256": "0f52b22941eab1644ac1eef430e479dad68ed9b945d7f4af13d0633d40894d5a"
+}

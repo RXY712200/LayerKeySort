@@ -1,0 +1,74 @@
+UpdateCTestConfiguration  from :C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug/DartConfiguration.tcl
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: contracts
+
+1: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-eval-build-gcc-debug\full_contracts.exe
+1: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug
+1: Test timeout computed to be: 10000000
+1: external wire mutations accepted=5000 rejected=15000 canonical_reserialize=true
+1: contracts: managed equality/context/reentry/edit, Group/Batch/sort, cursor, LS1/wire/history, legacy import, live foreign errors PASS
+1/5 Test #1: contracts ........................   Passed    0.01 sec
+test 2
+    Start 2: editor_model
+
+2: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug/full_editor.exe" "--steps" "12000"
+2: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug
+2: Test timeout computed to be: 10000000
+2: seed=17 generated_steps=12000 processed_commands=14092 all_external_rows_match=true
+2: seed=712200 generated_steps=12000 processed_commands=14064 all_external_rows_match=true
+2: seed=43801 generated_steps=12000 processed_commands=14133 all_external_rows_match=true
+2/5 Test #2: editor_model .....................   Passed    0.51 sec
+test 3
+    Start 3: large_document
+
+3: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug/full_editor.exe" "--large"
+3: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug
+3: Test timeout computed to be: 10000000
+3: large_document peak_residents=2048 commands=5123 seed=493 exact_all_rows=true
+3/5 Test #3: large_document ...................   Passed    2.48 sec
+test 4
+    Start 4: document_workflow
+
+4: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug/full_editor.exe" "--application"
+4: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug
+4: Test timeout computed to be: 10000000
+4: document workflow: shared layer instances, names/visibility, retirement, historical restore PASS
+4/5 Test #4: document_workflow ................   Passed    0.08 sec
+test 5
+    Start 5: allocation_failures
+
+5: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-eval-build-gcc-debug\full_failures.exe
+5: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-gcc-debug
+5: Test timeout computed to be: 10000000
+5: mode=0 failing_points=1 then_success=true
+5: mode=1 failing_points=1 then_success=true
+5: mode=2 failing_points=0 then_success=true
+5: mode=3 failing_points=8 then_success=true
+5: mode=4 failing_points=4 then_success=true
+5: mode=5 failing_points=165 then_success=true
+5: mode=6 failing_points=3 then_success=true
+5: mode=7 failing_points=2 then_success=true
+5: mode=8 failing_points=71 then_success=true
+5: mode=9 failing_points=2 then_success=true
+5: mode=10 failing_points=1 then_success=true
+5: mode=11 failing_points=1 then_success=true
+5: mode=12 failing_points=14 then_success=true
+5: mode=13 failing_points=2 then_success=true
+5: mode=14 failing_points=1 then_success=true
+5: mode=15 failing_points=3 then_success=true
+5: mode=16 failing_points=0 then_success=true
+5: mode=17 failing_points=0 then_success=true
+5: managed remove-edit-reinsert: OOM leaves item nonresident; explicit retry recovered
+5: all_sweeps failures=279 zero_live=true
+5/5 Test #5: allocation_failures ..............   Passed    0.02 sec
+
+100% tests passed out of 5
+
+Total Test time (real) =   3.13 sec

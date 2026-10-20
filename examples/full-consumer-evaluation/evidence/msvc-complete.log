@@ -1,0 +1,196 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.10.2
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+-- Configuring done (0.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug
+[ 70%] Built target layerkeysort
+[ 75%] Building C object CMakeFiles/full_editor.dir/editor.c.obj
+editor.c
+[ 79%] Linking C executable full_editor.exe
+[ 83%] Built target full_editor
+[ 91%] Built target full_contracts
+[100%] Built target full_measure
+UpdateCTestConfiguration  from :C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug/DartConfiguration.tcl
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: contracts
+
+1: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-eval-build-msvc-debug\full_contracts.exe
+1: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug
+1: Test timeout computed to be: 10000000
+1: external wire mutations accepted=5000 rejected=15000 canonical_reserialize=true
+1: contracts: managed equality/context/reentry/edit, Group/Batch/sort, cursor, LS1/wire/history, legacy import, live foreign errors PASS
+1/4 Test #1: contracts ........................   Passed    0.02 sec
+test 2
+    Start 2: editor_model
+
+2: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug/full_editor.exe" "--steps" "12000"
+2: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug
+2: Test timeout computed to be: 10000000
+2: seed=17 generated_steps=12000 processed_commands=14092 all_external_rows_match=true
+2: seed=712200 generated_steps=12000 processed_commands=14064 all_external_rows_match=true
+2: seed=43801 generated_steps=12000 processed_commands=14133 all_external_rows_match=true
+2/4 Test #2: editor_model .....................   Passed    0.69 sec
+test 3
+    Start 3: large_document
+
+3: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug/full_editor.exe" "--large"
+3: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug
+3: Test timeout computed to be: 10000000
+3: large_document peak_residents=2048 commands=5123 seed=493 exact_all_rows=true
+3/4 Test #3: large_document ...................   Passed    3.73 sec
+test 4
+    Start 4: document_workflow
+
+4: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug/full_editor.exe" "--application"
+4: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-debug
+4: Test timeout computed to be: 10000000
+4: document workflow: shared layer instances, names/visibility, retirement, historical restore PASS
+4/4 Test #4: document_workflow ................   Passed    0.09 sec
+
+100% tests passed out of 4
+
+Total Test time (real) =   4.53 sec
+-- Configuring done (0.3s)
+-- Generating done (0.2s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release
+[ 70%] Built target layerkeysort
+[ 75%] Building C object CMakeFiles/full_editor.dir/editor.c.obj
+editor.c
+[ 79%] Linking C executable full_editor.exe
+[ 83%] Built target full_editor
+[ 91%] Built target full_contracts
+[100%] Built target full_measure
+UpdateCTestConfiguration  from :C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release/DartConfiguration.tcl
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: contracts
+
+1: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-eval-build-msvc-release\full_contracts.exe
+1: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release
+1: Test timeout computed to be: 10000000
+1: external wire mutations accepted=5000 rejected=15000 canonical_reserialize=true
+1: contracts: managed equality/context/reentry/edit, Group/Batch/sort, cursor, LS1/wire/history, legacy import, live foreign errors PASS
+1/4 Test #1: contracts ........................   Passed    0.02 sec
+test 2
+    Start 2: editor_model
+
+2: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release/full_editor.exe" "--steps" "12000"
+2: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release
+2: Test timeout computed to be: 10000000
+2: seed=17 generated_steps=12000 processed_commands=14092 all_external_rows_match=true
+2: seed=712200 generated_steps=12000 processed_commands=14064 all_external_rows_match=true
+2: seed=43801 generated_steps=12000 processed_commands=14133 all_external_rows_match=true
+2/4 Test #2: editor_model .....................   Passed    0.39 sec
+test 3
+    Start 3: large_document
+
+3: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release/full_editor.exe" "--large"
+3: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release
+3: Test timeout computed to be: 10000000
+3: large_document peak_residents=2048 commands=5123 seed=493 exact_all_rows=true
+3/4 Test #3: large_document ...................   Passed    1.55 sec
+test 4
+    Start 4: document_workflow
+
+4: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release/full_editor.exe" "--application"
+4: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-release
+4: Test timeout computed to be: 10000000
+4: document workflow: shared layer instances, names/visibility, retirement, historical restore PASS
+4/4 Test #4: document_workflow ................   Passed    0.09 sec
+
+100% tests passed out of 4
+
+Total Test time (real) =   2.07 sec
+-- Configuring done (0.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan
+[ 70%] Built target layerkeysort
+[ 75%] Building C object CMakeFiles/full_editor.dir/editor.c.obj
+editor.c
+[ 79%] Linking C executable full_editor.exe
+[ 83%] Built target full_editor
+[ 91%] Built target full_contracts
+[100%] Built target full_measure
+UpdateCTestConfiguration  from :C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan/DartConfiguration.tcl
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: contracts
+
+1: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-eval-build-msvc-asan\full_contracts.exe
+1: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan
+1: Test timeout computed to be: 10000000
+1: external wire mutations accepted=5000 rejected=15000 canonical_reserialize=true
+1: contracts: managed equality/context/reentry/edit, Group/Batch/sort, cursor, LS1/wire/history, legacy import, live foreign errors PASS
+1/4 Test #1: contracts ........................   Passed    0.06 sec
+test 2
+    Start 2: editor_model
+
+2: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan/full_editor.exe" "--steps" "12000"
+2: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan
+2: Test timeout computed to be: 10000000
+2: seed=17 generated_steps=12000 processed_commands=14092 all_external_rows_match=true
+2: seed=712200 generated_steps=12000 processed_commands=14064 all_external_rows_match=true
+2: seed=43801 generated_steps=12000 processed_commands=14133 all_external_rows_match=true
+2/4 Test #2: editor_model .....................   Passed    1.20 sec
+test 3
+    Start 3: large_document
+
+3: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan/full_editor.exe" "--large"
+3: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan
+3: Test timeout computed to be: 10000000
+3: large_document peak_residents=2048 commands=5123 seed=493 exact_all_rows=true
+3/4 Test #3: large_document ...................   Passed    6.65 sec
+test 4
+    Start 4: document_workflow
+
+4: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-evaluation/examples/full-consumer-evaluation/exercise.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan/full_editor.exe" "--application"
+4: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-eval-build-msvc-asan
+4: Test timeout computed to be: 10000000
+4: document workflow: shared layer instances, names/visibility, retirement, historical restore PASS
+4/4 Test #4: document_workflow ................   Passed    0.11 sec
+
+100% tests passed out of 4
+
+Total Test time (real) =   8.04 sec
+seed=17 generated_steps=120000 processed_commands=144369 all_external_rows_match=true
+seed=712200 generated_steps=120000 processed_commands=143478 all_external_rows_match=true
+seed=43801 generated_steps=120000 processed_commands=142682 all_external_rows_match=true
+phase,residents,operations,operation_bracket_seconds,phase_seconds,p99_bracket_seconds,max_bracket_seconds,process_working_set_bytes,wire_or_history_bytes,allocations,frees,live_allocations,live_requested_bytes,requested_traffic_bytes
+empty,0,1,0.000000000,0.000037000,0.000000000,0.000000000,13254656,0,NA,NA,NA,NA,NA
+grow_back,100000,100000,0.063081901,0.065589700,0.000001500,0.000191900,24018944,0,NA,NA,NA,NA,NA
+drag_hotspot,100000,100000,0.004600600,0.006822000,0.000000100,0.000010600,24023040,0,NA,NA,NA,NA,NA
+distant_drag,100000,100000,0.044329500,0.046533500,0.000001300,0.000018300,26726400,0,NA,NA,NA,NA,NA
+local_pair_drag,100000,100000,0.004920400,0.008471000,0.000000200,0.000003500,26726400,0,NA,NA,NA,NA,NA
+churn,100000,400000,0.248676400,0.258844500,0.000000700,0.000060400,43233280,0,NA,NA,NA,NA,NA
+churn_cycle_1,100000,200000,0.124154100,0.128881600,0.000000700,0.000035500,50233344,0,NA,NA,NA,NA,NA
+churn_cycle_2,100000,200000,0.125035200,0.129802400,0.000000800,0.000029200,57143296,0,NA,NA,NA,NA,NA
+churn_cycle_3,100000,200000,0.124649500,0.129381900,0.000000700,0.000025000,63995904,0,NA,NA,NA,NA,NA
+retained_16_captures,100000,16,0.049783800,0.049784900,0.003173600,0.003414800,129310720,25600640,NA,NA,NA,NA,NA
+serialize,100000,16,0.018264700,0.018265300,0.001161800,0.001320700,131129344,1600040,NA,NA,NA,NA,NA
+deserialize,100000,8,0.024764600,0.024834100,0.003112900,0.003147200,152989696,1600040,NA,NA,NA,NA,NA
+restore,100000,8,0.441772800,0.787181200,0.055258800,0.055972100,226902016,1600040,NA,NA,NA,NA,NA
+history_released,100000,16,0.000000000,0.000434700,0.000000000,0.000000000,227086336,0,NA,NA,NA,NA,NA
+live_released,0,1,0.000000000,0.044186800,0.000000000,0.000000000,228122624,0,NA,NA,NA,NA,NA
+managed_duplicates,100000,100000,0.090600700,0.092883900,0.000001800,0.000034800,236777472,0,NA,NA,NA,NA,NA
+cleanup,0,1,0.000000000,0.046147100,0.000000000,0.000000000,237731840,0,NA,NA,NA,NA,NA
