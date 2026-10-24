@@ -1,0 +1,68 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.10.2
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+ENV mode=production profile=append n=100000 seed=17 app_fixture_bytes=4400000 available_before=6747893760
+ORACLE_BUILD seconds=0.001373 bytes=800000
+mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+production,append,growth,100000,100000,100000,0.066552500,1502573.157,391,0.000000600,0.000000700,0.000001600,0.000001800,NA,NA,NA,NA,NA,NA,NA,24825856,6717702144,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=c2cc699511dc4303 oracle_seconds=0.002623
+ORACLE_TRACE kind=0 operations=100000 seconds=0.003783
+production,append,local_move,100000,100000,100000,0.011328700,8827138.153,391,0.000000100,0.000000400,0.000001500,0.000002000,NA,NA,NA,NA,NA,NA,NA,26636288,6713880576,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=b1282a74c6cb67e5 oracle_seconds=0.002457
+ORACLE_TRACE kind=1 operations=100000 seconds=0.002479
+production,append,hotspot_move,100000,100000,100000,0.038772800,2579127.636,391,0.000000300,0.000001200,0.000001300,0.000003000,NA,NA,NA,NA,NA,NA,NA,29421568,6697852928,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=dda6e80c63a3b535 oracle_seconds=0.003625
+ORACLE_TRACE kind=2 operations=100000 seconds=0.002652
+production,append,front_back_move,100000,100000,100000,0.038581200,2591935.969,391,0.000000300,0.000001200,0.000001400,0.000006400,NA,NA,NA,NA,NA,NA,NA,32194560,6730690560,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=843ff81bd1cac3ff oracle_seconds=0.003277
+ORACLE_TRACE kind=3 operations=100000 seconds=0.002796
+production,append,uniform_move,100000,100000,100000,0.035556100,2812456.934,391,0.000000300,0.000000500,0.000001400,0.000001700,NA,NA,NA,NA,NA,NA,NA,33034240,6729949184,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=211a5d5c58ef2193 oracle_seconds=0.003609
+ORACLE_TRACE kind=4 operations=100000 seconds=0.002714
+production,append,uniform_churn_1,100000,100000,200000,0.148061500,1350790.043,391,0.000001500,0.000001700,0.000002400,0.000006000,NA,NA,NA,NA,NA,NA,NA,40554496,6724988928,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=66747701ef5f2d0d oracle_seconds=0.003823
+ORACLE_TRACE kind=5 operations=100000 seconds=0.003201
+production,append,hotspot_churn,100000,100000,200000,0.151963000,1316109.843,391,0.000001500,0.000002200,0.000002500,0.000002700,NA,NA,NA,NA,NA,NA,NA,50225152,6718377984,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=c1d4e6f4d00137a9 oracle_seconds=0.004179
+ORACLE_TRACE kind=4 operations=100000 seconds=0.002689
+production,append,uniform_churn_2,100000,100000,200000,0.148718500,1344822.601,391,0.000001400,0.000002000,0.000002700,0.000004600,NA,NA,NA,NA,NA,NA,NA,58757120,6716157952,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=d2a99ac47e2802c5 oracle_seconds=0.003758
+ORACLE_TRACE kind=4 operations=100000 seconds=0.002714
+production,append,uniform_churn_3,100000,100000,200000,0.161670300,1237085.600,391,0.000001500,0.000002200,0.000003500,0.000004800,NA,NA,NA,NA,NA,NA,NA,66191360,6708592640,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=9fb9c11fc343c451 oracle_seconds=0.004572
+production,append,half_delete,100000,50000,50000,0.037979300,1316506.623,195,0.000000700,0.000001000,0.000001600,0.000005200,NA,NA,NA,NA,NA,NA,NA,66629632,6708293632,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=50000 exact_forward_reverse_identity=true digest=b1465ca43918c19f oracle_seconds=0.001790
+production,append,regrow,100000,100000,50000,0.032424100,1542062.848,195,0.000000600,0.000000700,0.000001600,0.000001900,NA,NA,NA,NA,NA,NA,NA,70905856,6704828416,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT append count=100000 exact_forward_reverse_identity=true digest=cf5971a41a6128bf oracle_seconds=0.003470
+production,append,library_destroy,100000,100000,1,0.045154500,22.146,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,71962624,6704308224,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+COMPLETE mode=production profile=append n=100000 cleanup_requested_zero=unavailable seconds=0.984474 working_set_after_fixture_free=71983104
+ENV mode=production profile=history n=100000 seed=17 app_fixture_bytes=4400000 available_before=6764912640
+ORACLE_BUILD seconds=0.002091 bytes=800000
+mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+production,history,growth,100000,100000,100000,0.066472800,1504374.722,391,0.000000600,0.000000700,0.000001500,0.000001700,NA,NA,NA,NA,NA,NA,NA,24805376,6757179392,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CHECKPOINT history count=100000 exact_forward_reverse_identity=true digest=c2cc699511dc4303 oracle_seconds=0.002489
+production,history,capture,100000,100000,1,0.003713700,269.273,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,29446144,6754172928,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,retained_two,100000,100000,1,0.003480400,287.323,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,33488896,6751223808,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,serialize,100000,100000,1,0.001341400,745.490,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,35311616,6749777920,1600040,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,deserialize,100000,100000,1,0.003008200,332.425,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,38051840,6747615232,1600040,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,restore,100000,100000,1,0.056759400,17.618,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,46333952,6738268160,1600040,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,restored_destroy,100000,100000,1,0.045585300,21.937,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,47337472,6737256448,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,history_destroy,100000,100000,3,0.000083200,36057.692,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,47382528,6737256448,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+production,history,library_destroy,100000,100000,1,0.043790300,22.836,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,48414720,6735060992,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+COMPLETE mode=production profile=history n=100000 cleanup_requested_zero=unavailable seconds=0.235903 working_set_after_fixture_free=48431104
+LONG_CHECK count=100000 digest=c2cc699511dc4303 exact_forward_reverse=true
+LONG_CHECK count=100000 digest=fde4767693df76d7 exact_forward_reverse=true
+LONG_CHECK count=100000 digest=aabcbf95e20df51d exact_forward_reverse=true
+LONG_COMPLETE mode=production n=100000 pairs=1000000 tracked_cleanup=unavailable
+mode,scale,cycle,pairs,wall_seconds,allocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,traffic_bytes,working_set_bytes,blocks,height
+production,100000,1,100000,0.140551500,NA,NA,NA,NA,NA,NA,33087488,NA,NA
+production,100000,2,100000,0.139431300,NA,NA,NA,NA,NA,NA,40603648,NA,NA
+production,100000,3,100000,0.141185600,NA,NA,NA,NA,NA,NA,48254976,NA,NA
+production,100000,4,100000,0.140542100,NA,NA,NA,NA,NA,NA,55816192,NA,NA
+production,100000,5,100000,0.140125700,NA,NA,NA,NA,NA,NA,63377408,NA,NA
+production,100000,6,100000,0.140430100,NA,NA,NA,NA,NA,NA,71094272,NA,NA
+production,100000,7,100000,0.140512000,NA,NA,NA,NA,NA,NA,78598144,NA,NA
+production,100000,8,100000,0.140295700,NA,NA,NA,NA,NA,NA,86175744,NA,NA
+production,100000,9,100000,0.140816900,NA,NA,NA,NA,NA,NA,93687808,NA,NA
+production,100000,10,100000,0.142088300,NA,NA,NA,NA,NA,NA,101351424,NA,NA

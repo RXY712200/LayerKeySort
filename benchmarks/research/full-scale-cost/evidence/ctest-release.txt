@@ -1,0 +1,299 @@
+UpdateCTestConfiguration  from :C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release/DartConfiguration.tcl
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+      Start  1: research_append
+
+1: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "append" "4096" "17"
+1: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+1: Test timeout computed to be: 10000000
+1: ENV mode=production profile=append n=4096 seed=17 app_fixture_bytes=180224 available_before=6935814144
+1: ORACLE_BUILD seconds=0.000022 bytes=32768
+1: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+1: production,append,growth,4096,4096,4096,0.000250800,16331738.452,16,0.000000100,0.000000100,0.000000100,0.000000200,NA,NA,NA,NA,NA,NA,NA,5574656,6935781376,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=f98ec7e49cf04383 oracle_seconds=0.000031
+1: ORACLE_TRACE kind=0 operations=4096 seconds=0.000028
+1: production,append,local_move,4096,4096,4096,0.000047600,86050419.317,16,0.000000000,0.000000000,0.000000000,0.000000100,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=a541f0cd16df3261 oracle_seconds=0.000024
+1: ORACLE_TRACE kind=1 operations=4096 seconds=0.000012
+1: production,append,hotspot_move,4096,4096,4096,0.000304500,13451559.961,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=6bcac4866562eabd oracle_seconds=0.000033
+1: ORACLE_TRACE kind=2 operations=4096 seconds=0.000017
+1: production,append,front_back_move,4096,4096,4096,0.000299900,13657885.928,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=32c767b3c4c811f7 oracle_seconds=0.000034
+1: ORACLE_TRACE kind=3 operations=4096 seconds=0.000018
+1: production,append,uniform_move,4096,4096,4096,0.000327500,12506870.232,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=8aece66020023351 oracle_seconds=0.000034
+1: ORACLE_TRACE kind=4 operations=4096 seconds=0.000072
+1: production,append,uniform_churn_1,4096,4096,8192,0.000482300,16985278.875,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=2b124ac2b9ac6b99 oracle_seconds=0.000035
+1: ORACLE_TRACE kind=5 operations=4096 seconds=0.000016
+1: production,append,hotspot_churn,4096,4096,8192,0.000369700,22158506.940,16,0.000000100,0.000000200,0.000000200,0.000000300,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=3a1443fae389e2bb oracle_seconds=0.000034
+1: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+1: production,append,uniform_churn_2,4096,4096,8192,0.000463900,17658978.232,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=1323505d7826a27b oracle_seconds=0.000034
+1: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+1: production,append,uniform_churn_3,4096,4096,8192,0.000459100,17843607.068,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=d3cb3cdb1606dabb oracle_seconds=0.000034
+1: production,append,half_delete,4096,2048,2048,0.000096200,21288981.408,8,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=2048 exact_forward_reverse_identity=true digest=4b223f44357bcab7 oracle_seconds=0.000018
+1: production,append,regrow,4096,4096,2048,0.000074400,27526881.420,8,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5627904,6935777280,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: CHECKPOINT append count=4096 exact_forward_reverse_identity=true digest=cb07863f89fcbab7 oracle_seconds=0.000030
+1: production,append,library_destroy,4096,4096,1,0.000076500,13071.895,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5398528,6935990272,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+1: COMPLETE mode=production profile=append n=4096 cleanup_requested_zero=unavailable seconds=0.005700 working_set_after_fixture_free=5201920
+ 1/12 Test  #1: research_append ..................   Passed    0.04 sec
+test 2
+      Start  2: research_prepend
+
+2: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "prepend" "4096" "17"
+2: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+2: Test timeout computed to be: 10000000
+2: ENV mode=production profile=prepend n=4096 seed=17 app_fixture_bytes=180224 available_before=6936530944
+2: ORACLE_BUILD seconds=0.000024 bytes=32768
+2: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+2: production,prepend,growth,4096,4096,4096,0.000343700,11917369.751,16,0.000000100,0.000000200,0.000000200,0.000000300,NA,NA,NA,NA,NA,NA,NA,5578752,6936100864,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=b99b9e08e91fd383 oracle_seconds=0.000025
+2: ORACLE_TRACE kind=0 operations=4096 seconds=0.000027
+2: production,prepend,local_move,4096,4096,4096,0.000058100,70499138.944,16,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5632000,6936096768,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=dcd9793d66c88727 oracle_seconds=0.000025
+2: ORACLE_TRACE kind=1 operations=4096 seconds=0.000038
+2: production,prepend,hotspot_move,4096,4096,4096,0.000449000,9122494.448,16,0.000000100,0.000000300,0.000000300,0.000000700,NA,NA,NA,NA,NA,NA,NA,5632000,6936096768,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=2cee51ac073a5279 oracle_seconds=0.000033
+2: ORACLE_TRACE kind=2 operations=4096 seconds=0.000015
+2: production,prepend,front_back_move,4096,4096,4096,0.000327000,12525993.894,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5632000,6936096768,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=0015122a23c128fd oracle_seconds=0.000034
+2: ORACLE_TRACE kind=3 operations=4096 seconds=0.000016
+2: production,prepend,uniform_move,4096,4096,4096,0.000331100,12370884.928,16,0.000000100,0.000000100,0.000000100,0.000000300,NA,NA,NA,NA,NA,NA,NA,5632000,6936096768,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=bfb869ef08641929 oracle_seconds=0.000040
+2: ORACLE_TRACE kind=4 operations=4096 seconds=0.000022
+2: production,prepend,uniform_churn_1,4096,4096,8192,0.000477800,17145249.115,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5632000,6936096768,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=f5f56cad3c8a448d oracle_seconds=0.000034
+2: ORACLE_TRACE kind=5 operations=4096 seconds=0.000016
+2: production,prepend,hotspot_churn,4096,4096,8192,0.000363600,22530253.017,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5632000,6936027136,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=05041e20d2638b1f oracle_seconds=0.000046
+2: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+2: production,prepend,uniform_churn_2,4096,4096,8192,0.000471300,17381710.169,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5632000,6936027136,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=dc39ab7fc113d563 oracle_seconds=0.000034
+2: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+2: production,prepend,uniform_churn_3,4096,4096,8192,0.000463000,17693304.524,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5632000,6935957504,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=7e436a4594b68595 oracle_seconds=0.000036
+2: production,prepend,half_delete,4096,2048,2048,0.000096200,21288981.006,8,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5632000,6935957504,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=2048 exact_forward_reverse_identity=true digest=1bb3b4453868ec1b oracle_seconds=0.000018
+2: production,prepend,regrow,4096,4096,2048,0.000074600,27453082.920,8,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5632000,6935957504,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: CHECKPOINT prepend count=4096 exact_forward_reverse_identity=true digest=332c12015bb4bc1b oracle_seconds=0.000033
+2: production,prepend,library_destroy,4096,4096,1,0.000066600,15015.015,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5406720,6936170496,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+2: COMPLETE mode=production profile=prepend n=4096 cleanup_requested_zero=unavailable seconds=0.006029 working_set_after_fixture_free=5222400
+ 2/12 Test  #2: research_prepend .................   Passed    0.03 sec
+test 3
+      Start  3: research_anchor
+
+3: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "anchor" "4096" "17"
+3: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+3: Test timeout computed to be: 10000000
+3: ENV mode=production profile=anchor n=4096 seed=17 app_fixture_bytes=180224 available_before=6934388736
+3: ORACLE_BUILD seconds=0.000039 bytes=32768
+3: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+3: production,anchor,growth,4096,4096,4096,0.000289400,14153420.830,16,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5582848,6933610496,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=b62e7c5dcdf21383 oracle_seconds=0.000025
+3: ORACLE_TRACE kind=0 operations=4096 seconds=0.000028
+3: production,anchor,local_move,4096,4096,4096,0.000045300,90419427.389,16,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5636096,6933258240,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=8a28799a99cb3601 oracle_seconds=0.000024
+3: ORACLE_TRACE kind=1 operations=4096 seconds=0.000012
+3: production,anchor,hotspot_move,4096,4096,4096,0.000295600,13856562.973,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5636096,6933188608,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=6bcac4866562eabd oracle_seconds=0.000032
+3: ORACLE_TRACE kind=2 operations=4096 seconds=0.000012
+3: production,anchor,front_back_move,4096,4096,4096,0.000297100,13786603.863,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5636096,6933118976,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=32c767b3c4c811f7 oracle_seconds=0.000034
+3: ORACLE_TRACE kind=3 operations=4096 seconds=0.000016
+3: production,anchor,uniform_move,4096,4096,4096,0.000327900,12491613.253,16,0.000000100,0.000000100,0.000000100,0.000000200,NA,NA,NA,NA,NA,NA,NA,5636096,6933118976,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=8aece66020023351 oracle_seconds=0.000034
+3: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+3: production,anchor,uniform_churn_1,4096,4096,8192,0.000479100,17098726.808,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5636096,6933118976,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=2b124ac2b9ac6b99 oracle_seconds=0.000034
+3: ORACLE_TRACE kind=5 operations=4096 seconds=0.000017
+3: production,anchor,hotspot_churn,4096,4096,8192,0.000366400,22358078.626,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5636096,6932979712,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=3a1443fae389e2bb oracle_seconds=0.000036
+3: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+3: production,anchor,uniform_churn_2,4096,4096,8192,0.000739500,11077755.223,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5636096,6932979712,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=1323505d7826a27b oracle_seconds=0.000035
+3: ORACLE_TRACE kind=4 operations=4096 seconds=0.000018
+3: production,anchor,uniform_churn_3,4096,4096,8192,0.000469600,17444633.677,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5636096,6932979712,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=d3cb3cdb1606dabb oracle_seconds=0.000035
+3: production,anchor,half_delete,4096,2048,2048,0.000222900,9187976.665,8,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5636096,6932979712,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=2048 exact_forward_reverse_identity=true digest=4b223f44357bcab7 oracle_seconds=0.000039
+3: production,anchor,regrow,4096,4096,2048,0.000079000,25924050.810,8,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5636096,6932979712,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: CHECKPOINT anchor count=4096 exact_forward_reverse_identity=true digest=cb07863f89fcbab7 oracle_seconds=0.000031
+3: production,anchor,library_destroy,4096,4096,1,0.000068500,14598.540,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5406720,6933184512,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+3: COMPLETE mode=production profile=anchor n=4096 cleanup_requested_zero=unavailable seconds=0.006243 working_set_after_fixture_free=5210112
+ 3/12 Test  #3: research_anchor ..................   Passed    0.02 sec
+test 4
+      Start  4: research_local
+
+4: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "local" "4096" "17"
+4: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+4: Test timeout computed to be: 10000000
+4: ENV mode=production profile=local n=4096 seed=17 app_fixture_bytes=180224 available_before=6930681856
+4: ORACLE_BUILD seconds=0.000031 bytes=32768
+4: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+4: production,local,growth,4096,4096,4096,0.000365600,11203501.125,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5562368,6929485824,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=02514bdaffb04911 oracle_seconds=0.000032
+4: ORACLE_TRACE kind=0 operations=4096 seconds=0.000022
+4: production,local,local_move,4096,4096,4096,0.000042000,97523810.298,16,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5615616,6929481728,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=7af10b5088555a35 oracle_seconds=0.000030
+4: ORACLE_TRACE kind=1 operations=4096 seconds=0.000012
+4: production,local,hotspot_move,4096,4096,4096,0.000311800,13136626.101,16,0.000000100,0.000000100,0.000000100,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6929342464,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=80699aa733bf6d0b oracle_seconds=0.000033
+4: ORACLE_TRACE kind=2 operations=4096 seconds=0.000013
+4: production,local,front_back_move,4096,4096,4096,0.000310700,13183134.886,16,0.000000100,0.000000100,0.000000100,0.000000400,NA,NA,NA,NA,NA,NA,NA,5627904,6929342464,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=1da3c35c105bfd47 oracle_seconds=0.000034
+4: ORACLE_TRACE kind=3 operations=4096 seconds=0.000016
+4: production,local,uniform_move,4096,4096,4096,0.000318400,12864321.618,16,0.000000100,0.000000100,0.000000100,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6929203200,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=3870f7e463b672f1 oracle_seconds=0.000034
+4: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+4: production,local,uniform_churn_1,4096,4096,8192,0.000474700,17257215.073,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6929203200,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=543c94fdeadcf57f oracle_seconds=0.000034
+4: ORACLE_TRACE kind=5 operations=4096 seconds=0.000016
+4: production,local,hotspot_churn,4096,4096,8192,0.000397800,20593262.924,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6929203200,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=2f64036975c08a31 oracle_seconds=0.000037
+4: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+4: production,local,uniform_churn_2,4096,4096,8192,0.000465500,17598281.374,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6929133568,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=8a4dac0399218021 oracle_seconds=0.000034
+4: ORACLE_TRACE kind=4 operations=4096 seconds=0.000017
+4: production,local,uniform_churn_3,4096,4096,8192,0.000446900,18330722.774,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5627904,6929063936,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=3640b7e45f611835 oracle_seconds=0.000034
+4: production,local,half_delete,4096,2048,2048,0.000096400,21244813.061,8,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5627904,6928994304,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=2048 exact_forward_reverse_identity=true digest=6d9897f0d7fa431f oracle_seconds=0.000018
+4: production,local,regrow,4096,4096,2048,0.000074600,27453082.920,8,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5627904,6928994304,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: CHECKPOINT local count=4096 exact_forward_reverse_identity=true digest=9ad016e75c06f31f oracle_seconds=0.000030
+4: production,local,library_destroy,4096,4096,1,0.000064800,15432.099,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5402624,6929215488,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+4: COMPLETE mode=production profile=local n=4096 cleanup_requested_zero=unavailable seconds=0.005421 working_set_after_fixture_free=5222400
+ 4/12 Test  #4: research_local ...................   Passed    0.02 sec
+test 5
+      Start  5: research_ascending
+
+5: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "ascending" "4096" "17"
+5: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+5: Test timeout computed to be: 10000000
+5: ENV mode=production profile=ascending n=4096 seed=17 app_fixture_bytes=180224 available_before=6927798272
+5: ORACLE_BUILD seconds=0.000067 bytes=49152
+5: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+5: production,ascending,growth,4096,4096,4096,0.000304000,13473684.164,16,0.000000000,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5586944,6926790656,0,24633,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+5: CHECKPOINT ascending count=4096 exact_forward_reverse_identity=true digest=f98ec7e49cf04383 oracle_seconds=0.000036
+5: production,ascending,locate,4096,4096,4096,0.000524300,7812321.169,16,0.000000200,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5713920,6926721024,0,91628,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+5: production,ascending,library_destroy,4096,4096,1,0.000063600,15723.271,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5464064,6926970880,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+5: COMPLETE mode=production profile=ascending n=4096 cleanup_requested_zero=unavailable seconds=0.001572 working_set_after_fixture_free=5328896
+ 5/12 Test  #5: research_ascending ...............   Passed    0.02 sec
+test 6
+      Start  6: research_descending
+
+6: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "descending" "4096" "17"
+6: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+6: Test timeout computed to be: 10000000
+6: ENV mode=production profile=descending n=4096 seed=17 app_fixture_bytes=180224 available_before=6927507456
+6: ORACLE_BUILD seconds=0.000071 bytes=49152
+6: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+6: production,descending,growth,4096,4096,4096,0.000321100,12756150.720,16,0.000000100,0.000000100,0.000000100,0.000000200,NA,NA,NA,NA,NA,NA,NA,5582848,6927491072,0,47137,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+6: CHECKPOINT descending count=4096 exact_forward_reverse_identity=true digest=b99b9e08e91fd383 oracle_seconds=0.000025
+6: production,descending,locate,4096,4096,4096,0.000528600,7748770.343,16,0.000000200,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5713920,6927491072,0,91780,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+6: production,descending,library_destroy,4096,4096,1,0.000066800,14970.060,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5459968,6927732736,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+6: COMPLETE mode=production profile=descending n=4096 cleanup_requested_zero=unavailable seconds=0.001626 working_set_after_fixture_free=5308416
+ 6/12 Test  #6: research_descending ..............   Passed    0.02 sec
+test 7
+      Start  7: research_random
+
+7: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "random" "4096" "17"
+7: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+7: Test timeout computed to be: 10000000
+7: ENV mode=production profile=random n=4096 seed=17 app_fixture_bytes=180224 available_before=6931185664
+7: ORACLE_BUILD seconds=0.000270 bytes=49152
+7: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+7: production,random,growth,4096,4096,4096,0.000628000,6522292.996,16,0.000000200,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5570560,6930403328,0,44215,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+7: CHECKPOINT random count=4096 exact_forward_reverse_identity=true digest=a6b66de2d10badb7 oracle_seconds=0.000034
+7: production,random,locate,4096,4096,4096,0.000533400,7679040.123,16,0.000000200,0.000000200,0.000000200,0.000000300,NA,NA,NA,NA,NA,NA,NA,5697536,6930403328,0,92688,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+7: production,random,library_destroy,4096,4096,1,0.000066500,15037.594,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5464064,6930632704,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+7: COMPLETE mode=production profile=random n=4096 cleanup_requested_zero=unavailable seconds=0.002143 working_set_after_fixture_free=5304320
+ 7/12 Test  #7: research_random ..................   Passed    0.02 sec
+test 8
+      Start  8: research_duplicates
+
+8: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "duplicates" "4096" "17"
+8: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+8: Test timeout computed to be: 10000000
+8: ENV mode=production profile=duplicates n=4096 seed=17 app_fixture_bytes=180224 available_before=6931505152
+8: ORACLE_BUILD seconds=0.000288 bytes=49152
+8: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+8: production,duplicates,growth,4096,4096,4096,0.000532400,7693463.569,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5566464,6931488768,0,43930,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+8: CHECKPOINT duplicates count=4096 exact_forward_reverse_identity=true digest=23ba06bc3642ccc5 oracle_seconds=0.000034
+8: production,duplicates,locate,4096,4096,4096,0.000279900,14633797.814,16,0.000000100,0.000000200,0.000000200,0.000000200,NA,NA,NA,NA,NA,NA,NA,5693440,6931488768,0,92386,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+8: production,duplicates,library_destroy,4096,4096,1,0.000073600,13586.956,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5439488,6931730432,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+8: COMPLETE mode=production profile=duplicates n=4096 cleanup_requested_zero=unavailable seconds=0.001785 working_set_after_fixture_free=5304320
+ 8/12 Test  #8: research_duplicates ..............   Passed    0.02 sec
+test 9
+      Start  9: research_equal
+
+9: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "equal" "4096" "17"
+9: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+9: Test timeout computed to be: 10000000
+9: ENV mode=production profile=equal n=4096 seed=17 app_fixture_bytes=180224 available_before=6925864960
+9: ORACLE_BUILD seconds=0.000074 bytes=49152
+9: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+9: production,equal,growth,4096,4096,4096,0.000271300,15097677.879,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5582848,6925848576,0,24633,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+9: CHECKPOINT equal count=4096 exact_forward_reverse_identity=true digest=f98ec7e49cf04383 oracle_seconds=0.000030
+9: production,equal,locate,4096,4096,4096,0.000129200,31702786.000,16,0.000000100,0.000000100,0.000000100,0.000000100,NA,NA,NA,NA,NA,NA,NA,5713920,6925848576,0,78848,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+9: production,equal,library_destroy,4096,4096,1,0.000062300,16051.364,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5464064,6926098432,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+9: COMPLETE mode=production profile=equal n=4096 cleanup_requested_zero=unavailable seconds=0.001031 working_set_after_fixture_free=5328896
+ 9/12 Test  #9: research_equal ...................   Passed    0.01 sec
+test 10
+      Start 10: research_history
+
+10: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_scale.exe "history" "4096" "17"
+10: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+10: Test timeout computed to be: 10000000
+10: ENV mode=production profile=history n=4096 seed=17 app_fixture_bytes=180224 available_before=6927167488
+10: ORACLE_BUILD seconds=0.000019 bytes=32768
+10: mode,profile,phase,scale,residents,operations,wall_seconds,operations_per_second,latency_samples,p50_seconds,p95_seconds,p99_seconds,max_sample_seconds,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,working_set_bytes,available_physical_bytes,wire_bytes,comparisons,location_assignments,max_operation_assignments,index_writes,max_operation_index_blocks,splits,merges,redistributions,rotations,blocks,height,occupancy_histogram
+10: production,history,growth,4096,4096,4096,0.000250500,16351297.331,16,0.000000000,0.000000100,0.000000100,0.000000200,NA,NA,NA,NA,NA,NA,NA,5578752,6927155200,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: CHECKPOINT history count=4096 exact_forward_reverse_identity=true digest=f98ec7e49cf04383 oracle_seconds=0.000031
+10: production,history,capture,4096,4096,1,0.000054900,18214.936,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5713920,6927147008,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,retained_two,4096,4096,1,0.000035200,28409.092,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5812224,6927147008,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,serialize,4096,4096,1,0.000015100,66225.164,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5877760,6927147008,65576,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,deserialize,4096,4096,1,0.000058800,17006.803,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5976064,6927147008,65576,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,restore,4096,4096,1,0.000134900,7412.898,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,6234112,6927142912,65576,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,restored_destroy,4096,4096,1,0.000051300,19493.177,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5984256,6927331328,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,history_destroy,4096,4096,3,0.000018800,159574.457,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5672960,6927572992,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: production,history,library_destroy,4096,4096,1,0.000070000,14285.714,0,0.000000000,0.000000000,0.000000000,0.000000000,NA,NA,NA,NA,NA,NA,NA,5369856,6927740928,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+10: COMPLETE mode=production profile=history n=4096 cleanup_requested_zero=unavailable seconds=0.001159 working_set_after_fixture_free=5234688
+10/12 Test #10: research_history .................   Passed    0.01 sec
+test 11
+      Start 11: independent_oracle_selftest
+
+11: Test command: C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-research/benchmarks/research/full-scale-cost/oracle_test.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release/oracle_probe.exe"
+11: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+11: Test timeout computed to be: 10000000
+11: 20,000 C-oracle transitions match independent Python lists; corrupted observation rejected
+11/12 Test #11: independent_oracle_selftest ......   Passed    0.92 sec
+test 12
+      Start 12: long_churn_small
+
+12: Test command: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-scale-build-release\full_long.exe "4096" "3"
+12: Working Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-scale-build-release
+12: Test timeout computed to be: 10000000
+12: LONG_CHECK count=4096 digest=f98ec7e49cf04383 exact_forward_reverse=true
+12: LONG_CHECK count=4096 digest=050167ecbc215991 exact_forward_reverse=true
+12: LONG_CHECK count=4096 digest=5be2aaaa6c3127c5 exact_forward_reverse=true
+12: LONG_COMPLETE mode=production n=4096 pairs=12288 tracked_cleanup=unavailable
+12: mode,scale,cycle,pairs,wall_seconds,allocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,traffic_bytes,working_set_bytes,blocks,height
+12: production,4096,1,4096,0.000771100,NA,NA,NA,NA,NA,NA,5545984,NA,NA
+12: production,4096,2,4096,0.000462400,NA,NA,NA,NA,NA,NA,5545984,NA,NA
+12: production,4096,3,4096,0.000470800,NA,NA,NA,NA,NA,NA,5545984,NA,NA
+12/12 Test #12: long_churn_small .................   Passed    0.04 sec
+
+100% tests passed out of 12
+
+Total Test time (real) =   1.21 sec

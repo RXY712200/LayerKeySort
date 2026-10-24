@@ -1,0 +1,72 @@
+{
+  "research_source": {
+    "analyze.py": {
+      "physical_sha256": "39fd26a5afb73f9a3058613b2579a4303130e06c4d9ba85ce7642fa5d5305216",
+      "canonical_lf_sha256": "39fd26a5afb73f9a3058613b2579a4303130e06c4d9ba85ce7642fa5d5305216"
+    },
+    "CMakeLists.txt": {
+      "physical_sha256": "ad85535c75dd1d654cdcf45465aa793e727dd9a14d406a71d707a155fcaacc9d",
+      "canonical_lf_sha256": "ad85535c75dd1d654cdcf45465aa793e727dd9a14d406a71d707a155fcaacc9d"
+    },
+    "collect.py": {
+      "physical_sha256": "40ae5e407dc8350e8a389ee0a7cc3d80992fdb55893193572957d4f5589d8428",
+      "canonical_lf_sha256": "40ae5e407dc8350e8a389ee0a7cc3d80992fdb55893193572957d4f5589d8428"
+    },
+    "collect_long.py": {
+      "physical_sha256": "6acd7659de83a9327d60c53ac86904f7f0a11a91206e6c9f878b1198f1c77526",
+      "canonical_lf_sha256": "6acd7659de83a9327d60c53ac86904f7f0a11a91206e6c9f878b1198f1c77526"
+    },
+    "long_churn.c": {
+      "physical_sha256": "a5a7b5d74869afe674e3787d070103af06141a4b99357a37d986c8068816a25c",
+      "canonical_lf_sha256": "a5a7b5d74869afe674e3787d070103af06141a4b99357a37d986c8068816a25c"
+    },
+    "oracle.c": {
+      "physical_sha256": "24eb5b12e5a8afc5def1891b81e4f7aef753facd37399d7e5205816e94f78a68",
+      "canonical_lf_sha256": "24eb5b12e5a8afc5def1891b81e4f7aef753facd37399d7e5205816e94f78a68"
+    },
+    "oracle.h": {
+      "physical_sha256": "473375d74c9642c7d2e86d43a80e451b31a2bc7b26c9e4d8612066183d91c933",
+      "canonical_lf_sha256": "473375d74c9642c7d2e86d43a80e451b31a2bc7b26c9e4d8612066183d91c933"
+    },
+    "oracle_probe.c": {
+      "physical_sha256": "4135d29c8e0e963c47d2b67e7b28d85271c29916343f08efd20302b5f869da27",
+      "canonical_lf_sha256": "4135d29c8e0e963c47d2b67e7b28d85271c29916343f08efd20302b5f869da27"
+    },
+    "oracle_test.py": {
+      "physical_sha256": "a1fe5d05a08a2495a227f73b3ef39ae587f2b9e38dc2f1e4baa46222001b38cb",
+      "canonical_lf_sha256": "a1fe5d05a08a2495a227f73b3ef39ae587f2b9e38dc2f1e4baa46222001b38cb"
+    },
+    "probe.c": {
+      "physical_sha256": "7669e7513b11d7cd4e5c54ace3ebf5b63802828820de1beca7d0bb8a11cf5012",
+      "canonical_lf_sha256": "7669e7513b11d7cd4e5c54ace3ebf5b63802828820de1beca7d0bb8a11cf5012"
+    },
+    "probe.h": {
+      "physical_sha256": "c0a0f4d40ae11b93b102c135bf20ab453b99060638fad34a6f5ec579684c4028",
+      "canonical_lf_sha256": "c0a0f4d40ae11b93b102c135bf20ab453b99060638fad34a6f5ec579684c4028"
+    },
+    "retry_deferred.py": {
+      "physical_sha256": "b548be9f0716e5bdb3a4e07b05d36af9fe38358ef6e5099046a6e6cfa21b803e",
+      "canonical_lf_sha256": "b548be9f0716e5bdb3a4e07b05d36af9fe38358ef6e5099046a6e6cfa21b803e"
+    },
+    "study.c": {
+      "physical_sha256": "79e35365496b5786cdff91aaecadfe47d1e7579fb2800e7f4da09ae9d68e0145",
+      "canonical_lf_sha256": "79e35365496b5786cdff91aaecadfe47d1e7579fb2800e7f4da09ae9d68e0145"
+    },
+    "wrap.c": {
+      "physical_sha256": "0e152e30c8c056960715addb94998b1bb1eea6b3cd582dfb3f2c16822d30e6f1",
+      "canonical_lf_sha256": "0e152e30c8c056960715addb94998b1bb1eea6b3cd582dfb3f2c16822d30e6f1"
+    }
+  },
+  "measured_binary_sha256": {
+    "full_long.exe": "9e0389792dab31c81e2d3a4a5e9288f91dc6add4366ba245a9ce36624a7fa35c",
+    "full_long_alloc.exe": "a32b52ad29bae183a1351253c286a9a91990f3f8670ac6f105f41df9cbb8d842",
+    "full_long_structural.exe": "f2aa1c41fd876f964e88a46070e176950b46e7254c4e7a47e4f1b75cec49d5bb",
+    "full_scale.exe": "124408f02b97987c83fcbb29022cc6a68d2575812ba897b8e4996b0270351556",
+    "full_scale_alloc.exe": "cae50d352bbd71eeaf9eea0088319b18c7fbd6ac6125ace13a5b19619aa44b7e",
+    "full_scale_structural.exe": "d654463f2b14f93ea5d64b0f658aabf207d01229bac40ac9ca29fa819d1f4cf4",
+    "oracle_probe.exe": "5b26853146e442d526cfe045053ab9d3768c204be8b32c6511e81917848738fd"
+  },
+  "sampling": "one rotated sample per 256 strata",
+  "raw_capture": "final-capture only",
+  "private_macro": "LKS_ENABLE_ALLOC_DIAGNOSTICS; B64 unchanged"
+}

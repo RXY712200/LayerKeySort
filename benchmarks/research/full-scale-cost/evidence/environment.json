@@ -1,0 +1,29 @@
+{
+  "date_label": "2026-10-24",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "memory_at_start": {
+    "total": 16304992256,
+    "available": 6928150528,
+    "load": 57
+  },
+  "compiler": "gcc (Rev4, Built by MSYS2 project) 16.2.0",
+  "base_main": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+  "stable": "80004ae732daf696f7e9192e417de0edb0b2aafa",
+  "previous_research": "bf27502f18de5988cd2d1c797ddc3e0ff48d0b03",
+  "source_sha256": {
+    "CMakeLists.txt": "ad85535c75dd1d654cdcf45465aa793e727dd9a14d406a71d707a155fcaacc9d",
+    "collect.py": "40ae5e407dc8350e8a389ee0a7cc3d80992fdb55893193572957d4f5589d8428",
+    "collect_long.py": "6acd7659de83a9327d60c53ac86904f7f0a11a91206e6c9f878b1198f1c77526",
+    "long_churn.c": "a5a7b5d74869afe674e3787d070103af06141a4b99357a37d986c8068816a25c",
+    "oracle.c": "24eb5b12e5a8afc5def1891b81e4f7aef753facd37399d7e5205816e94f78a68",
+    "oracle.h": "473375d74c9642c7d2e86d43a80e451b31a2bc7b26c9e4d8612066183d91c933",
+    "oracle_probe.c": "4135d29c8e0e963c47d2b67e7b28d85271c29916343f08efd20302b5f869da27",
+    "oracle_test.py": "a1fe5d05a08a2495a227f73b3ef39ae587f2b9e38dc2f1e4baa46222001b38cb",
+    "probe.c": "7669e7513b11d7cd4e5c54ace3ebf5b63802828820de1beca7d0bb8a11cf5012",
+    "probe.h": "c0a0f4d40ae11b93b102c135bf20ab453b99060638fad34a6f5ec579684c4028",
+    "study.c": "79e35365496b5786cdff91aaecadfe47d1e7579fb2800e7f4da09ae9d68e0145",
+    "wrap.c": "0e152e30c8c056960715addb94998b1bb1eea6b3cd582dfb3f2c16822d30e6f1"
+  },
+  "provenance": "fresh deterministic synthetic engineering research, not human traces",
+  "flags": "-std=c17 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Werror"
+}

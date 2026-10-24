@@ -1,0 +1,154 @@
+[
+  {
+    "mode": "production",
+    "scale": 100000,
+    "repeat": 1,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5210038272,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 83108864,
+    "returncode": 0,
+    "wall_seconds": 2.1177883000000293,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5158866944,
+      "load": 68
+    }
+  },
+  {
+    "mode": "production",
+    "scale": 100000,
+    "repeat": 2,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5158850560,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 83108864,
+    "returncode": 0,
+    "wall_seconds": 1.9908825000002253,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5169950720,
+      "load": 68
+    }
+  },
+  {
+    "mode": "allocation",
+    "scale": 100000,
+    "repeat": 1,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5169954816,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 87108864,
+    "returncode": 0,
+    "wall_seconds": 2.093815500000346,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5178642432,
+      "load": 68
+    }
+  },
+  {
+    "mode": "structural",
+    "scale": 100000,
+    "repeat": 1,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5178646528,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 87108864,
+    "returncode": 0,
+    "wall_seconds": 2.670563100000436,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5183537152,
+      "load": 68
+    }
+  },
+  {
+    "mode": "production",
+    "scale": 1000000,
+    "repeat": 1,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5183541248,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 227108864,
+    "returncode": 0,
+    "wall_seconds": 13.169100099999923,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5550919680,
+      "load": 65
+    }
+  },
+  {
+    "mode": "production",
+    "scale": 1000000,
+    "repeat": 2,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5550923776,
+      "load": 65
+    },
+    "estimated_envelope_bytes": 227108864,
+    "returncode": 0,
+    "wall_seconds": 12.772918099999515,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5546352640,
+      "load": 65
+    }
+  },
+  {
+    "mode": "allocation",
+    "scale": 1000000,
+    "repeat": 1,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5546352640,
+      "load": 65
+    },
+    "estimated_envelope_bytes": 267108864,
+    "returncode": 0,
+    "wall_seconds": 14.255018400001063,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5562621952,
+      "load": 65
+    }
+  },
+  {
+    "mode": "structural",
+    "scale": 1000000,
+    "repeat": 1,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5562621952,
+      "load": 65
+    },
+    "estimated_envelope_bytes": 267108864,
+    "returncode": 0,
+    "wall_seconds": 15.522031399999833,
+    "status": "completed",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5321519104,
+      "load": 67
+    }
+  }
+]

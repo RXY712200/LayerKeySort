@@ -1,0 +1,5412 @@
+[
+  {
+    "id": "production-append-10000-0-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6924656640,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.028934900001331698,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6926958592,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-10000-0-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6926946304,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.027808999999251682,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6929399808,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-10000-0-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6929395712,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.02708630000051926,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6930862080,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-10000-0-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6930862080,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.027699600001142244,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6932725760,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-10000-0-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6932725760,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.017929899999217014,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6934331392,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-10000-0-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6934331392,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.017789300000004005,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6935769088,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-10000-0-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6935769088,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.02172439999958442,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6935248896,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-10000-0-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6935248896,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.018002800001340802,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6931476480,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-10000-0-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6931476480,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 68708864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.016477099999974598,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6928883712,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-10000-0-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 10000,
+    "repeat": 0,
+    "seed": 17,
+    "warmup": true,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6928814080,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 70108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "10000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.017799499999455293,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6928150528,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-100000-1-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6928150528,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.17595520000031684,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6922227712,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-100000-1-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6922227712,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.17980760000136797,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921584640,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-100000-1-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921584640,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.1667077000001882,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6923984896,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-100000-1-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6923984896,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.17991910000091593,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6926700544,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-100000-1-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6926700544,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.05638360000011744,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6928601088,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-100000-1-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6927732736,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.06170670000028622,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6937038848,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-100000-1-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6937038848,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.10669740000048478,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6926438400,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-100000-1-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6926438400,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.06276460000117368,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6924558336,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-100000-1-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6924558336,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.03936229999999341,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6933848064,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-100000-1-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6933848064,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 97108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.04134200000044075,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6925578240,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-100000-2-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6925578240,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.20328169999993406,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6918819840,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-100000-2-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6918815744,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.19037749999915832,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907535360,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-100000-2-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907535360,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.16657320000012987,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6903787520,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-100000-2-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6903787520,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.176533500000005,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907416576,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-100000-2-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907416576,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.05297720000089612,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6904635392,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-100000-2-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6904635392,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.05777440000019851,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6904967168,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-100000-2-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6904967168,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.08463990000018384,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6905937920,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-100000-2-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6905937920,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.057599600000685314,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6914719744,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-100000-2-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6914719744,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.036288400000557886,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6906695680,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-100000-2-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 100000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6906695680,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 97108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.03679270000066026,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6910316544,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-100000-3-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6910316544,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.16453270000056364,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907244544,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-100000-3-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907244544,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.1710748000004969,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6908235776,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-100000-3-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6908231680,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.17364100000122562,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6906695680,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-100000-3-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6906695680,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.1674079000003985,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6906671104,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-100000-3-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6906339328,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.0524132999998983,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6915018752,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-100000-3-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6915018752,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.0520606999998563,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6913224704,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-100000-3-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6913224704,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.08237579999877198,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907162624,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-100000-3-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907162624,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.0568158999994921,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907154432,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-100000-3-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907154432,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 83108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.047432999999728054,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907609088,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-100000-3-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 100000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907609088,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 97108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.034021600000414765,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6908657664,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-append-100000-1-17",
+    "mode": "allocation",
+    "profile": "append",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6908657664,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "append",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.19073990000106278,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6908469248,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-prepend-100000-1-17",
+    "mode": "allocation",
+    "profile": "prepend",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6908469248,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "prepend",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.17266469999958645,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6920228864,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-anchor-100000-1-17",
+    "mode": "allocation",
+    "profile": "anchor",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6920228864,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "anchor",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.16747360000044864,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921572352,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-local-100000-1-17",
+    "mode": "allocation",
+    "profile": "local",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921572352,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "local",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.1733605000008538,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921416704,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-ascending-100000-1-17",
+    "mode": "allocation",
+    "profile": "ascending",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921412608,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "ascending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.05593579999913345,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6926086144,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-descending-100000-1-17",
+    "mode": "allocation",
+    "profile": "descending",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6924828672,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "descending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.05832870000085677,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921830400,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-random-100000-1-17",
+    "mode": "allocation",
+    "profile": "random",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921191424,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "random",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.08735789999991539,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921089024,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-duplicates-100000-1-17",
+    "mode": "allocation",
+    "profile": "duplicates",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921068544,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "duplicates",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.06461820000004082,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921691136,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-equal-100000-1-17",
+    "mode": "allocation",
+    "profile": "equal",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921691136,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "equal",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.038316399999530404,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6926741504,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-history-100000-1-17",
+    "mode": "allocation",
+    "profile": "history",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6925529088,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 97108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "history",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.04165549999925133,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6920409088,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-append-100000-1-17",
+    "mode": "structural",
+    "profile": "append",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6920146944,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "append",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.22036280000065744,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6921183232,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-prepend-100000-1-17",
+    "mode": "structural",
+    "profile": "prepend",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6921183232,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:32Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "prepend",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.22253809999892837,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6919647232,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-anchor-100000-1-17",
+    "mode": "structural",
+    "profile": "anchor",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6919647232,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "anchor",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.2293059000003268,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6915887104,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-local-100000-1-17",
+    "mode": "structural",
+    "profile": "local",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6915887104,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "local",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 0.21679839999887918,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6915801088,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-ascending-100000-1-17",
+    "mode": "structural",
+    "profile": "ascending",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6915801088,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "ascending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.06727089999913005,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6918348800,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-descending-100000-1-17",
+    "mode": "structural",
+    "profile": "descending",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6918348800,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "descending",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.061264699999810546,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6919860224,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-random-100000-1-17",
+    "mode": "structural",
+    "profile": "random",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6919856128,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "random",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.09315870000136783,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6919303168,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-duplicates-100000-1-17",
+    "mode": "structural",
+    "profile": "duplicates",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6919303168,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "duplicates",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.07091940000100294,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6918246400,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-equal-100000-1-17",
+    "mode": "structural",
+    "profile": "equal",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6918246400,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 87108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "equal",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.039893299999675946,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6918070272,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-history-100000-1-17",
+    "mode": "structural",
+    "profile": "history",
+    "scale": 100000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6918070272,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 97108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "history",
+      "100000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.043926700000156416,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6919974912,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-1000000-1-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6919938048,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.663209000000279,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6910107648,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-1000000-1-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6910103552,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:36Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.601686600000903,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6904864768,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-1000000-1-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6904860672,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:39Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.5362048000006325,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6919663616,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-1000000-1-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6919659520,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:41Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.9067981999996846,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6926430208,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-1000000-1-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6926426112,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:44Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.27740429999903427,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6938222592,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-1000000-1-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6938222592,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:44Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.2759537999991153,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6937501696,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-1000000-1-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6937501696,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:45Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.2796387999987928,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6937640960,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-1000000-1-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6937636864,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:46Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.5966211999984807,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6936842240,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-1000000-1-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6936842240,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:47Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.2121160000006057,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6937956352,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-1000000-1-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6937952256,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 367108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:47Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.297848399999566,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6937178112,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-1000000-2-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6937178112,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:47Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.591764200000398,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6939459584,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-1000000-2-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6939455488,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:50Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.482191099999909,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6939463680,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-1000000-2-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6939459584,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:52Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.565022400000089,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6924111872,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-1000000-2-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6924107776,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:55Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.0909575000005134,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6930477056,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-1000000-2-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6930472960,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:58Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.2811550000005809,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6931435520,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-1000000-2-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6931460096,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:58Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.2883474999998725,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6929543168,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-1000000-2-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6929547264,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:24:58Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.3580027999996673,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6929862656,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-1000000-2-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6929858560,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:00Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.6367526000012731,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6929403904,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-1000000-2-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6929403904,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:00Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.2308548000000883,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6931771392,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-1000000-2-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 1000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6931767296,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 367108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:01Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.31045049999920593,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6933745664,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-1000000-3-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6933745664,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:01Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.568811299999652,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6937395200,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-1000000-3-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6937391104,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:03Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.5577472999993915,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6939897856,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-1000000-3-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6939893760,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:06Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.590648399998827,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6938271744,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-1000000-3-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6938267648,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:09Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.931482500000129,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6920110080,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-1000000-3-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6920105984,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:12Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.28261440000096627,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6917562368,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-1000000-3-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6917562368,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:12Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.30313480000040727,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6917529600,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-1000000-3-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6917529600,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:12Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.3297074000001885,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6928326656,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-1000000-3-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6928322560,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:13Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.6058257999993657,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6928146432,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-1000000-3-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6928142336,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:14Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.21252300000014657,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6925905920,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-history-1000000-3-17",
+    "mode": "production",
+    "profile": "history",
+    "scale": 1000000,
+    "repeat": 3,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6925905920,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 367108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:14Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "history",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.29890939999859256,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6925709312,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-append-1000000-1-17",
+    "mode": "allocation",
+    "profile": "append",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6925709312,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:15Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "append",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.017321700001048,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6928605184,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-prepend-1000000-1-17",
+    "mode": "allocation",
+    "profile": "prepend",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6928601088,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:18Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "prepend",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.0325810000013007,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6913527808,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-anchor-1000000-1-17",
+    "mode": "allocation",
+    "profile": "anchor",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6913523712,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:21Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "anchor",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.0188495999991574,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6910636032,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-local-1000000-1-17",
+    "mode": "allocation",
+    "profile": "local",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6910627840,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:24Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "local",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.4318336000014824,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6908383232,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-ascending-1000000-1-17",
+    "mode": "allocation",
+    "profile": "ascending",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6908379136,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:27Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "ascending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.3424718000005669,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6908469248,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-descending-1000000-1-17",
+    "mode": "allocation",
+    "profile": "descending",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6908469248,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:27Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "descending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.33131649999995716,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6908456960,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-random-1000000-1-17",
+    "mode": "allocation",
+    "profile": "random",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6908452864,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "random",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.500089700000899,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6914625536,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-duplicates-1000000-1-17",
+    "mode": "allocation",
+    "profile": "duplicates",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6914621440,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:29Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "duplicates",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.686722299999019,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6914633728,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-equal-1000000-1-17",
+    "mode": "allocation",
+    "profile": "equal",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6914637824,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "equal",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.26513490000070306,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6915649536,
+      "load": 57
+    }
+  },
+  {
+    "id": "allocation-history-1000000-1-17",
+    "mode": "allocation",
+    "profile": "history",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6915649536,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 367108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "history",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.4056313000000955,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6916157440,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-append-1000000-1-17",
+    "mode": "structural",
+    "profile": "append",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6916153344,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:31Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "append",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.1370391999989806,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6917902336,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-prepend-1000000-1-17",
+    "mode": "structural",
+    "profile": "prepend",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6917898240,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:34Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "prepend",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.1718866000010166,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6917292032,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-anchor-1000000-1-17",
+    "mode": "structural",
+    "profile": "anchor",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6917287936,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:37Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "anchor",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.2308563999995386,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6907625472,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-local-1000000-1-17",
+    "mode": "structural",
+    "profile": "local",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6907621376,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:40Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "local",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 3.686705099999017,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6895792128,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-ascending-1000000-1-17",
+    "mode": "structural",
+    "profile": "ascending",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6895788032,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:44Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "ascending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.3574716000002809,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6895898624,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-descending-1000000-1-17",
+    "mode": "structural",
+    "profile": "descending",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6895894528,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:44Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "descending",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.36619640000026266,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6896406528,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-random-1000000-1-17",
+    "mode": "structural",
+    "profile": "random",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6896406528,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:45Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "random",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.5375977000003331,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6911160320,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-duplicates-1000000-1-17",
+    "mode": "structural",
+    "profile": "duplicates",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6911160320,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:46Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "duplicates",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.6749669000000722,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6910152704,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-equal-1000000-1-17",
+    "mode": "structural",
+    "profile": "equal",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6910148608,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 267108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:47Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "equal",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.2951264000002993,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6910357504,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-history-1000000-1-17",
+    "mode": "structural",
+    "profile": "history",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6910357504,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 367108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:47Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "history",
+      "1000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 9,
+    "process_wall_seconds": 0.43310090000159107,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6910627840,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-1000000-1-712200",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 712200,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6910627840,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:48Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "1000000",
+      "712200"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 2.5843344000004436,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6909890560,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-1000000-1-712200",
+    "mode": "production",
+    "profile": "random",
+    "scale": 1000000,
+    "repeat": 1,
+    "seed": 712200,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6909882368,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 227108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:50Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "1000000",
+      "712200"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.3590641999999207,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6912688128,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-3000000-1-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6912610304,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:51Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 5.017257499999687,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6900256768,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-3000000-1-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6900252672,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:25:56Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 5.011809700001322,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6895869952,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-3000000-1-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6895816704,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:01Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 4.948006199998417,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6936006656,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-3000000-1-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6936002560,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:06Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.984556100000191,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6948941824,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-3000000-1-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6948937728,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:13Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.7205922000011924,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6946394112,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-3000000-1-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6946390016,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:14Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.705461200001082,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6946783232,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-random-3000000-1-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6946783232,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:15Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 5.8469819000001735,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6933381120,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-duplicates-3000000-1-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6933377024,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:21Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.8977773000005982,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6931951616,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-equal-3000000-1-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6931947520,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:23Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.621717299998636,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6938374144,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-append-3000000-2-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6938374144,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:23Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 4.891457399999126,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6941483008,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-3000000-2-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6941478912,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 4.899191800001063,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6940913664,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-3000000-2-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6940909568,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:33Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 4.916714999999385,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6942433280,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-local-3000000-2-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6942429184,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:38Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.891362999998819,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7002636288,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-ascending-3000000-2-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7002632192,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:45Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.7090802999991865,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6992801792,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-descending-3000000-2-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6992797696,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:46Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.7203837999986717,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7086415872,
+      "load": 56
+    }
+  },
+  {
+    "id": "production-random-3000000-2-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7086415872,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:46Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 6.170541900000899,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7078694912,
+      "load": 56
+    }
+  },
+  {
+    "id": "production-duplicates-3000000-2-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7078690816,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:52Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 1.9217406999996456,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7064875008,
+      "load": 56
+    }
+  },
+  {
+    "id": "production-equal-3000000-2-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 3000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7064870912,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 547108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:54Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 0.6237105000000156,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7066673152,
+      "load": 56
+    }
+  },
+  {
+    "id": "allocation-append-3000000-1-17",
+    "mode": "allocation",
+    "profile": "append",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7066669056,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:26:55Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "append",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.006392000001142,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7061716992,
+      "load": 56
+    }
+  },
+  {
+    "id": "allocation-prepend-3000000-1-17",
+    "mode": "allocation",
+    "profile": "prepend",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7061712896,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:01Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "prepend",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.213210399999298,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7060230144,
+      "load": 56
+    }
+  },
+  {
+    "id": "allocation-anchor-3000000-1-17",
+    "mode": "allocation",
+    "profile": "anchor",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7060226048,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:07Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "anchor",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.161914700000125,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7052947456,
+      "load": 56
+    }
+  },
+  {
+    "id": "allocation-local-3000000-1-17",
+    "mode": "allocation",
+    "profile": "local",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7052943360,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:13Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "local",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 8.21308820000013,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7056523264,
+      "load": 56
+    }
+  },
+  {
+    "id": "allocation-random-3000000-1-17",
+    "mode": "allocation",
+    "profile": "random",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7056371712,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:22Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "random",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 6.4890530000011495,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7044702208,
+      "load": 56
+    }
+  },
+  {
+    "id": "allocation-duplicates-3000000-1-17",
+    "mode": "allocation",
+    "profile": "duplicates",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7044698112,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "duplicates",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 2.004789200000232,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7047991296,
+      "load": 56
+    }
+  },
+  {
+    "id": "structural-append-3000000-1-17",
+    "mode": "structural",
+    "profile": "append",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7047987200,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "append",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.483135200000106,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7003869184,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-anchor-3000000-1-17",
+    "mode": "structural",
+    "profile": "anchor",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7003865088,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:37Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "anchor",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 6.548333199998524,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6989049856,
+      "load": 57
+    }
+  },
+  {
+    "id": "structural-random-3000000-1-17",
+    "mode": "structural",
+    "profile": "random",
+    "scale": 3000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6988943360,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:43Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "random",
+      "3000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 6.599240999999893,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6983000064,
+      "load": 57
+    }
+  },
+  {
+    "id": "history-3000000-policy-skip",
+    "mode": "all",
+    "profile": "history",
+    "scale": 3000000,
+    "status": "safely_skipped",
+    "reason": "simultaneous snapshots/loaded snapshot/second live order capped at 1m; 10m sanitizer also excluded",
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6983000064,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 967108864
+  },
+  {
+    "id": "production-append-10000000-1-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6982905856,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:27:50Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 11.667889000000287,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6990598144,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-prepend-10000000-1-17",
+    "mode": "production",
+    "profile": "prepend",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6990594048,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:28:01Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "prepend",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 11.334562000000005,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6990835712,
+      "load": 57
+    }
+  },
+  {
+    "id": "production-anchor-10000000-1-17",
+    "mode": "production",
+    "profile": "anchor",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6990831616,
+      "load": 57
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:28:13Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "anchor",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 11.86038600000029,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 7029329920,
+      "load": 56
+    }
+  },
+  {
+    "id": "production-local-10000000-1-17",
+    "mode": "production",
+    "profile": "local",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 7029325824,
+      "load": 56
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:28:25Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "local",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 21.24438679999912,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5356310528,
+      "load": 67
+    }
+  },
+  {
+    "id": "production-ascending-10000000-1-17",
+    "mode": "production",
+    "profile": "ascending",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5356306432,
+      "load": 67
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:28:46Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "ascending",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 2.390830199999982,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5247078400,
+      "load": 67
+    }
+  },
+  {
+    "id": "production-descending-10000000-1-17",
+    "mode": "production",
+    "profile": "descending",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5247078400,
+      "load": 67
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:28:48Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "descending",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 2.300632399999813,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5216747520,
+      "load": 68
+    }
+  },
+  {
+    "id": "production-random-10000000-1-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5216743424,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:28:50Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 30.053693199999543,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5278298112,
+      "load": 67
+    }
+  },
+  {
+    "id": "production-duplicates-10000000-1-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5278298112,
+      "load": 67
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:29:21Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 7.4794459999993705,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5284118528,
+      "load": 67
+    }
+  },
+  {
+    "id": "production-equal-10000000-1-17",
+    "mode": "production",
+    "profile": "equal",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5284118528,
+      "load": 67
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:29:28Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "equal",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 2.133078499999101,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5273505792,
+      "load": 67
+    }
+  },
+  {
+    "id": "production-append-10000000-2-17",
+    "mode": "production",
+    "profile": "append",
+    "scale": 10000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5273505792,
+      "load": 67
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:29:30Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "append",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 12.22899099999995,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5222993920,
+      "load": 67
+    }
+  },
+  {
+    "id": "production-random-10000000-2-17",
+    "mode": "production",
+    "profile": "random",
+    "scale": 10000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5222993920,
+      "load": 67
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:29:42Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "random",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 28.818713700000444,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5477695488,
+      "load": 66
+    }
+  },
+  {
+    "id": "production-duplicates-10000000-2-17",
+    "mode": "production",
+    "profile": "duplicates",
+    "scale": 10000000,
+    "repeat": 2,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5477765120,
+      "load": 66
+    },
+    "estimated_envelope_bytes": 1667108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:11Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale.exe",
+      "duplicates",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 3,
+    "process_wall_seconds": 7.866890600000261,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5407264768,
+      "load": 66
+    }
+  },
+  {
+    "id": "allocation-append-10000000-1-17",
+    "mode": "allocation",
+    "profile": "append",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5407264768,
+      "load": 66
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:19Z",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "append",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "status": "completed",
+    "phase_rows": 12,
+    "process_wall_seconds": 15.626443200000722,
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    }
+  },
+  {
+    "id": "allocation-prepend-10000000-1-17",
+    "mode": "allocation",
+    "profile": "prepend",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "safely_skipped",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    }
+  },
+  {
+    "id": "allocation-anchor-10000000-1-17",
+    "mode": "allocation",
+    "profile": "anchor",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "safely_skipped",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    }
+  },
+  {
+    "id": "allocation-random-10000000-1-17",
+    "mode": "allocation",
+    "profile": "random",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "safely_skipped",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    }
+  },
+  {
+    "id": "allocation-duplicates-10000000-1-17",
+    "mode": "allocation",
+    "profile": "duplicates",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "safely_skipped",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5200625664,
+      "load": 68
+    }
+  },
+  {
+    "id": "structural-append-10000000-1-17",
+    "mode": "structural",
+    "profile": "append",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5199577088,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "safely_skipped",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5199577088,
+      "load": 68
+    }
+  },
+  {
+    "id": "structural-anchor-10000000-1-17",
+    "mode": "structural",
+    "profile": "anchor",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5200769024,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "safely_skipped",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5200769024,
+      "load": 68
+    }
+  },
+  {
+    "id": "history-10000000-policy-skip",
+    "mode": "all",
+    "profile": "history",
+    "scale": 10000000,
+    "status": "safely_skipped",
+    "reason": "simultaneous snapshots/loaded snapshot/second live order capped at 1m; 10m sanitizer also excluded",
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5200769024,
+      "load": 68
+    },
+    "estimated_envelope_bytes": 3067108864
+  },
+  {
+    "id": "allocation-prepend-10000000-1-17-retry1",
+    "mode": "allocation",
+    "profile": "prepend",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5661687808,
+      "load": 65
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "completed",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 5615091712,
+      "load": 65
+    },
+    "retry_of": "allocation-prepend-10000000-1-17",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "prepend",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "phase_rows": 12,
+    "process_wall_seconds": 14.292642899999919,
+    "inherited_fields_note": "reason and time_utc describe original admission deferral; precise retry UTC start was not recorded. Actual retry memory, duration, exit status and command are recorded."
+  },
+  {
+    "id": "allocation-anchor-10000000-1-17-retry1",
+    "mode": "allocation",
+    "profile": "anchor",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 5615083520,
+      "load": 65
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "completed",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6099439616,
+      "load": 62
+    },
+    "retry_of": "allocation-anchor-10000000-1-17",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "anchor",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "phase_rows": 12,
+    "process_wall_seconds": 14.37408510000023,
+    "inherited_fields_note": "reason and time_utc describe original admission deferral; precise retry UTC start was not recorded. Actual retry memory, duration, exit status and command are recorded."
+  },
+  {
+    "id": "allocation-random-10000000-1-17-retry1",
+    "mode": "allocation",
+    "profile": "random",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6099435520,
+      "load": 62
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "completed",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6138654720,
+      "load": 62
+    },
+    "retry_of": "allocation-random-10000000-1-17",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "random",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "phase_rows": 3,
+    "process_wall_seconds": 28.22942239999975,
+    "inherited_fields_note": "reason and time_utc describe original admission deferral; precise retry UTC start was not recorded. Actual retry memory, duration, exit status and command are recorded."
+  },
+  {
+    "id": "allocation-duplicates-10000000-1-17-retry1",
+    "mode": "allocation",
+    "profile": "duplicates",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6138650624,
+      "load": 62
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "completed",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6140399616,
+      "load": 62
+    },
+    "retry_of": "allocation-duplicates-10000000-1-17",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_alloc.exe",
+      "duplicates",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "phase_rows": 3,
+    "process_wall_seconds": 7.336817300001712,
+    "inherited_fields_note": "reason and time_utc describe original admission deferral; precise retry UTC start was not recorded. Actual retry memory, duration, exit status and command are recorded."
+  },
+  {
+    "id": "structural-append-10000000-1-17-retry1",
+    "mode": "structural",
+    "profile": "append",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6140395520,
+      "load": 62
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "completed",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6135218176,
+      "load": 62
+    },
+    "retry_of": "structural-append-10000000-1-17",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "append",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "phase_rows": 12,
+    "process_wall_seconds": 15.0401540999992,
+    "inherited_fields_note": "reason and time_utc describe original admission deferral; precise retry UTC start was not recorded. Actual retry memory, duration, exit status and command are recorded."
+  },
+  {
+    "id": "structural-anchor-10000000-1-17-retry1",
+    "mode": "structural",
+    "profile": "anchor",
+    "scale": 10000000,
+    "repeat": 1,
+    "seed": 17,
+    "warmup": false,
+    "memory_before": {
+      "total": 16304992256,
+      "available": 6135214080,
+      "load": 62
+    },
+    "estimated_envelope_bytes": 2067108864,
+    "reserve_bytes": 3221225472,
+    "process_budget_seconds": 270,
+    "time_utc": "2026-10-24T05:30:35Z",
+    "status": "completed",
+    "reason": "conservative memory envelope/reserve not satisfied",
+    "memory_after": {
+      "total": 16304992256,
+      "available": 6016065536,
+      "load": 63
+    },
+    "retry_of": "structural-anchor-10000000-1-17",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-scale-build-release\\full_scale_structural.exe",
+      "anchor",
+      "10000000",
+      "17"
+    ],
+    "returncode": 0,
+    "phase_rows": 12,
+    "process_wall_seconds": 15.176535799999328,
+    "inherited_fields_note": "reason and time_utc describe original admission deferral; precise retry UTC start was not recorded. Actual retry memory, duration, exit status and command are recorded."
+  }
+]

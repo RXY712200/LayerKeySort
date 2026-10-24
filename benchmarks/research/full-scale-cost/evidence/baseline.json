@@ -1,0 +1,31 @@
+{
+  "main": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+  "stable": "80004ae732daf696f7e9192e417de0edb0b2aafa",
+  "tag_object": "83d67d3ef5dacaf6117db320d9bbea68b199e23e",
+  "full_source_sha256": {
+    "src/lks_alloc.c": "d54a6b1b36c253b14425de8eca544d90599b53e1a8867cd9331e3f93897043e1",
+    "src/lks_base.c": "bdf50ead894dfb3728f34f161789ba5c7aabfe6c7b8e9fa9b0939c3146485a3b",
+    "src/path.c": "cc86b28fdaa7e95ef515ddec8f9bb6a36d53064c9a25efae5673b80ebbbca1ec",
+    "src/path_text.c": "54e78602dc2ecd65545008799bd0d5ced87ad874265c868a1a12b58aa1ffb092",
+    "src/path_order_key.c": "4093fbfc95fe89adf8cd182ff106a529c3aa46cf91e20e7b79cf818cc0dbc384",
+    "src/slot_codec.c": "923b08d05b589726c1bf0090aa8df7008d269d3abe9a89d7b93fc0543ee8252e",
+    "src/path_compare.c": "a9127a43237edfbddd3db0485cd25f0e329a7a2e98b67fcaf0b7bc673bc29449",
+    "src/order.c": "087a5f041a8c1cbcfa3e4cb0edb7f898e09345a67c13696ef244b97afc6d414e",
+    "src/managed_order.c": "f930af44d285ca2738a080cc6667c070c1d8a61bb65413718c67ed6cfca1e01d",
+    "src/snapshot.c": "41fb633fceb45ac1274c90db656428691989bf16ff6e1697d29f11eee21122da",
+    "src/snapshot_key.c": "0cfe6a7f95e1ff9c1b419a2442910c581401ed30138862b5d4a1c8dc4282c5b7",
+    "src/snapshot_wire.c": "9fa0f52188fca0ea4eb8841743658adedc22fd0a6430980fe904868e01503a9d",
+    "src/snapshot_restore.c": "ee07a426eea7a700c6f9443b39a364c88bf3053cab57023b565a0d85785e6354",
+    "src/order_bulk.c": "cd6dedc693c3e054139f23e47736334d5fd4b00192439970d5c05450f3f3c56b",
+    "src/immutable_group.c": "208a4687178301df70d266d3def7c61c49ad9fa37fceb5c2de25ff8f799dd1fc",
+    "src/sort.c": "6cbe23d4194f428aecf9f3e7870ab7b23552b7e2716b7c72e7cf5f6b21afb5ab",
+    "include/layerkeysort.h": "246557c0ae00462645740f6bafeff3bce5ba7f92be6f611bc1e4630328e760fe",
+    "cmake/ProductionSources.cmake": "7cbcfd8fcc7ba1835e06d49a6d659e7b5938cc30704c5e22b6b3728ab25ba371",
+    "CMakeLists.txt": "0c560f43caae5ada6ecb5b8d544f4b333111c6b762862937c446b706de2ad103"
+  },
+  "stable_production_diff": "",
+  "issue_body_sha256": {
+    "3": "38fa0f50da56d1010fcb80c1f6ea357983ba342680f8e8fe465b80a7d2eb07a6",
+    "4": "551974c835ede9126d86acb235d37567d2762a1cd5beebbf369ef88f1f195031"
+  }
+}
