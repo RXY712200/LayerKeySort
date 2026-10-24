@@ -1,0 +1,17 @@
+043872eb5560e867aa7f8c094e0e9dbf2e8a7b95	refs/heads/main
+bf27502f18de5988cd2d1c797ddc3e0ff48d0b03	refs/heads/research/full-comprehensive-consumer-audit
+d9d3b370fb8daf134eadc26c64e3b30aae12ec75	refs/heads/research/full-million-scale-cost-study
+83d67d3ef5dacaf6117db320d9bbea68b199e23e	refs/tags/v4.0.0
+80004ae732daf696f7e9192e417de0edb0b2aafa	refs/tags/v4.0.0^{}
+135c5e896441f5b4acf577a82af7d11486cdeb3c	refs/tags/v4.0.0-preview.1
+21b2902555534d10d97e704161066197cebc13ae	refs/tags/v4.0.0-preview.1^{}
+225827c7ed7afc62ed2b9aaeb8d0569ae105a916	refs/tags/v4.0.0-preview.2
+2967cc6429c6af7a0c5a8d9fabdeb31ed2bf0642	refs/tags/v4.0.0-preview.2^{}
+a0e7582fd9cb0ccc0c32422be3a5e0ed74388105	refs/tags/v4.0.0-preview.3
+9ace38fb40253a54a9466c5202701c074702f973	refs/tags/v4.0.0-preview.3^{}
+182c344b219382e2afd2f1c27ea7d6c2f4651725	refs/tags/v4.0.0-preview.4
+b73a9efb5493662509269b8efe6a905dd26fdc26	refs/tags/v4.0.0-preview.4^{}
+2c1b4f3add87e691aea0480b391b44720f548169	refs/tags/v4.0.0-preview.5
+f413382e96175b79c117956fe4a57212785fb104	refs/tags/v4.0.0-preview.5^{}
+9a9d0f15874248d1ba92aadc193f2232b92473bd	refs/tags/v4.0.0-rc.1
+9ad636fb2e292070505a86f59011d433296651b1	refs/tags/v4.0.0-rc.1^{}

@@ -1,0 +1,173 @@
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/live-core-step1-asan
+      Start  1: layerkeysort_v4_api_compile
+      Start  2: layerkeysort_v4_freeze_contract
+      Start  3: layerkeysort_v4_rc_torture
+ 1/39 Test  #1: layerkeysort_v4_api_compile .............Exit code 0xc0000135***Exception:   0.08 sec
+
+ 2/39 Test  #2: layerkeysort_v4_freeze_contract .........Exit code 0xc0000135***Exception:   0.05 sec
+
+      Start  4: layerkeysort_v4_api_manifest
+      Start  5: layerkeysort_v4_wire_golden
+ 3/39 Test  #3: layerkeysort_v4_rc_torture ..............Exit code 0xc0000135***Exception:   0.05 sec
+
+      Start  6: layerkeysort_v3_core
+ 4/39 Test  #6: layerkeysort_v3_core ....................Exit code 0xc0000135***Exception:   0.04 sec
+
+      Start  7: layerkeysort_v4_marker_threads
+ 5/39 Test  #4: layerkeysort_v4_api_manifest ............   Passed    0.09 sec
+      Start  8: layerkeysort_v4_immutable_group
+ 6/39 Test  #7: layerkeysort_v4_marker_threads ..........Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start  9: layerkeysort_v4_live_order
+ 7/39 Test  #8: layerkeysort_v4_immutable_group .........Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 10: layerkeysort_v4_snapshot
+ 8/39 Test  #5: layerkeysort_v4_wire_golden .............***Failed    0.16 sec
+Traceback (most recent call last):
+  File "C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\live-core-step1\tools\verify_v4_wire.py", line 7, in <module>
+    for key in c['ls1']:subprocess.run([sys.argv[1],'key',key],check=True)
+                        ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\rxy71\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/live-core-step1-asan/RelWithDebInfo/layerkeysort_v4_wire_probe.exe', 'key', 'LS1.00.0000000000000000']' returned non-zero exit status 3221225781.
+
+ 9/39 Test  #9: layerkeysort_v4_live_order ..............Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 11: layerkeysort_v4_mutation
+      Start 12: layerkeysort_mutation_soak
+10/39 Test #10: layerkeysort_v4_snapshot ................Exit code 0xc0000135***Exception:   0.08 sec
+
+11/39 Test #11: layerkeysort_v4_mutation ................Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 13: layerkeysort_consumer_roundtrip
+      Start 14: layerkeysort_parser_torture
+12/39 Test #12: layerkeysort_mutation_soak ..............Exit code 0xc0000135***Exception:   0.08 sec
+
+13/39 Test #13: layerkeysort_consumer_roundtrip .........Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 15: layerkeysort_rc_contract
+      Start 16: layerkeysort_v4_storage_smoke
+14/39 Test #14: layerkeysort_parser_torture .............Exit code 0xc0000135***Exception:   0.09 sec
+
+15/39 Test #15: layerkeysort_rc_contract ................Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 17: layerkeysort_v4_groups_smoke
+      Start 18: layerkeysort_v4_trace_timeline
+16/39 Test #16: layerkeysort_v4_storage_smoke ...........Exit code 0xc0000135***Exception:   0.09 sec
+
+17/39 Test #17: layerkeysort_v4_groups_smoke ............Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 19: layerkeysort_v4_trace_priority
+      Start 20: layerkeysort_v4_trace_local
+18/39 Test #18: layerkeysort_v4_trace_timeline ..........Exit code 0xc0000135***Exception:   0.05 sec
+
+19/39 Test #19: layerkeysort_v4_trace_priority ..........Exit code 0xc0000135***Exception:   0.03 sec
+
+      Start 21: layerkeysort_v4_trace_churn
+      Start 22: layerkeysort_v4_trace_local_drag
+20/39 Test #20: layerkeysort_v4_trace_local .............Exit code 0xc0000135***Exception:   0.03 sec
+
+      Start 23: layerkeysort_v4_trace_distant_drag
+21/39 Test #21: layerkeysort_v4_trace_churn .............Exit code 0xc0000135***Exception:   0.03 sec
+
+22/39 Test #22: layerkeysort_v4_trace_local_drag ........Exit code 0xc0000135***Exception:   0.02 sec
+
+      Start 24: layerkeysort_v4_trace_hotspot_drag
+      Start 25: layerkeysort_v4_trace_front_back
+23/39 Test #23: layerkeysort_v4_trace_distant_drag ......Exit code 0xc0000135***Exception:   0.03 sec
+
+24/39 Test #24: layerkeysort_v4_trace_hotspot_drag ......Exit code 0xc0000135***Exception:   0.02 sec
+
+      Start 26: layerkeysort_v4_trace_delete_reinsert
+      Start 27: layerkeysort_v4_trace_equal
+25/39 Test #25: layerkeysort_v4_trace_front_back ........Exit code 0xc0000135***Exception:   0.02 sec
+
+26/39 Test #26: layerkeysort_v4_trace_delete_reinsert ...Exit code 0xc0000135***Exception:   0.02 sec
+
+      Start 28: layerkeysort_v4_trace_retained
+      Start 29: layerkeysort_v4_trace_long_churn
+27/39 Test #27: layerkeysort_v4_trace_equal .............Exit code 0xc0000135***Exception:   0.03 sec
+
+28/39 Test #28: layerkeysort_v4_trace_retained ..........Exit code 0xc0000135***Exception:   0.02 sec
+
+      Start 30: layerkeysort_v4_snapshot_smoke
+      Start 31: layerkeysort_v4_mutation_smoke
+29/39 Test #29: layerkeysort_v4_trace_long_churn ........Exit code 0xc0000135***Exception:   0.06 sec
+
+30/39 Test #30: layerkeysort_v4_snapshot_smoke ..........Exit code 0xc0000135***Exception:   0.05 sec
+
+      Start 32: layerkeysort_workload_timeline_smoke
+      Start 33: layerkeysort_workload_priority_smoke
+31/39 Test #31: layerkeysort_v4_mutation_smoke ..........Exit code 0xc0000135***Exception:   0.07 sec
+
+32/39 Test #32: layerkeysort_workload_timeline_smoke ....Exit code 0xc0000135***Exception:   0.04 sec
+
+      Start 34: layerkeysort_workload_local_smoke
+      Start 35: layerkeysort_workload_churn_smoke
+33/39 Test #33: layerkeysort_workload_priority_smoke ....Exit code 0xc0000135***Exception:   0.04 sec
+
+34/39 Test #34: layerkeysort_workload_local_smoke .......Exit code 0xc0000135***Exception:   0.02 sec
+
+      Start 36: layerkeysort_workload_output_smoke
+      Start 37: layerkeysort_benchmark_tree_smoke
+35/39 Test #35: layerkeysort_workload_churn_smoke .......Exit code 0xc0000135***Exception:   0.06 sec
+
+      Start 38: layerkeysort_benchmark_mutation_smoke
+36/39 Test #37: layerkeysort_benchmark_tree_smoke .......Exit code 0xc0000135***Exception:   0.04 sec
+
+      Start 39: layerkeysort_benchmark_sort_smoke
+37/39 Test #38: layerkeysort_benchmark_mutation_smoke ...Exit code 0xc0000135***Exception:   0.02 sec
+
+38/39 Test #39: layerkeysort_benchmark_sort_smoke .......Exit code 0xc0000135***Exception:   0.02 sec
+
+39/39 Test #36: layerkeysort_workload_output_smoke ......***Failed    0.20 sec
+FAIL: command failed: [WindowsPath('C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/live-core-step1-asan/RelWithDebInfo/layerkeysort_workload.exe'), '--oracle-self-test']
+
+
+
+
+3% tests passed, 38 tests failed out of 39
+
+Total Test time (real) =   0.93 sec
+
+The following tests FAILED:
+	  1 - layerkeysort_v4_api_compile (Exit code 0xc0000135)
+	  2 - layerkeysort_v4_freeze_contract (Exit code 0xc0000135)
+	  3 - layerkeysort_v4_rc_torture (Exit code 0xc0000135)
+	  5 - layerkeysort_v4_wire_golden (Failed)
+	  6 - layerkeysort_v3_core (Exit code 0xc0000135)
+	  7 - layerkeysort_v4_marker_threads (Exit code 0xc0000135)
+	  8 - layerkeysort_v4_immutable_group (Exit code 0xc0000135)
+	  9 - layerkeysort_v4_live_order (Exit code 0xc0000135)
+	 10 - layerkeysort_v4_snapshot (Exit code 0xc0000135)
+	 11 - layerkeysort_v4_mutation (Exit code 0xc0000135)
+	 12 - layerkeysort_mutation_soak (Exit code 0xc0000135)
+	 13 - layerkeysort_consumer_roundtrip (Exit code 0xc0000135)
+	 14 - layerkeysort_parser_torture (Exit code 0xc0000135)
+	 15 - layerkeysort_rc_contract (Exit code 0xc0000135)
+	 16 - layerkeysort_v4_storage_smoke (Exit code 0xc0000135)
+	 17 - layerkeysort_v4_groups_smoke (Exit code 0xc0000135)
+	 18 - layerkeysort_v4_trace_timeline (Exit code 0xc0000135)
+	 19 - layerkeysort_v4_trace_priority (Exit code 0xc0000135)
+	 20 - layerkeysort_v4_trace_local (Exit code 0xc0000135)
+	 21 - layerkeysort_v4_trace_churn (Exit code 0xc0000135)
+	 22 - layerkeysort_v4_trace_local_drag (Exit code 0xc0000135)
+	 23 - layerkeysort_v4_trace_distant_drag (Exit code 0xc0000135)
+	 24 - layerkeysort_v4_trace_hotspot_drag (Exit code 0xc0000135)
+	 25 - layerkeysort_v4_trace_front_back (Exit code 0xc0000135)
+	 26 - layerkeysort_v4_trace_delete_reinsert (Exit code 0xc0000135)
+	 27 - layerkeysort_v4_trace_equal (Exit code 0xc0000135)
+	 28 - layerkeysort_v4_trace_retained (Exit code 0xc0000135)
+	 29 - layerkeysort_v4_trace_long_churn (Exit code 0xc0000135)
+	 30 - layerkeysort_v4_snapshot_smoke (Exit code 0xc0000135)
+	 31 - layerkeysort_v4_mutation_smoke (Exit code 0xc0000135)
+	 32 - layerkeysort_workload_timeline_smoke (Exit code 0xc0000135)
+	 33 - layerkeysort_workload_priority_smoke (Exit code 0xc0000135)
+	 34 - layerkeysort_workload_local_smoke (Exit code 0xc0000135)
+	 35 - layerkeysort_workload_churn_smoke (Exit code 0xc0000135)
+	 36 - layerkeysort_workload_output_smoke (Failed)
+	 37 - layerkeysort_benchmark_tree_smoke (Exit code 0xc0000135)
+	 38 - layerkeysort_benchmark_mutation_smoke (Exit code 0xc0000135)
+	 39 - layerkeysort_benchmark_sort_smoke (Exit code 0xc0000135)
+Errors while running CTest

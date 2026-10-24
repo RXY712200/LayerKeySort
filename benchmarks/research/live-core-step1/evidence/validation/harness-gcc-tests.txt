@@ -1,0 +1,29 @@
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/live-core-step1-candidate
+      Start  1: research_append
+      Start  2: research_prepend
+      Start  3: research_anchor
+      Start  4: research_local
+ 1/12 Test  #1: research_append ..................   Passed    0.03 sec
+      Start  5: research_ascending
+ 2/12 Test  #2: research_prepend .................   Passed    0.04 sec
+      Start  6: research_descending
+ 3/12 Test  #3: research_anchor ..................   Passed    0.04 sec
+      Start  7: research_random
+ 4/12 Test  #4: research_local ...................   Passed    0.04 sec
+ 5/12 Test  #5: research_ascending ...............   Passed    0.02 sec
+      Start  8: research_duplicates
+      Start  9: research_equal
+ 6/12 Test  #6: research_descending ..............   Passed    0.03 sec
+      Start 10: research_history
+ 7/12 Test  #7: research_random ..................   Passed    0.03 sec
+      Start 11: independent_oracle_selftest
+ 8/12 Test  #8: research_duplicates ..............   Passed    0.03 sec
+ 9/12 Test  #9: research_equal ...................   Passed    0.02 sec
+      Start 12: long_churn_small
+10/12 Test #10: research_history .................   Passed    0.03 sec
+11/12 Test #12: long_churn_small .................   Passed    0.02 sec
+12/12 Test #11: independent_oracle_selftest ......   Passed    0.95 sec
+
+100% tests passed out of 12
+
+Total Test time (real) =   1.04 sec

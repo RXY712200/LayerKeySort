@@ -1,0 +1,12 @@
+{
+  "process_statuses": {
+    "completed": 123,
+    "safely_skipped": 69
+  },
+  "exact_checkpoints": 613,
+  "fingerprint_groups": 29,
+  "cross_variant_and_mode_fingerprints_equal": true,
+  "identical_structural_phase_pairs": 48,
+  "phase_rows": 906,
+  "limitations": "Checkpoints are not per-mutation proof; all timings include driver overhead."
+}

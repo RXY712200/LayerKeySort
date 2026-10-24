@@ -1,0 +1,18 @@
+occupancy boundaries, duplicate residences, invalid arguments, capacity and checker PASS
+insert OOM initial=0 failing points=2 then success PASS
+insert OOM initial=1 failing points=1 then success PASS
+insert OOM initial=64 failing points=2 then success PASS
+insert OOM initial=4096 failing points=2 then success PASS
+allocation-free removal including repairs/drain PASS
+shared block owner: bulk OOM 133 points, stable moves/merges/foreign handles PASS
+random seed=17 steps=40000 PASS
+random seed=1779033703 steps=40000 PASS
+random seed=3144134277 steps=40000 PASS
+adversarial pattern=0 N=100000 PASS
+adversarial pattern=1 N=8192 PASS
+adversarial pattern=2 N=8192 PASS
+adversarial pattern=3 N=8192 PASS
+adversarial pattern=4 N=8192 PASS
+V4 counters operations=388599 oracle_steps=120000 max_record_locations=95 max_local_blocks=2 max_index_blocks=14
+splits=5426 merges=5427 redistributions=3989 left=4390 right=2768 LR=198 RL=509 two_child=743
+V4 Preview.1 live order PASS; final live allocations=0

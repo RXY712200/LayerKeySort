@@ -108,12 +108,12 @@ static LksOrderBlock *v4_minimum(LksOrderBlock *block)
     while (block->left) block = block->left;
     return block;
 }
-static LksOrderBlock *v4_new_block(void)
+static LksOrderBlock *v4_new_block(LksOrder *owner)
 {
     LksOrderBlock *block = (LksOrderBlock *)lks_alloc(sizeof(*block));
     if (block) {
         memset(block, 0, sizeof(*block));
-        block->height = 1; block->subtree_blocks = 1;
+        block->owner = owner; block->height = 1; block->subtree_blocks = 1;
     }
     return block;
 }
@@ -251,10 +251,10 @@ static LksStatus v4_insert(LksOrder *order, LksOrderBlock *block, size_t at,
     record = (LksOrderHandle *)lks_alloc(sizeof(*record));
     if (!record) return LKS_STATUS_OUT_OF_MEMORY;
     if (!block || block->count == LKS_ORDER_BLOCK_CAPACITY) {
-        spare = v4_new_block();
+        spare = v4_new_block(order);
         if (!spare) { lks_free(record); return LKS_STATUS_OUT_OF_MEMORY; }
     }
-    record->owner = order; record->item = item;
+    record->item = item;
     /* Preparation has finished. No recoverable work/callback/allocation follows. */
     v4_place(order, block, at, record, spare);
     ++order->count; ++order->revision;
@@ -274,7 +274,7 @@ static LksStatus v4_insert_relative(LksOrder *order, const LksOrderHandle *ancho
     void *item, const LksOrderHandle **out_handle, int after)
 {
     if (out_handle) *out_handle = NULL;
-    if (!order || !anchor || anchor->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
+    if (!order || !anchor || anchor->block->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
     return v4_insert(order, anchor->block, anchor->local + (size_t)after, item, out_handle);
 }
 LksStatus lks_order_insert_before(LksOrder *order, const LksOrderHandle *anchor,
@@ -321,7 +321,7 @@ LksStatus lks_order_remove(LksOrder *order, const LksOrderHandle *handle,
     size_t i;
     void *item;
     if (out_item) *out_item = NULL;
-    if (!order || !handle || handle->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
+    if (!order || !handle || handle->block->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
     if (order->callback_active) return LKS_STATUS_REENTRANT;
     v4_begin(order);
     if (order->revision == UINT64_MAX) return LKS_STATUS_CAPACITY_LIMIT;
@@ -348,7 +348,7 @@ const LksOrderHandle *lks_order_last(const LksOrder *order)
 }
 const LksOrderHandle *lks_order_next(const LksOrderHandle *handle)
 {
-    if (!handle || handle->owner->callback_active) return NULL;
+    if (!handle || handle->block->owner->callback_active) return NULL;
     if (handle->local + 1 < handle->block->count)
         return handle->block->records[handle->local+1];
     return handle->block->next ? handle->block->next->records[0] : NULL;
@@ -356,13 +356,13 @@ const LksOrderHandle *lks_order_next(const LksOrderHandle *handle)
 const LksOrderHandle *lks_order_previous(const LksOrderHandle *handle)
 {
     const LksOrderBlock *previous;
-    if (!handle || handle->owner->callback_active) return NULL;
+    if (!handle || handle->block->owner->callback_active) return NULL;
     if (handle->local) return handle->block->records[handle->local-1];
     previous = handle->block->previous;
     return previous ? previous->records[previous->count-1] : NULL;
 }
 void *lks_order_item(const LksOrderHandle *handle)
-{ return handle && !handle->owner->callback_active ? handle->item : NULL; }
+{ return handle && !handle->block->owner->callback_active ? handle->item : NULL; }
 static size_t v4_rank(const LksOrderBlock *block)
 {
     size_t rank = v4_subtree(block->left);
@@ -379,7 +379,7 @@ LksStatus lks_order_compare(const LksOrder *order, const LksOrderHandle *left,
     size_t a, b;
     if (out_order) *out_order = 0;
     if (!order || !left || !right || !out_order ||
-        left->owner != order || right->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
+        left->block->owner != order || right->block->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
     if (order->callback_active) return LKS_STATUS_REENTRANT;
     if (left->block == right->block) { a = left->local; b = right->local; }
     else { a = v4_rank(left->block); b = v4_rank(right->block); }
@@ -393,7 +393,7 @@ static LksStatus v4_move(LksOrder *order, const LksOrderHandle *handle,
     LksOrderBlock *source, *destination, *spare = NULL;
     LksOrderHandle *record;
     size_t from, to, i;
-    if (!order || !handle || !anchor || handle->owner != order || anchor->owner != order)
+    if (!order || !handle || !anchor || handle->block->owner != order || anchor->block->owner != order)
         return LKS_STATUS_INVALID_ARGUMENT;
     if (order->callback_active) return LKS_STATUS_REENTRANT;
     v4_begin(order);
@@ -422,7 +422,7 @@ static LksStatus v4_move(LksOrder *order, const LksOrderHandle *handle,
         /* The only fallible work precedes unlinking. Source repair deliberately
          * follows destination placement, using its final neighboring blocks. */
         if (destination->count == LKS_ORDER_BLOCK_CAPACITY) {
-            spare = v4_new_block();
+            spare = v4_new_block(order);
             if (!spare) return LKS_STATUS_OUT_OF_MEMORY;
         }
         for (i = from; i + 1 < source->count; ++i) source->records[i] = source->records[i+1];
@@ -497,7 +497,7 @@ static int v4_check_node(V4Check *check, const LksOrderBlock *block,
     size_t lb, rb, i;
     if (!block) { *out_height = 0; *out_blocks = 0; return 1; }
     if (!check->budget || depth > 2u * sizeof(size_t) * CHAR_BIT ||
-        block->parent != parent) return 0;
+        block->parent != parent || block->owner != check->order) return 0;
     --check->budget;
     if (!v4_check_node(check, block->left, block, depth+1, &lh, &lb)) return 0;
     if (!block->count || block->count > LKS_ORDER_BLOCK_CAPACITY ||
@@ -508,8 +508,8 @@ static int v4_check_node(V4Check *check, const LksOrderBlock *block,
     for (i = 0; i < block->count; ++i) {
         const LksOrderHandle *record = block->records[i];
         /* A duplicated record cannot simultaneously match two locations. */
-        if (!record || !record->item || record->owner != check->order ||
-            record->block != block || record->local != i) return 0;
+        if (!record || !record->item || record->block != block || record->local != i)
+            return 0;
     }
     for (; i <= LKS_ORDER_BLOCK_CAPACITY; ++i) if (block->records[i]) return 0;
     if (check->residents > SIZE_MAX - block->count) return 0;

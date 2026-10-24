@@ -1,0 +1,5 @@
+LONG_CHECK count=1000000 digest=307276fdb96f3683 exact_forward_reverse=true
+LONG_CHECK count=100000 digest=70e221e9da0a2ef9 exact_forward_reverse=true
+LONG_CHECK count=10000 digest=525d3d958179ebcc exact_forward_reverse=true
+LONG_CHECK count=1000000 digest=e1a12cefcab960cd exact_forward_reverse=true
+SHRINK_COMPLETE cleanup_zero=true

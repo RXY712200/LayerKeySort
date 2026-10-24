@@ -1,0 +1,4 @@
+profile,scale,phase,baseline_observations,candidate_observations,baseline_seconds,baseline_p50_seconds,baseline_p95_seconds,baseline_p99_seconds,baseline_max_sample_seconds,baseline_working_set_bytes,candidate_seconds,candidate_p50_seconds,candidate_p95_seconds,candidate_p99_seconds,candidate_max_sample_seconds,candidate_working_set_bytes,candidate_over_baseline
+duplicates,1000000,growth,5,5,0.1846002,2e-07,3e-07,4e-07,5.04e-05,104300544.0,0.180853,2e-07,3e-07,5e-07,0.0002793,88752128.0,0.9797009970736761
+duplicates,1000000,library_destroy,5,5,0.0690391,0.0,0.0,0.0,0.0,38166528.0,0.0653054,0.0,0.0,0.0,0.0,37621760.0,0.945919051667823
+duplicates,1000000,locate,5,5,0.023989,2e-07,2e-07,3e-07,9e-06,108417024.0,0.0252064,2e-07,2e-07,3e-07,3.9e-06,92864512.0,1.050748259618992
