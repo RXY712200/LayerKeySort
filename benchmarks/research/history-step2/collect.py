@@ -71,7 +71,7 @@ def main():
                         plan.append((n, 2, 'legacy', 2, mode, repeat, ['a', 'b', 'c']))
         elif args.suite == 'guard':
             for kind in ('append', 'random', 'duplicates'):
-                for repeat in (1, 2): plan.append((n, 0, kind, 0, 'production', repeat, ['b', 'c']))
+                for repeat in (1, 2, 3, 4): plan.append((n, 0, kind, 0, 'production', repeat, ['b', 'c']))
                 plan.append((n, 0, kind, 0, 'structural', 1, ['b', 'c']))
         elif args.suite == 'long':
             for mode in ('production', 'allocation', 'structural'):
@@ -81,8 +81,10 @@ def main():
             assert n == 1000000
             for repeat in (1, 2): plan.append((n, 0, 'shrink', 0, 'structural', repeat, ['b', 'c']))
     for index, (n, keep, kind, ns, mode, repeat, variants) in enumerate(plan):
-        variants = variants[index % len(variants):]+variants[:index % len(variants)]
-        if repeat % 2 == 0: variants = list(reversed(variants))
+        # Rotate by repetition only. Combining case-index rotation and reversal
+        # can cancel and accidentally repeat the same within-case order.
+        offset = (repeat-1) % len(variants)
+        variants = variants[offset:]+variants[:offset]
         for variant in variants:
             label = f'{variant}-{mode}-{kind}-{n}-k{keep}-ns{ns}-r{repeat}'
             if label in done: continue
@@ -90,6 +92,7 @@ def main():
             row = dict(id=label, variant=variant, mode=mode, kind=kind, residents=n, retention=keep,
                        namespace=ns, repeat=repeat, suite=args.suite, memory_before=m,
                        estimated_envelope=estimated, reserve=3*GIB,
+                       order_protocol='repeat-rotation-v2',
                        utc=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()))
             if estimated > min(3*GIB, .4*m['available']) or m['available']-estimated < 3*GIB:
                 row.update(status='safely_skipped', reason='conservative simultaneous-memory admission')
