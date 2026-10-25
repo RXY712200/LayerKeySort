@@ -30,7 +30,7 @@ LksStatus lks_order_bulk_build(void *const *items, size_t count, LksOrder **out)
         LksOrderBlock *b = (LksOrderBlock *)lks_alloc(sizeof(*b));
         size_t j, n = base+(i < extra);
         if (!b) goto oom;
-        memset(b, 0, sizeof(*b)); b->previous = o->last;
+        memset(b, 0, sizeof(*b)); b->owner = o; b->previous = o->last;
         if (o->last) o->last->next = b; else o->first = b;
         o->last = b; ++o->blocks;
         for (j = 0; j < n; ++j, ++row) {
@@ -38,7 +38,7 @@ LksStatus lks_order_bulk_build(void *const *items, size_t count, LksOrder **out)
             if (!items[row]) { lks_order_destroy(o); return LKS_STATUS_INVALID_ARGUMENT; }
             h = (LksOrderHandle *)lks_alloc(sizeof(*h));
             if (!h) goto oom;
-            h->owner = o; h->block = b; h->local = j; h->item = items[row];
+            h->block = b; h->local = j; h->item = items[row];
             b->records[b->count++] = h; ++o->count;
         }
     }

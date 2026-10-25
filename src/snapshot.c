@@ -66,8 +66,7 @@ void lks_snapshot_destroy(LksSnapshot *s)
 {
     if (!s) return;
     lks_source_marker_release(s->marker);
-    lks_free(s->associations); lks_free(s->namespace_data);
-    lks_free(s->rows); lks_free(s);
+    lks_free(s->associations); lks_free(s);
 }
 LksStatus lks_snapshot_new(size_t count, const void *domain, size_t domain_size,
     LksSnapshot **out)
@@ -80,21 +79,18 @@ LksStatus lks_snapshot_new(size_t count, const void *domain, size_t domain_size,
         count > SIZE_MAX/sizeof(LksSnapshotRow) ||
         domain_size > SIZE_MAX-24 || count > (SIZE_MAX-24-domain_size)/8)
         return LKS_STATUS_INVALID_ARGUMENT;
-    s = (LksSnapshot *)lks_alloc(sizeof(*s));
+    if (domain_size > SIZE_MAX-sizeof(*s) ||
+        count > (SIZE_MAX-sizeof(*s)-domain_size)/sizeof(LksSnapshotRow))
+        return LKS_STATUS_INVALID_ARGUMENT;
+    s = (LksSnapshot *)lks_alloc(sizeof(*s)+count*sizeof(LksSnapshotRow)+domain_size);
     if (!s) return LKS_STATUS_OUT_OF_MEMORY;
     memset(s, 0, sizeof(*s)); s->count = count; s->namespace_size = domain_size;
-    s->namespace_data = (unsigned char *)lks_alloc(domain_size);
-    if (!s->namespace_data) goto oom;
+    s->rows = count ? (LksSnapshotRow *)(s+1) : NULL;
+    s->namespace_data = (unsigned char *)(s+1)+count*sizeof(LksSnapshotRow);
     memcpy(s->namespace_data, domain, domain_size);
-    if (count) {
-        s->rows = (LksSnapshotRow *)lks_alloc(count*sizeof(*s->rows));
-        if (!s->rows) goto oom;
-        memset(s->rows, 0, count*sizeof(*s->rows));
-    }
     *out = s; return LKS_STATUS_OK;
-oom:
-    lks_snapshot_destroy(s); return LKS_STATUS_OUT_OF_MEMORY;
 }
+
 static LksStatus snap_append(LksSnapshot *s, size_t row, const void *data, size_t size)
 {
     size_t need, limit = SIZE_MAX-24-s->namespace_size-8*s->count;
@@ -113,7 +109,7 @@ static LksStatus snap_append(LksSnapshot *s, size_t row, const void *data, size_
         if (!p) return LKS_STATUS_OUT_OF_MEMORY;
         s->associations = p; s->association_capacity = cap;
     }
-    s->rows[row].offset = s->association_size; s->rows[row].size = size;
+    s->rows[row].end = need;
     if (size) memcpy(s->associations+s->association_size, data, size);
     s->association_size = need; return LKS_STATUS_OK;
 }
@@ -139,6 +135,13 @@ LksStatus lks_snapshot_capture_sequence(size_t count, LksSnapshotNextItem next,
         }
         status = snap_append(s, row, data, size);
         if (status != LKS_STATUS_OK) goto fail;
+    }
+    /* Release geometric growth slack before publication. Failure remains a
+     * capture failure: no provenance is committed and no partial view escapes. */
+    if (s->association_capacity != s->association_size) {
+        unsigned char *exact = (unsigned char *)lks_realloc(s->associations, s->association_size);
+        if (!exact) { status = LKS_STATUS_OUT_OF_MEMORY; goto fail; }
+        s->associations = exact; s->association_capacity = s->association_size;
     }
     /* Commit provenance only after every row is ready. */
     if (*marker) {
@@ -200,7 +203,7 @@ LksStatus lks_snapshot_association(const LksSnapshot *s, size_t row,
     if (data) *data = NULL;
     if (size) *size = 0;
     if (!s || !data || !size || row >= s->count) return LKS_STATUS_INVALID_ARGUMENT;
-    *size = s->rows[row].size;
-    *data = *size ? s->associations+s->rows[row].offset : NULL;
+    *size = lks_snapshot_row_size(s, row);
+    *data = *size ? s->associations+lks_snapshot_row_offset(s, row) : NULL;
     return LKS_STATUS_OK;
 }
