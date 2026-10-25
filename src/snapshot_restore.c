@@ -5,7 +5,7 @@
 LksStatus lks_snapshot_restore_order(const LksSnapshot *s,
     LksSnapshotResolveFn resolve, void *context, LksOrder **out)
 {
-    void **items = NULL; size_t i; LksStatus status;
+    void **items = NULL; size_t i, offset = 0; LksStatus status;
     if (out) *out = NULL;
     if (!s || !out || (s->count && !resolve) || s->count > SIZE_MAX/sizeof(*items))
         return LKS_STATUS_INVALID_ARGUMENT;
@@ -14,11 +14,13 @@ LksStatus lks_snapshot_restore_order(const LksSnapshot *s,
         if (!items) return LKS_STATUS_OUT_OF_MEMORY;
     }
     for (i = 0; i < s->count; ++i) {
-        const void *data = s->rows[i].size ? s->associations+s->rows[i].offset : NULL;
+        size_t end = s->rows[i].end, size = end-offset;
+        const void *data = size ? s->associations+offset : NULL;
         items[i] = NULL;
-        status = resolve(data, s->rows[i].size, (uint64_t)i, context, &items[i]);
+        status = resolve(data, size, (uint64_t)i, context, &items[i]);
         if (status != LKS_STATUS_OK) goto done;
         if (!items[i]) { status = LKS_STATUS_INVALID_ARGUMENT; goto done; }
+        offset = end;
     }
     status = lks_order_bulk_build(items, s->count, out);
 done:

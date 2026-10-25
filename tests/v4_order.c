@@ -313,10 +313,55 @@ static void two_child_deletion(void)
     check_work(order, order->root->height + 1);
     lks_order_destroy(order);
 }
+/* Bulk construction and ordinary mutation must share block ownership. Exercise
+ * owner derivation after cross-block moves and merges, including foreign live
+ * handles. Expired handles are deliberately never inspected. */
+static void shared_block_owner(void)
+{
+    enum { COUNT = 129 };
+    int items[COUNT]; void *input[COUNT];
+    const LksOrderHandle *handles[COUNT], *foreign, *out;
+    LksOrder *order = NULL, *other = lks_order_create();
+    size_t i, fail;
+    CHECK(other);
+    for (i = 0; i < COUNT; ++i) { items[i] = (int)i; input[i] = &items[i]; }
+    CHECK(lks_order_insert_back(other, &items[0], &foreign) == LKS_STATUS_OK);
+    for (fail = 1; ; ++fail) {
+        LksAllocStats before = lks_alloc_stats_get(); LksStatus status;
+        lks_alloc_test_fail_on_attempt(fail);
+        status = lks_order_bulk_build(input, COUNT, &order);
+        lks_alloc_test_disable_failure();
+        CHECK(lks_order_item(foreign) == &items[0] && lks_order_internal_valid(other));
+        if (status == LKS_STATUS_OK) break;
+        CHECK(status == LKS_STATUS_OUT_OF_MEMORY && !order);
+        CHECK(lks_alloc_stats_get().live_bytes == before.live_bytes &&
+            lks_alloc_stats_get().live_blocks == before.live_blocks);
+    }
+    CHECK(lks_order_internal_valid(order));
+    out = lks_order_first(order);
+    for (i = 0; i < COUNT; ++i) {
+        handles[i] = out; CHECK(lks_order_item(out) == input[i]); out = lks_order_next(out);
+    }
+    CHECK(!out);
+    for (i = 0; i < 64; ++i) {
+        CHECK(lks_order_move_after(order, handles[i], handles[COUNT-1]) == LKS_STATUS_OK);
+        CHECK(lks_order_item(handles[i]) == input[i] && lks_order_internal_valid(order));
+        CHECK(lks_order_remove(other, handles[i], NULL) == LKS_STATUS_INVALID_ARGUMENT);
+        out = foreign;
+        CHECK(lks_order_insert_before(other, handles[i], &items[0], &out) == LKS_STATUS_INVALID_ARGUMENT && !out);
+    }
+    for (i = 0; i < COUNT-1; ++i) {
+        CHECK(lks_order_remove(order, handles[i], NULL) == LKS_STATUS_OK);
+        CHECK(lks_order_item(handles[COUNT-1]) == input[COUNT-1] && lks_order_internal_valid(order));
+    }
+    CHECK(lks_order_remove(order, foreign, NULL) == LKS_STATUS_INVALID_ARGUMENT);
+    lks_order_destroy(order); lks_order_destroy(other);
+    printf("shared block owner: bulk OOM %zu points, stable moves/merges/foreign handles PASS\n", fail-1);
+}
 int main(void)
 {
     CHECK(lks_alloc_stats_reset() == 0);
-    boundaries_and_checker(); oom(); two_child_deletion();
+    boundaries_and_checker(); oom(); two_child_deletion(); shared_block_owner();
     random_campaign(17); random_campaign(UINT32_C(0x6a09e667)); random_campaign(UINT32_C(0xbb67ae85));
     adversarial(0, 100000);
     adversarial(1, 8192); adversarial(2, 8192); adversarial(3, 8192); adversarial(4, 8192);

@@ -1,5 +1,38 @@
 # Changelog
 
+## [4.1.0] - 2026-10-25
+
+Compatible Full 4.x minor update from the fixed three-step optimization cycle. No
+public functions, public types, statuses, wire formats or behavioral ownership
+contracts are added or changed; Mini remains independently versioned.
+
+- **Live Order**: share container-owner metadata per Block instead of repeating
+  it in every Resident. On measured x64, Resident records are 32 -> 24 bytes
+  and Blocks 584 -> 592 bytes; addresses, B64/AVL work, handle lifetime,
+  failure atomicity and per-Resident allocation frequency remain unchanged.
+- **Snapshot/History**: store one cumulative association end per row instead
+  of an offset/size pair (measured x64 16 -> 8 bytes); coallocate the header,
+  row array and Namespace, and trim association capacity before publication.
+  The final trim is fallible and its OOM path is covered by regression tests.
+  Snapshots still own independent copies and preserve resolve-first restoration.
+- **Measured memory**: for 1m residents and 16 retained ID8 snapshots, Full
+  requested peak fell from 513.594 MB to 355.751 MB. At admitted 10m/2
+  snapshots (Linux), it fell from 1,822.185 MB to 1,317.500 MB.
+  These are Full allocator-request accounting results, not process-RSS peaks.
+- **Known workload-dependent costs**: Linux 3m random lookup measured ~10.2%
+  slower than 4.0.0, and a large-Namespace key-format trace ~25.1% slower
+  than Step 1; selected wide serialization/movement/destruction workloads
+  also regressed. No universal speedup or end-to-end latency bound is claimed.
+- **Tooling**: correct Windows implicit single-configuration Debug handling in
+  the distribution validator. Keep reproducible amalgamation and external
+  C17/C++ consumer verification.
+- **Evidence**: [independent final review and raw test data](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md).
+  Full regression and cross-platform CI passed on the exact review commit.
+  Original 4.0.0 Stable artifacts and historical research remain immutable.
+
+See [v4.1.0 compatibility notes](docs/V4_1_0.md). This entry records the
+candidate source changes; tagged Release publication is a separate action.
+
 Notable changes to LayerKeySort are documented here.
 
 ## [4.0.0] - 2026-10-07

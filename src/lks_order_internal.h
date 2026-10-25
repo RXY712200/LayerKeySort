@@ -16,14 +16,15 @@ typedef struct LksSourceMarker LksSourceMarker;
 void lks_source_marker_release(LksSourceMarker *marker);
 LksStatus lks_order_bulk_build(void *const *items, size_t count, LksOrder **out_order);
 
+/* Owner is shared by the containing block; resident addresses never move. */
 struct LksOrderHandle {
-    LksOrder *owner;
     LksOrderBlock *block;
     size_t local;
     void *item;
 };
 
 struct LksOrderBlock {
+    LksOrder *owner;
     LksOrderBlock *left, *right, *parent;
     LksOrderBlock *previous, *next;
     size_t subtree_blocks, count;

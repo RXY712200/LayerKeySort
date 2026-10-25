@@ -7,6 +7,8 @@ def contract():
     s=(ROOT/'include/layerkeysort.h').read_text(encoding='utf-8-sig')
     s=re.sub(r'/\*.*?\*/','',s,flags=re.S)
     s=re.sub(r'(#define LKS_VERSION_(?:PRERELEASE|STRING))[^\n]*',r'\1 RELEASE_TEXT',s)
+    # Normalize minor/patch release numbers without mutating the frozen V4 API fixture.
+    s=re.sub(r'^(#define LKS_VERSION_(?:MINOR|PATCH))[ \t]+[0-9]+[ \t]*$',r'\g<1> 0',s,flags=re.M)
     functions=sorted(set(re.findall(r'\b(lks_\w+)\s*\(',s)))
     types=sorted(set(re.findall(r'\b(Lks\w+)\b',s)))
     statuses={n:int(v) for n,v in re.findall(r'(LKS_STATUS_\w+)\s*=\s*(\d+)',s)}
