@@ -2,8 +2,10 @@
 
 [V4 freeze](V4_FREEZE.md) defines the 4.x source/layout and persistent-format contract.
 V4.0.0 Stable preserves the Preview.5 freeze after independently reviewed RC.1.
-Full 4.1.0 is a compatible minor implementation/storage optimization and preserves
-that 4.x frozen public API, LS1/LKS4SNP1 bytes and strict V3 LK1 migration.
+Full 4.1.0 is merged into `main` as a compatible minor storage optimization,
+while the latest *published* Full Stable remains v4.0.0 until a new verified
+Tag/Release exists. It preserves the 4.x frozen API, LS1/LKS4SNP1 bytes and
+strict V3 LK1 migration.
 
 ## Source compatibility
 

@@ -4,7 +4,7 @@ LayerKeySort V4 separates two problems that earlier versions coupled together:
 
 > **live position is contextual; historical/exported position is immutable.**
 
-The current Stable model is intentionally narrow. LayerKeySort manages order; the
+The current 4.x model, retained in Full 4.1.0 source, is intentionally narrow. LayerKeySort manages order; the
 application owns business identity, item payloads, storage and higher-level domain logic.
 
 ## 1. Mutable live order
@@ -25,6 +25,12 @@ or source destruction expires its handle.
 
 Live mutation therefore does not require rewriting externally visible coordinates for
 the whole collection.
+
+Full 4.1.0 shares the Order-owner pointer at Block level instead of storing
+it in every Resident. On measured x64 the resident record becomes 24 instead
+of 32 bytes, while Block size grows by 8 bytes. Handles remain at their stable
+separately allocated addresses. Allocation frequency, B64 and AVL algorithms
+are unchanged; not every workload is faster.
 
 The current B64/minimum-32 block policy is private implementation policy. It is not part
 of API, wire or persistence compatibility.
@@ -54,12 +60,18 @@ mutable ordering system.
 A snapshot owns:
 
 - copied namespace bytes,
-- row metadata,
+- cumulative-end row metadata (8 instead of 16 bytes per row on measured x64),
 - copied application association bytes,
 - detached source-provenance bookkeeping where applicable.
 
 It does **not** retain live handles, blocks, item pointers, comparator contexts or a former
 source pointer.
+
+Full 4.1.0 coallocates Snapshot header/rows/namespace and trims association
+storage to its useful length before publication; callbacks still run once and
+their borrowed data are copied immediately. Final shrink is fallible and OOM
+tested. Each history remains independently owned and restore retains the
+resolve-first N-pointer scratch.
 
 This allows historical snapshots to survive later live mutation and source/item destruction.
 
@@ -111,4 +123,5 @@ Current post-v4 roadmap and active technical debt are tracked in
 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 
 [Freeze](V4_FREEZE.md) defines the V4.0 compatibility contract.
-[Stable record](V4_STABLE.md) records the reviewed release evidence.
+[4.1.0 record](V4_1_0.md) describes newer merged-source optimizations;
+[v4.0.0 Stable record](V4_STABLE.md) remains historical release evidence.
