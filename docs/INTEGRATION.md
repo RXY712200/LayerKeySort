@@ -1,6 +1,6 @@
 # V4 integration
 
-**Version status:** the current `main` source is Full **4.1.0** ([merged commit](https://github.com/RXY712200/LayerKeySort/commit/7fef6396cba4f5f8d19516b9ae2af132ca3cd529)); the latest *published* Full Stable is still [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0), pending a verified 4.1.0 tag/Release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
+**Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
 
 Tested: MSVC Windows x64/x86, Linux GCC/Clang, macOS AppleClang; C17 implementation,
 C++17 consumer, eight-bit bytes. CMake >=3.21.

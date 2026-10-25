@@ -1,12 +1,11 @@
 # V4 API reference
 
 Preview.5 froze the V4.0 source contract: 64 functions, 14 public types.
-V4.0.0 Stable preserved it unchanged, and 4.1.0 merged into `main` retains
+V4.0.0 Stable preserved it unchanged, and the released Full 4.1.0 retains
 the frozen API. See [4.1.0 record](V4_1_0.md) and historical [Stable record](V4_STABLE.md).
 Include `<layerkeysort.h>` only. [Freeze](V4_FREEZE.md) specifies ownership,
 statuses and persistent compatibility; [migration](MIGRATION_V3_V4.md) covers the
-major source break. Full 4.1.0 is in `main`; the latest published Stable remains
-v4.0.0 until the new GitHub Release exists. V3.1.0 remains for legacy contracts.
+major source break. [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable. V3.1.0 remains for legacy contracts.
 
 ## Status / comparator / sort
 

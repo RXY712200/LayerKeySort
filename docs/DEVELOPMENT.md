@@ -2,8 +2,8 @@
 
 V4.0.0 completes the fixed V4 Preview.1–5 → RC.1 → Stable development cycle.
 
-Full 4.1.0 internal storage optimizations are merged into `main`; the published
-Stable stays at v4.0.0 until the separate 4.1.0 release is verified.
+[Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable,
+including the accepted internal storage optimizations.
 See [4.1.0 record](V4_1_0.md), [historical Stable record](V4_STABLE.md),
 [RC record](V4_RC1.md) and [freeze](V4_FREEZE.md).
 

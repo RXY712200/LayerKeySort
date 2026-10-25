@@ -1,8 +1,6 @@
 # Public V4 examples
 
-These public-API examples also apply to the Full **4.1.0** source merged
-into `main`. The latest publicly tagged Stable is still [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)
-until a verified 4.1.0 GitHub Release exists. No new public functions or
+These public-API examples apply to the current published [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). No new public functions or
 usage semantics were added by the private memory-layout improvements.
 
 All include only layerkeysort.h, check errors and preserve item ownership.

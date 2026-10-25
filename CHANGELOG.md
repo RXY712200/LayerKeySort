@@ -30,8 +30,8 @@ contracts are added or changed; Mini remains independently versioned.
   Full regression and cross-platform CI passed on the exact review commit.
   Original 4.0.0 Stable artifacts and historical research remain immutable.
 
-See [v4.1.0 compatibility notes](docs/V4_1_0.md). This entry records the
-candidate source changes; tagged Release publication is a separate action.
+See [v4.1.0 compatibility notes](docs/V4_1_0.md) and the
+[published Full v4.1.0 Stable Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0).
 
 Notable changes to LayerKeySort are documented here.
 
