@@ -1,6 +1,8 @@
 # V3 to V4 migration
 
-This guide targets **v4.0.0 Stable**.
+This guide describes the frozen Full **4.x** migration contract introduced in
+v4.0.0 Stable and preserved by the **4.1.0 `main` source**. The latest
+published Full Stable is still v4.0.0 until a verified 4.1.0 Release exists.
 
 V4 is a source-breaking major release. Keep v3.1.0 if hierarchical Path/Tree
 contracts are required. Rebuild against the final V4 header; no alias layer.
@@ -39,8 +41,9 @@ to caller-owned objects; restore borrows those objects and gives fresh handles.
 Historical snapshot remains after source/item destruction. LS1 is an ordinal
 within a namespace, not live position. Namespace uniqueness belongs to application.
 Full capture/export costs O(N+A). See [freeze](V4_FREEZE.md), [API](API.md) and
-[public snapshot example](../examples/snapshot.c). V4.0.0 is current Stable;
-V3.1.0 remains a historical Stable for applications retaining V3 contracts.
+[public snapshot example](../examples/snapshot.c). v4.0.0 is the latest
+*published* Full Stable; the 4.1.0 merged source retains its migration behavior.
+V3.1.0 remains historical Stable for applications retaining V3 contracts.
 
 ## Historical Preview-only rename table
 
@@ -115,5 +118,6 @@ The following V3 names are absent from the primary V4 header:
 Old V3 `lks_group_*` names that are reused now implement flat V4 semantics.
 All 57 V3-specific contracts are removed/replaced; only generic sort/status remain.
 
-V4.0.0 Stable uses the unchanged Preview.5 frozen declarations and formats; see
-[Stable record](V4_STABLE.md). V3.1.0 remains available for legacy Path/Tree applications.
+Full 4.1.0 retains the unchanged Preview.5 frozen declarations and formats;
+see [current source record](V4_1_0.md) and the historical
+[v4.0.0 Stable record](V4_STABLE.md). V3.1.0 is available for legacy Path/Tree applications.
