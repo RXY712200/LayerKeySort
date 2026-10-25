@@ -1,0 +1,170 @@
+[  1%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/lks_alloc.c.obj
+[  2%] Building C object CMakeFiles/layerkeysort.dir/src/lks_base.c.obj
+[  2%] Building C object CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj
+[  2%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/lks_alloc.c.obj
+[  3%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/lks_base.c.obj
+[  4%] Building C object CMakeFiles/layerkeysort.dir/src/path.c.obj
+[  6%] Building C object CMakeFiles/layerkeysort.dir/src/path_text.c.obj
+[  6%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/lks_base.c.obj
+[  7%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/path.c.obj
+[  8%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/path.c.obj
+[  9%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/path_text.c.obj
+[  9%] Building C object CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj
+[  9%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/path_text.c.obj
+[ 10%] Building C object CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj
+[ 10%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/path_order_key.c.obj
+[ 11%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/path_order_key.c.obj
+[ 12%] Building C object CMakeFiles/layerkeysort.dir/src/path_compare.c.obj
+[ 13%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/slot_codec.c.obj
+[ 14%] Building C object CMakeFiles/layerkeysort.dir/src/order.c.obj
+[ 15%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/slot_codec.c.obj
+[ 16%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/path_compare.c.obj
+[ 17%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/path_compare.c.obj
+[ 17%] Building C object CMakeFiles/layerkeysort.dir/src/managed_order.c.obj
+[ 18%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/order.c.obj
+[ 19%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/order.c.obj
+[ 19%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/managed_order.c.obj
+[ 19%] Building C object CMakeFiles/layerkeysort.dir/src/snapshot.c.obj
+[ 20%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/managed_order.c.obj
+[ 21%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot.c.obj
+[ 22%] Building C object CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj
+[ 23%] Building C object CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj
+[ 24%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot.c.obj
+[ 26%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot_key.c.obj
+[ 26%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot_key.c.obj
+[ 26%] Building C object CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj
+[ 27%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot_wire.c.obj
+[ 28%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot_restore.c.obj
+[ 28%] Building C object CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj
+[ 28%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot_wire.c.obj
+[ 29%] Building C object CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj
+[ 31%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot_restore.c.obj
+[ 31%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/order_bulk.c.obj
+[ 32%] Building C object CMakeFiles/layerkeysort.dir/src/sort.c.obj
+[ 33%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/order_bulk.c.obj
+[ 33%] Linking C static library liblayerkeysort.a
+[ 35%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/immutable_group.c.obj
+[ 35%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/immutable_group.c.obj
+[ 36%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/sort.c.obj
+[ 36%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/sort.c.obj
+[ 36%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/gap.c.obj
+[ 37%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/gap.c.obj
+[ 37%] Built target layerkeysort
+[ 38%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/tree.c.obj
+[ 39%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/tree.c.obj
+[ 39%] Building C object CMakeFiles/layerkeysort_group_snapshot_example.dir/examples/immutable_group.c.obj
+[ 40%] Building C object CMakeFiles/layerkeysort_snapshot_example.dir/examples/snapshot.c.obj
+[ 41%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/group.c.obj
+[ 42%] Linking C executable layerkeysort_group_snapshot_example.exe
+[ 43%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/group.c.obj
+[ 43%] Linking C executable layerkeysort_snapshot_example.exe
+[ 44%] Building C object CMakeFiles/layerkeysort_legacy_bench.dir/src/bulk.c.obj
+[ 44%] Building C object CMakeFiles/layerkeysort_diagnostics.dir/src/bulk.c.obj
+[ 44%] Linking C static library liblayerkeysort_legacy_bench.a
+[ 44%] Built target layerkeysort_group_snapshot_example
+[ 44%] Built target layerkeysort_snapshot_example
+[ 45%] Linking C static library liblayerkeysort_diagnostics.a
+[ 46%] Building C object CMakeFiles/layerkeysort_example.dir/examples/basic.c.obj
+[ 46%] Built target layerkeysort_legacy_bench
+[ 47%] Building C object CMakeFiles/layerkeysort_ordered_example.dir/examples/ordered_tree.c.obj
+[ 48%] Building C object CMakeFiles/layerkeysort_layer_list_example.dir/examples/layer_list.c.obj
+[ 49%] Linking C executable layerkeysort_example.exe
+[ 49%] Built target layerkeysort_diagnostics
+[ 50%] Linking C executable layerkeysort_ordered_example.exe
+[ 51%] Building C object CMakeFiles/layerkeysort_order_example.dir/examples/live_order.c.obj
+[ 52%] Linking C executable layerkeysort_layer_list_example.exe
+[ 52%] Linking C executable layerkeysort_order_example.exe
+[ 52%] Built target layerkeysort_example
+[ 52%] Built target layerkeysort_ordered_example
+[ 53%] Building C object CMakeFiles/layerkeysort_managed_order_example.dir/examples/managed_order.c.obj
+[ 53%] Built target layerkeysort_layer_list_example
+[ 54%] Building C object CMakeFiles/layerkeysort_v4_trace.dir/benchmarks/v4_trace.c.obj
+[ 55%] Building C object CMakeFiles/layerkeysort_benchmark.dir/benchmarks/current_benchmark.c.obj
+[ 56%] Linking C executable layerkeysort_managed_order_example.exe
+[ 56%] Built target layerkeysort_order_example
+[ 57%] Building C object CMakeFiles/layerkeysort_v4_snapshot_smoke.dir/benchmarks/v4_snapshot_smoke.c.obj
+[ 58%] Linking C executable layerkeysort_benchmark.exe
+[ 58%] Built target layerkeysort_managed_order_example
+[ 59%] Building C object CMakeFiles/layerkeysort_v4_smoke.dir/benchmarks/v4_core_smoke.c.obj
+[ 59%] Built target layerkeysort_benchmark
+[ 60%] Building C object CMakeFiles/layerkeysort_v4_mutation_smoke.dir/benchmarks/v4_mutation_smoke.c.obj
+[ 60%] Linking C executable layerkeysort_v4_trace.exe
+[ 61%] Linking C executable layerkeysort_v4_snapshot_smoke.exe
+[ 61%] Built target layerkeysort_v4_trace
+[ 62%] Building C object CMakeFiles/layerkeysort_workload.dir/benchmarks/workload_simulator.c.obj
+[ 62%] Linking C executable layerkeysort_v4_smoke.exe
+[ 62%] Built target layerkeysort_v4_snapshot_smoke
+[ 63%] Building C object CMakeFiles/layerkeysort_v4_api_compile.dir/tests/v4_api_compile.c.obj
+[ 64%] Linking C executable layerkeysort_workload.exe
+[ 64%] Linking C executable layerkeysort_v4_mutation_smoke.exe
+[ 64%] Built target layerkeysort_v4_smoke
+[ 64%] Linking C executable layerkeysort_v4_api_compile.exe
+[ 65%] Building C object CMakeFiles/layerkeysort_v4_freeze.dir/tests/v4_freeze.c.obj
+[ 65%] Built target layerkeysort_v4_mutation_smoke
+[ 65%] Built target layerkeysort_workload
+[ 66%] Linking C executable layerkeysort_v4_freeze.exe
+[ 66%] Built target layerkeysort_v4_api_compile
+[ 67%] Building C object CMakeFiles/layerkeysort_v4_rc_torture.dir/tests/v4_rc_torture.c.obj
+[ 68%] Building C object CMakeFiles/layerkeysort_v4_wire_probe.dir/tests/v4_wire_probe.c.obj
+[ 69%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/v2_main.c.obj
+[ 69%] Linking C executable layerkeysort_v4_wire_probe.exe
+[ 70%] Linking C executable layerkeysort_v4_rc_torture.exe
+[ 70%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/v2_preview.c.obj
+[ 70%] Built target layerkeysort_v4_freeze
+[ 71%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/property.c.obj
+[ 71%] Built target layerkeysort_v4_rc_torture
+[ 71%] Built target layerkeysort_v4_wire_probe
+[ 72%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/mutation.c.obj
+[ 73%] Building C object CMakeFiles/layerkeysort_v4_marker_threads.dir/tests/v4_marker_threads.c.obj
+[ 74%] Building C object CMakeFiles/layerkeysort_v4_immutable_group.dir/tests/v4_immutable_group.c.obj
+[ 75%] Building C object CMakeFiles/layerkeysort_v4_tests.dir/tests/v4_order.c.obj
+[ 76%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/path_external.c.obj
+[ 76%] Linking C executable layerkeysort_v4_immutable_group.exe
+[ 77%] Linking C executable layerkeysort_v4_tests.exe
+[ 77%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/public_api_usage.c.obj
+[ 78%] Building C object CMakeFiles/layerkeysort_tests.dir/tests/v3_ordered.c.obj
+[ 78%] Built target layerkeysort_v4_immutable_group
+[ 78%] Built target layerkeysort_v4_tests
+[ 79%] Building C object CMakeFiles/layerkeysort_v4_snapshot.dir/tests/v4_snapshot.c.obj
+[ 80%] Building C object CMakeFiles/layerkeysort_v4_mutation.dir/tests/v4_mutation.c.obj
+[ 81%] Linking C executable layerkeysort_tests.exe
+[ 82%] Linking C executable layerkeysort_v4_snapshot.exe
+[ 83%] Linking C executable layerkeysort_v4_marker_threads.exe
+[ 83%] Linking C executable layerkeysort_v4_mutation.exe
+[ 83%] Built target layerkeysort_tests
+[ 84%] Building C object CMakeFiles/layerkeysort_soak.dir/tests/soak.c.obj
+[ 84%] Built target layerkeysort_v4_marker_threads
+[ 84%] Built target layerkeysort_v4_snapshot
+[ 84%] Built target layerkeysort_v4_mutation
+[ 85%] Building C object CMakeFiles/layerkeysort_consumer_roundtrip.dir/tests/consumer_roundtrip.c.obj
+[ 86%] Building C object CMakeFiles/layerkeysort_parser_torture.dir/tests/parser_torture.c.obj
+[ 87%] Building C object CMakeFiles/layerkeysort_rc_contract.dir/tests/rc_contract.c.obj
+[ 88%] Linking C executable layerkeysort_soak.exe
+[ 89%] Linking C executable layerkeysort_rc_contract.exe
+[ 89%] Linking C executable layerkeysort_consumer_roundtrip.exe
+[ 89%] Linking C executable layerkeysort_parser_torture.exe
+[ 89%] Built target layerkeysort_soak
+[ 90%] Building C object CMakeFiles/layerkeysort_v4_storage.dir/benchmarks/v4_storage.c.obj
+[ 90%] Built target layerkeysort_consumer_roundtrip
+[ 90%] Built target layerkeysort_parser_torture
+[ 90%] Built target layerkeysort_rc_contract
+[ 91%] Building C object CMakeFiles/layerkeysort_v4_groups.dir/benchmarks/v4_groups.c.obj
+[ 92%] Building C object CMakeFiles/layerkeysort_v4_groups_diagnostics.dir/benchmarks/v4_groups.c.obj
+[ 93%] Building C object CMakeFiles/layerkeysort_v4_trace_diagnostics.dir/benchmarks/v4_trace.c.obj
+[ 93%] Linking C executable layerkeysort_v4_storage.exe
+[ 93%] Built target layerkeysort_v4_storage
+[ 94%] Building C object CMakeFiles/layerkeysort_v4_snapshot_diagnostics.dir/benchmarks/v4_snapshot_smoke.c.obj
+[ 94%] Linking C executable layerkeysort_v4_groups.exe
+[ 95%] Linking C executable layerkeysort_v4_groups_diagnostics.exe
+[ 96%] Linking C executable layerkeysort_v4_trace_diagnostics.exe
+[ 96%] Built target layerkeysort_v4_groups
+[ 96%] Built target layerkeysort_v4_groups_diagnostics
+[ 96%] Built target layerkeysort_v4_trace_diagnostics
+[ 97%] Building C object CMakeFiles/layerkeysort_v4_mutation_diagnostics.dir/benchmarks/v4_mutation_smoke.c.obj
+[ 98%] Building C object CMakeFiles/layerkeysort_workload_diagnostics.dir/benchmarks/workload_simulator.c.obj
+[ 98%] Linking C executable layerkeysort_v4_snapshot_diagnostics.exe
+[ 99%] Linking C executable layerkeysort_workload_diagnostics.exe
+[ 99%] Built target layerkeysort_v4_snapshot_diagnostics
+[ 99%] Built target layerkeysort_workload_diagnostics
+[100%] Linking C executable layerkeysort_v4_mutation_diagnostics.exe
+[100%] Built target layerkeysort_v4_mutation_diagnostics

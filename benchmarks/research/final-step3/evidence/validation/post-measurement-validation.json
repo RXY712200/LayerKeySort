@@ -1,0 +1,46 @@
+[
+  {
+    "label": "distribution-msvc-fixed",
+    "command": [
+      "python",
+      "-B",
+      "-X",
+      "utf8",
+      "tools/validate_distribution.py",
+      "--generator",
+      "Visual Studio 18 2026",
+      "--architecture",
+      "x64"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-asan-configure",
+    "command": [
+      "cmake",
+      "-S",
+      "benchmarks/research/final-step3",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-asan",
+      "-G",
+      "Visual Studio 18 2026",
+      "-A",
+      "x64",
+      "-DRESEARCH_ASAN=ON"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-asan-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-asan",
+      "--config",
+      "RelWithDebInfo",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0
+  }
+]

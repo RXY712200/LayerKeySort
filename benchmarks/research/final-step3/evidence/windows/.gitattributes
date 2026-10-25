@@ -1,0 +1,4 @@
+# Raw execution capsule: preserve native output bytes and inner checksums.
+* -text whitespace=cr-at-eol
+# Original CMake flag dumps intentionally contain empty assignment/trailer lines.
+compileflags-*.txt -whitespace

@@ -1,0 +1,2 @@
+kind,residents,retention,namespace,a_timed_phase_sum,b_timed_phase_sum,c_timed_phase_sum,c_over_b
+append,10000000,0,0,3.4482530000000002,2.87701735,2.8915388,1.0050473974374885

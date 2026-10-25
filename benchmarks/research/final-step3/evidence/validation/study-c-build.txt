@@ -1,0 +1,96 @@
+[  4%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/lks_base.c.obj
+[  4%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj
+[  4%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/lks_alloc.c.obj
+[  4%] Building C object history-harness/CMakeFiles/oracle_probe.dir/oracle_probe.c.obj
+[  6%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/lks_base.c.obj
+[  8%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/path.c.obj
+[  8%] Building C object history-harness/CMakeFiles/oracle_probe.dir/oracle.c.obj
+[  9%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path.c.obj
+[ 10%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/path_text.c.obj
+[ 12%] Linking C executable oracle_probe.exe
+[ 13%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path_text.c.obj
+[ 14%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/path_order_key.c.obj
+[ 15%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj
+[ 15%] Built target oracle_probe
+[ 17%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/slot_codec.c.obj
+[ 18%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj
+[ 19%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path_compare.c.obj
+[ 20%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/order.c.obj
+[ 21%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/path_compare.c.obj
+[ 23%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/managed_order.c.obj
+[ 24%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/order.c.obj
+[ 25%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot.c.obj
+[ 26%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/managed_order.c.obj
+[ 28%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/snapshot.c.obj
+[ 29%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj
+[ 30%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj
+[ 31%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj
+[ 32%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/snapshot_key.c.obj
+[ 34%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj
+[ 35%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/snapshot_wire.c.obj
+[ 36%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/snapshot_restore.c.obj
+[ 37%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj
+[ 39%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/order_bulk.c.obj
+[ 40%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/sort.c.obj
+[ 41%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/immutable_group.c.obj
+[ 42%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/C_/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/src/sort.c.obj
+[ 43%] Linking C static library liblayerkeysort.a
+[ 45%] Linking C static library libfull_research_diagnostics.a
+[ 45%] Built target layerkeysort
+[ 47%] Building C object history-harness/CMakeFiles/full_long.dir/long_churn.c.obj
+[ 47%] Building C object history-harness/CMakeFiles/full_scale.dir/study.c.obj
+[ 48%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/study.c.obj
+[ 48%] Built target full_research_diagnostics
+[ 50%] Building C object history-harness/CMakeFiles/full_long.dir/oracle.c.obj
+[ 51%] Building C object history-harness/CMakeFiles/full_scale.dir/oracle.c.obj
+[ 52%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/oracle.c.obj
+[ 53%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/long_churn.c.obj
+[ 54%] Building C object history-harness/CMakeFiles/full_long.dir/probe.c.obj
+[ 56%] Linking C executable full_long.exe
+[ 57%] Building C object history-harness/CMakeFiles/full_scale.dir/probe.c.obj
+[ 58%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/probe.c.obj
+[ 59%] Linking C executable full_scale.exe
+[ 60%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/wrap.c.obj
+[ 60%] Built target full_long
+[ 62%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/oracle.c.obj
+[ 63%] Linking C executable full_scale_alloc.exe
+[ 63%] Built target full_scale
+[ 64%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/probe.c.obj
+[ 65%] Building C object history-harness/CMakeFiles/full_long_structural.dir/long_churn.c.obj
+[ 67%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/wrap.c.obj
+[ 67%] Built target full_scale_alloc
+[ 68%] Building C object history-harness/CMakeFiles/full_shrink.dir/shrink.c.obj
+[ 69%] Building C object history-harness/CMakeFiles/full_long_structural.dir/oracle.c.obj
+[ 70%] Linking C executable full_long_alloc.exe
+[ 71%] Building C object history-harness/CMakeFiles/full_history.dir/history.c.obj
+[ 71%] Built target full_long_alloc
+[ 73%] Building C object history-harness/CMakeFiles/full_shrink.dir/oracle.c.obj
+[ 74%] Building C object history-harness/CMakeFiles/full_long_structural.dir/probe.c.obj
+[ 75%] Building C object history-harness/CMakeFiles/full_history.dir/history_probe.c.obj
+[ 78%] Linking C executable full_long_structural.exe
+[ 78%] Building C object history-harness/CMakeFiles/full_shrink.dir/probe.c.obj
+[ 79%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/history.c.obj
+[ 80%] Linking C executable full_shrink.exe
+[ 80%] Built target full_long_structural
+[ 81%] Building C object history-harness/CMakeFiles/full_history.dir/probe.c.obj
+[ 82%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/history_probe.c.obj
+[ 82%] Built target full_shrink
+[ 84%] Linking C executable full_history.exe
+[ 85%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/probe.c.obj
+[ 86%] Building C object history-harness/CMakeFiles/full_history_structural.dir/history.c.obj
+[ 87%] Building C object CMakeFiles/full_layout.dir/layout.c.obj
+[ 87%] Built target full_history
+[ 89%] Building C object history-harness/CMakeFiles/full_history_structural.dir/history_probe.c.obj
+[ 90%] Linking C executable full_layout.exe
+[ 91%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/wrap.c.obj
+[ 93%] Linking C executable full_history_alloc.exe
+[ 93%] Building C object history-harness/CMakeFiles/full_scale_structural.dir/study.c.obj
+[ 93%] Built target full_layout
+[ 95%] Building C object history-harness/CMakeFiles/full_history_structural.dir/probe.c.obj
+[ 96%] Building C object history-harness/CMakeFiles/full_scale_structural.dir/oracle.c.obj
+[ 96%] Built target full_history_alloc
+[ 97%] Building C object history-harness/CMakeFiles/full_scale_structural.dir/probe.c.obj
+[ 98%] Linking C executable full_history_structural.exe
+[ 98%] Built target full_history_structural
+[100%] Linking C executable full_scale_structural.exe
+[100%] Built target full_scale_structural

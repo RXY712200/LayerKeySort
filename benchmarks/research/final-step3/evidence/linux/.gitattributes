@@ -1,0 +1,2 @@
+# Raw execution capsule: preserve native output bytes and inner checksums.
+* -text whitespace=cr-at-eol

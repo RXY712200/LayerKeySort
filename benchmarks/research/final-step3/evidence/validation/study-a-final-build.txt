@@ -1,0 +1,19 @@
+-- Configuring done (0.3s)
+-- Generating done (0.4s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-study-a
+[ 20%] Built target oracle_probe
+[ 40%] Built target full_research_diagnostics
+[ 45%] Built target layerkeysort
+[ 46%] Building C object CMakeFiles/full_layout.dir/layout.c.obj
+[ 51%] Built target full_long
+[ 56%] Built target full_scale_structural
+[ 62%] Built target full_long_alloc
+[ 63%] Linking C executable full_layout.exe
+[ 78%] Built target full_long_structural
+[ 78%] Built target full_history
+[ 78%] Built target full_shrink
+[ 84%] Built target full_history_alloc
+[ 93%] Built target full_history_structural
+[ 93%] Built target full_scale
+[ 93%] Built target full_layout
+[100%] Built target full_scale_alloc

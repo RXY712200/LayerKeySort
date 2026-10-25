@@ -1,0 +1,15 @@
+{
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "memory": {
+    "total": 16766414848,
+    "available": 15120138240
+  },
+  "sources": {
+    "a": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+    "b": "19ca51bc616a1b6a2d28530bc0932dc7c4a255ce",
+    "c": "291305dca03d2d7599c88b6e6cebf2cc426e1790"
+  },
+  "driver_source": "291305dca03d2d7599c88b6e6cebf2cc426e1790",
+  "synthetic": true,
+  "flags": "GCC C17 -O3 -DNDEBUG; strict warnings"
+}

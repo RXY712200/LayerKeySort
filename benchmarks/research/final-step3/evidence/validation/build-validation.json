@@ -1,0 +1,340 @@
+[
+  {
+    "label": "gcc-Release-configure",
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release",
+      "-G",
+      "MinGW Makefiles",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DLKS_BUILD_BENCHMARKS=ON",
+      "-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror"
+    ],
+    "returncode": 0,
+    "seconds": 3.321904420852661
+  },
+  {
+    "label": "gcc-Release-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 8.163456201553345
+  },
+  {
+    "label": "gcc-Release-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 7.5260326862335205
+  },
+  {
+    "label": "gcc-Debug-configure",
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-debug",
+      "-G",
+      "MinGW Makefiles",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DLKS_BUILD_BENCHMARKS=ON",
+      "-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror"
+    ],
+    "returncode": 0,
+    "seconds": 2.9952142238616943
+  },
+  {
+    "label": "gcc-Debug-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-debug",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 6.426793098449707
+  },
+  {
+    "label": "gcc-Debug-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-debug",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 11.40230655670166
+  },
+  {
+    "label": "study-a-configure",
+    "command": [
+      "cmake",
+      "-S",
+      "benchmarks/research/final-step3",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-a",
+      "-G",
+      "MinGW Makefiles",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DFULL_ROOT=C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-final-base-a",
+      "-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror"
+    ],
+    "returncode": 0,
+    "seconds": 1.5301029682159424
+  },
+  {
+    "label": "study-a-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-a",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 5.302965879440308
+  },
+  {
+    "label": "study-a-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-a",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 1.1842982769012451
+  },
+  {
+    "label": "study-a-layout",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-a\\full_layout.exe"
+    ],
+    "returncode": 0,
+    "seconds": 0.005311489105224609
+  },
+  {
+    "label": "study-b-configure",
+    "command": [
+      "cmake",
+      "-S",
+      "benchmarks/research/final-step3",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-b",
+      "-G",
+      "MinGW Makefiles",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DFULL_ROOT=C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\live-core-step1",
+      "-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror"
+    ],
+    "returncode": 0,
+    "seconds": 1.4961445331573486
+  },
+  {
+    "label": "study-b-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-b",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 5.3269689083099365
+  },
+  {
+    "label": "study-b-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-b",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 1.1400291919708252
+  },
+  {
+    "label": "study-b-layout",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-b\\full_layout.exe"
+    ],
+    "returncode": 0,
+    "seconds": 0.005647420883178711
+  },
+  {
+    "label": "study-c-configure",
+    "command": [
+      "cmake",
+      "-S",
+      "benchmarks/research/final-step3",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-c",
+      "-G",
+      "MinGW Makefiles",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DFULL_ROOT=C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-final-step3",
+      "-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror"
+    ],
+    "returncode": 0,
+    "seconds": 1.5005309581756592
+  },
+  {
+    "label": "study-c-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-c",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 5.435703754425049
+  },
+  {
+    "label": "study-c-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-c",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 1.178215742111206
+  },
+  {
+    "label": "study-c-layout",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-c\\full_layout.exe"
+    ],
+    "returncode": 0,
+    "seconds": 0.0059642791748046875
+  },
+  {
+    "label": "msvc-configure",
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc",
+      "-G",
+      "Visual Studio 18 2026",
+      "-A",
+      "x64",
+      "-DLKS_BUILD_BENCHMARKS=ON"
+    ],
+    "returncode": 0,
+    "seconds": 4.139206886291504
+  },
+  {
+    "label": "msvc-Debug-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc",
+      "--config",
+      "Debug",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 4.700596809387207
+  },
+  {
+    "label": "msvc-Debug-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc",
+      "-C",
+      "Debug",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 13.515020847320557
+  },
+  {
+    "label": "msvc-Release-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc",
+      "--config",
+      "Release",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 4.458636999130249
+  },
+  {
+    "label": "msvc-Release-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc",
+      "-C",
+      "Release",
+      "--output-on-failure"
+    ],
+    "returncode": 0,
+    "seconds": 7.498273134231567
+  },
+  {
+    "label": "asan-configure",
+    "command": [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc-asan",
+      "-G",
+      "Visual Studio 18 2026",
+      "-A",
+      "x64",
+      "-DLKS_BUILD_BENCHMARKS=ON",
+      "-DCMAKE_C_FLAGS=/fsanitize=address /Zi",
+      "-DCMAKE_EXE_LINKER_FLAGS=/INCREMENTAL:NO"
+    ],
+    "returncode": 0,
+    "seconds": 3.9244132041931152
+  },
+  {
+    "label": "asan-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc-asan",
+      "--config",
+      "RelWithDebInfo",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0,
+    "seconds": 5.558916807174683
+  },
+  {
+    "label": "asan-tests",
+    "command": [
+      "cmd",
+      "/c",
+      "\"D:\\vs\\Common7\\Tools\\VsDevCmd.bat\" -arch=x64 -host_arch=x64 && ctest --test-dir \"C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-msvc-asan\" -C RelWithDebInfo --output-on-failure"
+    ],
+    "returncode": 1,
+    "seconds": 0.011809349060058594
+  }
+]

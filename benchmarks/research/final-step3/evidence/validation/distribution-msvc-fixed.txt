@@ -1,0 +1,266 @@
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build -DCMAKE_BUILD_TYPE=Debug -G Visual Studio 18 2026 -A x64 -DLKS_SOURCE_DIR=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The C compiler identification is MSVC 19.51.36260.0
+-- The CXX compiler identification is MSVC 19.51.36260.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (3.4s)
+-- Generating done (0.1s)
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_BUILD_TYPE
+
+
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build --config Debug --parallel
+适用于 .NET Framework MSBuild 版本 18.10.1-1.26427.6+3cd27c13e
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/CMakeLists.txt
+  lks_alloc.c
+  lks_base.c
+  path.c
+  path_text.c
+  path_order_key.c
+  slot_codec.c
+  path_compare.c
+  order.c
+  managed_order.c
+  snapshot.c
+  snapshot_key.c
+  snapshot_wire.c
+  snapshot_restore.c
+  order_bulk.c
+  immutable_group.c
+  sort.c
+  正在生成代码...
+  layerkeysort.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\lks_dependency\Debug\layerkeysort.lib
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
+  api_compile.cpp
+  consumer.c
+  consumer.cpp
+  consumer_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\Debug\consumer_cpp.exe
+  consumer_api_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\Debug\consumer_api_cpp.exe
+  consumer_c.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\Debug\consumer_c.exe
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\Debug\consumer_c.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\Debug\consumer_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-build\Debug\consumer_api_cpp.exe
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\source-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build -DCMAKE_BUILD_TYPE=Debug -G Visual Studio 18 2026 -A x64 -DLKS_FETCHCONTENT_SOURCE_DIR=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The C compiler identification is MSVC 19.51.36260.0
+-- The CXX compiler identification is MSVC 19.51.36260.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (3.1s)
+-- Generating done (0.1s)
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_BUILD_TYPE
+
+
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/fetchcontent-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build --config Debug --parallel
+适用于 .NET Framework MSBuild 版本 18.10.1-1.26427.6+3cd27c13e
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/CMakeLists.txt
+  lks_alloc.c
+  lks_base.c
+  path.c
+  path_text.c
+  path_order_key.c
+  slot_codec.c
+  path_compare.c
+  order.c
+  managed_order.c
+  snapshot.c
+  snapshot_key.c
+  snapshot_wire.c
+  snapshot_restore.c
+  order_bulk.c
+  immutable_group.c
+  sort.c
+  正在生成代码...
+  layerkeysort.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\_deps\layerkeysort_source-build\Debug\layerkeysort.lib
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
+  consumer.c
+  consumer.cpp
+  api_compile.cpp
+  consumer_c.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\Debug\consumer_c.exe
+  consumer_api_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\Debug\consumer_api_cpp.exe
+  consumer_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\Debug\consumer_cpp.exe
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/source-consumer/CMakeLists.txt
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\Debug\consumer_c.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\Debug\consumer_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\fetchcontent-build\Debug\consumer_api_cpp.exe
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3 -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\install-build -DCMAKE_BUILD_TYPE=Debug -G Visual Studio 18 2026 -A x64 -DLKS_BUILD_TESTS=OFF -DLKS_BUILD_EXAMPLES=OFF -DLKS_INSTALL=ON
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The C compiler identification is MSVC 19.51.36260.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (1.7s)
+-- Generating done (0.1s)
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_BUILD_TYPE
+
+
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/install-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\install-build --config Debug --parallel
+适用于 .NET Framework MSBuild 版本 18.10.1-1.26427.6+3cd27c13e
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/CMakeLists.txt
+  lks_alloc.c
+  lks_base.c
+  path.c
+  path_text.c
+  path_order_key.c
+  slot_codec.c
+  path_compare.c
+  order.c
+  managed_order.c
+  snapshot.c
+  snapshot_key.c
+  snapshot_wire.c
+  snapshot_restore.c
+  order_bulk.c
+  immutable_group.c
+  sort.c
+  正在生成代码...
+  layerkeysort.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\install-build\Debug\layerkeysort.lib
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/CMakeLists.txt
++ cmake --install C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\install-build --config Debug --prefix C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/lib/layerkeysort.lib
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/include/layerkeysort.h
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/share/licenses/LayerKeySort/LICENSE
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/lib/cmake/LayerKeySort/LayerKeySortTargets.cmake
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/lib/cmake/LayerKeySort/LayerKeySortTargets-debug.cmake
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/lib/cmake/LayerKeySort/LayerKeySortConfig.cmake
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix/lib/cmake/LayerKeySort/LayerKeySortConfigVersion.cmake
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build -DCMAKE_BUILD_TYPE=Debug -G Visual Studio 18 2026 -A x64 -DCMAKE_PREFIX_PATH=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\prefix
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The C compiler identification is MSVC 19.51.36260.0
+-- The CXX compiler identification is MSVC 19.51.36260.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (3.2s)
+-- Generating done (0.1s)
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_BUILD_TYPE
+
+
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/installed-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build --config Debug --parallel
+适用于 .NET Framework MSBuild 版本 18.10.1-1.26427.6+3cd27c13e
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/installed-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/installed-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/installed-consumer/CMakeLists.txt
+  api_compile.cpp
+  consumer.c
+  consumer.cpp
+  consumer_c.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build\Debug\consumer_c.exe
+  consumer_api_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build\Debug\consumer_api_cpp.exe
+  consumer_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build\Debug\consumer_cpp.exe
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/installed-consumer/CMakeLists.txt
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build\Debug\consumer_c.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build\Debug\consumer_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\installed-build\Debug\consumer_api_cpp.exe
++ C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\tools\amalgamate.py --package-parent C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-a
+C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-a\LayerKeySort-4.0.0-amalgamation
+C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-a\LayerKeySort-4.0.0-amalgamation.zip
++ C:\Users\rxy71\AppData\Local\Programs\Python\Python313\python.exe C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\tools\amalgamate.py --package-parent C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-b
+C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-b\LayerKeySort-4.0.0-amalgamation
+C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-b\LayerKeySort-4.0.0-amalgamation.zip
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build -DCMAKE_BUILD_TYPE=Debug -G Visual Studio 18 2026 -A x64 -DLKS_AMALGAM_DIR=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\package-a\LayerKeySort-4.0.0-amalgamation
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The C compiler identification is MSVC 19.51.36260.0
+-- The CXX compiler identification is MSVC 19.51.36260.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (3.1s)
+-- Generating done (0.1s)
+CMake Warning (unused-cli):
+  Manually-specified variables were not used by the project:
+
+    CMAKE_BUILD_TYPE
+
+
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build --config Debug --parallel
+适用于 .NET Framework MSBuild 版本 18.10.1-1.26427.6+3cd27c13e
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-consumer/CMakeLists.txt
+  layerkeysort.c
+  layerkeysort.c
+  consumer.c
+  正在生成代码...
+  layerkeysort.c
+  amalgamation_library.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_library.lib
+  example.c
+  正在生成代码...
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-consumer/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-consumer/CMakeLists.txt
+  amalgamation_consumer.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_consumer.exe
+  consumer.cpp
+  api_compile.cpp
+  amalgamation_package_example.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_package_example.exe
+  amalgamation_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_cpp.exe
+  amalgamation_api_cpp.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_api_cpp.exe
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-lgk7w8dm/amalgamation-consumer/CMakeLists.txt
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_consumer.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_api_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-lgk7w8dm\amalgamation-build\Debug\amalgamation_package_example.exe
+First item: 1
+distribution validation passed

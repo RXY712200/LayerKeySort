@@ -1,0 +1,57 @@
+{
+  "live": {
+    "exact_ABC_structural_phase_pairs": 189,
+    "exact_x64_memory_formula_phase_pairs": 189,
+    "fields": [
+      "allocations",
+      "reallocations",
+      "frees",
+      "live_allocations",
+      "comparisons",
+      "location_assignments",
+      "max_operation_assignments",
+      "index_writes",
+      "max_operation_index_blocks",
+      "splits",
+      "merges",
+      "redistributions",
+      "rotations",
+      "blocks",
+      "height",
+      "occupancy_histogram"
+    ]
+  },
+  "upper": {
+    "exact_ABC_structural_phase_pairs": 12,
+    "exact_x64_memory_formula_phase_pairs": 12,
+    "fields": [
+      "allocations",
+      "reallocations",
+      "frees",
+      "live_allocations",
+      "comparisons",
+      "location_assignments",
+      "max_operation_assignments",
+      "index_writes",
+      "max_operation_index_blocks",
+      "splits",
+      "merges",
+      "redistributions",
+      "rotations",
+      "blocks",
+      "height",
+      "occupancy_histogram"
+    ]
+  },
+  "history_history": {
+    "exact_ABC_capture_phase_pairs": 98,
+    "exact_published_capacity_checks": 98
+  },
+  "upper_history": {
+    "exact_ABC_capture_phase_pairs": 2,
+    "exact_published_capacity_checks": 2
+  },
+  "shrink": {
+    "exact_x64_reclamation_phase_pairs": 12
+  }
+}

@@ -1,0 +1,11 @@
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26300.
+-- The C compiler identification is MSVC 19.51.36260.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/vs/VC/Tools/MSVC/14.51.36231/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found Python3: C:/Users/rxy71/AppData/Local/Programs/Python/Python313/python.exe (found version "3.13.14") found components: Interpreter
+-- Configuring done (2.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-study-asan

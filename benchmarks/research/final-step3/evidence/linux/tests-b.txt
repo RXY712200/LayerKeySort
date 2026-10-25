@@ -1,0 +1,48 @@
+Internal ctest changing into directory: /home/runner/work/LayerKeySort/LayerKeySort/build-b
+Test project /home/runner/work/LayerKeySort/LayerKeySort/build-b
+      Start  1: integrated_layout_lifetime
+ 1/21 Test  #1: integrated_layout_lifetime .......   Passed    0.00 sec
+      Start  2: research_append
+ 2/21 Test  #2: research_append ..................   Passed    0.01 sec
+      Start  3: research_prepend
+ 3/21 Test  #3: research_prepend .................   Passed    0.01 sec
+      Start  4: research_anchor
+ 4/21 Test  #4: research_anchor ..................   Passed    0.01 sec
+      Start  5: research_local
+ 5/21 Test  #5: research_local ...................   Passed    0.01 sec
+      Start  6: research_ascending
+ 6/21 Test  #6: research_ascending ...............   Passed    0.00 sec
+      Start  7: research_descending
+ 7/21 Test  #7: research_descending ..............   Passed    0.00 sec
+      Start  8: research_random
+ 8/21 Test  #8: research_random ..................   Passed    0.00 sec
+      Start  9: research_duplicates
+ 9/21 Test  #9: research_duplicates ..............   Passed    0.00 sec
+      Start 10: research_equal
+10/21 Test #10: research_equal ...................   Passed    0.00 sec
+      Start 11: research_history
+11/21 Test #11: research_history .................   Passed    0.00 sec
+      Start 12: independent_oracle_selftest
+12/21 Test #12: independent_oracle_selftest ......   Passed    1.58 sec
+      Start 13: long_churn_small
+13/21 Test #13: long_churn_small .................   Passed    0.00 sec
+      Start 14: history_none
+14/21 Test #14: history_none .....................   Passed    0.00 sec
+      Start 15: history_empty
+15/21 Test #15: history_empty ....................   Passed    0.00 sec
+      Start 16: history_one
+16/21 Test #16: history_one ......................   Passed    0.00 sec
+      Start 17: history_eight
+17/21 Test #17: history_eight ....................   Passed    0.00 sec
+      Start 18: history_variable
+18/21 Test #18: history_variable .................   Passed    0.01 sec
+      Start 19: history_fixed256
+19/21 Test #19: history_fixed256 .................   Passed    0.01 sec
+      Start 20: history_wide
+20/21 Test #20: history_wide .....................   Passed    0.04 sec
+      Start 21: history_large_namespace
+21/21 Test #21: history_large_namespace ..........   Passed    0.05 sec
+
+100% tests passed, 0 tests failed out of 21
+
+Total Test time (real) =   1.77 sec

@@ -1,0 +1,154 @@
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-build -DLKS_SOURCE_DIR=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3
+-- Building for: Ninja
+-- The C compiler identification is GNU 16.2.0
+-- The CXX compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/msys64/ucrt64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (1.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-5pexbbtr/source-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-build --config Debug --parallel
+[1/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/lks_base.c.obj
+[2/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj
+[3/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj
+[4/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/path_text.c.obj
+[5/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/path_compare.c.obj
+[6/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj
+[7/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/path.c.obj
+[8/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/managed_order.c.obj
+[9/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj
+[10/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj
+[11/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/snapshot.c.obj
+[12/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj
+[13/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj
+[14/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/sort.c.obj
+[15/23] Building C object CMakeFiles/consumer_c.dir/consumer.c.obj
+[16/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj
+[17/23] Building CXX object CMakeFiles/consumer_api_cpp.dir/api_compile.cpp.obj
+[18/23] Building C object lks_dependency/CMakeFiles/layerkeysort.dir/src/order.c.obj
+[19/23] Building CXX object CMakeFiles/consumer_cpp.dir/consumer.cpp.obj
+[20/23] Linking C static library lks_dependency\liblayerkeysort.a
+[21/23] Linking C executable consumer_c.exe
+[22/23] Linking CXX executable consumer_cpp.exe
+[23/23] Linking CXX executable consumer_api_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-build\consumer_c.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-build\consumer_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-build\consumer_api_cpp.exe
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\source-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\fetchcontent-build -DLKS_FETCHCONTENT_SOURCE_DIR=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3
+-- Building for: Ninja
+-- The C compiler identification is GNU 16.2.0
+-- The CXX compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/msys64/ucrt64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (1.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-5pexbbtr/fetchcontent-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\fetchcontent-build --config Debug --parallel
+[1/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/lks_base.c.obj
+[2/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj
+[3/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj
+[4/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/path_compare.c.obj
+[5/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/path_text.c.obj
+[6/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj
+[7/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/managed_order.c.obj
+[8/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/path.c.obj
+[9/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj
+[10/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj
+[11/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj
+[12/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj
+[13/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/sort.c.obj
+[14/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/snapshot.c.obj
+[15/23] Building CXX object CMakeFiles/consumer_api_cpp.dir/api_compile.cpp.obj
+[16/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj
+[17/23] Building C object _deps/layerkeysort_source-build/CMakeFiles/layerkeysort.dir/src/order.c.obj
+[18/23] Building C object CMakeFiles/consumer_c.dir/consumer.c.obj
+[19/23] Building CXX object CMakeFiles/consumer_cpp.dir/consumer.cpp.obj
+[20/23] Linking C static library _deps\layerkeysort_source-build\liblayerkeysort.a
+[21/23] Linking CXX executable consumer_cpp.exe
+[22/23] Linking C executable consumer_c.exe
+[23/23] Linking CXX executable consumer_api_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\fetchcontent-build\consumer_c.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\fetchcontent-build\consumer_cpp.exe
++ C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\fetchcontent-build\consumer_api_cpp.exe
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3 -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\install-build -DLKS_BUILD_TESTS=OFF -DLKS_BUILD_EXAMPLES=OFF -DLKS_INSTALL=ON
+-- Building for: Ninja
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (0.6s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/build/distribution-check-5pexbbtr/install-build
++ cmake --build C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\install-build --config Debug --parallel
+[1/17] Building C object CMakeFiles/layerkeysort.dir/src/lks_base.c.obj
+[2/17] Building C object CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj
+[3/17] Building C object CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj
+[4/17] Building C object CMakeFiles/layerkeysort.dir/src/path_compare.c.obj
+[5/17] Building C object CMakeFiles/layerkeysort.dir/src/path_text.c.obj
+[6/17] Building C object CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj
+[7/17] Building C object CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj
+[8/17] Building C object CMakeFiles/layerkeysort.dir/src/path.c.obj
+[9/17] Building C object CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj
+[10/17] Building C object CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj
+[11/17] Building C object CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj
+[12/17] Building C object CMakeFiles/layerkeysort.dir/src/sort.c.obj
+[13/17] Building C object CMakeFiles/layerkeysort.dir/src/managed_order.c.obj
+[14/17] Building C object CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj
+[15/17] Building C object CMakeFiles/layerkeysort.dir/src/order.c.obj
+[16/17] Building C object CMakeFiles/layerkeysort.dir/src/snapshot.c.obj
+[17/17] Linking C static library liblayerkeysort.a
++ cmake --install C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\install-build --config Debug --prefix C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix/lib/liblayerkeysort.a
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix/include/layerkeysort.h
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix/share/licenses/LayerKeySort/LICENSE
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix/lib/cmake/LayerKeySort/LayerKeySortTargets.cmake
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix/lib/cmake/LayerKeySort/LayerKeySortConfig.cmake
+-- Installing: C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix/lib/cmake/LayerKeySort/LayerKeySortConfigVersion.cmake
++ cmake -S C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\installed-consumer -B C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\installed-build -DCMAKE_PREFIX_PATH=C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\full-final-step3\build\distribution-check-5pexbbtr\prefix
+-- Building for: Ninja
+-- The C compiler identification is GNU 16.2.0
+-- The CXX compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/cc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: D:/msys64/ucrt64/bin/c++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done (1.2s)
+CMake Error in CMakeLists.txt:
+  IMPORTED_LOCATION not set for imported target "LayerKeySort::layerkeysort".
+
+
+CMake Error in CMakeLists.txt:
+  IMPORTED_LOCATION not set for imported target "LayerKeySort::layerkeysort".
+
+
+CMake Error in CMakeLists.txt:
+  IMPORTED_LOCATION not set for imported target "LayerKeySort::layerkeysort".
+
+
+-- Generating done (0.0s)
+CMake Generate step failed.  Build files cannot be regenerated correctly.
+distribution validation failed: Command '['cmake', '-S', 'C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-final-step3\\build\\distribution-check-5pexbbtr\\installed-consumer', '-B', 'C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-final-step3\\build\\distribution-check-5pexbbtr\\installed-build', '-DCMAKE_PREFIX_PATH=C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\full-final-step3\\build\\distribution-check-5pexbbtr\\prefix']' returned non-zero exit status 1.

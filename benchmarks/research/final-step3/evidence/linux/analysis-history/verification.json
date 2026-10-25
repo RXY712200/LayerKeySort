@@ -1,0 +1,10 @@
+{
+  "process_statuses": {
+    "completed": 285
+  },
+  "phase_rows": 5856,
+  "exact_oracle_checkpoints": 3006,
+  "fingerprint_groups": 17,
+  "fingerprints_equal_across_variants_modes_repeats": true,
+  "limitations": "Whole phase costs; callback replay is not subtracted; checkpoints are not per-mutation proof."
+}

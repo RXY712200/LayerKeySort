@@ -1,0 +1,96 @@
+[  1%] Building C object history-harness/CMakeFiles/oracle_probe.dir/oracle_probe.c.o
+[  2%] Building C object history-harness/CMakeFiles/oracle_probe.dir/oracle.c.o
+[  4%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.o
+[  4%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c.o
+[  6%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/lks_base.c.o
+[  7%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path.c.o
+[  8%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c.o
+[  9%] Linking C executable oracle_probe
+[ 10%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c.o
+[ 10%] Built target oracle_probe
+[ 12%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path_text.c.o
+[ 13%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path_order_key.c.o
+[ 14%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c.o
+[ 15%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c.o
+[ 17%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/slot_codec.c.o
+[ 18%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c.o
+[ 19%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/path_compare.c.o
+[ 20%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c.o
+[ 21%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/order.c.o
+[ 23%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c.o
+[ 24%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/managed_order.c.o
+[ 25%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot.c.o
+[ 26%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c.o
+[ 28%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.o
+[ 29%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.o
+[ 30%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c.o
+[ 31%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c.o
+[ 32%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.o
+[ 34%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/order_bulk.c.o
+[ 35%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c.o
+[ 36%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c.o
+[ 37%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/immutable_group.c.o
+[ 39%] Building C object history-harness/full/CMakeFiles/layerkeysort.dir/src/sort.c.o
+[ 40%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c.o
+[ 41%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c.o
+[ 42%] Building C object history-harness/CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c.o
+[ 43%] Linking C static library liblayerkeysort.a
+[ 45%] Linking C static library libfull_research_diagnostics.a
+[ 45%] Built target layerkeysort
+[ 47%] Building C object history-harness/CMakeFiles/full_scale.dir/study.c.o
+[ 47%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/study.c.o
+[ 48%] Building C object history-harness/CMakeFiles/full_long.dir/long_churn.c.o
+[ 48%] Built target full_research_diagnostics
+[ 50%] Building C object history-harness/CMakeFiles/full_long.dir/oracle.c.o
+[ 51%] Building C object history-harness/CMakeFiles/full_scale.dir/oracle.c.o
+[ 52%] Building C object history-harness/CMakeFiles/full_long.dir/probe.c.o
+[ 53%] Linking C executable full_long
+[ 54%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/long_churn.c.o
+[ 54%] Built target full_long
+[ 56%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/oracle.c.o
+[ 57%] Building C object history-harness/CMakeFiles/full_scale.dir/probe.c.o
+[ 58%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/oracle.c.o
+[ 59%] Building C object history-harness/CMakeFiles/full_long_structural.dir/long_churn.c.o
+[ 60%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/probe.c.o
+[ 62%] Building C object history-harness/CMakeFiles/full_long_alloc.dir/wrap.c.o
+[ 63%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/probe.c.o
+[ 64%] Linking C executable full_scale
+[ 65%] Building C object history-harness/CMakeFiles/full_long_structural.dir/oracle.c.o
+[ 67%] Building C object history-harness/CMakeFiles/full_scale_alloc.dir/wrap.c.o
+[ 68%] Linking C executable full_long_alloc
+[ 68%] Built target full_scale
+[ 69%] Building C object history-harness/CMakeFiles/full_long_structural.dir/probe.c.o
+[ 69%] Built target full_long_alloc
+[ 70%] Building C object history-harness/CMakeFiles/full_shrink.dir/shrink.c.o
+[ 71%] Linking C executable full_scale_alloc
+[ 73%] Building C object history-harness/CMakeFiles/full_shrink.dir/oracle.c.o
+[ 74%] Linking C executable full_long_structural
+[ 74%] Built target full_scale_alloc
+[ 74%] Built target full_long_structural
+[ 75%] Building C object history-harness/CMakeFiles/full_shrink.dir/probe.c.o
+[ 76%] Building C object history-harness/CMakeFiles/full_history.dir/history.c.o
+[ 78%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/history.c.o
+[ 79%] Building C object history-harness/CMakeFiles/full_history.dir/history_probe.c.o
+[ 80%] Linking C executable full_shrink
+[ 81%] Building C object history-harness/CMakeFiles/full_history_structural.dir/history.c.o
+[ 81%] Built target full_shrink
+[ 82%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/history_probe.c.o
+[ 84%] Building C object history-harness/CMakeFiles/full_history.dir/probe.c.o
+[ 85%] Building C object history-harness/CMakeFiles/full_history_structural.dir/history_probe.c.o
+[ 86%] Building C object CMakeFiles/full_layout.dir/layout.c.o
+[ 87%] Linking C executable full_layout
+[ 87%] Built target full_layout
+[ 89%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/probe.c.o
+[ 90%] Building C object history-harness/CMakeFiles/full_history_structural.dir/probe.c.o
+[ 91%] Building C object history-harness/CMakeFiles/full_scale_structural.dir/study.c.o
+[ 92%] Linking C executable full_history
+[ 93%] Building C object history-harness/CMakeFiles/full_history_alloc.dir/wrap.c.o
+[ 93%] Built target full_history
+[ 95%] Building C object history-harness/CMakeFiles/full_scale_structural.dir/oracle.c.o
+[ 96%] Linking C executable full_history_structural
+[ 97%] Linking C executable full_history_alloc
+[ 97%] Built target full_history_structural
+[ 98%] Building C object history-harness/CMakeFiles/full_scale_structural.dir/probe.c.o
+[ 98%] Built target full_history_alloc
+[100%] Linking C executable full_scale_structural
+[100%] Built target full_scale_structural

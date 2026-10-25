@@ -1,0 +1,964 @@
+Start testing: Oct 25 14:19 马来西亚半岛标准时间
+----------------------------------------------------------
+1/39 Testing: layerkeysort_v4_api_compile
+1/39 Test: layerkeysort_v4_api_compile
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_api_compile.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_api_compile" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_api_compile" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_api_compile" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/39 Testing: layerkeysort_v4_freeze_contract
+2/39 Test: layerkeysort_v4_freeze_contract
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_freeze.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_freeze_contract" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_freeze_contract" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_freeze_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/39 Testing: layerkeysort_v4_rc_torture
+3/39 Test: layerkeysort_v4_rc_torture
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_rc_torture.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_rc_torture" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+RC parser campaign iterations=2000 seeds=3 accepted=1327 rejected=17144; zero live allocations PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_rc_torture" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_rc_torture" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/39 Testing: layerkeysort_v4_api_manifest
+4/39 Test: layerkeysort_v4_api_manifest
+Command: "C:/Users/rxy71/AppData/Local/Programs/Python/Python313/python.exe" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/tools/verify_v4_api.py"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_api_manifest" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+Frozen V4 manifest PASS: 64 functions
+<end of output>
+Test time =   0.06 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_api_manifest" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_api_manifest" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/39 Testing: layerkeysort_v4_wire_golden
+5/39 Test: layerkeysort_v4_wire_golden
+Command: "C:/Users/rxy71/AppData/Local/Programs/Python/Python313/python.exe" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/tools/verify_v4_wire.py" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_wire_probe.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_wire_golden" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+Frozen LS1/wire/LK1 corpus PASS; canonical bytes match architecture-independent fixtures
+<end of output>
+Test time =   0.19 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_wire_golden" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_wire_golden" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/39 Testing: layerkeysort_v3_core
+6/39 Test: layerkeysort_v3_core
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_tests.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v3_core" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+V2 SlotCodec Exhaustive=65536 Examples=9 LexicalOrder=PASS Status=PASS
+V2 SlotDomain Boundaries=0,65535,65536 CloneAndGaps=PASS
+V2 LevelText GrammarAndBuffer=PASS Depths=1,2,4,8,16,32,64
+V2 BulkSlotPolicy Blocks=1,2,25,26 Status=PASS
+V2 BulkBoundary N=0 Seen=0 MaxDepth=0 Status=PASS
+V2 BulkBoundary N=1 Seen=1 MaxDepth=0 Status=PASS
+V2 BulkBoundary N=2 Seen=2 MaxDepth=1 Status=PASS
+V2 BulkBoundary N=25 Seen=25 MaxDepth=1 Status=PASS
+V2 BulkBoundary N=26 Seen=26 MaxDepth=1 Status=PASS
+V2 BulkBoundary N=27 Seen=27 MaxDepth=1 Status=PASS
+V2 BulkBoundary N=675 Seen=675 MaxDepth=2 Status=PASS
+V2 BulkBoundary N=676 Seen=676 MaxDepth=2 Status=PASS
+V2 BulkBoundary N=677 Seen=677 MaxDepth=2 Status=PASS
+V2 BulkBoundary N=1024 Seen=1024 MaxDepth=3 Status=PASS
+V2 BulkBoundary N=10000 Seen=10000 MaxDepth=3 Status=PASS
+V2 BulkToPrepend N=45 Seen=45 MaxDepth=1 Status=PASS
+V2 Group ascending N=1024 MaxDepth=3 MaxSinglePathFormattedChars=12 PeakRequestedBytes=135992
+V2 Group descending N=1024 MaxDepth=3 MaxSinglePathFormattedChars=12 PeakRequestedBytes=135992
+V2 Group all-equal N=10000 MaxDepth=3 MaxSinglePathFormattedChars=12 PeakRequestedBytes=1428536
+V2 Group heavy-duplicates N=1024 MaxDepth=3 MaxSinglePathFormattedChars=12 PeakRequestedBytes=135992
+V2 Group random-duplicates N=1024 MaxDepth=3 MaxSinglePathFormattedChars=12 PeakRequestedBytes=135992
+V2 Group random-unique N=1024 MaxDepth=3 MaxSinglePathFormattedChars=12 PeakRequestedBytes=135992
+V2 Tree ascending N=1024 MaxDepth=1 AvgDepth=0.999 P95=1 P99=1 MaxText=4 Attempts=0 Local=0 Fallbacks=0 Nodes=0 Expanded=0 MaxRegion=0 Full=0 Deeper=0 PeakBytes=98304 RequestedBytes=98304
+V2 Tree descending N=256 MaxDepth=1 AvgDepth=0.996 P95=1 P99=1 MaxText=4 Attempts=0 Local=0 Fallbacks=0 Nodes=0 Expanded=0 MaxRegion=0 Full=0 Deeper=0 PeakBytes=24576 RequestedBytes=24576
+V2 NarrowGap N=62 Attempts=0 Local=0 Fallbacks=0 Expanded=0 Full=0 Deeper=0 MaxDepth=1 MaxText=6 PeakBytes=5952 RequestedBytes=5952 Status=PASS
+V2 LocalRelabel N=18 Attempts=0 Success=0 Expanded=0 Nodes=0 MaxRegion=0 Full=0 MaxDepth=6 Status=PASS
+V2 ParentFirstDescendant Local=0 Region=0 MaxDepth=5 Status=PASS
+V2 PositiveBoundary Kind=descendants Local=0 Region=0 MaxDepth=6 Status=PASS
+V2 PositiveBoundary Kind=sibling-subtrees Local=0 Region=0 MaxDepth=6 Status=PASS
+V2 OnlinePattern Mode=0 N=128 Attempts=0 Local=0 Fallbacks=0 Expanded=0 Full=0 Deeper=0 MaxDepth=1 MaxText=4 PeakBytes=12288 RequestedBytes=12288 Status=PASS
+V2 OnlinePattern Mode=1 N=128 Attempts=7 Local=7 Fallbacks=0 Expanded=0 Full=0 Deeper=0 MaxDepth=3 MaxText=12 PeakBytes=12720 RequestedBytes=20248 Status=PASS
+V2 OnlinePattern Mode=2 N=128 Attempts=0 Local=0 Fallbacks=0 Expanded=0 Full=0 Deeper=0 MaxDepth=1 MaxText=4 PeakBytes=12288 RequestedBytes=12288 Status=PASS
+V2 OnlinePattern Mode=3 N=160 Attempts=2 Local=2 Fallbacks=0 Expanded=1 Full=0 Deeper=0 MaxDepth=6 MaxText=24 PeakBytes=17208 RequestedBytes=23784 Status=PASS
+V2 EndpointPressure N=20000 Attempts=0 Full=0 MaxDepth=7 Status=PASS
+V2 Tree congestion OOM N=17 FailPoints=6 Success=1 Local=0 Expanded=0 Nodes=0 Full=0
+V2 RangeOrFallbackOOM FailPoints=6 Local=0 Full=0 MaxDepth=7 Status=PASS
+V2 LevelLimitFallback Full=0 Status=PASS
+V2 AVL ExplicitNoPrefix Deep=1000,10000,100000 Status=PASS
+V2 AVL EqualUpperBound N=4096 SearchSteps=45057 Rotations=4083 Status=PASS
+V2 AVL ExplicitRotationOOM FailPoints=3 Status=PASS
+V2 AVL ComparatorLocate Status=PASS
+V2 AVL FullFallbackOOM FailPoints=4 Status=PASS
+V2 AVL BulkOOM FailPoints=20 Status=PASS
+LayerKeySort v2 preview focused tests PASS
+V3 ordered public random=4096 removed=128 PASS
+V3 ordered bound context/equals PASS
+V3 ordered remove/update/reinsert PASS
+V3 ordered append/equal/prepend runs=512 each PASS
+V3 ordered endpoint carry OOM failures=3 PASS
+V3 ordered depth-nine direct OOM failures=4 PASS
+V3 ordered depth-seventeen relabel OOM failures=7 PASS
+V3 ordered prepend level carry OOM failures=3 PASS
+V3 ordered burst transition OOM failures=3 PASS
+V3 ordered local/expanded OOM failures=115 PASS
+V3 ordered full-range/expanded OOM failures=556 PASS
+V2 DeleteLeafUnaryBranch PASS
+V2 RekeyShapesAndComparator PASS
+V2 RekeyTransitions PASS
+V2 RekeyOOM FailPoints=3 PASS
+V2 MutationDifferential Seed=C0FFEE12 Steps=2400 PASS
+V2 MutationDifferential Seed=12345678 Steps=2400 PASS
+V2 MutationDifferential Seed=DEADBEEF Steps=2400 PASS
+V2 MixedInteraction Seed=41786321 Steps=600 PASS
+V2 MixedInteraction Seed=A76509DE Steps=600 PASS
+V2 MutationDeep Depth=1000 PASS
+V2 MutationDeep Depth=10000 PASS
+V2 MutationDeep Depth=100000 PASS
+V2 mutation tests PASS
+Path key v1 golden vectors: 16 fixed plus ZERO and SIZE_MAX edges PASS
+Path gap boundary cases PASS
+Path external corpus: 480 paths, 230400 ordered pairs, sorted corpus PASS
+Path external malformed: 25 display, 21 key PASS
+Path parser OOM sweep: 4 injected failures PASS
+Path parser OOM sweep: 4 injected failures PASS
+Path depth 1000: display 4000, key 10238 bytes PASS
+Path depth 10000: display 40000, key 109238 bytes PASS
+Path depth 100000: display 400000, key 1202630 bytes PASS
+Stage14.1FinalStatus=PASS
+DeterministicSeeds=64 BaseSeed=0x14A10C5D SeedStride=0x9E3779B9
+GroupStableOracleCases=384 BatchOracleCases=935 PublicMergeOracleCases=128 PrivateMergeDifferentialCases=128
+DuplicateCases=64 HeavyDuplicateCases=64 AllEqualCases=64 EqualStabilityFailures=0
+BatchMutationFailures=0 PublicInputMutationFailures=0 PrivateIncomingMutationFailures=0
+GroupOracleFailures=0 BatchOracleFailures=0 PublicMergeOracleFailures=0 PrivateMergeDifferentialFailures=0
+PathOrderFailures=0 PathUniquenessFailures=0 BeforeChecks=256 AfterChecks=256 BetweenChecks=256 PathConstructionFailures=0
+TreeProfileChecks=935 TreeProfileFailures=0 AllocatorFailures=0 LeakCount=0
+PathPairChecks=55296 PathTripleChecks=288000 AntisymmetryFailures=0 TransitivityFailures=0
+Stage14.2StressFacts
+DeterministicSeeds=256
+MaxN=512
+BatchStressCases=2048
+PublicMergeStressCases=500
+PrivateMergeStressCases=500
+AllEqualStressCases=343
+StableOracleFailures=0
+EqualStabilityFailures=0
+BatchMutationFailures=0
+PublicInputMutationFailures=0
+PrivateIncomingMutationFailures=0
+PathOrderFailures=0
+PathUniquenessFailures=0
+TreeProfileFailures=0
+AllocatorAccountingFailures=0
+LeakCount=0
+ASanErrors=0
+DebugStressFailures=0
+Stage14.2StressStatus=PASS
+Stage14.2PostFixOOMFacts
+TreeInsertEqualRange_K=3
+TreeInsertEqualRange_FailPointsPassed=3
+TreeInsertEqualRange_KPlusOnePASS=PASS
+EqualHeavyPublicMerge_K=41
+EqualHeavyPublicMerge_FailPointsPassed=41
+EqualHeavyPublicMerge_KPlusOnePASS=PASS
+EqualHeavyPrivateMerge_K=32
+EqualHeavyPrivateMerge_FailPointsPassed=32
+EqualHeavyPrivateMerge_KPlusOnePASS=PASS
+WrongStatusCount=0
+StateContractFailureCount=0
+OwnershipContractFailureCount=0
+LeakCount=0
+Stage14.2PostFixOOMStatus=PASS
+LayerKeySort V3 core tests PASS
+<end of output>
+Test time =   0.53 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v3_core" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v3_core" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/39 Testing: layerkeysort_v4_marker_threads
+7/39 Test: layerkeysort_v4_marker_threads
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_marker_threads.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_marker_threads" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+Concurrent marker releases and protected immutable reads PASS
+Concurrent marker releases and protected immutable reads PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_marker_threads" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_marker_threads" time elapsed: 00:00:00
+----------------------------------------------------------
+
+8/39 Testing: layerkeysort_v4_immutable_group
+8/39 Test: layerkeysort_v4_immutable_group
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_immutable_group.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_immutable_group" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+V4 immutable Group/Batch stability, callbacks, snapshots and OOM PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_immutable_group" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_immutable_group" time elapsed: 00:00:00
+----------------------------------------------------------
+
+9/39 Testing: layerkeysort_v4_live_order
+9/39 Test: layerkeysort_v4_live_order
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_tests.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_live_order" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+occupancy boundaries, duplicate residences, invalid arguments, capacity and checker PASS
+insert OOM initial=0 failing points=2 then success PASS
+insert OOM initial=1 failing points=1 then success PASS
+insert OOM initial=64 failing points=2 then success PASS
+insert OOM initial=4096 failing points=2 then success PASS
+allocation-free removal including repairs/drain PASS
+shared block owner: bulk OOM 133 points, stable moves/merges/foreign handles PASS
+random seed=17 steps=40000 PASS
+random seed=1779033703 steps=40000 PASS
+random seed=3144134277 steps=40000 PASS
+adversarial pattern=0 N=100000 PASS
+adversarial pattern=1 N=8192 PASS
+adversarial pattern=2 N=8192 PASS
+adversarial pattern=3 N=8192 PASS
+adversarial pattern=4 N=8192 PASS
+V4 counters operations=388599 oracle_steps=120000 max_record_locations=95 max_local_blocks=2 max_index_blocks=14
+splits=5426 merges=5427 redistributions=3989 left=4390 right=2768 LR=198 RL=509 two_child=743
+V4 Preview.1 live order PASS; final live allocations=0
+<end of output>
+Test time =   1.78 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_live_order" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_live_order" time elapsed: 00:00:01
+----------------------------------------------------------
+
+10/39 Testing: layerkeysort_v4_snapshot
+10/39 Test: layerkeysort_v4_snapshot
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_snapshot.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_snapshot" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+compact history: 12 capture OOM points including final trim; immediate copy/callback failure/lifetime PASS
+Preview.3 snapshot keys/wire/torture/lifetime/bulk/OOM PASS
+<end of output>
+Test time =   0.05 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_snapshot" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_snapshot" time elapsed: 00:00:00
+----------------------------------------------------------
+
+11/39 Testing: layerkeysort_v4_mutation
+11/39 Test: layerkeysort_v4_mutation
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_mutation.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_mutation" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+cursor revision/no-op/failure/capacity cases PASS
+move spare OOM + allocation-free moves PASS
+explicit oracle seed=17 steps=30000 PASS
+explicit oracle seed=1779033703 steps=30000 PASS
+explicit oracle seed=3144134277 steps=30000 PASS
+100001-resident distant move campaign 2000 moves PASS
+managed pattern=0 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=1 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=2 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=3 N=100001 stable oracle/remove/call envelope PASS
+managed pattern=4 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=5 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=6 N=4096 stable oracle/remove/call envelope PASS
+managed creation/insertion + cursor OOM sweeps PASS
+managed cursor, 5000 remove/change/reinsert cycles, comparator reentry PASS
+move operations=42154 cross=41618 noops=20 max_assignments=160 max_arrays=4 max_index=17 splits=866 repairs=2626
+managed max_insert_calls=14 max_locate_calls=37
+V4 mutation contract PASS; zero live allocations
+<end of output>
+Test time =   3.90 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_mutation" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_mutation" time elapsed: 00:00:03
+----------------------------------------------------------
+
+12/39 Testing: layerkeysort_mutation_soak
+12/39 Test: layerkeysort_mutation_soak
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_soak.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_mutation_soak" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+Soak explicit Seed=6B47C291 Steps=22500 PASS
+Soak comparator Seed=A9172E63 Steps=30000 PASS
+Soak endpoint phases Seed=A9172E63 modes=3 PASS
+Mutation soak manual=22500 ordered=30000 PASS
+<end of output>
+Test time =   0.44 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_mutation_soak" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_mutation_soak" time elapsed: 00:00:00
+----------------------------------------------------------
+
+13/39 Testing: layerkeysort_consumer_roundtrip
+13/39 Test: layerkeysort_consumer_roundtrip
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_consumer_roundtrip.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_consumer_roundtrip" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+Consumer LK1 persistence/rekey/identity PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_consumer_roundtrip" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_consumer_roundtrip" time elapsed: 00:00:00
+----------------------------------------------------------
+
+14/39 Testing: layerkeysort_parser_torture
+14/39 Test: layerkeysort_parser_torture
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_parser_torture.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_parser_torture" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+Parser torture cases=2000 PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_parser_torture" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_parser_torture" time elapsed: 00:00:00
+----------------------------------------------------------
+
+15/39 Testing: layerkeysort_rc_contract
+15/39 Test: layerkeysort_rc_contract
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_rc_contract.exe"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_rc_contract" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+RC documented-input/lifecycle checks PASS
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_rc_contract" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_rc_contract" time elapsed: 00:00:00
+----------------------------------------------------------
+
+16/39 Testing: layerkeysort_v4_storage_smoke
+16/39 Test: layerkeysort_v4_storage_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_storage.exe" "512"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_storage_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase":"live","n":512,"record_bytes":12288,"block_index_bytes":4736,"blocks":8,"container_bytes":4344,"requested_bytes":21368}
+{"phase":"group","n":512,"flat_array_bytes":4096,"object_bytes":32,"resident_delta":4128}
+{"phase":"snapshot","n":512,"row_bytes":4096,"association_bytes":4096,"association_capacity":4096,"marker_bytes":8,"wire_bytes":8218,"ls1_bytes":12800,"group_live_identical":true}
+{"phase":"retained","n":512,"snapshot_count":8,"requested_bytes":88096,"peak_bytes":88096}
+{"phase":"empty_with_history","requested_bytes":70480,"resident_count":0}
+{"phase":"destroyed","live_bytes":0,"live_blocks":0,"oracle":true}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_storage_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_storage_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+17/39 Testing: layerkeysort_v4_groups_smoke
+17/39 Test: layerkeysort_v4_groups_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_groups.exe" "1024" "1" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_groups_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"version":"V3","operation":"build","n":1024,"equal":1,"run":0,"ms":0.227700,"comparisons":6143,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V3","operation":"merge","n":1024,"equal":1,"run":0,"ms":0.194100,"comparisons":1535,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V3","operation":"batch_build","n":1024,"equal":1,"run":0,"ms":0.184600,"comparisons":6143,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V3","operation":"batch_merge","n":1024,"equal":1,"run":0,"ms":0.164200,"comparisons":1023,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V3","operation":"cleanup","n":1024,"equal":1,"run":0,"ms":0.092300,"comparisons":0,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V4","operation":"build","n":1024,"equal":1,"run":0,"ms":0.015600,"comparisons":5120,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V4","operation":"capture","n":1024,"equal":1,"run":0,"ms":0.004000,"comparisons":0,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V4","operation":"merge","n":1024,"equal":1,"run":0,"ms":0.000900,"comparisons":512,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V4","operation":"batch_build","n":1024,"equal":1,"run":0,"ms":0.013600,"comparisons":5120,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V4","operation":"batch_merge","n":1024,"equal":1,"run":0,"ms":0.000200,"comparisons":0,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+{"version":"V4","operation":"cleanup","n":1024,"equal":1,"run":0,"ms":0.000200,"comparisons":0,"resident_bytes":0,"allocation_bytes":0,"allocations":0,"peak_requested":0,"oracle":true}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_groups_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_groups_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+18/39 Testing: layerkeysort_v4_trace_timeline
+18/39 Test: layerkeysort_v4_trace_timeline
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "timeline" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_timeline" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"timeline","initial":256,"steps":2048,"run":0,"build_ms":0.033700,"operation_ms":0.214700}
+{"family":"timeline","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.248400,"p50_us":0.100001,"p95_us":0.200000,"p99_us":0.399999,"p999_us":2.999999,"max_us":5.700000,"query_ms":0.024800,"capture_ms":0.120300,"format_ms":0.064500,"serialize_ms":0.043100,"load_ms":0.004100,"restore_ms":0.020500,"cleanup_ms":0.088200,"assignments":107844,"local_arrays":2350,"index_writes":218,"splits":39,"source_repairs":7,"merges":4,"rotations":21,"noops":0,"max_assignments":68,"max_arrays":2,"max_index":7,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":2443,"allocation_bytes":780002,"frees":2280,"peak_requested":85594,"built_requested":14632,"churn_requested":60368,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":22698,"snapshot_count":20,"snapshot_row_bytes":137360,"association_capacity_bytes":137360,"wire_bytes":275240,"key_bytes":429250,"rss_start":4460544,"rss_built":4505600,"rss_churn":4763648,"rss_small":4763648,"rss_empty":4657152,"rss_retained":0,"rss_released":4657152,"rss_final":4575232,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_timeline" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_timeline" time elapsed: 00:00:00
+----------------------------------------------------------
+
+19/39 Testing: layerkeysort_v4_trace_priority
+19/39 Test: layerkeysort_v4_trace_priority
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "priority" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_priority" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"priority","initial":256,"steps":2048,"run":0,"build_ms":0.044200,"operation_ms":0.320000}
+{"family":"priority","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.364200,"p50_us":0.100001,"p95_us":0.200002,"p99_us":0.400001,"p999_us":3.800000,"max_us":5.000000,"query_ms":0.031500,"capture_ms":0.190300,"format_ms":0.095600,"serialize_ms":0.089800,"load_ms":0.006100,"restore_ms":0.023300,"cleanup_ms":0.128400,"assignments":108689,"local_arrays":2358,"index_writes":280,"splits":54,"source_repairs":0,"merges":0,"rotations":6,"noops":0,"max_assignments":65,"max_arrays":2,"max_index":8,"max_splits":1,"max_repairs":0,"comparisons":23060,"allocations":2942,"allocation_bytes":1158010,"frees":2768,"peak_requested":141386,"built_requested":14072,"churn_requested":92240,"small_requested":5360,"empty_container_requested":4384,"snapshot_peak":36170,"snapshot_count":20,"snapshot_row_bytes":208960,"association_capacity_bytes":208960,"wire_bytes":418440,"key_bytes":653000,"rss_start":4464640,"rss_built":4509696,"rss_churn":4833280,"rss_small":4800512,"rss_empty":4734976,"rss_retained":0,"rss_released":4734976,"rss_final":4644864,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_priority" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_priority" time elapsed: 00:00:00
+----------------------------------------------------------
+
+20/39 Testing: layerkeysort_v4_trace_local
+20/39 Test: layerkeysort_v4_trace_local
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "local" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_local" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"local","initial":256,"steps":2048,"run":0,"build_ms":0.028300,"operation_ms":0.198500}
+{"family":"local","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.226800,"p50_us":0.100001,"p95_us":0.200000,"p99_us":0.399999,"p999_us":1.500001,"max_us":3.100000,"query_ms":0.023500,"capture_ms":0.092800,"format_ms":0.062800,"serialize_ms":0.036800,"load_ms":0.004400,"restore_ms":0.019900,"cleanup_ms":0.091200,"assignments":112665,"local_arrays":2409,"index_writes":391,"splits":52,"source_repairs":53,"merges":18,"rotations":37,"noops":0,"max_assignments":95,"max_arrays":2,"max_index":8,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":2456,"allocation_bytes":787698,"frees":2293,"peak_requested":86186,"built_requested":14632,"churn_requested":59776,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":22698,"snapshot_count":20,"snapshot_row_bytes":137360,"association_capacity_bytes":137360,"wire_bytes":275240,"key_bytes":429250,"rss_start":4464640,"rss_built":4509696,"rss_churn":4784128,"rss_small":4648960,"rss_empty":4648960,"rss_retained":0,"rss_released":4648960,"rss_final":4575232,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_local" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_local" time elapsed: 00:00:00
+----------------------------------------------------------
+
+21/39 Testing: layerkeysort_v4_trace_churn
+21/39 Test: layerkeysort_v4_trace_churn
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "churn" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_churn" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"churn","initial":256,"steps":2048,"run":0,"build_ms":0.027800,"operation_ms":0.167800}
+{"family":"churn","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.195600,"p50_us":0.099999,"p95_us":0.100001,"p99_us":0.200000,"p999_us":1.500001,"max_us":3.100000,"query_ms":0.007000,"capture_ms":0.033600,"format_ms":0.019700,"serialize_ms":0.009900,"load_ms":0.002500,"restore_ms":0.020300,"cleanup_ms":0.014300,"assignments":100953,"local_arrays":2318,"index_writes":25,"splits":6,"source_repairs":8,"merges":1,"rotations":4,"noops":0,"max_assignments":95,"max_arrays":2,"max_index":5,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":1693,"allocation_bytes":181370,"frees":1593,"peak_requested":37292,"built_requested":14632,"churn_requested":14048,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":4178,"snapshot_count":20,"snapshot_row_bytes":40960,"association_capacity_bytes":40960,"wire_bytes":82440,"key_bytes":128000,"rss_start":4460544,"rss_built":4505600,"rss_churn":4661248,"rss_small":4661248,"rss_empty":4661248,"rss_retained":0,"rss_released":4661248,"rss_final":4558848,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_churn" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_churn" time elapsed: 00:00:00
+----------------------------------------------------------
+
+22/39 Testing: layerkeysort_v4_trace_local_drag
+22/39 Test: layerkeysort_v4_trace_local_drag
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "local_drag" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_local_drag" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"local_drag","initial":256,"steps":2048,"run":0,"build_ms":0.039100,"operation_ms":0.097800}
+{"family":"local_drag","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.136900,"p50_us":0.000000,"p95_us":0.100001,"p99_us":0.200000,"p999_us":2.900000,"max_us":6.099999,"query_ms":0.006700,"capture_ms":0.033500,"format_ms":0.019800,"serialize_ms":0.010300,"load_ms":0.002500,"restore_ms":0.022100,"cleanup_ms":0.014500,"assignments":35914,"local_arrays":2364,"index_writes":61,"splits":12,"source_repairs":12,"merges":7,"rotations":11,"noops":147,"max_assignments":159,"max_arrays":4,"max_index":5,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":675,"allocation_bytes":160346,"frees":575,"peak_requested":36700,"built_requested":14632,"churn_requested":14048,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":4178,"snapshot_count":20,"snapshot_row_bytes":40960,"association_capacity_bytes":40960,"wire_bytes":82440,"key_bytes":128000,"rss_start":4460544,"rss_built":4509696,"rss_churn":4665344,"rss_small":4665344,"rss_empty":4665344,"rss_retained":0,"rss_released":4665344,"rss_final":4562944,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_local_drag" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_local_drag" time elapsed: 00:00:00
+----------------------------------------------------------
+
+23/39 Testing: layerkeysort_v4_trace_distant_drag
+23/39 Test: layerkeysort_v4_trace_distant_drag
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "distant_drag" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_distant_drag" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"distant_drag","initial":256,"steps":2048,"run":0,"build_ms":0.030300,"operation_ms":0.199800}
+{"family":"distant_drag","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.230100,"p50_us":0.100001,"p95_us":0.200000,"p99_us":0.300000,"p999_us":1.500001,"max_us":3.100000,"query_ms":0.006500,"capture_ms":0.033900,"format_ms":0.019800,"serialize_ms":0.010300,"load_ms":0.002400,"restore_ms":0.016700,"cleanup_ms":0.014700,"assignments":187816,"local_arrays":4436,"index_writes":158,"splits":23,"source_repairs":61,"merges":18,"rotations":12,"noops":0,"max_assignments":142,"max_arrays":3,"max_index":6,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":686,"allocation_bytes":166858,"frees":586,"peak_requested":37292,"built_requested":14632,"churn_requested":14048,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":4178,"snapshot_count":20,"snapshot_row_bytes":40960,"association_capacity_bytes":40960,"wire_bytes":82440,"key_bytes":128000,"rss_start":4460544,"rss_built":4509696,"rss_churn":4665344,"rss_small":4665344,"rss_empty":4665344,"rss_retained":0,"rss_released":4665344,"rss_final":4562944,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_distant_drag" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_distant_drag" time elapsed: 00:00:00
+----------------------------------------------------------
+
+24/39 Testing: layerkeysort_v4_trace_hotspot_drag
+24/39 Test: layerkeysort_v4_trace_hotspot_drag
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "hotspot_drag" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_hotspot_drag" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"hotspot_drag","initial":256,"steps":2048,"run":0,"build_ms":0.058600,"operation_ms":0.356900}
+{"family":"hotspot_drag","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.415500,"p50_us":0.200000,"p95_us":0.300000,"p99_us":0.700000,"p999_us":2.600002,"max_us":5.900001,"query_ms":0.007000,"capture_ms":0.057800,"format_ms":0.034700,"serialize_ms":0.016900,"load_ms":0.005000,"restore_ms":0.038700,"cleanup_ms":0.014100,"assignments":174720,"local_arrays":4178,"index_writes":361,"splits":46,"source_repairs":152,"merges":41,"rotations":51,"noops":13,"max_assignments":159,"max_arrays":4,"max_index":6,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":709,"allocation_bytes":180474,"frees":609,"peak_requested":37292,"built_requested":14632,"churn_requested":14048,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":4178,"snapshot_count":20,"snapshot_row_bytes":40960,"association_capacity_bytes":40960,"wire_bytes":82440,"key_bytes":128000,"rss_start":4460544,"rss_built":4509696,"rss_churn":4665344,"rss_small":4665344,"rss_empty":4665344,"rss_retained":0,"rss_released":4665344,"rss_final":4562944,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_hotspot_drag" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_hotspot_drag" time elapsed: 00:00:00
+----------------------------------------------------------
+
+25/39 Testing: layerkeysort_v4_trace_front_back
+25/39 Test: layerkeysort_v4_trace_front_back
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "front_back" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_front_back" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"front_back","initial":256,"steps":2048,"run":0,"build_ms":0.037900,"operation_ms":0.192100}
+{"family":"front_back","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.230000,"p50_us":0.100001,"p95_us":0.200000,"p99_us":0.300000,"p999_us":2.600000,"max_us":5.400001,"query_ms":0.007800,"capture_ms":0.032700,"format_ms":0.019700,"serialize_ms":0.010000,"load_ms":0.002300,"restore_ms":0.017800,"cleanup_ms":0.014200,"assignments":180680,"local_arrays":4141,"index_writes":302,"splits":42,"source_repairs":152,"merges":36,"rotations":49,"noops":16,"max_assignments":156,"max_arrays":4,"max_index":6,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":705,"allocation_bytes":178106,"frees":605,"peak_requested":37292,"built_requested":14632,"churn_requested":14640,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":4178,"snapshot_count":20,"snapshot_row_bytes":40960,"association_capacity_bytes":40960,"wire_bytes":82440,"key_bytes":128000,"rss_start":4456448,"rss_built":4501504,"rss_churn":4653056,"rss_small":4653056,"rss_empty":4653056,"rss_retained":0,"rss_released":4653056,"rss_final":4550656,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_front_back" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_front_back" time elapsed: 00:00:00
+----------------------------------------------------------
+
+26/39 Testing: layerkeysort_v4_trace_delete_reinsert
+26/39 Test: layerkeysort_v4_trace_delete_reinsert
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "delete_reinsert" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_delete_reinsert" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"delete_reinsert","initial":256,"steps":2048,"run":0,"build_ms":0.032000,"operation_ms":0.167300}
+{"family":"delete_reinsert","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.199300,"p50_us":0.099999,"p95_us":0.100001,"p99_us":0.200000,"p999_us":2.600002,"max_us":3.899999,"query_ms":0.006900,"capture_ms":0.031900,"format_ms":0.020100,"serialize_ms":0.010000,"load_ms":0.002500,"restore_ms":0.023300,"cleanup_ms":0.014400,"assignments":100953,"local_arrays":2318,"index_writes":25,"splits":6,"source_repairs":8,"merges":1,"rotations":4,"noops":0,"max_assignments":95,"max_arrays":2,"max_index":5,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":1693,"allocation_bytes":181370,"frees":1593,"peak_requested":37292,"built_requested":14632,"churn_requested":14048,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":4178,"snapshot_count":20,"snapshot_row_bytes":40960,"association_capacity_bytes":40960,"wire_bytes":82440,"key_bytes":128000,"rss_start":4468736,"rss_built":4513792,"rss_churn":4669440,"rss_small":4669440,"rss_empty":4669440,"rss_retained":0,"rss_released":4669440,"rss_final":4567040,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_delete_reinsert" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_delete_reinsert" time elapsed: 00:00:00
+----------------------------------------------------------
+
+27/39 Testing: layerkeysort_v4_trace_equal
+27/39 Test: layerkeysort_v4_trace_equal
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "equal" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_equal" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"equal","initial":256,"steps":2048,"run":0,"build_ms":0.029900,"operation_ms":0.179500}
+{"family":"equal","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.209400,"p50_us":0.099999,"p95_us":0.100001,"p99_us":0.300000,"p999_us":2.999999,"max_us":8.200001,"query_ms":0.033100,"capture_ms":0.198800,"format_ms":0.095400,"serialize_ms":0.100800,"load_ms":0.004500,"restore_ms":0.022800,"cleanup_ms":0.129800,"assignments":112960,"local_arrays":2374,"index_writes":470,"splits":70,"source_repairs":0,"merges":0,"rotations":64,"noops":0,"max_assignments":65,"max_arrays":2,"max_index":9,"max_splits":1,"max_repairs":0,"comparisons":12089,"allocations":2958,"allocation_bytes":1167482,"frees":2784,"peak_requested":150858,"built_requested":14664,"churn_requested":101712,"small_requested":5360,"empty_container_requested":4384,"snapshot_peak":36170,"snapshot_count":20,"snapshot_row_bytes":208960,"association_capacity_bytes":208960,"wire_bytes":418440,"key_bytes":653000,"rss_start":4468736,"rss_built":4513792,"rss_churn":4894720,"rss_small":4685824,"rss_empty":4685824,"rss_retained":0,"rss_released":4685824,"rss_final":4608000,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_equal" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_equal" time elapsed: 00:00:00
+----------------------------------------------------------
+
+28/39 Testing: layerkeysort_v4_trace_retained
+28/39 Test: layerkeysort_v4_trace_retained
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "retained" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_retained" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"retained","initial":256,"steps":2048,"run":0,"build_ms":0.029500,"operation_ms":0.258300}
+{"family":"retained","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.287800,"p50_us":0.100001,"p95_us":0.200002,"p99_us":0.400001,"p999_us":2.700001,"max_us":14.600000,"query_ms":0.030200,"capture_ms":0.294300,"format_ms":0.183600,"serialize_ms":0.160800,"load_ms":0.006200,"restore_ms":0.020200,"cleanup_ms":0.128500,"assignments":107765,"local_arrays":2356,"index_writes":275,"splits":52,"source_repairs":0,"merges":0,"rotations":10,"noops":0,"max_assignments":65,"max_arrays":2,"max_index":7,"max_splits":1,"max_repairs":0,"comparisons":0,"allocations":3021,"allocation_bytes":1545994,"frees":2781,"peak_requested":286176,"built_requested":14632,"churn_requested":271840,"small_requested":186144,"empty_container_requested":185168,"snapshot_peak":36938,"snapshot_count":28,"snapshot_row_bytes":299072,"association_capacity_bytes":299072,"wire_bytes":598872,"key_bytes":934600,"rss_start":4464640,"rss_built":4509696,"rss_churn":5029888,"rss_small":4984832,"rss_empty":4915200,"rss_retained":5029888,"rss_released":4702208,"rss_final":4632576,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_retained" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_retained" time elapsed: 00:00:00
+----------------------------------------------------------
+
+29/39 Testing: layerkeysort_v4_trace_long_churn
+29/39 Test: layerkeysort_v4_trace_long_churn
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_trace_diagnostics.exe" "long_churn" "256" "2048" "100" "7" "0"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_trace_long_churn" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"phase_details":true,"family":"long_churn","initial":256,"steps":2048,"run":0,"build_ms":0.027900,"operation_ms":0.186800}
+{"family":"long_churn","initial":256,"steps":2048,"cadence":100,"seed":7,"run":0,"capacity":64,"diagnostic":1,"mutation_ms":0.214700,"p50_us":0.099999,"p95_us":0.100001,"p99_us":0.300000,"p999_us":2.400000,"max_us":2.799999,"query_ms":0.007100,"capture_ms":0.050300,"format_ms":0.029100,"serialize_ms":0.015000,"load_ms":0.005900,"restore_ms":0.022900,"cleanup_ms":0.021000,"assignments":106598,"local_arrays":2414,"index_writes":236,"splits":31,"source_repairs":79,"merges":26,"rotations":12,"noops":0,"max_assignments":95,"max_arrays":2,"max_index":6,"max_splits":1,"max_repairs":1,"comparisons":0,"allocations":1860,"allocation_bytes":366890,"frees":1720,"peak_requested":48460,"built_requested":14632,"churn_requested":14048,"small_requested":5328,"empty_container_requested":4352,"snapshot_peak":8138,"snapshot_count":20,"snapshot_row_bytes":61888,"association_capacity_bytes":61888,"wire_bytes":124296,"key_bytes":193400,"rss_start":4464640,"rss_built":4509696,"rss_churn":4685824,"rss_small":4685824,"rss_empty":4632576,"rss_retained":0,"rss_released":4632576,"rss_final":4567040,"oracle":true,"cleanup_live_bytes":0,"cleanup_live_blocks":0}
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_trace_long_churn" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_trace_long_churn" time elapsed: 00:00:00
+----------------------------------------------------------
+
+30/39 Testing: layerkeysort_v4_snapshot_smoke
+30/39 Test: layerkeysort_v4_snapshot_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_snapshot_diagnostics.exe" "smoke"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_snapshot_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+case,n,association_bytes,capture_ms,key_ms,serialize_ms,deserialize_ms,restore_ms,alloc_attempts,resident_delta_bytes,namespace_bytes,row_bytes,association_logical_bytes,association_capacity_bytes,wire_bytes,all_key_bytes
+capture,512,0,0.005900,0.008800,0.000300,0.002600,0.027200,2,4192,16,4096,0,0,4136,27136
+capture,512,16,0.006800,0.005700,0.002200,0.006500,0.021400,10,12384,16,4096,8192,8192,12328,27136
+capture,512,64,0.015500,0.005500,0.006300,0.011400,0.016500,12,36960,16,4096,32768,32768,36904,27136
+frequency,1000,0,0,0.095600,0.000000
+frequency,1000,10000,0,0.064600,0.000000
+frequency,1000,1000,1,0.076900,0.002400
+frequency,1000,100,10,0.078700,0.017800
+import,512,0.128800
+import,1024,0.282900
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_snapshot_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_snapshot_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+31/39 Testing: layerkeysort_v4_mutation_smoke
+31/39 Test: layerkeysort_v4_mutation_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_v4_mutation_diagnostics.exe" "smoke"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_v4_mutation_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+# diagnostic: counters enabled; timing includes instrumentation
+workload,N,operations,total_ms,p50_us,p99_us,max_us,comparator_calls,assignments,local_arrays,index_blocks,splits,repairs,max_assignments,max_index_blocks,allocations
+move_local,512,1000,0.045,0.000,0.100,3.700,0,21076,1002,5,0,1,97,5,0
+move_distant,512,1000,0.066,0.100,0.100,0.800,0,96032,2002,9,1,1,128,9,1
+move_random,512,1000,0.056,0.000,0.300,0.700,0,22511,522,90,8,22,158,9,8
+insert_remove_mix,512,1000,0.076,0.100,0.100,6.000,0,63500,1001,5,0,1,64,5,500
+managed_ascending,512,512,0.046,0.100,0.800,1.400,1596,24256,526,64,14,0,65,6,527
+managed_random,512,512,0.065,0.100,0.300,0.500,4082,23360,522,35,10,0,65,4,523
+managed_equal,512,512,0.038,0.100,0.200,0.300,1596,24256,526,64,14,0,65,6,527
+managed_duplicates,512,512,0.059,0.100,0.200,0.300,3959,23632,523,39,11,0,65,4,524
+managed_alternating,512,512,0.046,0.100,0.300,0.300,2909,24060,526,60,14,0,65,6,527
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_v4_mutation_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_v4_mutation_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+32/39 Testing: layerkeysort_workload_timeline_smoke
+32/39 Test: layerkeysort_workload_timeline_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_workload_diagnostics.exe" "timeline" "7" "128" "512" "128"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_workload_timeline_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"kind":"growth","operation":0,"resident":128,"depth_mean":0.992188,"depth_p95":1,"depth_p99":1,"depth_max":1,"display_mean":3.992188,"display_max":4,"lk1_mean":13.937500,"lk1_max":14,"resident_path_bytes":6128,"lk1_payload_bytes":1784,"path_digest":"71d5133c6deab100","alloc_calls":385,"requested_bytes":12328,"live_bytes":12328,"peak_live_bytes":12328,"path_object_bytes":4096,"path_step_bytes":2032,"tree_node_bytes":6144}
+{"kind":"growth","operation":128,"resident":230,"depth_mean":1.095652,"depth_p95":2,"depth_p99":3,"depth_max":3,"display_mean":4.382609,"display_max":12,"lk1_mean":14.765217,"lk1_max":30,"resident_path_bytes":11240,"lk1_payload_bytes":3396,"path_digest":"813ec5eb8b4f2d75","alloc_calls":730,"requested_bytes":23912,"live_bytes":22336,"peak_live_bytes":22336,"path_object_bytes":7360,"path_step_bytes":3880,"tree_node_bytes":11040}
+{"kind":"growth","operation":256,"resident":328,"depth_mean":1.067073,"depth_p95":2,"depth_p99":2,"depth_max":3,"display_mean":4.268293,"display_max":12,"lk1_mean":14.536585,"lk1_max":30,"resident_path_bytes":15944,"lk1_payload_bytes":4768,"path_digest":"0acc9887cd2173e7","alloc_calls":1069,"requested_bytes":34832,"live_bytes":31744,"peak_live_bytes":31840,"path_object_bytes":10496,"path_step_bytes":5448,"tree_node_bytes":15744}
+{"kind":"growth","operation":384,"resident":426,"depth_mean":1.051643,"depth_p95":1,"depth_p99":2,"depth_max":3,"display_mean":4.206573,"display_max":12,"lk1_mean":14.413146,"lk1_max":30,"resident_path_bytes":20648,"lk1_payload_bytes":6140,"path_digest":"dddf54eabf3503b1","alloc_calls":1408,"requested_bytes":45680,"live_bytes":41152,"peak_live_bytes":41248,"path_object_bytes":13632,"path_step_bytes":7016,"tree_node_bytes":20448}
+{"kind":"growth","operation":512,"resident":532,"depth_mean":1.043233,"depth_p95":1,"depth_p99":2,"depth_max":3,"display_mean":4.172932,"display_max":12,"lk1_mean":14.345865,"lk1_max":30,"resident_path_bytes":25744,"lk1_payload_bytes":7632,"path_digest":"d9ca3a482b436dd1","alloc_calls":1759,"requested_bytes":56936,"live_bytes":51336,"peak_live_bytes":51336,"path_object_bytes":17024,"path_step_bytes":8720,"tree_node_bytes":25536}
+{"kind":"latency","category":"all","count":458,"mean_ms":0.000374207,"p50_ms":0.000244141,"p95_ms":0.000488281,"p99_ms":0.003417969,"p999_ms":null,"max_ms":0.003662109}
+{"kind":"latency","category":"direct","count":458,"mean_ms":0.000374207,"p50_ms":0.000244141,"p95_ms":0.000488281,"p99_ms":0.003417969,"p999_ms":null,"max_ms":0.003662109}
+{"kind":"event","operation":1,"resident":128,"ms":0.001953125,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":25,"resident":148,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":41,"resident":158,"ms":0.003417969,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":53,"resident":168,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":59,"resident":174,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":81,"resident":188,"ms":0.002685547,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":100,"resident":205,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":1,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":121,"resident":222,"ms":0.002685547,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":1,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":128,"resident":229,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":1,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":183,"resident":270,"ms":0.002929688,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":10,"rotations":1,"comparisons":10,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":198,"resident":285,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":2,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":221,"resident":304,"ms":0.002685547,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":10,"rotations":1,"comparisons":10,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":234,"resident":311,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":10,"rotations":1,"comparisons":10,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":291,"resident":352,"ms":0.003662109,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":1,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":294,"resident":355,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":1,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":360,"resident":405,"ms":0.003662109,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":10,"rotations":1,"comparisons":10,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":363,"resident":408,"ms":0.002929688,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":10,"rotations":1,"comparisons":10,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":481,"resident":506,"ms":0.003662109,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":11,"rotations":1,"comparisons":11,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":497,"resident":520,"ms":0.003417969,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":0,"comparisons":9,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":498,"resident":521,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":11,"rotations":1,"comparisons":11,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":500,"resident":523,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":11,"rotations":1,"comparisons":11,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":501,"resident":524,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":11,"rotations":1,"comparisons":11,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":505,"resident":524,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":11,"rotations":1,"comparisons":11,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":507,"resident":526,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":0,"comparisons":9,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":508,"resident":527,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":11,"rotations":1,"comparisons":11,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"summary","workload":"timeline","seed":7,"initial":128,"operations":512,"checkpoint":128,"diagnostic":1,"insertions":458,"new_items":458,"remove_only":54,"updates":0,"final_resident":532,"trace_digest":"4790567f504f5dd1","verified":true,"relabelled_total":0,"max_region":0,"attempts":0,"attempted_nodes_sum":0,"full_nodes":0,"histogram":[458,0,0,0,0,0,0,0]}
+{"kind":"cleanup","after_destroy_live_bytes":0,"diagnostic":1}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_workload_timeline_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_workload_timeline_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+33/39 Testing: layerkeysort_workload_priority_smoke
+33/39 Test: layerkeysort_workload_priority_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_workload_diagnostics.exe" "priority" "7" "128" "512" "128"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_workload_priority_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"kind":"growth","operation":0,"resident":128,"depth_mean":2.414062,"depth_p95":5,"depth_p99":6,"depth_max":6,"display_mean":9.679688,"display_max":24,"lk1_mean":25.312500,"lk1_max":54,"resident_path_bytes":8264,"lk1_payload_bytes":3240,"path_digest":"365507651fd0f7f7","alloc_calls":421,"requested_bytes":19160,"live_bytes":14464,"peak_live_bytes":14464,"path_object_bytes":4096,"path_step_bytes":4168,"tree_node_bytes":6144}
+{"kind":"growth","operation":128,"resident":134,"depth_mean":2.440299,"depth_p95":5,"depth_p99":6,"depth_max":6,"display_mean":9.783582,"display_max":24,"lk1_mean":25.522388,"lk1_max":54,"resident_path_bytes":8608,"lk1_payload_bytes":3420,"path_digest":"231dbcffe8d1810d","alloc_calls":986,"requested_bytes":48136,"live_bytes":15096,"peak_live_bytes":18832,"path_object_bytes":4288,"path_step_bytes":4320,"tree_node_bytes":6432}
+{"kind":"growth","operation":256,"resident":138,"depth_mean":2.434783,"depth_p95":5,"depth_p99":5,"depth_max":6,"display_mean":9.760870,"display_max":24,"lk1_mean":25.478261,"lk1_max":54,"resident_path_bytes":8792,"lk1_payload_bytes":3516,"path_digest":"2332a676d6c33cd2","alloc_calls":1331,"requested_bytes":64672,"live_bytes":15472,"peak_live_bytes":18832,"path_object_bytes":4416,"path_step_bytes":4376,"tree_node_bytes":6624}
+{"kind":"growth","operation":384,"resident":153,"depth_mean":2.013072,"depth_p95":4,"depth_p99":6,"depth_max":6,"display_mean":8.052288,"display_max":24,"lk1_mean":22.104575,"lk1_max":54,"resident_path_bytes":8952,"lk1_payload_bytes":3382,"path_digest":"3e14f7a750a1b991","alloc_calls":1873,"requested_bytes":91672,"live_bytes":16352,"peak_live_bytes":20968,"path_object_bytes":4896,"path_step_bytes":4056,"tree_node_bytes":7344}
+{"kind":"growth","operation":512,"resident":160,"depth_mean":1.925000,"depth_p95":5,"depth_p99":6,"depth_max":6,"display_mean":7.718750,"display_max":24,"lk1_mean":21.400000,"lk1_max":54,"resident_path_bytes":9496,"lk1_payload_bytes":3424,"path_digest":"99ca8eaf013b4ae3","alloc_calls":2314,"requested_bytes":112736,"live_bytes":17232,"peak_live_bytes":20968,"path_object_bytes":5120,"path_step_bytes":4376,"tree_node_bytes":7680}
+{"kind":"latency","category":"all","count":373,"mean_ms":0.000818166,"p50_ms":0.000488281,"p95_ms":0.000976562,"p99_ms":0.004394531,"p999_ms":null,"max_ms":0.048828125}
+{"kind":"latency","category":"direct","count":361,"mean_ms":0.000476784,"p50_ms":0.000488281,"p95_ms":0.000732422,"p99_ms":0.000976562,"p999_ms":null,"max_ms":0.001220703}
+{"kind":"latency","category":"local","count":12,"mean_ms":0.011088053,"p50_ms":0.003662109,"p95_ms":0.048828125,"p99_ms":0.048828125,"p999_ms":null,"max_ms":0.048828125}
+{"kind":"event","operation":1,"resident":127,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":5,"resident":127,"ms":0.048828125,"category":"local","relabelled":64,"attempted_nodes_sum":120,"attempts":1,"expansions":3,"generated":124,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":3}
+{"kind":"event","operation":39,"resident":136,"ms":0.001220703,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":6,"full":0,"sample_flags":1}
+{"kind":"event","operation":74,"resident":133,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":6,"full":0,"sample_flags":1}
+{"kind":"event","operation":77,"resident":134,"ms":0.004394531,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":3}
+{"kind":"event","operation":85,"resident":136,"ms":0.003662109,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":4,"full":0,"sample_flags":3}
+{"kind":"event","operation":131,"resident":134,"ms":0.002197266,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":6,"rotations":1,"comparisons":6,"inserted_depth":1,"full":0,"sample_flags":3}
+{"kind":"event","operation":193,"resident":135,"ms":0.002929688,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":3}
+{"kind":"event","operation":233,"resident":138,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":5,"full":0,"sample_flags":1}
+{"kind":"event","operation":234,"resident":138,"ms":0.003906250,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":3}
+{"kind":"event","operation":239,"resident":137,"ms":0.003417969,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":3}
+{"kind":"event","operation":284,"resident":143,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":300,"resident":151,"ms":0.003173828,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":3,"full":0,"sample_flags":3}
+{"kind":"event","operation":311,"resident":150,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":5,"full":0,"sample_flags":1}
+{"kind":"event","operation":315,"resident":151,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":5,"full":0,"sample_flags":1}
+{"kind":"event","operation":377,"resident":151,"ms":0.037841797,"category":"local","relabelled":64,"attempted_nodes_sum":120,"attempts":1,"expansions":3,"generated":124,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":3}
+{"kind":"event","operation":404,"resident":148,"ms":0.003662109,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":3,"full":0,"sample_flags":3}
+{"kind":"event","operation":409,"resident":150,"ms":0.015625000,"category":"local","relabelled":32,"attempted_nodes_sum":56,"attempts":1,"expansions":2,"generated":59,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":3}
+{"kind":"event","operation":435,"resident":158,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":9,"rotations":1,"comparisons":9,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":438,"resident":159,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":6,"full":0,"sample_flags":1}
+{"kind":"event","operation":447,"resident":164,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":1,"comparisons":7,"inserted_depth":5,"full":0,"sample_flags":1}
+{"kind":"event","operation":458,"resident":163,"ms":0.003417969,"category":"local","relabelled":8,"attempted_nodes_sum":8,"attempts":1,"expansions":0,"generated":9,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":3}
+{"kind":"event","operation":497,"resident":160,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":6,"full":0,"sample_flags":1}
+{"kind":"event","operation":503,"resident":160,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":5,"full":0,"sample_flags":1}
+{"kind":"event","operation":506,"resident":160,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":6,"full":0,"sample_flags":1}
+{"kind":"summary","workload":"priority","seed":7,"initial":128,"operations":512,"checkpoint":128,"diagnostic":1,"insertions":373,"new_items":171,"remove_only":139,"updates":202,"final_resident":160,"trace_digest":"cf89e011d38302ef","verified":true,"relabelled_total":232,"max_region":64,"attempts":12,"attempted_nodes_sum":368,"full_nodes":0,"histogram":[361,9,1,2,0,0,0,0]}
+{"kind":"cleanup","after_destroy_live_bytes":0,"diagnostic":1}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_workload_priority_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_workload_priority_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+34/39 Testing: layerkeysort_workload_local_smoke
+34/39 Test: layerkeysort_workload_local_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_workload_diagnostics.exe" "local" "7" "128" "512" "128"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_workload_local_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"kind":"growth","operation":0,"resident":128,"depth_mean":0.992188,"depth_p95":1,"depth_p99":1,"depth_max":1,"display_mean":3.992188,"display_max":4,"lk1_mean":13.937500,"lk1_max":14,"resident_path_bytes":6128,"lk1_payload_bytes":1784,"path_digest":"71d5133c6deab100","alloc_calls":385,"requested_bytes":12328,"live_bytes":12328,"peak_live_bytes":12328,"path_object_bytes":4096,"path_step_bytes":2032,"tree_node_bytes":6144}
+{"kind":"growth","operation":128,"resident":128,"depth_mean":1.250000,"depth_p95":2,"depth_p99":3,"depth_max":3,"display_mean":5.023438,"display_max":12,"lk1_mean":16.000000,"lk1_max":30,"resident_path_bytes":6440,"lk1_payload_bytes":2048,"path_digest":"ae42539459f720f8","alloc_calls":720,"requested_bytes":24072,"live_bytes":12640,"peak_live_bytes":12888,"path_object_bytes":4096,"path_step_bytes":2344,"tree_node_bytes":6144}
+{"kind":"growth","operation":256,"resident":125,"depth_mean":1.256000,"depth_p95":2,"depth_p99":3,"depth_max":4,"display_mean":5.024000,"display_max":16,"lk1_mean":16.048000,"lk1_max":38,"resident_path_bytes":6320,"lk1_payload_bytes":2006,"path_digest":"c04aa663dd1fd46d","alloc_calls":1071,"requested_bytes":36000,"live_bytes":12376,"peak_live_bytes":12888,"path_object_bytes":4000,"path_step_bytes":2320,"tree_node_bytes":6000}
+{"kind":"growth","operation":384,"resident":121,"depth_mean":1.305785,"depth_p95":3,"depth_p99":4,"depth_max":4,"display_mean":5.247934,"display_max":16,"lk1_mean":16.446281,"lk1_max":38,"resident_path_bytes":6192,"lk1_payload_bytes":1990,"path_digest":"78adf748b9afba8f","alloc_calls":1405,"requested_bytes":47640,"live_bytes":12056,"peak_live_bytes":12888,"path_object_bytes":3872,"path_step_bytes":2320,"tree_node_bytes":5808}
+{"kind":"growth","operation":512,"resident":121,"depth_mean":1.429752,"depth_p95":3,"depth_p99":4,"depth_max":5,"display_mean":5.743802,"display_max":20,"lk1_mean":17.438017,"lk1_max":46,"resident_path_bytes":6440,"lk1_payload_bytes":2110,"path_digest":"5e79453f685aa6e6","alloc_calls":1759,"requested_bytes":60384,"live_bytes":12304,"peak_live_bytes":12888,"path_object_bytes":3872,"path_step_bytes":2568,"tree_node_bytes":5808}
+{"kind":"latency","category":"all","count":459,"mean_ms":0.000344137,"p50_ms":0.000244141,"p95_ms":0.000488281,"p99_ms":0.000732422,"p999_ms":null,"max_ms":0.001220703}
+{"kind":"latency","category":"direct","count":459,"mean_ms":0.000344137,"p50_ms":0.000244141,"p95_ms":0.000488281,"p99_ms":0.000732422,"p999_ms":null,"max_ms":0.001220703}
+{"kind":"event","operation":2,"resident":127,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":6,"resident":127,"ms":0.001220703,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":227,"resident":124,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":258,"resident":124,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":319,"resident":117,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":1,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":392,"resident":120,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":429,"resident":120,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":462,"resident":121,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":6,"rotations":0,"comparisons":6,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":468,"resident":121,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":471,"resident":121,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":6,"rotations":0,"comparisons":6,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":473,"resident":121,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":477,"resident":122,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":479,"resident":122,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":480,"resident":122,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":482,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":483,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":484,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":486,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":488,"resident":123,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":1,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":491,"resident":124,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":2,"comparisons":7,"inserted_depth":4,"full":0,"sample_flags":1}
+{"kind":"event","operation":492,"resident":124,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":497,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":2,"comparisons":7,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":500,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":503,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":507,"resident":121,"ms":0.000976562,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":1,"comparisons":7,"inserted_depth":5,"full":0,"sample_flags":1}
+{"kind":"summary","workload":"local","seed":7,"initial":128,"operations":512,"checkpoint":128,"diagnostic":1,"insertions":459,"new_items":46,"remove_only":53,"updates":413,"final_resident":121,"trace_digest":"8fd81124a0640b43","verified":true,"relabelled_total":0,"max_region":0,"attempts":0,"attempted_nodes_sum":0,"full_nodes":0,"histogram":[459,0,0,0,0,0,0,0]}
+{"kind":"cleanup","after_destroy_live_bytes":0,"diagnostic":1}
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_workload_local_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_workload_local_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+35/39 Testing: layerkeysort_workload_churn_smoke
+35/39 Test: layerkeysort_workload_churn_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_workload_diagnostics.exe" "churn" "7" "128" "512" "128"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_workload_churn_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+{"kind":"growth","operation":0,"resident":128,"depth_mean":0.992188,"depth_p95":1,"depth_p99":1,"depth_max":1,"display_mean":3.992188,"display_max":4,"lk1_mean":13.937500,"lk1_max":14,"resident_path_bytes":6128,"lk1_payload_bytes":1784,"path_digest":"71d5133c6deab100","alloc_calls":385,"requested_bytes":12328,"live_bytes":12328,"peak_live_bytes":12328,"path_object_bytes":4096,"path_step_bytes":2032,"tree_node_bytes":6144}
+{"kind":"growth","operation":128,"resident":124,"depth_mean":1.137097,"depth_p95":2,"depth_p99":2,"depth_max":3,"display_mean":4.548387,"display_max":12,"lk1_mean":15.096774,"lk1_max":30,"resident_path_bytes":6096,"lk1_payload_bytes":1872,"path_digest":"096c139f0a70d2fe","alloc_calls":661,"requested_bytes":21904,"live_bytes":12104,"peak_live_bytes":13056,"path_object_bytes":3968,"path_step_bytes":2128,"tree_node_bytes":5952}
+{"kind":"growth","operation":256,"resident":123,"depth_mean":1.227642,"depth_p95":2,"depth_p99":3,"depth_max":3,"display_mean":4.910569,"display_max":12,"lk1_mean":15.821138,"lk1_max":30,"resident_path_bytes":6160,"lk1_payload_bytes":1946,"path_digest":"d15c84051a1ce987","alloc_calls":937,"requested_bytes":31384,"live_bytes":12120,"peak_live_bytes":13056,"path_object_bytes":3936,"path_step_bytes":2224,"tree_node_bytes":5904}
+{"kind":"growth","operation":384,"resident":132,"depth_mean":1.151515,"depth_p95":2,"depth_p99":2,"depth_max":3,"display_mean":4.628788,"display_max":12,"lk1_mean":15.212121,"lk1_max":30,"resident_path_bytes":6496,"lk1_payload_bytes":2008,"path_digest":"9b289a0e928c42a4","alloc_calls":1230,"requested_bytes":41160,"live_bytes":12888,"peak_live_bytes":13144,"path_object_bytes":4224,"path_step_bytes":2272,"tree_node_bytes":6336}
+{"kind":"growth","operation":512,"resident":127,"depth_mean":1.196850,"depth_p95":2,"depth_p99":3,"depth_max":3,"display_mean":4.811024,"display_max":12,"lk1_mean":15.574803,"lk1_max":30,"resident_path_bytes":6312,"lk1_payload_bytes":1978,"path_digest":"895afb13ace60f3b","alloc_calls":1503,"requested_bytes":50448,"live_bytes":12464,"peak_live_bytes":13144,"path_object_bytes":4064,"path_step_bytes":2248,"tree_node_bytes":6096}
+{"kind":"latency","category":"all","count":373,"mean_ms":0.000327921,"p50_ms":0.000244141,"p95_ms":0.000488281,"p99_ms":0.000732422,"p999_ms":null,"max_ms":0.002197266}
+{"kind":"latency","category":"direct","count":373,"mean_ms":0.000327921,"p50_ms":0.000244141,"p95_ms":0.000488281,"p99_ms":0.000732422,"p999_ms":null,"max_ms":0.002197266}
+{"kind":"event","operation":3,"resident":127,"ms":0.002197266,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":10,"resident":126,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":16,"resident":128,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":19,"resident":129,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":26,"resident":129,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":117,"resident":125,"ms":0.000732422,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":460,"resident":131,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":464,"resident":129,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":465,"resident":129,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":466,"resident":129,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":468,"resident":128,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":2,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":470,"resident":127,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":475,"resident":125,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":477,"resident":127,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":6,"rotations":0,"comparisons":6,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":480,"resident":128,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":481,"resident":128,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":0,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":483,"resident":127,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":485,"resident":128,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":2,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":491,"resident":126,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":1,"comparisons":8,"inserted_depth":2,"full":0,"sample_flags":1}
+{"kind":"event","operation":493,"resident":127,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":0,"comparisons":8,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":497,"resident":127,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":2,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":502,"resident":123,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":1,"comparisons":7,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":504,"resident":125,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":7,"rotations":0,"comparisons":7,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"event","operation":506,"resident":125,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":6,"rotations":0,"comparisons":6,"inserted_depth":1,"full":0,"sample_flags":1}
+{"kind":"event","operation":509,"resident":126,"ms":0.000488281,"category":"direct","relabelled":0,"attempted_nodes_sum":0,"attempts":0,"expansions":0,"generated":0,"search_steps":8,"rotations":2,"comparisons":8,"inserted_depth":3,"full":0,"sample_flags":1}
+{"kind":"summary","workload":"churn","seed":7,"initial":128,"operations":512,"checkpoint":128,"diagnostic":1,"insertions":373,"new_items":138,"remove_only":139,"updates":235,"final_resident":127,"trace_digest":"eec9689cb530dc7c","verified":true,"relabelled_total":0,"max_region":0,"attempts":0,"attempted_nodes_sum":0,"full_nodes":0,"histogram":[373,0,0,0,0,0,0,0]}
+{"kind":"cleanup","after_destroy_live_bytes":0,"diagnostic":1}
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_workload_churn_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_workload_churn_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+36/39 Testing: layerkeysort_workload_output_smoke
+36/39 Test: layerkeysort_workload_output_smoke
+Command: "C:/Users/rxy71/AppData/Local/Programs/Python/Python313/python.exe" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/run_workloads.py" "--timed" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_workload.exe" "--diagnostic" "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_workload_diagnostics.exe" "--smoke"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_workload_output_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+11 families/controls paired; equality/membership oracle self-test and malformed-output rejection passed
+<end of output>
+Test time =   0.31 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_workload_output_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_workload_output_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+37/39 Testing: layerkeysort_benchmark_tree_smoke
+37/39 Test: layerkeysort_benchmark_tree_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_benchmark.exe" "tree" "equal" "200" "0" "1"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_benchmark_tree_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+tree,equal,200,0,1,0.116,0.116,0.116,0
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_benchmark_tree_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_benchmark_tree_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+38/39 Testing: layerkeysort_benchmark_mutation_smoke
+38/39 Test: layerkeysort_benchmark_mutation_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_benchmark.exe" "mut_mixed" "random" "200" "0" "1"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_benchmark_mutation_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+mut_mixed,random,200,0,1,0.055,0.055,0.055,0
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_benchmark_mutation_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_benchmark_mutation_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+39/39 Testing: layerkeysort_benchmark_sort_smoke
+39/39 Test: layerkeysort_benchmark_sort_smoke
+Command: "C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release/layerkeysort_benchmark.exe" "sort" "duplicates" "200" "0" "1"
+Directory: C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/step3-gcc-release
+"layerkeysort_benchmark_sort_smoke" start time: Oct 25 14:19 马来西亚半岛标准时间
+Output:
+----------------------------------------------------------
+sort,duplicates,200,0,1,0.015,0.015,0.015,0
+<end of output>
+Test time =   0.00 sec
+----------------------------------------------------------
+Test Passed.
+"layerkeysort_benchmark_sort_smoke" end time: Oct 25 14:19 马来西亚半岛标准时间
+"layerkeysort_benchmark_sort_smoke" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 25 14:19 马来西亚半岛标准时间

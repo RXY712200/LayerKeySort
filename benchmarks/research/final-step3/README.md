@@ -4,9 +4,23 @@ This isolated assignment starts at accepted Step 2
 `291305dca03d2d7599c88b6e6cebf2cc426e1790`, including accepted Step 1
 `19ca51bc616a1b6a2d28530bc0932dc7c4a255ce`.
 
-The initial commit supplies fresh validation infrastructure; it is not a final
-acceptance claim. A complete report and compact raw evidence follow before
-delivery. No production change, merge, release or final project PASS is implied.
+**Engineering recommendation: A — READY FOR COMPATIBLE ADOPTION.** This is
+not final project PASS or merge/release authority. Both accepted optimizations
+are retained; no corrective production change was justified. One narrow
+Windows distribution-validation configuration bug was corrected.
+
+Read [REPORT.md](REPORT.md) for the complete English acceptance report, including
+all paired numeric tables and explicit regressions. [SOURCE_REVIEW.md](SOURCE_REVIEW.md)
+records direct source analysis. [VALIDATION.md](VALIDATION.md) gives commands;
+[FILES.txt](FILES.txt) and [INTEGRATED_FILES.txt](INTEGRATED_FILES.txt) give the
+Step 3 and combined inventories. [SHA256SUMS.txt](SHA256SUMS.txt) identifies all
+integrated changed Git blobs except itself.
+
+Fresh evidence:1,548 completed native processes across Windows/Linux,36 safely
+skipped attempts,11,802 matching checkpoint fingerprints, full byte/order/restore
+oracles and actual cross-platform CI. Performance is mixed: Linux lookup,
+large-domain keys, some serialization/movement/destruction phases and wide-span
+request traffic remain explicit accepted costs. No universal speedup is claimed.
 
 A is exact original main `043872eb5560e867aa7f8c094e0e9dbf2e8a7b95`;
 B is accepted Step 1; C includes both steps. All three use the SAME existing

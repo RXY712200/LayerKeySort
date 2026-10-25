@@ -1,0 +1,8 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "python": "3.13.14",
+  "gcc": "gcc (Rev4, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "cmake": "cmake version 4.4.3\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+  "driver_commit": "9baa229194d7900f9de5107ef743b5f9baaa3bde",
+  "production_pin": "291305dca03d2d7599c88b6e6cebf2cc426e1790"
+}

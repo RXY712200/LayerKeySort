@@ -1,0 +1,133 @@
+[
+  {
+    "label": "distribution-explicit-generator",
+    "command": [
+      "python",
+      "-B",
+      "-X",
+      "utf8",
+      "tools/validate_distribution.py",
+      "--generator",
+      "MinGW Makefiles",
+      "--c-compiler",
+      "D:/msys64/ucrt64/bin/gcc.exe",
+      "--cxx-compiler",
+      "D:/msys64/ucrt64/bin/g++.exe",
+      "--make-program",
+      "D:/msys64/ucrt64/bin/mingw32-make.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-ordered_example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_ordered_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-layer_list_example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_layer_list_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-order_example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_order_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-managed_order_example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_managed_order_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-snapshot_example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_snapshot_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "example-group_snapshot_example",
+    "command": [
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-gcc-release\\layerkeysort_group_snapshot_example.exe"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-a-final-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-a",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-a-final-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-a",
+      "--output-on-failure"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-b-final-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-b",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-b-final-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-b",
+      "--output-on-failure"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-c-final-build",
+    "command": [
+      "cmake",
+      "--build",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-c",
+      "--parallel",
+      "4"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "study-c-final-tests",
+    "command": [
+      "ctest",
+      "--test-dir",
+      "C:\\Users\\rxy71\\Documents\\Codex\\2026-10-06\\new-chat-2\\step3-study-c",
+      "--output-on-failure"
+    ],
+    "returncode": 0
+  }
+]

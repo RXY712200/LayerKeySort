@@ -1,0 +1,2 @@
+pointer=8 size_t=8 record=24 block=592 snapshot=72 row=16 row_align=8
+layout/alignment/empty association/source-wire lifetime COMPLETE

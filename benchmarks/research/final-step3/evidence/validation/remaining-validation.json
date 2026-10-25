@@ -1,0 +1,24 @@
+[
+  {
+    "label": "api",
+    "command": [
+      "python",
+      "-B",
+      "-X",
+      "utf8",
+      "tools/verify_v4_api.py"
+    ],
+    "returncode": 0
+  },
+  {
+    "label": "distribution",
+    "command": [
+      "python",
+      "-B",
+      "-X",
+      "utf8",
+      "tools/validate_distribution.py"
+    ],
+    "returncode": 1
+  }
+]

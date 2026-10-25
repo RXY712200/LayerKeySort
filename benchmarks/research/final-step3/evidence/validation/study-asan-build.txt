@@ -1,0 +1,50 @@
+适用于 .NET Framework MSBuild 版本 18.10.1-1.26427.6+3cd27c13e
+
+  1>Checking Build System
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/research/history-step2/CMakeLists.txt
+  lks_alloc.c
+  oracle_probe.c
+  lks_base.c
+  path.c
+  oracle.c
+  path_text.c
+  path_order_key.c
+  正在生成代码...
+  slot_codec.c
+  path_compare.c
+  order.c
+  managed_order.c
+  snapshot.c
+  snapshot_key.c
+  snapshot_wire.c
+  snapshot_restore.c
+  order_bulk.c
+  immutable_group.c
+  sort.c
+  正在生成代码...
+  oracle_probe.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\history-harness\RelWithDebInfo\oracle_probe.exe
+  layerkeysort.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\history-harness\full\RelWithDebInfo\layerkeysort.lib
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/research/history-step2/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/research/final-step3/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/research/history-step2/CMakeLists.txt
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/research/history-step2/CMakeLists.txt
+  history.c
+  layout.c
+  study.c
+  long_churn.c
+LINK : warning LNK4075: 忽略“/INCREMENTAL”(由于“/INFERASANLIBS”规范) [C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\full_layout.vcxproj]
+  oracle.c
+  history_probe.c
+  probe.c
+  oracle.c
+  正在生成代码...
+  probe.c
+  正在生成代码...
+  probe.c
+  full_layout.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\RelWithDebInfo\full_layout.exe
+  正在生成代码...
+  full_long.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\history-harness\RelWithDebInfo\full_long.exe
+  full_scale.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\history-harness\RelWithDebInfo\full_scale.exe
+  full_history.vcxproj -> C:\Users\rxy71\Documents\Codex\2026-10-06\new-chat-2\step3-study-asan\history-harness\RelWithDebInfo\full_history.exe
+  Building Custom Rule C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/full-final-step3/benchmarks/research/final-step3/CMakeLists.txt
