@@ -17,9 +17,9 @@ LksStatus lks_snapshot_serialize(const LksSnapshot *s, void *buffer, size_t size
     snap_be_write(p+12, s->namespace_size, 4); snap_be_write(p+16, s->count, 8);
     p += 24; memcpy(p, s->namespace_data, s->namespace_size); p += s->namespace_size;
     for (i = 0; i < s->count; ++i) {
-        size_t n = s->rows[i].size;
+        size_t n = lks_snapshot_row_size(s, i);
         snap_be_write(p, n, 8); p += 8;
-        if (n) memcpy(p, s->associations+s->rows[i].offset, n);
+        if (n) memcpy(p, s->associations+lks_snapshot_row_offset(s, i), n);
         p += n;
     }
     return LKS_STATUS_OK;
@@ -57,7 +57,7 @@ LksStatus lks_snapshot_deserialize(const void *buffer, size_t size, LksSnapshot 
     at = 24+domain; total = 0;
     for (i = 0; i < count; ++i) {
         size_t n = (size_t)snap_be_read(p+at, 8); at += 8;
-        s->rows[i].offset = total; s->rows[i].size = n;
+        s->rows[i].end = total+n;
         if (n) memcpy(s->associations+total, p+at, n);
         total += n; at += n;
     }

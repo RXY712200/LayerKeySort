@@ -14,9 +14,11 @@ LksStatus lks_snapshot_restore_order(const LksSnapshot *s,
         if (!items) return LKS_STATUS_OUT_OF_MEMORY;
     }
     for (i = 0; i < s->count; ++i) {
-        const void *data = s->rows[i].size ? s->associations+s->rows[i].offset : NULL;
+        size_t offset = lks_snapshot_row_offset(s, i);
+        size_t size = lks_snapshot_row_size(s, i);
+        const void *data = size ? s->associations+offset : NULL;
         items[i] = NULL;
-        status = resolve(data, s->rows[i].size, (uint64_t)i, context, &items[i]);
+        status = resolve(data, size, (uint64_t)i, context, &items[i]);
         if (status != LKS_STATUS_OK) goto done;
         if (!items[i]) { status = LKS_STATUS_INVALID_ARGUMENT; goto done; }
     }

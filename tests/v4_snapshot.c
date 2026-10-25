@@ -339,10 +339,68 @@ static void large_and_edges(void)
     }
     zero_live();
 }
+typedef struct CompactContext { size_t calls, fail; unsigned char bytes[131]; } CompactContext;
+static LksStatus compact_associate(void *item,uint64_t ordinal,void *context,
+    const void **data,size_t *size)
+{
+    CompactContext *c=context;size_t i,id=*(size_t *)item;
+    CHECK(ordinal==c->calls++ && id==(size_t)ordinal);
+    if(id==c->fail)return LKS_STATUS_NOT_FOUND;
+    *size=(id*17)%131;
+    for(i=0;i<*size;++i)c->bytes[i]=(unsigned char)(id+i);
+    *data=*size?c->bytes:NULL;return LKS_STATUS_OK;
+}
+/* Reused callback storage, empty/interleaved spans, exact retained capacity,
+ * and failure at the final compaction allocation are meaningful regressions
+ * for the new representation, independent of its physical pointer layout. */
+static void compact_history(void)
+{
+    size_t items[257],i,j,point,live,total=0,failed_calls=0;LksOrder *o=build(257,items);
+    CompactContext c={0,SIZE_MAX,{0}};LksSnapshotOptions opt={domain,sizeof(domain),compact_associate,&c};
+    LksSnapshot *old=NULL,*s=NULL,*loaded=NULL;unsigned char *wire;size_t wire_size;
+    CHECK(lks_order_snapshot_capture(o,&options,&old)==LKS_STATUS_OK);
+    for(point=1;;++point){
+        LksStatus status;c.calls=0;live=lks_alloc_stats_get().live_bytes;
+        lks_alloc_test_fail_on_attempt(point);status=lks_order_snapshot_capture(o,&opt,&s);lks_alloc_test_disable_failure();
+        CHECK(lks_order_snapshot_is_current(o,old)&&lks_order_size(o)==257);
+        if(status==LKS_STATUS_OK)break;
+        CHECK(status==LKS_STATUS_OUT_OF_MEMORY&&!s&&lks_alloc_stats_get().live_bytes==live);
+        failed_calls=c.calls;
+    }
+    CHECK(failed_calls==257 && c.calls==257); /* Last OOM is after callbacks. */
+    for(i=0;i<257;++i){
+        const void *data;size_t n;CHECK(lks_snapshot_association(s,i,&data,&n)==LKS_STATUS_OK);
+        CHECK(n==(i*17)%131);total+=n;
+        CHECK(n||!data);for(j=0;j<n;++j)CHECK(((const unsigned char *)data)[j]==(unsigned char)(i+j));
+    }
+    CHECK(s->association_size==total&&s->association_capacity==total);
+    wire_size=lks_snapshot_serialized_size(s);wire=malloc(wire_size);CHECK(wire);
+    lks_alloc_test_fail_on_attempt(1);
+    CHECK(lks_snapshot_serialize(s,wire,wire_size)==LKS_STATUS_OK&&!lks_alloc_test_get_attempt_count());
+    lks_alloc_test_disable_failure();
+    for(i=1;;++i){LksStatus status;live=lks_alloc_stats_get().live_bytes;
+        lks_alloc_test_fail_on_attempt(i);status=lks_snapshot_deserialize(wire,wire_size,&loaded);lks_alloc_test_disable_failure();
+        if(status==LKS_STATUS_OK)break;
+        CHECK(status==LKS_STATUS_OUT_OF_MEMORY&&!loaded&&lks_alloc_stats_get().live_bytes==live);
+    }
+    CHECK(loaded->association_size==loaded->association_capacity);
+    lks_snapshot_destroy(loaded);
+    for(i=0;i<3;++i){c.fail=i==0?0:i==1?128:256;c.calls=0;live=lks_alloc_stats_get().live_bytes;
+        CHECK(lks_order_snapshot_capture(o,&opt,&loaded)==LKS_STATUS_NOT_FOUND&&!loaded);
+        CHECK(c.calls==c.fail+1&&lks_alloc_stats_get().live_bytes==live&&lks_order_snapshot_is_current(o,old));
+    }
+    lks_snapshot_destroy(old);lks_order_destroy(o);
+    for(i=0;i<257;++i){const void *data;size_t n;
+        CHECK(lks_snapshot_association(s,i,&data,&n)==LKS_STATUS_OK&&n==(i*17)%131);
+        for(j=0;j<n;++j)CHECK(((const unsigned char *)data)[j]==(unsigned char)(i+j));
+    }
+    lks_snapshot_destroy(s);free(wire);zero_live();
+    printf("compact history: %zu capture OOM points including final trim; immediate copy/callback failure/lifetime PASS\n",point-1);
+}
 int main(void)
 {
     static const size_t counts[]={0,1,63,64,65,127,128,129,191,192,193,1024}; size_t i;
-    keys(); wire(); callbacks_lifetime();
+    keys(); wire(); callbacks_lifetime(); compact_history();
     for(i=0;i<sizeof(counts)/sizeof(*counts);++i) capture_restore(counts[i]);
     migration(); large_and_edges(); puts("Preview.3 snapshot keys/wire/torture/lifetime/bulk/OOM PASS"); return 0;
 }

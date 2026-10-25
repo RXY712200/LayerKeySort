@@ -1,0 +1,99 @@
+name: Full history Step 2 research
+
+on:
+  push:
+    branches: [optimization/full-history-step2]
+    paths:
+      - src/lks_snapshot_internal.h
+      - src/snapshot*.c
+      - tests/v4_snapshot.c
+      - benchmarks/research/history-step2/*.c
+      - benchmarks/research/history-step2/*.h
+      - benchmarks/research/history-step2/*.py
+      - benchmarks/research/history-step2/CMakeLists.txt
+      - .github/workflows/full-history-step2.yml
+  workflow_dispatch:
+
+# An isolated research runner is used when the owner's PC cannot admit the
+# retained-history matrix. This job never writes refs, releases, or issues.
+permissions:
+  contents: read
+
+jobs:
+  matched-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 043872eb5560e867aa7f8c094e0e9dbf2e8a7b95
+          path: baseline-a
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 19ca51bc616a1b6a2d28530bc0932dc7c4a255ce
+          path: baseline-b
+          persist-credentials: false
+      - name: Record environment and exact sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          { uname -a; lscpu; free -b; gcc --version; cmake --version; python3 --version; } > out/environment.txt
+          python3 - <<'PY'
+          import hashlib, json, subprocess
+          from pathlib import Path
+          data = {}
+          for label, folder in [('a','baseline-a'),('b','baseline-b'),('c','candidate')]:
+              root = Path(folder)
+              files = list((root/'src').glob('*'))+[root/'include/layerkeysort.h',root/'cmake/ProductionSources.cmake']
+              data[label] = dict(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
+                                 files={p.relative_to(root).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file()})
+          driver = Path('candidate/benchmarks/research/history-step2')
+          data['driver'] = {p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in driver.iterdir() if p.suffix in ('.c','.h','.py','.txt')}
+          Path('out/source-manifest.json').write_text(json.dumps(data,indent=2))
+          PY
+      - name: Build and self-test all three matched variants
+        shell: bash
+        run: |
+          set -euo pipefail
+          for variant in a b c; do
+            source="baseline-$variant"; if [ "$variant" = c ]; then source=candidate; fi
+            cmake -S candidate/benchmarks/research/history-step2 -B "out/build-$variant" -DFULL_ROOT="$GITHUB_WORKSPACE/$source" -DCMAKE_BUILD_TYPE=Release "-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON > "out/configure-$variant.txt" 2>&1
+            cmake --build "out/build-$variant" --parallel 4 > "out/build-$variant.txt" 2>&1
+            ctest --test-dir "out/build-$variant" --output-on-failure > "out/selftest-$variant.txt" 2>&1
+            cp "out/build-$variant/compile_commands.json" "out/compile-commands-$variant.json"
+          done
+      - name: Sequential budgeted measurements
+        shell: bash
+        run: |
+          set -euo pipefail
+          driver=candidate/benchmarks/research/history-step2/collect.py
+          python3 "$driver" out/build-a out/build-b out/build-c out/capture-history --suite history | tee out/collect-history.log
+          python3 "$driver" out/build-a out/build-b out/build-c out/capture-guard --suite guard | tee out/collect-guard.log
+          python3 "$driver" out/build-a out/build-b out/build-c out/capture-long --suite long --scales 100000,1000000 | tee out/collect-long.log
+          python3 "$driver" out/build-a out/build-b out/build-c out/capture-shrink --suite shrink --scales 1000000 | tee out/collect-shrink.log
+      - name: Verify oracles and calculate inclusive summaries
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          for suite in history guard long shrink; do
+            if [ -f "out/capture-$suite/runs.jsonl" ]; then
+              python3 candidate/benchmarks/research/history-step2/analyze.py "out/capture-$suite" "out/analysis-$suite"
+            fi
+          done
+      - name: Package raw research records
+        if: always()
+        run: python3 candidate/benchmarks/research/history-step2/pack.py out
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-history-step2-${{ github.sha }}
+          path: out/delivery/
+          if-no-files-found: error
+          retention-days: 90
