@@ -1,5 +1,7 @@
 # V4 Stable validation
 
+**Version status:** the current `main` source is Full **4.1.0** ([merged commit](https://github.com/RXY712200/LayerKeySort/commit/7fef6396cba4f5f8d19516b9ae2af132ca3cd529)); the latest *published* Full Stable is still [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0), pending a verified 4.1.0 tag/Release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
+
 V4.0.0 Stable was promoted only after Preview.5 freeze and independently reviewed RC.1.
 
 The Stable commit preserves the frozen production implementation and compatibility
@@ -52,7 +54,10 @@ RC extended campaigns include:
 - marker lifetime stress,
 - focused Preview.4 counter replay.
 
-Preview.4 remains the primary performance-convergence evidence.
+Preview.4 documents historical V4 convergence. The later three-step 4.1.0
+integrated [A/B/C research](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)
+records 1,548 completed native processes, 36 safe skips and 11,802 recorded
+exact-order fingerprints; benefits and regressions are both retained.
 
 See [RC record](V4_RC1.md) and [Stable record](V4_STABLE.md).
 
@@ -68,10 +73,10 @@ Passing the current matrix does not establish:
 - distributed/CRDT correctness,
 - a whole-library formal complexity theorem.
 
-The largest current evidence gap is real-user/editor workload behavior.
-
-Future validation should prioritize implementation-independent real operation traces over
-indefinitely multiplying synthetic benchmark variants.
+Remaining gaps include application-specific latency budgets, arbitrary-duration
+allocator behavior, and larger sanitizer/high-retention scenarios. Revisit
+validation for concrete engineering questions. Real traces can help, but
+external adoption is not required to continue internal study.
 
 Current roadmap:
 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).

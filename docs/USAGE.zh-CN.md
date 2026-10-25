@@ -1,5 +1,7 @@
 # LayerKeySort V4 使用指南
 
+**版本状态：** `main` 当前 Full 源码为 **4.1.0**（[合并提交](https://github.com/RXY712200/LayerKeySort/commit/7fef6396cba4f5f8d19516b9ae2af132ca3cd529)）；最新**已公开发布**的 Stable 仍为 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)，4.1.0 的新 Tag 和 Release 尚未发布。公开 API 和持久化格式仍兼容，详见 [4.1.0 说明](V4_1_0.md)。
+
 只包含 `<layerkeysort.h>` 即可。
 
 LayerKeySort 面向的是**长期存在并持续变化顺序的集合**，不是一次性排序。
@@ -82,8 +84,10 @@ V4 避免 live Path 增长和全范围 live-coordinate relabel，但仍存在：
 
 不承诺所有操作的统一硬延迟上界。
 
-下一阶段最重要的证据是**真实编辑器集成和真实 workload traces**，
-而不是为了版本号立即开始 V5。
+4.1.0 已完成包含 10 万至千万级负载的内部研究，既记录了内存收益，
+也公开记录特定负载下的耗时回退。未来以明确的正确性、性能、内存和兼容性
+问题驱动研究；真实编辑器数据有价值，但不是继续研发的前提。
+也不为了版本号仓促启动 V5。
 
 当前 roadmap：
 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。

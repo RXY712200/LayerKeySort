@@ -2,8 +2,10 @@
 
 V4.0.0 completes the fixed V4 Preview.1–5 → RC.1 → Stable development cycle.
 
-[Stable record](V4_STABLE.md), [RC record](V4_RC1.md) and
-[freeze](V4_FREEZE.md) preserve the release evidence and compatibility decisions.
+Full 4.1.0 internal storage optimizations are merged into `main`; the published
+Stable stays at v4.0.0 until the separate 4.1.0 release is verified.
+See [4.1.0 record](V4_1_0.md), [historical Stable record](V4_STABLE.md),
+[RC record](V4_RC1.md) and [freeze](V4_FREEZE.md).
 
 The active post-v4 roadmap is
 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
@@ -65,8 +67,9 @@ Historical files such as:
 
 must preserve what was true at that time.
 
-Current-facing files such as README, API, Usage, Architecture, Compatibility,
-Integration, Validation and this Development guide must describe current Stable truth.
+Current-facing README, API, Usage, Architecture, Compatibility, Integration,
+Validation and Development documents must distinguish the merged source version
+from the latest *published* Stable rather than advertising an unavailable release.
 
 Rule:
 
@@ -74,11 +77,12 @@ Rule:
 
 ## Evidence priority after V4
 
-Preview.4 remains the primary synthetic performance-convergence evidence.
-
-The next high-value evidence is real application integration and implementation-independent
-real workload traces. Do not create a new research cycle or major version merely because
-more tuning is possible.
+Preview.4 is historical V4 development evidence. The [Full 4.1.0 record](V4_1_0.md)
+and [final A/B/C research](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)
+are the newer internally validated 100k–10m evidence, including regressions.
+The fixed three-step optimization cycle is closed. Future internal research may
+address real costs without waiting for external adoption; a new major version
+still requires evidence of an incompatible need.
 
 A future V5/V6 should exist only when real correctness, compatibility, user or workload
 evidence justifies a major break.

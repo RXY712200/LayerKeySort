@@ -1,6 +1,9 @@
-# LayerKeySort V4.0.0 Stable 集成指南
+# LayerKeySort Full 4.x 集成指南
 
-当前推荐 Stable 为 **v4.0.0**。
+当前 `main` 的 Full 源码已经采用 **4.1.0**，但最新**公开发布**的 Stable
+仍是 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)。
+新 Release 发布前，正式项目可固定在 v4.0.0，或自行明确固定至已合并的
+4.1.0 源码提交，不能把尚未发布的 4.1.0 说成已经有发行附件。
 
 实现使用 C17；C++17 应用可以通过 C API 链接。已验证 Windows MSVC x64/Win32、
 Linux GCC/Clang、macOS AppleClang。CMake 最低版本 3.21。
@@ -52,7 +55,8 @@ Stable Release 提供：
 
 ## 兼容性
 
-V4.0.0 的 4.x source contract、LS1 和 LKS4SNP1 已冻结。
+v4.0.0 冻结的 4.x 源码契约、LS1 和 LKS4SNP1 在 4.1.0 中仍然兼容。
+4.1.0 改进 Full 私有内存布局，不能理解成所有负载必然加速。
 
 当前项目发布的是 static library，不承诺跨 MSVC/GCC/Clang、架构或 CRT 的 universal binary ABI。
 推荐按目标工具链重新构建。
@@ -65,4 +69,5 @@ V3.1.0 仍保留给必须继续使用 Path/Tree 契约的应用。
 - [兼容性](COMPATIBILITY.md)
 - [API](API.md)
 - [V3 → V4 迁移](MIGRATION_V3_V4.md)
-- [V4 Stable 记录](V4_STABLE.md)
+- [4.1.0 更新记录](V4_1_0.md)
+- [v4.0.0 Stable 历史记录](V4_STABLE.md)

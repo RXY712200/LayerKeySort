@@ -1,5 +1,7 @@
 # LayerKeySort V4 usage
 
+**Version status:** the current `main` source is Full **4.1.0** ([merged commit](https://github.com/RXY712200/LayerKeySort/commit/7fef6396cba4f5f8d19516b9ae2af132ca3cd529)); the latest *published* Full Stable is still [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0), pending a verified 4.1.0 tag/Release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
+
 Include only `<layerkeysort.h>`.
 
 Start with [basic.c](../examples/basic.c), then
@@ -104,8 +106,10 @@ No universal hard latency or universal speedup is promised.
 
 ## Next evidence priority
 
-The synthetic/application-shaped benchmark matrix is extensive. The next valuable
-evidence is real editor integration and implementation-independent real workload traces.
+The Full 4.1.0 research cycle includes independently reviewed 100k–10m
+workloads, storage gains and measured latency regressions. Future internal
+experiments should address specific engineering questions; real application
+traces are valuable but are not prerequisites to continued development.
 
 Current roadmap: [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 

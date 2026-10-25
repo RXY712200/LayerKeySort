@@ -1,13 +1,19 @@
 # Benchmark and performance evidence
 
-> Current release: V4.0.0 Stable; [Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
+> `main` has Full 4.1.0 source; the latest *published* Stable is [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0). See [4.1.0 evidence](V4_1_0.md), [historical Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
 > Historical result files keep the names and terminology that were correct when captured.
 > Stable promotion performs no new algorithm tuning.
 
 ## Current V4 evidence
 
-[Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) is the primary
-V4 performance-convergence record.
+[Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) is
+historical V4-convergence evidence. The latest independently accepted three-step
+Full 4.1.0 research covers 100k–10m workloads, with raw runs preserved on the
+[final research branch](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md).
+At 1m/16 retained histories, requested peak fell 513.594 to 355.751 MB; at
+admitted Linux 10m/2 histories, 1,822.185 to 1,317.500 MB. These are Full
+requested bytes, not process RSS. Linux 3m random lookup measured ~10.2% slower
+than original 4.0.0; other workloads also regress. No universal speedup.
 
 The important architectural observations are:
 
@@ -31,16 +37,16 @@ Stable 4.0.0 did not repeat tuning; focused replay preserved the frozen structur
 Current evidence is extensive but mostly deterministic synthetic/application-shaped workload
 evidence.
 
-The next important benchmark input should come from real editor integrations and
-implementation-independent semantic traces. A real repeated-drag/undo/bulk-edit/export
-trace is more valuable for future architecture decisions than adding synthetic workloads
-without a concrete user question.
+Future measurements should answer concrete correctness, performance, allocator,
+portability or integration questions. Real editor traces may help, but external
+adoption is not a prerequisite; the bounded three-step research cycle is closed.
 
 Track that work in [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 
 ## Historical V3 performance evidence
 
-Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). V4.0.0 is current Stable. Earlier milestone guides are historical records; Preview.5 froze the API/wire contracts, preserved through RC.1 and Stable.
+Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). v4.0.0 is the latest *published* Stable, while 4.1.0 is merged in `main`.
+Earlier milestone guides are historical records; Preview.5 froze the API/wire contracts, preserved through RC.1 and Stable.
 
 The local V4 Preview.1 sanity screen is described in [V4 Preview.1](V4_PREVIEW1.md).
 The captured V3 measurements below remain historical evidence and are unchanged;

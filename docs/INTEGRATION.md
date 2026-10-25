@@ -1,5 +1,7 @@
 # V4 integration
 
+**Version status:** the current `main` source is Full **4.1.0** ([merged commit](https://github.com/RXY712200/LayerKeySort/commit/7fef6396cba4f5f8d19516b9ae2af132ca3cd529)); the latest *published* Full Stable is still [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0), pending a verified 4.1.0 tag/Release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
+
 Tested: MSVC Windows x64/x86, Linux GCC/Clang, macOS AppleClang; C17 implementation,
 C++17 consumer, eight-bit bytes. CMake >=3.21.
 
@@ -25,13 +27,17 @@ target_link_libraries(app PRIVATE LayerKeySort::layerkeysort)
 
 16 production modules in cmake/ProductionSources.cmake; four legacy live modules
 regression-only. Rebuild static package for compiler/architecture/CRT settings.
-Numeric CMake version 4.0.0 uses SameMajorVersion source rebuild compatibility;
-header identifies Stable 4.0.0. No shared ABI shipped.
+Current `main` CMake and public header report version **4.1.0**. The package
+uses `SameMajorVersion` for rebuild-from-source compatibility; no shared ABI
+is shipped. Pin the current published v4.0.0 tag for a released archive until
+the verified v4.1.0 Release exists, or explicitly pin the 4.1.0 main commit.
 
 ZIP contains layerkeysort.h, layerkeysort.c, example.c, LICENSE and README.txt.
 Compile implementation as C17, link C/C++ application. No Python/private header
 requirement for installed/amalgamated consumers; Python only development tools.
 [Freeze](V4_FREEZE.md) defines exact compatibility and package gates.
 
-V4.0.0 Stable uses the unchanged Preview.5 frozen declarations and formats; see
-[Stable record](V4_STABLE.md). V3.1.0 remains available for legacy Path/Tree applications.
+Full 4.1.0 retains Preview.5's frozen public declarations and LS1/LKS4SNP1
+formats. See [4.1.0 record](V4_1_0.md) and the historical
+[v4.0.0 Stable record](V4_STABLE.md). V3.1.0 remains available for applications
+using legacy Path/Tree contracts.
