@@ -1,4 +1,4 @@
-# LayerKeySort Full — v4.0.0 Stable
+# LayerKeySort Full — v4.1.0 Stable
 
 [← LayerKeySort product family](../README.md) | English | [简体中文](FULL.zh-CN.md)
 
@@ -9,10 +9,11 @@ sortable immutable snapshot keys.
 
 **Live order: contextual handles. Historical/persistent order: immutable snapshot keys.**
 
-**v4.0.0 is the current recommended Stable release.**
+**v4.1.0 is the current recommended Stable release.**
+[Full v4.1.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) includes compatible Live Order and Snapshot memory-layout optimizations.
 [V4_FREEZE](V4_FREEZE.md) freezes the V4.0 API, LS1 and LKS4SNP1 contracts.
 V4 completes the fixed Preview.1–5 / RC.1 development cycle.
-[Stable release record](V4_STABLE.md), [RC validation record](V4_RC1.md).
+[v4.1.0 update record](V4_1_0.md), [historical v4.0.0 Stable record](V4_STABLE.md), [RC validation record](V4_RC1.md).
 V3.1.0 remains a historical Stable release for applications requiring Path/Tree contracts;
 V4 is a major source break, not a drop-in upgrade.
 
@@ -95,10 +96,8 @@ exports/retained history can dominate time/memory. Mutable sources require calle
 serialization; items/contexts stay alive, ordering semantics stay consistent.
 Dangling handles cannot safely be tested after removal.
 
-[Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) remains the primary
-convergence record; [Stable record](V4_STABLE.md) classifies costs/future debt.
-The next evidence priority is real editor integration and implementation-independent
-real workload traces, not a new major version for its own sake.
+The [v4.1.0 update record](V4_1_0.md) documents later internal 100k–10m workload studies, accepted storage optimizations and workload-specific timing regressions. Earlier [Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) and [v4.0.0 Stable record](V4_STABLE.md) remain available as history.
+No universal speedup is claimed. External adoption is not a prerequisite for future internal research.
 
 ## Documentation
 

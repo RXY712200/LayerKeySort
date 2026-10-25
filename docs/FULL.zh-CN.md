@@ -1,4 +1,4 @@
-# LayerKeySort Full — v4.0.0 Stable
+# LayerKeySort Full — v4.1.0 Stable
 
 [← LayerKeySort 产品家族首页](../README.zh-CN.md) | [English](FULL.md) | 简体中文
 
@@ -9,7 +9,7 @@ LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把�
 
 **实时顺序使用稳定的容器内句柄；历史/持久化顺序使用不可变快照和 LS1 键。**
 
-当前推荐 Stable 为 **v4.0.0**。V4 的 Preview.1–5 → RC.1 → Stable 开发周期已经完成。
+当前推荐 Stable 为 **v4.1.0**。可在 [Full v4.1.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 下载。本次属于兼容性存储优化；历史的 Preview.1–5 → RC.1 → v4.0.0 Stable 开发记录仍保留。
 V3.1.0 仍作为历史 Stable 保留给依赖 Path/Tree 契约的应用；V4 是源码级大版本变化，
 不是可以直接替换头文件的兼容升级。
 
@@ -105,9 +105,7 @@ V4 不再为 live resident 维护 Path/LK1，因此避免了 V3 的全范围 liv
 Mutable source 仍由调用方负责串行化；不承诺所有操作的统一硬延迟上界，
 也不承诺 universal binary ABI、CRDT、持久化 live handle 或数据库职责。
 
-主要性能收敛证据见
-[Preview.4 evidence](../benchmarks/results/v4-preview4/README.md)；
-Stable 结论见 [V4_STABLE](V4_STABLE.md)。
+v4.1.0 的内存优化、百万/千万级测试及部分耗时回退见 [v4.1.0 更新记录](V4_1_0.md)。并不保证所有负载都更快。早期的 [Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) 和 [v4.0.0 Stable 历史记录](V4_STABLE.md) 仍可追溯。
 
 ## 长期方向
 
@@ -118,8 +116,7 @@ LayerKeySort 的长期定位是 **dynamic ordering library**，而不是传统 s
 2. Immutable Historical Representation；
 3. Immutable Batch Utilities。
 
-短期内不应为了版本号立刻开始 V5。下一阶段最重要的是进入真实编辑器类应用，
-收集 implementation-independent 的真实 workload traces。
+不为增加版本号而仓促启动 V5，也不设置必须尽快推广的时间表。当前优先长期内部工程研究，有明确证据时可以主动优化；外部真实应用不是研发的前置条件。
 
 Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 的 API 契约；Embedded 等其他产品线仍只是未来设想，不代表已经实现。
 详见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
@@ -131,7 +128,8 @@ Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 �
 - [兼容性](COMPATIBILITY.md)
 - [验证](VALIDATION.md)
 - [开发维护](DEVELOPMENT.md)
-- [V4 Stable 记录](V4_STABLE.md)
+- [v4.1.0 更新记录](V4_1_0.md)
+- [v4.0.0 Stable 历史记录](V4_STABLE.md)
 - [Changelog](../CHANGELOG.md)
 
 License: [MIT](../LICENSE)。
