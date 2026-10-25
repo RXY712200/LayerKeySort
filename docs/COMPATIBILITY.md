@@ -2,9 +2,8 @@
 
 [V4 freeze](V4_FREEZE.md) defines the 4.x source/layout and persistent-format contract.
 V4.0.0 Stable preserves the Preview.5 freeze after independently reviewed RC.1.
-Full 4.1.0 is merged into `main` as a compatible minor storage optimization,
-while the latest *published* Full Stable remains v4.0.0 until a new verified
-Tag/Release exists. It preserves the 4.x frozen API, LS1/LKS4SNP1 bytes and
+[Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable and a compatible minor storage optimization.
+It preserves the 4.x frozen API, LS1/LKS4SNP1 bytes and
 strict V3 LK1 migration.
 
 ## Source compatibility

@@ -1,6 +1,6 @@
 # Benchmark and performance evidence
 
-> `main` has Full 4.1.0 source; the latest *published* Stable is [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0). See [4.1.0 evidence](V4_1_0.md), [historical Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
+> [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable. See [4.1.0 evidence](V4_1_0.md), [historical Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
 > Historical result files keep the names and terminology that were correct when captured.
 > Stable promotion performs no new algorithm tuning.
 
@@ -45,7 +45,7 @@ Track that work in [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3
 
 ## Historical V3 performance evidence
 
-Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). v4.0.0 is the latest *published* Stable, while 4.1.0 is merged in `main`.
+Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Full v4.1.0 is the current published Stable; the Preview and v4.0.0 measurements remain historical.
 Earlier milestone guides are historical records; Preview.5 froze the API/wire contracts, preserved through RC.1 and Stable.
 
 The local V4 Preview.1 sanity screen is described in [V4 Preview.1](V4_PREVIEW1.md).

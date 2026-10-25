@@ -4,7 +4,7 @@ LayerKeySort V4 separates two problems that earlier versions coupled together:
 
 > **live position is contextual; historical/exported position is immutable.**
 
-The current 4.x model, retained in Full 4.1.0 source, is intentionally narrow. LayerKeySort manages order; the
+The current 4.x model, retained in Full 4.1.0 Stable, is intentionally narrow. LayerKeySort manages order; the
 application owns business identity, item payloads, storage and higher-level domain logic.
 
 ## 1. Mutable live order
@@ -123,5 +123,5 @@ Current post-v4 roadmap and active technical debt are tracked in
 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 
 [Freeze](V4_FREEZE.md) defines the V4.0 compatibility contract.
-[4.1.0 record](V4_1_0.md) describes newer merged-source optimizations;
+[4.1.0 record](V4_1_0.md) describes the compatible released optimizations;
 [v4.0.0 Stable record](V4_STABLE.md) remains historical release evidence.
