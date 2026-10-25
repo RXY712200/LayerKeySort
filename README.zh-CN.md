@@ -10,7 +10,8 @@ LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实�
 
 | | **[Full](docs/FULL.zh-CN.md)** | **[Mini](mini/README.zh-CN.md)** |
 | --- | --- | --- |
-| 当前 Stable | **[v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
+| 最新**已发布** Stable | **[v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
+| 当前 `main` 源码 | **4.1.0**（[更新内容](docs/V4_1_0.md)，尚未发布 Release） | **1.0.0**（未改动） |
 | 主要定位 | 更完整的顺序管理及历史工作流 | 轻量本地可变序列 |
 | 实时顺序管理 | 相对插入/移动、稳定实例句柄、可选比较器管理 | 相对插入/移动、稳定 occurrence 句柄 |
 | 任意两实例实时顺序比较 | 按 Full 契约支持 | 最坏 O(n) |
@@ -28,7 +29,7 @@ LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实�
 
 | 产品 | 入门和使用 | API / 契约 | 正式下载 |
 | --- | --- | --- | --- |
-| Full | [Full 专属 README](docs/FULL.zh-CN.md) · [中文集成](docs/INTEGRATION.zh-CN.md) · [示例](examples/README.md) | [API](docs/API.md) · [V4 冻结契约](docs/V4_FREEZE.md) | [Full v4.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) |
+| Full | [Full 专属 README](docs/FULL.zh-CN.md) · [中文集成](docs/INTEGRATION.zh-CN.md) · [示例](examples/README.md) | [API](docs/API.md) · [V4 冻结契约](docs/V4_FREEZE.md) | [已发布 v4.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) · [4.1.0 源码更新](docs/V4_1_0.md) |
 | Mini | [Mini 专属 README](mini/README.zh-CN.md) · [使用指南](mini/docs/USAGE.md) · [示例](mini/examples/basic.c) | [Mini v1 公开契约](mini/docs/CONTRACT.md) | [Mini v1.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 下载 Mini 时请使用 Release 中的 **Mini-only 源码 ZIP**；GitHub 自动生成的 Source code 压缩包包含**整个仓库**。Full 则另有两文件 amalgamation 分发包。具体集成方法以各自产品文档为准；根目录 CMake 仍默认构建 Full。
@@ -44,7 +45,7 @@ LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实�
 
 ## 版本、兼容性与维护
 
-- Full 的已发布标签使用 `v*`（当前 Stable：`v4.0.0`）。
+- Full 的已发布标签使用 `v*`（最新已发布 Stable 为 `v4.0.0`；`main` 已采用 4.1.0 源码，Tag/Release 尚未发布）。
 - Mini 的已发布标签使用 `mini-v*`（当前 Stable：`mini-v1.0.0`）。
 - GitHub 仓库级 **Latest** 不等于各产品各自的最新版本；请使用上表的独立发布页面。
 - Full 早期版本和 V1–V4 研究属于保留的历史资料，不代表 Mini 的契约。
@@ -54,7 +55,7 @@ LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实�
 
 ## 路线图与验证资料
 
-- **Full：** [V4 后续路线与技术债 Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)；[历史问题台账 Issue #4](https://github.com/RXY712200/LayerKeySort/issues/4)。
+- **Full：** [Full 工程路线与三大步骤完成记录 Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)；[历史问题台账 Issue #4](https://github.com/RXY712200/LayerKeySort/issues/4)。
 - **Mini 与其消费者：** [Mini 路线图 Issue #7](https://github.com/RXY712200/LayerKeySort/issues/7)。
 - **Full 示例与验证：** [Full README](docs/FULL.zh-CN.md) · [验证](docs/VALIDATION.md)。
 - **Mini 示例与验证：** [Mini README](mini/README.zh-CN.md) · [开发与验证](mini/docs/DEVELOPMENT.md)。

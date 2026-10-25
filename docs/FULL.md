@@ -1,4 +1,4 @@
-# LayerKeySort Full — v4.0.0 Stable
+# LayerKeySort Full — 4.1.0 source / v4.0.0 published Stable
 
 [← LayerKeySort product family](../README.md) | English | [简体中文](FULL.zh-CN.md)
 
@@ -9,10 +9,12 @@ sortable immutable snapshot keys.
 
 **Live order: contextual handles. Historical/persistent order: immutable snapshot keys.**
 
-**v4.0.0 is the current recommended Stable release.**
+**Current `main` Full source: 4.1.0. Latest published Stable Release: [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0).**
+The 4.1.0 source is merged and CI-verified but does not yet have a public tag or Release.
+[4.1.0 update details](V4_1_0.md) document smaller Resident/Snapshot storage and workload-specific regressions.
 [V4_FREEZE](V4_FREEZE.md) freezes the V4.0 API, LS1 and LKS4SNP1 contracts.
 V4 completes the fixed Preview.1–5 / RC.1 development cycle.
-[Stable release record](V4_STABLE.md), [RC validation record](V4_RC1.md).
+[Historical v4.0.0 Stable record](V4_STABLE.md), [RC validation record](V4_RC1.md).
 V3.1.0 remains a historical Stable release for applications requiring Path/Tree contracts;
 V4 is a major source break, not a drop-in upgrade.
 
@@ -95,10 +97,12 @@ exports/retained history can dominate time/memory. Mutable sources require calle
 serialization; items/contexts stay alive, ordering semantics stay consistent.
 Dangling handles cannot safely be tested after removal.
 
-[Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) remains the primary
-convergence record; [Stable record](V4_STABLE.md) classifies costs/future debt.
-The next evidence priority is real editor integration and implementation-independent
-real workload traces, not a new major version for its own sake.
+The [4.1.0 update record](V4_1_0.md) links newer 100k–10m internal studies,
+including improved requested storage and documented performance regressions.
+Earlier [Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) and
+[v4.0.0 Stable evidence](V4_STABLE.md) remain historical. New internal
+research should answer concrete engineering questions; external adoption or
+editor traces are useful but not mandatory prerequisites.
 
 ## Documentation
 
