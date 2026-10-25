@@ -6,9 +6,9 @@ naming and delivery; each product's own README and API contract remain authorita
 
 ## Products and locations
 
-| Product | Sources, build and docs | Public identity | Status on 2026-10-08 |
+| Product | Sources, build and docs | Public identity | Status (2026-10-25) |
 | --- | --- | --- | --- |
-| Full | Repository root: `include/`, `src/`, root `CMakeLists.txt`, `docs/` | `LayerKeySort`, `layerkeysort` | v4.0.0 Stable, already published |
+| Full | Repository root: `include/`, `src/`, root `CMakeLists.txt`, `docs/` | `LayerKeySort`, `layerkeysort` | **4.1.0 source merged in `main`**, latest **published** Stable [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) |
 | Mini | Self-contained `mini/` subtree | `LayerKeySort Mini`, `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full and Mini are **alternative implementations for different requirements**,
@@ -72,7 +72,9 @@ for the exact target SHA and review of release notes, manifest, version and
 artifacts. Do not mark an unmerged or untagged candidate as released.
 
 Mini v1.0.0 uses `mini-v1.0.0` and its [own release page](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0).
-Full v4.0.0 remains the repository-wide Latest; Mini is not designated Latest.
+Full v4.0.0 is still the repository-wide Latest **published Release** as of
+2026-10-25; 4.1.0 is source-adopted but not yet tagged/released. Mini is not
+designated Latest. Keep [source/release status](V4_1_0.md) distinct.
 
 ## Development, CI and review
 

@@ -1,4 +1,4 @@
-# LayerKeySort Full — v4.1.0 Stable
+# LayerKeySort Full — 4.1.0 源码 / v4.0.0 已发布 Stable
 
 [← LayerKeySort 产品家族首页](../README.zh-CN.md) | [English](FULL.md) | 简体中文
 
@@ -9,7 +9,11 @@ LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把�
 
 **实时顺序使用稳定的容器内句柄；历史/持久化顺序使用不可变快照和 LS1 键。**
 
-当前推荐 Stable 为 **v4.1.0**。可在 [Full v4.1.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 下载。本次属于兼容性存储优化；历史的 Preview.1–5 → RC.1 → v4.0.0 Stable 开发记录仍保留。
+当前 `main` 的 Full 源码已经升级为 **4.1.0**，但最新**已发布的 Stable**
+仍是 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)。
+4.1.0 的源码合并及跨平台检查已经完成，新的 Tag 和 Release 附件尚未发布。
+[4.1.0 更新记录](V4_1_0.md)说明了内存优化与已测出的部分性能回退。
+V4 的 Preview.1–5 → RC.1 → v4.0.0 Stable 历史开发周期仍然保留。
 V3.1.0 仍作为历史 Stable 保留给依赖 Path/Tree 契约的应用；V4 是源码级大版本变化，
 不是可以直接替换头文件的兼容升级。
 
@@ -105,7 +109,10 @@ V4 不再为 live resident 维护 Path/LK1，因此避免了 V3 的全范围 liv
 Mutable source 仍由调用方负责串行化；不承诺所有操作的统一硬延迟上界，
 也不承诺 universal binary ABI、CRDT、持久化 live handle 或数据库职责。
 
-v4.1.0 的内存优化、百万/千万级测试及部分耗时回退见 [v4.1.0 更新记录](V4_1_0.md)。并不保证所有负载都更快。早期的 [Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) 和 [v4.0.0 Stable 历史记录](V4_STABLE.md) 仍可追溯。
+较新的 [4.1.0 更新记录](V4_1_0.md)包含 10 万至千万级研究、
+内存收益和真实的性能回退；不保证所有负载都更快。早期的
+[Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) 和
+[v4.0.0 Stable 历史记录](V4_STABLE.md)仍然完整保留。
 
 ## 长期方向
 
@@ -116,7 +123,9 @@ LayerKeySort 的长期定位是 **dynamic ordering library**，而不是传统 s
 2. Immutable Historical Representation；
 3. Immutable Batch Utilities。
 
-不为增加版本号而仓促启动 V5，也不设置必须尽快推广的时间表。当前优先长期内部工程研究，有明确证据时可以主动优化；外部真实应用不是研发的前置条件。
+不为了版本号仓促启动 V5，也不设立必须尽快推广的时间表。
+未来以明确的正确性、性能、内存或兼容性问题驱动内部工程研究；
+真实编辑器数据有价值，但不是继续开发的前提。
 
 Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 的 API 契约；Embedded 等其他产品线仍只是未来设想，不代表已经实现。
 详见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
@@ -128,7 +137,7 @@ Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 �
 - [兼容性](COMPATIBILITY.md)
 - [验证](VALIDATION.md)
 - [开发维护](DEVELOPMENT.md)
-- [v4.1.0 更新记录](V4_1_0.md)
+- [4.1.0 更新记录](V4_1_0.md)
 - [v4.0.0 Stable 历史记录](V4_STABLE.md)
 - [Changelog](../CHANGELOG.md)
 

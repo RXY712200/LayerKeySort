@@ -5,9 +5,9 @@ LayerKeySort 采用**单仓库、多独立产品、独立版本号**。这不是
 
 ## 产品划分
 
-| 产品 | 所在目录与构建入口 | 名称 | 当前状态（2026-10-08） |
+| 产品 | 所在目录与构建入口 | 名称 | 当前状态（2026-10-25） |
 | --- | --- | --- | --- |
-| Full | 仓库根目录：`include/`、`src/`、根 `CMakeLists.txt`、`docs/` | `LayerKeySort` / `layerkeysort` | v4.0.0 Stable，已经发布 |
+| Full | 仓库根目录：`include/`、`src/`、根 `CMakeLists.txt`、`docs/` | `LayerKeySort` / `layerkeysort` | `main` 已采用 **4.1.0 源码**；最新**已发布** Stable 仍是 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) |
 | Mini | 自包含的 `mini/` 子目录 | `LayerKeySort Mini` / `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full 与 Mini 是针对不同需求的**并行产品**，不是父子依赖关系。Full 面向更完整的
@@ -59,7 +59,9 @@ GitHub Release 或公开发行**。正式发布必须另行明确授权，核查
 源码包校验值、Release 文案与链接。
 
 Mini v1.0.0 使用 `mini-v1.0.0`，正式入口为[独立 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)。
-仓库级 Latest 保留 Full v4.0.0，Mini 不占用该标识。
+截至 2026-10-25，仓库级 Latest 已发布 Release 仍是 Full v4.0.0；
+Full 4.1.0 的 Tag/Release 尚未创建，Mini 不占用该标识。
+详见 [4.1.0 源码与发布状态](V4_1_0.md)。
 
 ## 日常开发与验证
 
