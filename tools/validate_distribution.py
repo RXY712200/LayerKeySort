@@ -35,10 +35,9 @@ def main():
     parser.add_argument("--make-program")
     args = parser.parse_args()
     cmake = args.cmake
-    configure_flags = []
-    if sys.platform != "win32" or (args.generator and args.generator in
-                                  {"MinGW Makefiles", "Unix Makefiles", "Ninja"}):
-        configure_flags.append("-DCMAKE_BUILD_TYPE=Debug")
+    # Match build/install --config Debug even when Windows implicitly selects
+    # a single-config generator. Multi-config generators ignore BUILD_TYPE.
+    configure_flags = ["-DCMAKE_BUILD_TYPE=Debug"]
     if args.generator:
         configure_flags += ["-G", args.generator]
     if args.architecture:
