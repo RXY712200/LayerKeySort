@@ -10,8 +10,8 @@ LayerKeySort maintains *live sequence order* as applications insert, remove, and
 
 | | **[Full](docs/FULL.md)** | **[Mini](mini/README.md)** |
 | --- | --- | --- |
-| Latest published Stable | **[v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
-| Current `main` source | **4.1.0** ([source update](docs/V4_1_0.md); Release pending) | **1.0.0** (unchanged) |
+| Latest published Stable | **[v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
+| Current `main` source | **4.1.0** ([released update](docs/V4_1_0.md)) | **1.0.0** (unchanged) |
 | Best fit | More complete ordering and historical workflows | Lightweight local, mutable sequences |
 | Live ordering | Relative operations, stable resident handles, comparator-managed option | Relative operations and stable occurrence handles |
 | Arbitrary live-order comparison | Available under the Full contract | O(n) worst case |
@@ -29,7 +29,7 @@ These are **capability distinctions, not benchmarks or claims that one product i
 
 | Product | Overview and usage | API / contract | Download |
 | --- | --- | --- | --- |
-| Full | [Full README](docs/FULL.md) · [Integration](docs/INTEGRATION.md) · [Examples](examples/README.md) | [API](docs/API.md) · [V4 frozen contract](docs/V4_FREEZE.md) | [Published v4.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) · [4.1.0 main-source changes](docs/V4_1_0.md) |
+| Full | [Full README](docs/FULL.md) · [Integration](docs/INTEGRATION.md) · [Examples](examples/README.md) | [API](docs/API.md) · [V4 frozen contract](docs/V4_FREEZE.md) | [Published v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) · [4.1.0 changes](docs/V4_1_0.md) |
 | Mini | [Mini README](mini/README.md) · [Usage](mini/docs/USAGE.md) · [Example](mini/examples/basic.c) | [Mini v1 public contract](mini/docs/CONTRACT.md) | [Mini v1.0.0 release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 For Mini, use the release's **Mini-only source ZIP**; GitHub's automatic Source code archive downloads the **whole repository**. Full publishes a separate two-file amalgamation asset. Follow the chosen product's instructions; the root CMake build remains Full by default.
@@ -45,7 +45,7 @@ A possible Embedded/MCU edition is **only a future concept**. No Embedded produc
 
 ## Versions, compatibility and maintenance
 
-- Full's published tags use `v*` (latest published Stable: `v4.0.0`; `main` already contains Full 4.1.0 source, pending a separate tag/Release).
+- Full's published tags use `v*` (current published Stable: `v4.1.0`).
 - Mini's published tags use `mini-v*` (current Stable `mini-v1.0.0`).
 - GitHub's repository-wide **Latest** designation is not a per-product version selector. Use each product's explicit release link.
 - Old Full releases and V1–V4 research remain available as history; they are not Mini contracts.

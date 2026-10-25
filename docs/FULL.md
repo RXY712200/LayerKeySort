@@ -1,4 +1,4 @@
-# LayerKeySort Full — 4.1.0 source / v4.0.0 published Stable
+# LayerKeySort Full — v4.1.0 Stable
 
 [← LayerKeySort product family](../README.md) | English | [简体中文](FULL.zh-CN.md)
 
@@ -9,8 +9,8 @@ sortable immutable snapshot keys.
 
 **Live order: contextual handles. Historical/persistent order: immutable snapshot keys.**
 
-**Current `main` Full source: 4.1.0. Latest published Stable Release: [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0).**
-The 4.1.0 source is merged and CI-verified but does not yet have a public tag or Release.
+**[LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable Release.**
+The Release provides the verified amalgamation ZIP and SHA-256 manifest from the annotated source tag.
 [4.1.0 update details](V4_1_0.md) document smaller Resident/Snapshot storage and workload-specific regressions.
 [V4_FREEZE](V4_FREEZE.md) freezes the V4.0 API, LS1 and LKS4SNP1 contracts.
 V4 completes the fixed Preview.1–5 / RC.1 development cycle.

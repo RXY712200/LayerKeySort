@@ -8,7 +8,7 @@ naming and delivery; each product's own README and API contract remain authorita
 
 | Product | Sources, build and docs | Public identity | Status (2026-10-25) |
 | --- | --- | --- | --- |
-| Full | Repository root: `include/`, `src/`, root `CMakeLists.txt`, `docs/` | `LayerKeySort`, `layerkeysort` | **4.1.0 source merged in `main`**, latest **published** Stable [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0) |
+| Full | Repository root: `include/`, `src/`, root `CMakeLists.txt`, `docs/` | `LayerKeySort`, `layerkeysort` | Current published Stable [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) |
 | Mini | Self-contained `mini/` subtree | `LayerKeySort Mini`, `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full and Mini are **alternative implementations for different requirements**,
@@ -31,7 +31,7 @@ Never reset, rewrite, repoint or reuse a released tag.
 
 | Product | Version displayed to consumers | Repository-level Git tag example |
 | --- | --- | --- |
-| Full | v4.0.0 | `v4.0.0` (retain existing historic `v*` tags) |
+| Full | v4.1.0 | `v4.1.0` (retain existing historic `v*` tags) |
 | Mini | v1.0.0 | `mini-v1.0.0` |
 
 The existing root `v1.0.0` belongs to historical Full. It is **not** Mini's
@@ -72,9 +72,9 @@ for the exact target SHA and review of release notes, manifest, version and
 artifacts. Do not mark an unmerged or untagged candidate as released.
 
 Mini v1.0.0 uses `mini-v1.0.0` and its [own release page](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0).
-Full v4.0.0 is still the repository-wide Latest **published Release** as of
-2026-10-25; 4.1.0 is source-adopted but not yet tagged/released. Mini is not
-designated Latest. Keep [source/release status](V4_1_0.md) distinct.
+Full v4.1.0 is the repository-wide Latest **published Stable Release** as of
+2026-10-25. Mini remains independently published and is not designated Latest.
+See the [Full release record](V4_1_0.md).
 
 ## Development, CI and review
 

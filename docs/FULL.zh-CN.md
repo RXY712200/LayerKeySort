@@ -1,4 +1,4 @@
-# LayerKeySort Full — 4.1.0 源码 / v4.0.0 已发布 Stable
+# LayerKeySort Full — v4.1.0 Stable
 
 [← LayerKeySort 产品家族首页](../README.zh-CN.md) | [English](FULL.md) | 简体中文
 
@@ -9,9 +9,8 @@ LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把�
 
 **实时顺序使用稳定的容器内句柄；历史/持久化顺序使用不可变快照和 LS1 键。**
 
-当前 `main` 的 Full 源码已经升级为 **4.1.0**，但最新**已发布的 Stable**
-仍是 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)。
-4.1.0 的源码合并及跨平台检查已经完成，新的 Tag 和 Release 附件尚未发布。
+**[LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已发布的 Stable 版本。**
+该 Release 提供与注解源码标签对应、经过校验的 amalgamation ZIP 和 SHA-256 清单。
 [4.1.0 更新记录](V4_1_0.md)说明了内存优化与已测出的部分性能回退。
 V4 的 Preview.1–5 → RC.1 → v4.0.0 Stable 历史开发周期仍然保留。
 V3.1.0 仍作为历史 Stable 保留给依赖 Path/Tree 契约的应用；V4 是源码级大版本变化，
