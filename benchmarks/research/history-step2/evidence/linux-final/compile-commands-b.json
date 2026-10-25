@@ -1,0 +1,404 @@
+[
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale.dir/study.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/study.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/study.c",
+  "output": "CMakeFiles/full_scale.dir/study.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_scale.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_scale.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_alloc.dir/study.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/study.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/study.c",
+  "output": "CMakeFiles/full_scale_alloc.dir/study.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_alloc.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_scale_alloc.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_alloc.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_scale_alloc.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_alloc.dir/wrap.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/wrap.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/wrap.c",
+  "output": "CMakeFiles/full_scale_alloc.dir/wrap.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c",
+  "output": "CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_structural.dir/study.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/study.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/study.c",
+  "output": "CMakeFiles/full_scale_structural.dir/study.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_structural.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_scale_structural.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_scale_structural.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_scale_structural.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc   -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/oracle_probe.dir/oracle_probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle_probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle_probe.c",
+  "output": "CMakeFiles/oracle_probe.dir/oracle_probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc   -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/oracle_probe.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/oracle_probe.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long.dir/long_churn.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/long_churn.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/long_churn.c",
+  "output": "CMakeFiles/full_long.dir/long_churn.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_long.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_long.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_alloc.dir/long_churn.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/long_churn.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/long_churn.c",
+  "output": "CMakeFiles/full_long_alloc.dir/long_churn.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_alloc.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_long_alloc.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_alloc.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_long_alloc.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_alloc.dir/wrap.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/wrap.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/wrap.c",
+  "output": "CMakeFiles/full_long_alloc.dir/wrap.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_structural.dir/long_churn.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/long_churn.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/long_churn.c",
+  "output": "CMakeFiles/full_long_structural.dir/long_churn.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_structural.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_long_structural.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_long_structural.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_long_structural.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_shrink.dir/shrink.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/shrink.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/shrink.c",
+  "output": "CMakeFiles/full_shrink.dir/shrink.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_shrink.dir/oracle.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/oracle.c",
+  "output": "CMakeFiles/full_shrink.dir/oracle.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_shrink.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_shrink.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history.dir/history.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history.c",
+  "output": "CMakeFiles/full_history.dir/history.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history.dir/history_probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history_probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history_probe.c",
+  "output": "CMakeFiles/full_history.dir/history_probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_history.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_alloc.dir/history.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history.c",
+  "output": "CMakeFiles/full_history_alloc.dir/history.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_alloc.dir/history_probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history_probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history_probe.c",
+  "output": "CMakeFiles/full_history_alloc.dir/history_probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_alloc.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_history_alloc.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DRESEARCH_WRAP -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_alloc.dir/wrap.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/wrap.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/wrap.c",
+  "output": "CMakeFiles/full_history_alloc.dir/wrap.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_structural.dir/history.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history.c",
+  "output": "CMakeFiles/full_history_structural.dir/history.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_structural.dir/history_probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history_probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/history_probe.c",
+  "output": "CMakeFiles/full_history_structural.dir/history_probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b",
+  "command": "/usr/bin/cc -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DRESEARCH_PRIVATE -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -Wall -Wextra -Wpedantic -Werror -o CMakeFiles/full_history_structural.dir/probe.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/candidate/benchmarks/research/history-step2/probe.c",
+  "output": "CMakeFiles/full_history_structural.dir/probe.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/lks_alloc.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_alloc.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/lks_base.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/lks_base.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/lks_base.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/path.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/path.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/path_text.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_text.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/path_text.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/path_order_key.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_order_key.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/path_order_key.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/slot_codec.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/slot_codec.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/slot_codec.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/path_compare.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/path_compare.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/path_compare.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/order.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/order.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/managed_order.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/managed_order.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/managed_order.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/snapshot.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/snapshot.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/snapshot_key.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_key.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_wire.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/snapshot_restore.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/order_bulk.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/order_bulk.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/order_bulk.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/immutable_group.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/immutable_group.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/immutable_group.c.o"
+},
+{
+  "directory": "/home/runner/work/LayerKeySort/LayerKeySort/out/build-b/full",
+  "command": "/usr/bin/cc  -I/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/include -Wall -Wextra -Wpedantic -Werror -O3 -DNDEBUG -std=c17 -o CMakeFiles/layerkeysort.dir/src/sort.c.o -c /home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c",
+  "file": "/home/runner/work/LayerKeySort/LayerKeySort/baseline-b/src/sort.c",
+  "output": "full/CMakeFiles/layerkeysort.dir/src/sort.c.o"
+}
+]

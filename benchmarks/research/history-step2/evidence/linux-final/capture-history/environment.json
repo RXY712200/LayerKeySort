@@ -1,0 +1,13 @@
+{
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "memory": {
+    "total": 16766414848,
+    "available": 14421196800
+  },
+  "baselines": {
+    "a": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+    "b": "19ca51bc616a1b6a2d28530bc0932dc7c4a255ce"
+  },
+  "flags": "GCC C17 -O3 -DNDEBUG, driver -Wall -Wextra -Wpedantic -Werror",
+  "synthetic": true
+}

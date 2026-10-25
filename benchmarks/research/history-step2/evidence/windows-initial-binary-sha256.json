@@ -1,0 +1,17 @@
+{
+  "source": "a3e136a77004c8fd04d6696e4b7923e4b1855e27",
+  "note": "Recorded after initial campaign and before rebuilding the codec refinement.",
+  "binaries": {
+    "full_history.exe": "700ffb9612c464d0d9d9cdec0081b0a3ea65d7da8efa9ca07f69d1c96475523f",
+    "full_history_alloc.exe": "8b357163eaccdc26a20f3dc4d92ab7ec02036ca4430d8a57bda7c663d04a8338",
+    "full_history_structural.exe": "3721debac1ec97c40be2ff26adcc2f4b6a5261506bf898ea2e4beeb11336e81f",
+    "full_long.exe": "ab759149756e345baa5f537c034dce1ea5e3a44727c75e5f318062413e1c4ef2",
+    "full_long_alloc.exe": "15374f7c307be629182e429c1fc7145b678beff8252c3f28482ef970b70fd46d",
+    "full_long_structural.exe": "67b16ae217f9342ebec3f3e1d4eef8f8bea94c1244d30cc5936dd805c9553ce0",
+    "full_scale.exe": "3db8fe35b08df187065847c9a52036f7c4de50672d29023049ecca0aee076783",
+    "full_scale_alloc.exe": "b1f3cf0684898bc69557e8ba86a011ac77132e2693087f1414e91e92df621e8b",
+    "full_scale_structural.exe": "f4086ba807743be9c874966c20c110698869a66f66ed01157d7bd32ac9cae3da",
+    "full_shrink.exe": "81097eaa3cfe34aedea38628aa5c5442f418d3e0d4a19576d2dd88030a662ae3",
+    "oracle_probe.exe": "db7131c02b5d5b3963683c88b880e1403cdd2da4b0f0b5c5bec9283bf2c2a3af"
+  }
+}

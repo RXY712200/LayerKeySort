@@ -3,12 +3,22 @@
 Base: accepted Step 1 `19ca51bc616a1b6a2d28530bc0932dc7c4a255ce`.
 This isolated branch is not merged, released or independently accepted.
 
-The compact snapshot candidate and regression tests are implemented. The
-matched comparison/evidence delivery is still being prepared; this intermediate
-commit is published to run its branch-only research workflow, not as the final
-completion report. Read [METHOD.md](METHOD.md) for representation, cost model,
-contracts and planned measurements. Final results will be recorded here before
-the assignment is declared ready for independent review.
+**IMPLEMENTATION READY FOR INDEPENDENT REVIEW**. Implementation, bounded
+measurement, regression validation and evidence collection are complete. This
+is a candidate delivery, not adoption approval or a final project PASS.
+
+Read [REPORT.md](REPORT.md) for the complete findings and explicit regressions,
+[METHOD.md](METHOD.md) for representation and measurement rules, and
+[VALIDATION.md](VALIDATION.md) for build/evidence verification commands.
+[FILES.txt](FILES.txt) lists the complete Step 2 change inventory;
+[SHA256SUMS.txt](SHA256SUMS.txt) hashes canonical Git blobs in that inventory.
+
+The primary comparison is accepted Step 1 versus Step 2 on the same host/epoch.
+Final Windows and Linux rounds contain 616 completed native processes and two
+safely skipped upper-scale cases. Earlier exploratory rounds remain archived
+separately. Do not combine timings across runner CPUs or protocol revisions.
+The main benefit is lower owned Snapshot memory; adverse lookup, movement,
+destruction and allocation-traffic results remain disclosed in the report.
 
 Build the same driver against three **absolute** source directories:
 

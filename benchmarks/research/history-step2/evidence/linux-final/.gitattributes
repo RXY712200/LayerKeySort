@@ -1,0 +1,2 @@
+# Preserve original CSV artifact bytes and their CRLF record separators.
+*.csv -text whitespace=cr-at-eol

@@ -121,3 +121,50 @@ separately in metadata. Live guard cases repeat random insertion, duplicate
 locate and append-origin local/broad moves/churn; long and severe-shrink drivers
 are unchanged Step 1 workloads. Allocation counts and memory must be checked
 even when an ordinary timing difference is small.
+
+## Final measurement provenance and limits
+
+Windows initially could not meet the 3 GiB benchmark reserve. Unit/regression
+builds passed, while standalone research ASan smoke tests initially exited on
+the unchanged 2 GiB guard. The developer-environment rerun passed 20/20. An
+isolated Ubuntu research runner supplied a second, separate matched dataset.
+After the owner closed applications, available Windows RAM rose to about8.1GiB;
+all planned 100k/1m/3m cases then passed admission. A bounded two-snapshot,
+eight-byte case was also admitted at10m; the variable-length10m envelope still
+exceeded the unchanged3GiB cap and was skipped. No unrelated process was killed.
+
+Only one production refinement followed the initial representation: sequential
+serialization/restore now carry the preceding end forward. The initially
+observed Linux100k variable serialization slowdown prompted this change, but
+cross-run host/ordering differences prevent attributing a timing change solely
+to it. The original implementation/carry-refinement data remain in evidence.
+
+A measurement bug was subsequently found: rotating by case index and reversing
+on even repetitions could cancel within-case alternation. Final measurements
+use `repeat-rotation-v2`: variant order rotates by repetition, and live guard
+cases use four production repeats. Two-variant history cases have three repeats
+at100k/1m and two at3m. Three-variant cases rotate their three-source order.
+Earlier order schedules are preserved as pre-correction evidence, not mixed into
+final medians. Final Windows upper-scale repetitions reverse the source order.
+
+The Windows follow-up prototype retained the original skip `reason` in completed
+retry records. There, `retry_of` identifies the earlier attempt; current status,
+new memory readings/UTC, return code and raw output determine the retry outcome.
+Those raw records are preserved verbatim. The final follow-up script labels the
+old reason explicitly as `original_skip_reason`; final-order upper runs had no
+pending base-case retries. No outcome or measurement was changed retroactively.
+
+Fresh Windows measurements investigate the prior second-capture regression.
+The capture iterator directly reads each record's item; it does not use the
+public handle owner lookup. Therefore extra owner derivation is not a supported
+explanation for that regression. Allocator/layout/cache/scheduling contributions
+are not isolated. Results must distinguish the original ID8 legacy driver from
+the callback-generated-byte history driver, and Windows from Linux. Linux runner
+CPU models differ between rounds; only same-round A/B/C comparisons are fair.
+
+Namespaces are fixed within each experiment to control size. Keys are validated
+within one snapshot, not used to infer cross-state order when a namespace is
+reused. Applications remain responsible for meaningful namespace uniqueness.
+The generic representation intentionally retains one end word per row even when
+all associations are empty. Full copies remain O(N+A); no delta export, dedup,
+callback-purity assumption or universal performance guarantee is introduced.

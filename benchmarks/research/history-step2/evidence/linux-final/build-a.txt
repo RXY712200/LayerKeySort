@@ -1,0 +1,93 @@
+[  1%] Building C object CMakeFiles/oracle_probe.dir/oracle_probe.c.o
+[  2%] Building C object CMakeFiles/oracle_probe.dir/oracle.c.o
+[  3%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/lks_alloc.c.o
+[  5%] Building C object full/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.o
+[  6%] Building C object full/CMakeFiles/layerkeysort.dir/src/lks_base.c.o
+[  7%] Building C object full/CMakeFiles/layerkeysort.dir/src/path.c.o
+[  8%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/lks_base.c.o
+[ 10%] Linking C executable oracle_probe
+[ 11%] Building C object full/CMakeFiles/layerkeysort.dir/src/path_text.c.o
+[ 11%] Built target oracle_probe
+[ 12%] Building C object full/CMakeFiles/layerkeysort.dir/src/path_order_key.c.o
+[ 13%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/path.c.o
+[ 15%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/path_text.c.o
+[ 16%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/path_order_key.c.o
+[ 17%] Building C object full/CMakeFiles/layerkeysort.dir/src/slot_codec.c.o
+[ 18%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/slot_codec.c.o
+[ 20%] Building C object full/CMakeFiles/layerkeysort.dir/src/path_compare.c.o
+[ 21%] Building C object full/CMakeFiles/layerkeysort.dir/src/order.c.o
+[ 22%] Building C object full/CMakeFiles/layerkeysort.dir/src/managed_order.c.o
+[ 23%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/path_compare.c.o
+[ 25%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/order.c.o
+[ 26%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/managed_order.c.o
+[ 27%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot.c.o
+[ 28%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.o
+[ 30%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/snapshot.c.o
+[ 31%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/snapshot_key.c.o
+[ 32%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.o
+[ 33%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/snapshot_wire.c.o
+[ 35%] Building C object full/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.o
+[ 36%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/snapshot_restore.c.o
+[ 37%] Building C object full/CMakeFiles/layerkeysort.dir/src/order_bulk.c.o
+[ 38%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/order_bulk.c.o
+[ 40%] Building C object full/CMakeFiles/layerkeysort.dir/src/immutable_group.c.o
+[ 41%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/immutable_group.c.o
+[ 42%] Building C object CMakeFiles/full_research_diagnostics.dir/home/runner/work/LayerKeySort/LayerKeySort/baseline-a/src/sort.c.o
+[ 43%] Building C object full/CMakeFiles/layerkeysort.dir/src/sort.c.o
+[ 45%] Linking C static library liblayerkeysort.a
+[ 46%] Linking C static library libfull_research_diagnostics.a
+[ 46%] Built target layerkeysort
+[ 46%] Built target full_research_diagnostics
+[ 47%] Building C object CMakeFiles/full_scale.dir/study.c.o
+[ 48%] Building C object CMakeFiles/full_scale_alloc.dir/study.c.o
+[ 50%] Building C object CMakeFiles/full_scale_structural.dir/study.c.o
+[ 51%] Building C object CMakeFiles/full_long.dir/long_churn.c.o
+[ 52%] Building C object CMakeFiles/full_long.dir/oracle.c.o
+[ 53%] Building C object CMakeFiles/full_long.dir/probe.c.o
+[ 55%] Linking C executable full_long
+[ 55%] Built target full_long
+[ 56%] Building C object CMakeFiles/full_scale.dir/oracle.c.o
+[ 57%] Building C object CMakeFiles/full_long_alloc.dir/long_churn.c.o
+[ 60%] Building C object CMakeFiles/full_scale_alloc.dir/oracle.c.o
+[ 60%] Building C object CMakeFiles/full_scale_structural.dir/oracle.c.o
+[ 61%] Building C object CMakeFiles/full_scale.dir/probe.c.o
+[ 62%] Linking C executable full_scale
+[ 63%] Building C object CMakeFiles/full_long_alloc.dir/oracle.c.o
+[ 66%] Building C object CMakeFiles/full_scale_alloc.dir/probe.c.o
+[ 66%] Building C object CMakeFiles/full_scale_structural.dir/probe.c.o
+[ 66%] Built target full_scale
+[ 67%] Building C object CMakeFiles/full_long_alloc.dir/probe.c.o
+[ 68%] Building C object CMakeFiles/full_scale_alloc.dir/wrap.c.o
+[ 70%] Building C object CMakeFiles/full_long_structural.dir/long_churn.c.o
+[ 71%] Building C object CMakeFiles/full_long_alloc.dir/wrap.c.o
+[ 72%] Linking C executable full_scale_structural
+[ 73%] Linking C executable full_scale_alloc
+[ 73%] Built target full_scale_structural
+[ 75%] Building C object CMakeFiles/full_long_structural.dir/oracle.c.o
+[ 76%] Linking C executable full_long_alloc
+[ 76%] Built target full_scale_alloc
+[ 77%] Building C object CMakeFiles/full_long_structural.dir/probe.c.o
+[ 77%] Built target full_long_alloc
+[ 78%] Building C object CMakeFiles/full_shrink.dir/shrink.c.o
+[ 80%] Building C object CMakeFiles/full_shrink.dir/oracle.c.o
+[ 81%] Building C object CMakeFiles/full_history.dir/history.c.o
+[ 82%] Linking C executable full_long_structural
+[ 82%] Built target full_long_structural
+[ 83%] Building C object CMakeFiles/full_history.dir/history_probe.c.o
+[ 85%] Building C object CMakeFiles/full_history.dir/probe.c.o
+[ 86%] Building C object CMakeFiles/full_history_alloc.dir/history.c.o
+[ 87%] Building C object CMakeFiles/full_history_alloc.dir/history_probe.c.o
+[ 88%] Building C object CMakeFiles/full_shrink.dir/probe.c.o
+[ 90%] Building C object CMakeFiles/full_history_alloc.dir/probe.c.o
+[ 91%] Building C object CMakeFiles/full_history_alloc.dir/wrap.c.o
+[ 92%] Linking C executable full_shrink
+[ 92%] Built target full_shrink
+[ 93%] Building C object CMakeFiles/full_history_structural.dir/history.c.o
+[ 95%] Building C object CMakeFiles/full_history_structural.dir/history_probe.c.o
+[ 96%] Building C object CMakeFiles/full_history_structural.dir/probe.c.o
+[ 97%] Linking C executable full_history
+[ 98%] Linking C executable full_history_alloc
+[ 98%] Built target full_history_alloc
+[ 98%] Built target full_history
+[100%] Linking C executable full_history_structural
+[100%] Built target full_history_structural

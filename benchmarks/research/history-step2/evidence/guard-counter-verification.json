@@ -1,0 +1,46 @@
+{
+  "windows-final": {
+    "identical_guard_phase_pairs": 54,
+    "fields": [
+      "allocations",
+      "reallocations",
+      "frees",
+      "live_requested_bytes",
+      "live_allocations",
+      "comparisons",
+      "location_assignments",
+      "max_operation_assignments",
+      "index_writes",
+      "max_operation_index_blocks",
+      "splits",
+      "merges",
+      "redistributions",
+      "rotations",
+      "blocks",
+      "height",
+      "occupancy_histogram"
+    ]
+  },
+  "linux-final": {
+    "identical_guard_phase_pairs": 54,
+    "fields": [
+      "allocations",
+      "reallocations",
+      "frees",
+      "live_requested_bytes",
+      "live_allocations",
+      "comparisons",
+      "location_assignments",
+      "max_operation_assignments",
+      "index_writes",
+      "max_operation_index_blocks",
+      "splits",
+      "merges",
+      "redistributions",
+      "rotations",
+      "blocks",
+      "height",
+      "occupancy_histogram"
+    ]
+  }
+}

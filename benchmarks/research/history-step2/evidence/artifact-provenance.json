@@ -1,0 +1,23 @@
+[
+  {
+    "round": "initial",
+    "run": 40161418418,
+    "source": "a3e136a77004c8fd04d6696e4b7923e4b1855e27",
+    "artifact": 12586723845,
+    "zip_sha256": "05936ff0f13eddf1d7c607de17d4a337478e15f8d32b11eacda2efdbb0272a7f"
+  },
+  {
+    "round": "refined-preorder",
+    "run": 40162231268,
+    "source": "7ac34f54dd7c7c544605efd0f8d97dbc4f02cd12",
+    "artifact": 12586758463,
+    "zip_sha256": "65376bdf63a13d1dc49ef476b45589ddb6a0e720ac2895d9a77482c9766fa302"
+  },
+  {
+    "round": "final",
+    "run": 40163805723,
+    "source": "a29e9472aebd4a3b7c0ec8cd50d94d5337662ed1",
+    "artifact": 12587054323,
+    "zip_sha256": "12a02839612d80b8aaee21d8b3f8e75c938fc6ca04f5da966ade4c2da381af61"
+  }
+]

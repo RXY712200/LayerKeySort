@@ -1,0 +1,101 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.10.2
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/history-step2-study-asan
+      Start  1: research_append
+      Start  2: research_prepend
+      Start  3: research_anchor
+ 1/17 Test  #1: research_append ..................***Failed    0.06 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start  4: research_local
+ 2/17 Test  #2: research_prepend .................***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start  5: research_ascending
+ 3/17 Test  #3: research_anchor ..................***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start  6: research_descending
+ 4/17 Test  #4: research_local ...................***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start  7: research_random
+ 5/17 Test  #5: research_ascending ...............***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start  8: research_duplicates
+ 6/17 Test  #6: research_descending ..............***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start  9: research_equal
+ 7/17 Test  #7: research_random ..................***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start 10: research_history
+ 8/17 Test  #8: research_duplicates ..............***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start 11: independent_oracle_selftest
+ 9/17 Test  #9: research_equal ...................***Failed    0.03 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start 12: long_churn_small
+10/17 Test #10: research_history .................***Failed    0.07 sec
+SAFE_BUDGET_ABORT reserve<2GiB or process>240s
+
+      Start 13: history_empty
+11/17 Test #12: long_churn_small .................***Failed    0.08 sec
+LONG_CHECK count=4096 digest=f98ec7e49cf04383 exact_forward_reverse=true
+SAFE_BUDGET_ABORT
+mode,scale,cycle,pairs,wall_seconds,allocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,traffic_bytes,working_set_bytes,blocks,height
+
+      Start 14: history_one
+12/17 Test #13: history_empty ....................***Failed    0.05 sec
+SAFE_BUDGET_ABORT
+mode,payload,residents,retention,namespace,phase,index,wall_seconds,callbacks,useful_bytes,wire_bytes,temporary_pointer_bytes,working_set_bytes,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,header_bytes,row_bytes,association_capacity,namespace_bytes,all_key_bytes
+
+      Start 15: history_eight
+13/17 Test #14: history_one ......................***Failed    0.03 sec
+SAFE_BUDGET_ABORT
+mode,payload,residents,retention,namespace,phase,index,wall_seconds,callbacks,useful_bytes,wire_bytes,temporary_pointer_bytes,working_set_bytes,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,header_bytes,row_bytes,association_capacity,namespace_bytes,all_key_bytes
+
+      Start 16: history_variable
+14/17 Test #15: history_eight ....................***Failed    0.03 sec
+SAFE_BUDGET_ABORT
+mode,payload,residents,retention,namespace,phase,index,wall_seconds,callbacks,useful_bytes,wire_bytes,temporary_pointer_bytes,working_set_bytes,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,header_bytes,row_bytes,association_capacity,namespace_bytes,all_key_bytes
+
+      Start 17: history_wide
+15/17 Test #16: history_variable .................***Failed    0.03 sec
+SAFE_BUDGET_ABORT
+mode,payload,residents,retention,namespace,phase,index,wall_seconds,callbacks,useful_bytes,wire_bytes,temporary_pointer_bytes,working_set_bytes,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,header_bytes,row_bytes,association_capacity,namespace_bytes,all_key_bytes
+
+16/17 Test #17: history_wide .....................***Failed    0.03 sec
+SAFE_BUDGET_ABORT
+mode,payload,residents,retention,namespace,phase,index,wall_seconds,callbacks,useful_bytes,wire_bytes,temporary_pointer_bytes,working_set_bytes,allocations,reallocations,frees,live_allocations,live_requested_bytes,peak_requested_bytes,requested_traffic_bytes,header_bytes,row_bytes,association_capacity,namespace_bytes,all_key_bytes
+
+17/17 Test #11: independent_oracle_selftest ......   Passed    3.17 sec
+
+6% tests passed, 16 tests failed out of 17
+
+Total Test time (real) =   3.30 sec
+
+The following tests FAILED:
+	  1 - research_append (Failed)
+	  2 - research_prepend (Failed)
+	  3 - research_anchor (Failed)
+	  4 - research_local (Failed)
+	  5 - research_ascending (Failed)
+	  6 - research_descending (Failed)
+	  7 - research_random (Failed)
+	  8 - research_duplicates (Failed)
+	  9 - research_equal (Failed)
+	 10 - research_history (Failed)
+	 12 - long_churn_small (Failed)
+	 13 - history_empty (Failed)
+	 14 - history_one (Failed)
+	 15 - history_eight (Failed)
+	 16 - history_variable (Failed)
+	 17 - history_wide (Failed)
+Errors while running CTest

@@ -1,0 +1,2 @@
+compact history: 12 capture OOM points including final trim; immediate copy/callback failure/lifetime PASS
+Preview.3 snapshot keys/wire/torture/lifetime/bulk/OOM PASS

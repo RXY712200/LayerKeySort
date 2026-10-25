@@ -1,0 +1,14 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "memory": {
+    "total": 16304992256,
+    "available": 9180278784,
+    "load": 43
+  },
+  "baselines": {
+    "a": "043872eb5560e867aa7f8c094e0e9dbf2e8a7b95",
+    "b": "19ca51bc616a1b6a2d28530bc0932dc7c4a255ce"
+  },
+  "flags": "GCC C17 -O3 -DNDEBUG, driver -Wall -Wextra -Wpedantic -Werror",
+  "synthetic": true
+}

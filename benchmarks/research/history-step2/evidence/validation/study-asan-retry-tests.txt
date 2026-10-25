@@ -1,0 +1,43 @@
+**********************************************************************
+** Visual Studio 2026 Developer Command Prompt v18.10.2
+** Copyright (c) 2026 Microsoft Corporation
+**********************************************************************
+Test project C:/Users/rxy71/Documents/Codex/2026-10-06/new-chat-2/history-step2-study-asan
+      Start  1: research_append
+ 1/17 Test  #1: research_append ..................   Passed    0.09 sec
+      Start  2: research_prepend
+ 2/17 Test  #2: research_prepend .................   Passed    0.06 sec
+      Start  3: research_anchor
+ 3/17 Test  #3: research_anchor ..................   Passed    0.06 sec
+      Start  4: research_local
+ 4/17 Test  #4: research_local ...................   Passed    0.06 sec
+      Start  5: research_ascending
+ 5/17 Test  #5: research_ascending ...............   Passed    0.03 sec
+      Start  6: research_descending
+ 6/17 Test  #6: research_descending ..............   Passed    0.03 sec
+      Start  7: research_random
+ 7/17 Test  #7: research_random ..................   Passed    0.03 sec
+      Start  8: research_duplicates
+ 8/17 Test  #8: research_duplicates ..............   Passed    0.03 sec
+      Start  9: research_equal
+ 9/17 Test  #9: research_equal ...................   Passed    0.03 sec
+      Start 10: research_history
+10/17 Test #10: research_history .................   Passed    0.04 sec
+      Start 11: independent_oracle_selftest
+11/17 Test #11: independent_oracle_selftest ......   Passed    3.27 sec
+      Start 12: long_churn_small
+12/17 Test #12: long_churn_small .................   Passed    0.05 sec
+      Start 13: history_empty
+13/17 Test #13: history_empty ....................   Passed    0.07 sec
+      Start 14: history_one
+14/17 Test #14: history_one ......................   Passed    0.05 sec
+      Start 15: history_eight
+15/17 Test #15: history_eight ....................   Passed    0.05 sec
+      Start 16: history_variable
+16/17 Test #16: history_variable .................   Passed    0.06 sec
+      Start 17: history_wide
+17/17 Test #17: history_wide .....................   Passed    0.19 sec
+
+100% tests passed out of 17
+
+Total Test time (real) =   4.26 sec

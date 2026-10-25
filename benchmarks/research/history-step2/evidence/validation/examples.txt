@@ -1,0 +1,27 @@
+First item: 1
+base-b
+base-a
+incoming
+LS1.7034.0000000000000000
+LS1.7034.0000000000000001
+LS1.7034.0000000000000002
+Background
+Overlay
+Object
+earlier
+first equal
+second equal
+10
+15
+20
+Smallest: 1
+LS1.20261006.0000000000000000
+LS1.20261006.0000000000000001
+LS1.20261006.0000000000000002
+Historical snapshot survives source mutation and destruction:
+row 0: a
+row 1: b
+row 2: c
+draft
+review
+publish
