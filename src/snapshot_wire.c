@@ -10,17 +10,17 @@ size_t lks_snapshot_serialized_size(const LksSnapshot *s)
 { return s ? 24+s->namespace_size+8*s->count+s->association_size : 0; }
 LksStatus lks_snapshot_serialize(const LksSnapshot *s, void *buffer, size_t size)
 {
-    unsigned char *p = (unsigned char *)buffer; size_t i;
+    unsigned char *p = (unsigned char *)buffer; size_t i, offset = 0;
     if (!s || !buffer) return LKS_STATUS_INVALID_ARGUMENT;
     if (size < lks_snapshot_serialized_size(s)) return LKS_STATUS_BUFFER_TOO_SMALL;
     memcpy(p, "LKS4SNP1", 8); snap_be_write(p+8, 0, 4);
     snap_be_write(p+12, s->namespace_size, 4); snap_be_write(p+16, s->count, 8);
     p += 24; memcpy(p, s->namespace_data, s->namespace_size); p += s->namespace_size;
     for (i = 0; i < s->count; ++i) {
-        size_t n = lks_snapshot_row_size(s, i);
+        size_t end = s->rows[i].end, n = end-offset;
         snap_be_write(p, n, 8); p += 8;
-        if (n) memcpy(p, s->associations+lks_snapshot_row_offset(s, i), n);
-        p += n;
+        if (n) memcpy(p, s->associations+offset, n);
+        p += n; offset = end;
     }
     return LKS_STATUS_OK;
 }
