@@ -1,0 +1,82 @@
+name: Full final Step 3 acceptance
+on:
+  push:
+    branches: [integration/full-final-step3]
+    paths:
+      - benchmarks/research/final-step3/*.py
+      - benchmarks/research/final-step3/*.c
+      - benchmarks/research/final-step3/CMakeLists.txt
+      - .github/workflows/full-final-step3.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  matched-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 043872eb5560e867aa7f8c094e0e9dbf2e8a7b95
+          path: baseline-a
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 19ca51bc616a1b6a2d28530bc0932dc7c4a255ce
+          path: baseline-b
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build all sources before timing
+        shell: bash
+        run: |
+          mkdir results
+          uname -a > results/environment.txt
+          lscpu >> results/environment.txt
+          free -b >> results/environment.txt
+          gcc --version >> results/environment.txt
+          cmake --version >> results/environment.txt
+          for v in a b c; do
+            src="$PWD/candidate"
+            if [ "$v" = a ]; then src="$PWD/baseline-a"; fi
+            if [ "$v" = b ]; then src="$PWD/baseline-b"; fi
+            cmake -S candidate/benchmarks/research/final-step3 -B "build-$v" -DFULL_ROOT="$src" -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON '-DCMAKE_C_FLAGS=-Wall -Wextra -Wpedantic -Werror' > "results/configure-$v.txt" 2>&1
+            cmake --build "build-$v" --parallel 4 > "results/build-$v.txt" 2>&1
+            ctest --test-dir "build-$v" --output-on-failure > "results/tests-$v.txt" 2>&1
+            "build-$v/full_layout" > "results/layout-$v.txt"
+            cp "build-$v/compile_commands.json" "results/compile-$v.json"
+          done
+      - name: Fixed sequential A B C measurements
+        shell: bash
+        run: |
+          python candidate/benchmarks/research/final-step3/collect.py build-a build-b build-c results > results/collector.log 2>&1
+          for suite in live history long shrink upper; do
+            python candidate/benchmarks/research/final-step3/analyze.py "results/capture-$suite" "results/analysis-$suite"
+          done
+      - name: Preserve exact source provenance
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          data={}
+          for v,root in [('a','baseline-a'),('b','baseline-b'),('c','candidate')]:
+              sha=subprocess.check_output(['git','-C',root,'rev-parse','HEAD'],text=True).strip()
+              files=subprocess.check_output(['git','-C',root,'ls-tree','-r','--name-only','HEAD','src','include','cmake/ProductionSources.cmake'],text=True).splitlines()
+              data[v]={'commit':sha,'files':{p:hashlib.sha256(subprocess.check_output(['git','-C',root,'show','HEAD:'+p])).hexdigest() for p in files}}
+          Path('results/source-manifest.json').write_text(json.dumps(data,indent=2))
+          PY
+      - name: Compact raw evidence without changing measurements
+        if: always()
+        run: python candidate/benchmarks/research/history-step2/pack.py results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-final-step3-${{ github.sha }}
+          path: results/delivery
+          retention-days: 90
