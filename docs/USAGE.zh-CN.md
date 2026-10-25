@@ -1,6 +1,6 @@
 # LayerKeySort V4 使用指南
 
-**版本状态：** `main` 当前 Full 源码为 **4.1.0**（[合并提交](https://github.com/RXY712200/LayerKeySort/commit/7fef6396cba4f5f8d19516b9ae2af132ca3cd529)）；最新**已公开发布**的 Stable 仍为 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)，4.1.0 的新 Tag 和 Release 尚未发布。公开 API 和持久化格式仍兼容，详见 [4.1.0 说明](V4_1_0.md)。
+**版本状态：** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已发布的 Stable 版本。公开 API 和持久化格式保持兼容，详见 [4.1.0 说明](V4_1_0.md)。
 
 只包含 `<layerkeysort.h>` 即可。
 

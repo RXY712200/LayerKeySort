@@ -1,9 +1,8 @@
 # LayerKeySort Full 4.x 集成指南
 
-当前 `main` 的 Full 源码已经采用 **4.1.0**，但最新**公开发布**的 Stable
-仍是 [v4.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.0.0)。
-新 Release 发布前，正式项目可固定在 v4.0.0，或自行明确固定至已合并的
-4.1.0 源码提交，不能把尚未发布的 4.1.0 说成已经有发行附件。
+[LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已公开发布的 Stable 版本。
+可固定到 `v4.1.0` 标签，或从该 Release 下载经过校验的 amalgamation ZIP 和 SHA-256 清单。
+历史 v4.0.0 发行记录保持不变。
 
 实现使用 C17；C++17 应用可以通过 C API 链接。已验证 Windows MSVC x64/Win32、
 Linux GCC/Clang、macOS AppleClang。CMake 最低版本 3.21。
