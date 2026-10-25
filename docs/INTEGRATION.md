@@ -29,8 +29,8 @@ target_link_libraries(app PRIVATE LayerKeySort::layerkeysort)
 regression-only. Rebuild static package for compiler/architecture/CRT settings.
 Current `main` CMake and public header report version **4.1.0**. The package
 uses `SameMajorVersion` for rebuild-from-source compatibility; no shared ABI
-is shipped. Pin the current published v4.0.0 tag for a released archive until
-the verified v4.1.0 Release exists, or explicitly pin the 4.1.0 main commit.
+is shipped. Pin the published `v4.1.0` tag for source integration, or download
+the verified [Full v4.1.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) assets.
 
 ZIP contains layerkeysort.h, layerkeysort.c, example.c, LICENSE and README.txt.
 Compile implementation as C17, link C/C++ application. No Python/private header
