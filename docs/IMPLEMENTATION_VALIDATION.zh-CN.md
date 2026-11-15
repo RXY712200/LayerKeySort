@@ -1,0 +1,150 @@
+# Full v4.1.0：可复现的源码、测试、发布与审计证据地图
+
+> 固定基线：`70d7f0ef5857b54381b863d292a213909d87459f`。依据该 SHA 的根 `CMakeLists.txt`、真实测试入口、CI/构建脚本、API/Golden 文件整理。**本轮建立文档没有自行执行完整本地 CTest 和跨平台矩阵**；“测试覆盖什么”是静态阅读相关测试源码后的范围说明，不能冒充新的独立运行 PASS。
+>
+> 文档体系：[总体实现导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) · [64 API 逐项索引](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [私有机制详解](IMPLEMENTATION_INTERNALS.zh-CN.md)。
+
+## 1. 先确认你审查的是哪份源码
+
+~~~sh
+git clone https://github.com/RXY712200/LayerKeySort.git
+cd LayerKeySort
+git checkout 70d7f0ef5857b54381b863d292a213909d87459f
+git rev-parse HEAD
+git status --short
+~~~
+
+Full 4.1.0、Mini、Workbench 和 V3 历史回归是不同对象。不要因为它们在一个仓库，就把某个产品或实验目标的通过等同于 Full 正常生产库的行为。
+
+## 2. 真正的 CMake 目标和选项
+
+根 `CMakeLists.txt` 通过 `include(cmake/ProductionSources.cmake)` 获取 `LKS_SOURCES` 列表，声明 `STATIC` 目标 `layerkeysort` 和别名 `LayerKeySort::layerkeysort`；C17 编译、关闭编译器 C 扩展。
+
+| 选项 | 用途 |
+| --- | --- |
+| `LKS_BUILD_TESTS` | 测试开关；仓库根构建默认 ON，被其他项目作为子目录使用默认 OFF |
+| `LKS_BUILD_EXAMPLES` | 公开例子；根构建默认 ON，嵌入默认 OFF |
+| `LKS_BUILD_BENCHMARKS` | 基准目标与附加测试，默认 OFF |
+| `LKS_ENABLE_SANITIZERS` | GNU/Clang 可用时启用 ASan/UBSan |
+| `LKS_BUILD_CAPACITY_SCREEN` | B64/B128/B256 私有容量屏选目标，非产品 ABI |
+| `LKS_INSTALL` | 安装静态库、公开头与 CMake package |
+
+`layerkeysort_diagnostics` 和 `layerkeysort_legacy_bench` 额外使用诊断定义与 V3 旧回归模块。普通 Full 生产目标**不包含** `gap.c/tree.c/group.c/bulk.c` 这四个旧 live 实现。
+
+按所选平台运行：
+
+~~~sh
+cmake -S . -B build -DLKS_BUILD_TESTS=ON -DLKS_BUILD_EXAMPLES=ON -DLKS_BUILD_BENCHMARKS=ON
+cmake --build build --config Debug --parallel
+ctest --test-dir build -C Debug -N
+ctest --test-dir build -C Debug --output-on-failure
+~~~
+
+`docs/VALIDATION.md` 的“39 个 CTest”明确有 benchmark/Python 的配置前提。具体次数以本机 `ctest -N` 和实际日志为准。
+
+## 3. 核心源码 → 测试源码 → 真实保障
+
+| 修改或研究的能力 | 测试入口 | 实际测试意图与范围 |
+| --- | --- | --- |
+| `order.c` 块索引、Handle 生命周期 | [`tests/v4_order.c`](../tests/v4_order.c) | 参考序列比对、边界模式、内部 invariant 校验、两子删除、Shared Block Owner、插入 OOM |
+| `order.c` Move/Cursor/revision | [`tests/v4_mutation.c`](../tests/v4_mutation.c) | 随机/敌对移动、长距离操作、no-op、Cursor 失效、跨块 Move OOM |
+| `managed_order.c` | [`tests/v4_mutation.c`](../tests/v4_mutation.c) | 重复值、有序插入、邻居定位、比较器调用、回调交互与 OOM |
+| `snapshot.c`/`snapshot_restore.c` | [`tests/v4_snapshot.c`](../tests/v4_snapshot.c) | 零行、历史保留、回调生命周期、关联数据、Resolver 失败、容量/分配错误 |
+| `snapshot_key.c`/`snapshot_wire.c` | [`tests/v4_snapshot.c`](../tests/v4_snapshot.c)、[`tests/v4_rc_torture.c`](../tests/v4_rc_torture.c) | LS1 规范、wire 向量、非法输入、畸形数据解析 |
+| `order_bulk.c` | [`tests/v4_snapshot.c`](../tests/v4_snapshot.c) | 大规模恢复、空恢复、新 Order 重建、失败后资源清理 |
+| `immutable_group.c`/`sort.c` | [`tests/v4_immutable_group.c`](../tests/v4_immutable_group.c) | 稳定排序、Group/Batch、相等源顺序、合并、多点 OOM、Group Snapshot |
+| SourceMarker 原子引用 | [`tests/v4_marker_threads.c`](../tests/v4_marker_threads.c) | 受限线程场景中的标记引用生命周期；**不是**可变 Order 的并发写安全性证明 |
+| 公开 API 冻结 | [`tests/v4_api_compile.c`](../tests/v4_api_compile.c)、[`tests/v4_freeze.c`](../tests/v4_freeze.c) | 64 个函数的类型/编译链接与冻结语义的示例核查 |
+| 严格 LK1 导入与旧代码 | [`tests/v4_snapshot.c`](../tests/v4_snapshot.c)、[`tests/parser_torture.c`](../tests/parser_torture.c) | V3 Path/LK1 格式和历史解析边界 |
+| V3 旧 Tree/Path 回归 | [`tests/consumer_roundtrip.c`](../tests/consumer_roundtrip.c)、`v2_main.c` 等 | 历史私有声明与旧 API 行为；不是 Full V4 公开 Tree 消费者示例 |
+| 长负载与跟踪 | `tests/soak.c`、`benchmarks/v4_trace.c`、`benchmarks/workload_simulator.c` | 反复变更与 workload 族；不代表全部真实应用 |
+
+### 3.1 测试文件名容易误导的地方
+
+`tests/consumer_roundtrip.c` 顶部明确写有 “Historical V3 regression using private declarations”。请不要因为叫 “consumer” 就宣称它验证了一个使用 V4 稳定 API 的数据库消费者。
+
+测试 `v4_marker_threads.c` 证明的是有专门同步条件的 SourceMarker 生命周期，**不证明**用户能无锁多线程访问/移动一个 Order。
+
+## 4. API、持久格式和 Frozen Fixtures 怎么核对？
+
+**公开头/API**
+
+~~~sh
+python tools/verify_v4_api.py
+~~~
+
+此脚本对照 [`tests/fixtures/v4_public_api.json`](../tests/fixtures/v4_public_api.json) 检查公开头的符号/类型，并核对引用当前接口的消费者编译测试。64 个函数和 14 个公开类型是冻结基线，新增函数需要按版本治理方案正式讨论，不能只为更新文档调整 Manifest。
+
+**LS1、LKS4SNP1 和 V3 LK1**
+
+`tests/v4_wire_probe.c` 是独立的 wire 测试可执行文件；`tools/verify_v4_wire.py` 与 [`tests/fixtures/v4_wire_golden.json`](../tests/fixtures/v4_wire_golden.json)、V3 LK1 golden 对照；测试框架通过 `layerkeysort_v4_wire_golden` 检验已编译的 probe。
+
+**Golden 常量不能由当前编码器重新生成后又拿来给当前编码器打分**。历史冻结字节变化需要显式版本政策和来源审查。
+
+**模拟 OOM**
+
+诊断版 `lks_alloc_test_fail_on_attempt(k)` 指定可失败分配位置；`v4_order.c`、`v4_mutation.c`、`v4_snapshot.c` 和 `v4_immutable_group.c` 在相关功能中使用该能力。验证点是失败时不泄漏本库资源、不部分提交被承诺原子性的源结构、必要时返回 NULL 输出；应用回调已产生的副作用仍由应用负责。
+
+**Fixture 哈希**
+
+[`tests/fixtures/v4_fixture_sha256.json`](../tests/fixtures/v4_fixture_sha256.json) 用于防止 Golden/Manifest 被无审查地更改。形式、宽度、字节序和兼容规则应以 [V4 冻结契约](V4_FREEZE.md) 为准。
+
+## 5. 两文件发行、安装模式和实际外部调用
+
+Full 有三类正式集成路径：
+
+1. **源码集成**：`add_subdirectory` 或离线 `FetchContent`；
+2. **安装后集成**：`cmake --install`、`find_package(LayerKeySort 4 CONFIG REQUIRED)`，链接 `LayerKeySort::layerkeysort`；
+3. **官方 amalgamation**：`layerkeysort.h` + `layerkeysort.c`，必须由发行流程生成，用户编译 C17 后由 C/C++ 应用调用。
+
+`tools/amalgamate.py` 严格以 `cmake/ProductionSources.cmake` 为依据收集生产 .c 和所需私有头，不允许人工长期维护另一套会漂移的合并 C 文件。它还有与 MSVC 项目/源清单一致性的校验，避免发行源码漏模块。
+
+`tools/validate_distribution.py` 针对源码消费者、安装消费者和两文件消费者分别编译验证，包含 C/C++ 包装工程；`tools/validate_release_assets.py` 独立生成两份发行物，对照字节一致性、SHA256 和故意篡改/额外文件的拒绝行为。
+
+在适当 Python/CMake/工具链环境：
+
+~~~sh
+python tools/validate_distribution.py
+python tools/validate_release_assets.py
+~~~
+
+这些是**可执行命令建议**，不是本次对它们实际运行的记录。
+
+## 6. 性能与内存报告怎样才能可信？
+
+需要固定来源 SHA、平台、编译器和优化参数；公布 record 数量、操作分布、Comparator/Allocator 代价、块策略、是否含 Snapshot/保留历史等约束。不能只挑一个最漂亮的结果。
+
+- requested live bytes、peak requested bytes 和进程 RSS 不同；
+- 同块 Move 和跨块 Move 不同；远距离 Drag 与热点局部修改要分开；
+- Snapshot 捕获/序列化是完整 O(N+A)，不要用实时 Move 的局部成本替代其实际耗时；
+- 4.1.0 的历史报告保留了空间改善和部分 CPU/延迟回归，不应改写结果成“全面更快”；
+- 实际应用 trace 有价值，但没有 trace 不等于所有技术审计必须停止。
+
+## 7. 哪些事实不能靠测试绿色直接推出？
+
+不能推断：任意用户传入已释放 Handle 的操作可以安全检测；所有用户 Comparator 都定义总序；任何调用方的 C++ 回调可以抛异常穿越 C 库；一个 Order 可以并发读写；所有情况都有硬实时最坏延迟；库自动创建磁盘文件、支持 WAL、可崩溃恢复；动态顺序结构能在不载入 RAM 的情况下直接改磁盘页。
+
+如果外部数据库需要这些能力，应由数据库建立自己的存储和事务测试；不能把调用 Full 的 Snapshot 序列化直接宣传为数据库崩溃安全提交。
+
+## 8. 修改源码后必须同步哪里？
+
+| 变更类型 | 需要更新的文档和测试 |
+| --- | --- |
+| 块/AVL/Handle/Move | [内部详解](IMPLEMENTATION_INTERNALS.zh-CN.md) `2–`8、[总体导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) `2–`4、相关 Order/Mutation 测试 |
+| ManagedOrder | 内部详解 `7、API 索引与 Managed Mutation 测试 |
+| Snapshot/LS1/wire/Restore | 内部详解 `9–`11、公开 API/兼容/迁移说明、对应 Golden、Snapshot 测试 |
+| Group/Batch/sort | 内部详解 `12、API 索引、Group 与稳定排序测试 |
+| 旧 LK1 导入 | 内部详解 `13、V3 fixture 和迁移说明，不倒改旧发行版 |
+| 构建/安装/两文件发行 | 本篇 `2/`5、Integration 文档、发行验证脚本 |
+| 新公开 API | 先正式审查 4.x 冻结契约和版本，再修改 Manifest、API 文档、消费者测试 |
+| Full 对外版本升级 | 在 [尚未合并的 PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 所拟定的交接台账中记录精确前后 SHA、API/内部差异、消费者是否需改适配层 |
+
+**如果 PR #24 尚未合并，则它的交接文件还不存在于 main**；不能在发行文档里假装已生效。
+
+## 9. 本轮文档化的验收范围与不足
+
+- **已完成：** 固定 SHA 源码核对、全部 16 个生产 C 翻阅、主要私有头、64 个公开 API 枚举、关键内部函数/分支说明、测试入口/构建/分发工具对照、源码导航。
+- **未完成：** 在本轮独立运行完整 39 项 CTest、所有 CI 平台、Sanitizer、全部历史实验数据以及对任意输入的形式化正确性证明。
+- **未授权：** 修改 Full 生产代码、修改 stable API/文件格式、直接合并 PR、打 tag 或发布新版。
+
+这份文件是一张**可复现审查地图**。将来要把“静态源码确认”升级为“实际测试 PASS”，必须记录实际运行的测试 SHA、命令、平台与日志，不得只复制上次 Codex 或 ChatGPT 的结论。
