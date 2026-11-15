@@ -6,6 +6,17 @@ English | [简体中文](README.zh-CN.md)
 
 LayerKeySort maintains *live sequence order* as applications insert, remove, and move occurrences. It is not a replacement for one-shot array sorting. The application owns its items and business identities; each product defines its own order-management contract.
 
+## How Full works — start with the source guides
+
+**New to the Full implementation?** These four **Chinese-language, source-grounded guides** are the main entry point for understanding how Full works internally. They follow a pinned **Full v4.1.0** source revision, covering the 16 production C modules and their actual execution paths. They do **not** describe Mini, and they do not replace the public header or frozen compatibility contract.
+
+1. **[Implementation walkthrough · 从源码理解完整实现](docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)** — **Start here.** Understand why Full maintains live occurrence order rather than merely sorting an array; trace the Block/AVL/Handle structure, insert–move–remove workflows, ManagedOrder, Snapshot, LS1, serialization and restore, and the distinctions between current and legacy code.
+2. **[Public API index and key contracts · 64 个公开 API](docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md)** — Find all **64 frozen Full public functions**, grouped by purpose and mapped to implementation files. Check required parameters, error outcomes, borrowed ownership, Handle/Cursor lifetimes, callback restrictions, concurrency boundaries, and practical traversal examples before integrating.
+3. **[Internal algorithms and data structures · 内部算法详解](docs/IMPLEMENTATION_INTERNALS.zh-CN.md)** — Follow the principal helpers across all **16 production C modules**: bounded blocks, implicit AVL maintenance, splitting/merging and redistribution, insertion and move commit paths, bulk reconstruction, allocation diagnostics, stable merges, and V3 LK1 compatibility.
+4. **[Validation and source-evidence map · 测试与验证指南](docs/IMPLEMENTATION_VALIDATION.zh-CN.md)** — Locate concrete test functions and assertions for important guarantees; learn the CMake, API/wire fixture, distribution and CI checks, plus how to reproduce them and distinguish examined source from executed tests.
+
+**Suggested route:** read **1 → 2 → 3 → 4** when studying or maintaining Full; for application integration, start with **2** alongside the [Full usage and integration guides](docs/FULL.md). All four are implementation explanations tied to a fixed source SHA, not a claim of exhaustive formal verification.
+
 ## Choose a product
 
 | | **[Full](docs/FULL.md)** | **[Mini](mini/README.md)** |
