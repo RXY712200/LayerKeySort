@@ -14,7 +14,7 @@
 
 1. **本文（总导读）**：完整架构、典型操作的实际调用过程和模块间关系。
 2. **[64 个公开 API 逐项源码映射](IMPLEMENTATION_API_REFERENCE.zh-CN.md)**：一个不漏地列出冻结接口、所有权、失效边界及实现文件。
-3. **[所有生产模块的私有算法与分支](IMPLEMENTATION_INTERNALS.zh-CN.md)**：分块、AVL、移动与修复、比较器定位、Snapshot/wire、Batch 和旧 LK1 导入，解释关键 helper 的调用及不变量。
+3. **[所有生产模块的私有算法与分支](IMPLEMENTATION_INTERNALS.zh-CN.md)**：分块、AVL、移动与修复、比较器定位、Snapshot/wire、Batch 和旧 LK1 导入，解释主要 helper 的调用及不变量。
 4. **[构建、测试、Golden、分发与可复现审计地图](IMPLEMENTATION_VALIDATION.zh-CN.md)**：哪些测试覆盖什么、哪些假设未验证、如何复测与避免错误地宣称 PASS。
 
 **覆盖范围**：当前 Full 的 16 个生产 C 文件、公开 API 与相关私有结构，以及关键测试入口；**未逐行证明**所有测试、基准、脚本、历史分支和应用侧代码的正确性。源码是最终事实来源，文档必须随变更同步更新。
@@ -172,6 +172,8 @@ Order
 - 不改变顺序的 move、失败操作和纯查询不增加版本，所以不使 Cursor 失效。
 - Cursor 自身借用源容器；**Cursor 必须先于源容器销毁**。
 
+存活 Handle 的有效性不冻结邻接关系或 compare 结果；普通遍历不会自动检测 revision。删除当前项前先保存 next，且保证 next 自身不被删除；需要修改检测时用 Cursor。可编译函数片段见 [API 指南 D1](IMPLEMENTATION_API_REFERENCE.zh-CN.md#d1-handle-身份不冻结相邻关系)。
+
 ## 4. ManagedOrder：不是另一个排序树
 
 实现：[`src/managed_order.c`](../src/managed_order.c)，结构 `LksManagedOrder { core, comparator, active }`。
@@ -190,7 +192,9 @@ Order
 
 **防回调重入**：每次比较器调用期间设置 `core->callback_active`；同时 facade 使用 `active` 阻止同一 ManagedOrder 的再次访问。独立的其他容器不受这个标记影响。它是重入保护**不是多线程锁**。
 
-**修改比较相关的业务字段**：不能原地改后假设顺序自动更新；应该从 ManagedOrder 删除、修改字段、再插入（新的 Handle）。不提供任意拖动式的 ManagedOrder move。
+**修改比较相关的业务字段**：修改比较器可见字段前，应用必须处理每一个相关 ManagedOrder 中引用该对象的**全部 occurrence**，以及依赖该对象排序的 Group 等其他结构。仅删除一个 occurrence 不够；Full 不会自动追踪跨容器共享对象。Group 不可原地删除记录，应由应用安排重建或替换。
+
+“remove → 修改 → insert”是多个独立操作，**不是 Full 事务**：成功 remove 立即使原 Handle 的全部副本失效；后续 insert 可能因 OOM 等错误失败，Full 不会撤销先前删除，也不保证恢复原 Handle。应用应保留业务对象及足够的顺序/身份状态，在失败后重建相关容器或按应用策略恢复；恢复插入本身也可能失败，必须继续处理错误。不提供任意拖动式的 ManagedOrder move。
 
 ## 5. Snapshot：独立于实时结构的历史视图
 
@@ -217,6 +221,8 @@ Snapshot 不持有 live Handle、AVL/块布局或旧业务指针；其数据包�
 
 关联字节是可由业务侧选择的“恢复所需线索”，常见做法是 occurrence ID 或业务关联信息，而不是偷偷将内存指针地址当作文件中的永久身份。没有 Association 回调时，关联数据全为空，Resolver 仍可以按 ordinal 自行恢复。
 
+**Association 返回 span 的生命周期**：数据必须在回调返回之后仍然有效，直到 Full 完成紧接着的复制。不能返回自动局部数组的地址，因为其生命周期在回调返回时结束；可使用仍存活的业务对象字段或由调用方管理的缓冲区。非零长度要求非 NULL 数据。
+
 ### 5.2 为什么旧 Snapshot 可以安全存活？
 
 `LksSourceMarker` 引用计数在适用平台上用原子操作维护**标记的生命周期**。当原 Order/Group 已销毁，旧 Snapshot 仍可存储 Namespace、关联字节和读取历史 Key。
@@ -238,6 +244,8 @@ LS1.<namespace lower-case hex>.<16位小写十六进制行序号>
 - 格式化对 Namespace 逐字节编码，再把本次 Snapshot 的 `row` 转换成 16 个小写 hex 字符。
 - 验证器拒绝非法字符/语法；比较器要求**相同 namespace/domain**，否则返回 `DOMAIN_MISMATCH`，同域按 ordinal 比较。
 - **LS1 不能作为不同历史时刻记录身份**；相同 namespace 的不同快照可能给不同业务对象产生相同 ordinal Key，故上层须单独标识版本/快照。
+
+同一 namespace 的规范 LS1 键使用固定 16 位小写十六进制 ordinal，故其**字节级 ASCII 词典序与 ordinal 顺序一致**。外部数据库依赖该性质时须采用保持字节顺序的 collation，不能假定语言或忽略大小写的排序规则适用。不同 namespace 的 `lks_snapshot_key_compare` 返回 `DOMAIN_MISMATCH`；对这些字符串直接排序不建立有意义的业务记录先后。LS1 是历史快照坐标，不是跨快照版本的持久记录 ID；这与 V3 LK1 的 Path 顺序编码是不同契约。
 
 ## 6. LKS4SNP1：真正保存的二进制是什么？
 
@@ -269,8 +277,8 @@ offset  width  contents
 `lks_snapshot_restore_order(snapshot, resolve, context, out_order)` 位于 [snapshot_restore.c](../src/snapshot_restore.c)：
 
 1. 分配暂用的 N 个 `void*` 槽位（空 Snapshot 则免此分配）。
-2. 按快照行序逐项取 association 和 ordinal，调用应用提供的 **Resolver**，要求恢复每一行的**非 NULL、调用者拥有的业务对象指针**；同一业务指针可重复出现。
-3. 解析成功后调用 `lks_order_bulk_build`，一次构建新的实时 Order。
+2. 按行序调用 Resolver，首次非 OK 或 OK 但 item 为 NULL 时立即停止，后续行不调用；仅全部必需行成功后才进入未发布的 bulk Order 构建。空 Snapshot 不调用 Resolver，允许 NULL Resolver，仍需分配一个新的空 Order，因此可能 OOM。失败清理 Full 自有临时分配、输出为 NULL，但不回滚应用回调副作用、不释放已经解析出的调用方 item。同一业务指针可重复出现。
+3. 全部必需行解析成功后调用 `lks_order_bulk_build`，一次构建新的实时 Order。
 4. `order_bulk.c` 按默认块容量计算块数，均衡填充各块，独立分配每个新 Handle，链接块前后关系；随后 `snap_bulk_index` 递归按顺序取中间块构建平衡 AVL，并计算高度和 `subtree_blocks`。
 5. 成功返回一个**新的** Order 和新的 Handle；旧快照只保留历史数据，不能恢复旧内存指针的身份。失败则输出 NULL，清理本库临时内存；应用 Resolver 的外部副作用/已创建业务对象不由 Full 回滚或释放。
 
@@ -284,7 +292,7 @@ offset  width  contents
 - **`lks_group_build`**：复制输入指针并稳定排序到独立的 `LksGroup` 中；Group 持有自己的指针数组，却**不持有业务 item 内容**。
 - **`lks_group_merge`**：归并两个已按兼容比较器排序的 Group；同值时优先取 base（左侧），使跨来源相等项保留稳定先后。
 - **`lks_group_batch_build`**：按调用者给定 `group_size` 切分输入，每段分别建立 Group，Batch 持有各 Group。
-- **`lks_group_batch_merge_all`**：按 `group_size` 起步，逐轮翻倍进行宽度归并，使用独立 scratch，最后生成**独立拥有指针数组**的新 Group；每一层在比较器相等时仍按早期来源优先。
+- **`lks_group_batch_merge_all`**：仅当 `group_count > 1` 才分配独立 scratch 并按 `group_size` 起步逐轮翻倍归并；空和单 chunk Batch 不走此 scratch 分配路径，最后生成**独立拥有指针数组**的新 Group；每一层在比较器相等时仍按早期来源优先。
 - **`lks_group_snapshot_capture`**：将已有 Group 的有序指针序列转入与 Order 相同的 Snapshot/LS1/wire 逻辑；Group 的逻辑 revision 为 0，来源标记用于本 Group 的当前性判断。
 - **防重入**：Group/Batch 在调用比较器/关联回调期间设置 `busy`；避免在来源尚被调用时被访问/销毁。与多线程互斥不同。
 
@@ -334,7 +342,9 @@ offset  width  contents
 
 某些指针型 getter 因返回类型约束，在无效/忙碌时返回 NULL；这不等同于能安全读取已经释放的 Handle。
 
-### 9.3 线程安全不是“一点原子操作就全线程安全”
+### 9.3 允许的并发读取与同步边界
+
+完成后的不可变 Snapshot 可以并发读取，前提是应用从外部保护其整个读取期间的生命周期，不与销毁冲突。Group 的纯读取可在无并发销毁、merge/capture 等状态访问且业务对象读取安全时进行；merge/capture 会读写内部 busy/marker 状态，不能仅因 Group 逻辑不可变就与其他访问任意并发。Order/ManagedOrder 的访问若涉及修改或销毁，必须由调用者同步。回调重入 guard 与 SourceMarker 原子引用计数都不是容器锁。
 
 Snapshot SourceMarker 的引用计数存在原子操作，但 **Order、ManagedOrder、Group 的可变访问仍要求调用者自己同步**。回调活跃标记只防同源回调重入，不是互斥锁；调用者应保证业务 item、比较器 context 在要求的生命周期内有效。
 
@@ -347,6 +357,22 @@ Snapshot SourceMarker 的引用计数存在原子操作，但 **Order、ManagedO
 - 对数据库等外部项目，应先建立真实使用行为的 trace，再决定有无理由增加增量持久化或新的 rank/定位 API；**Full 现在没有磁盘原生排序文件和通用数据库事务能力**。
 
 来源：[v4.1.0 变更与限制](V4_1_0.md)、[当前路线与剩余成本（Issue #3）](https://github.com/RXY712200/LayerKeySort/issues/3)、[历史问题（Issue #4）](https://github.com/RXY712200/LayerKeySort/issues/4)。这些资料解释为什么做出取舍，**具体行为仍以生产源码为准**。
+
+### 10.1 同时存活的内存，而不只是最终结果
+
+N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存与最终所有权，不固定架构相关字节数。
+
+| 操作 | 峰值期间可能同时存在 | 返回后的归属 |
+| --- | --- | --- |
+| Live Order | 独立 Handle、Blocks、未使用指针槽、应用 item；插入/满目标 move 可有 spare | Order 释放结构；应用释放业务对象 |
+| Snapshot capture | 原来源、Snapshot 头/rows/namespace、关联增长缓冲及 slack；realloc 搬迁是否短时保留旧块取决于分配器 | Snapshot 拥有精确关联副本及来源 marker 引用；来源仍独立 |
+| Serialize | 已有 Snapshot + 调用者输出 buffer | Snapshot 与 buffer 各归原拥有者；编码无堆分配 |
+| Deserialize | 调用者输入 buffer + 新 Snapshot rows/namespace/关联副本 | 新 Snapshot 独立；输入仍归调用者 |
+| Restore | 来源 Snapshot + N 指针临时数组 + 逐步建立的新 Order + Resolver 返回的应用对象 | 临时指针数组释放；新 Order 借用业务对象，失败不释放它们 |
+| Sort / Group build | 输入指针数组、sorted/result、merge scratch；Group build 还有 Group 头 | sort 复制回输入后释放临时数组；Group 保留结果数组，均不拥有 item |
+| Group merge / Batch merge_all | 原 Groups/Batch + 新结果数组；merge_all 仅 group_count>1 另有 scratch，普通两组 merge 不需此 scratch | 源不变；新 Group 独立拥有结果数组，scratch 释放 |
+
+这些是同时存活的请求和所有权关系，不是 RSS 上界；分配器元数据、缓存、碎片、业务对象和调用者额外 buffer 都可能增加进程内存。
 
 ## 11. 实际上从一次“编辑 → 保存 → 重新打开”会经过哪些函数？
 

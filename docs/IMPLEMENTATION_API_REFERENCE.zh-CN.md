@@ -1,4 +1,4 @@
-# Full v4.1.0：全部 64 个公开 API 的源码映射与使用契约
+# Full v4.1.0：完整公开 API 索引与关键契约指南
 
 > 审查基线：`main` `70d7f0ef5857b54381b863d292a213909d87459f`；接口最高事实来源为 [`include/layerkeysort.h`](../include/layerkeysort.h) 与其生产实现。本文与 [完整执行导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[内部算法详解](IMPLEMENTATION_INTERNALS.zh-CN.md)、[测试与证据地图](IMPLEMENTATION_VALIDATION.zh-CN.md) 配套。**本文不是可编译的替代头文件；签名、参数顺序、准确返回值以该固定 SHA 的公开头为准**。4.x 公开契约冻结，不在本文发明额外 API。
 
@@ -69,7 +69,7 @@
 | `lks_managed_order_size` | 查询 occurrence 总数，忙碌/NULL 返回 0。 | `src/managed_order.c` |
 | `lks_managed_order_insert` | 搜索 upper bound 并用 `lks_order_insert_before/back` 插入；比较器相等的新项排在旧项后。 | `src/managed_order.c` |
 | `lks_managed_order_locate` | 分别查 lower/upper bound，返回严格左邻、首个等值、首个严格大值；三个输出地址须不同。 | `src/managed_order.c` |
-| `lks_managed_order_remove` | 按独立 Handle 删除，不要求再次比较数据；修改比较器相关字段需要先删再改再插。 | `src/managed_order.c` |
+| `lks_managed_order_remove` | 按独立 Handle 删除，不要求再次比较数据；比较字段变更必须处理共享对象的全部相关 occurrence；删除后重插不是原子事务（见 E）。 | `src/managed_order.c` |
 | `lks_managed_order_first` | 取得比较器顺序中的首个 occurrence。 | `src/managed_order.c` |
 | `lks_managed_order_last` | 取得比较器顺序中的末项。 | `src/managed_order.c` |
 | `lks_managed_order_compare` | 复用 core 的 Handle 顺序比较；不再根据当前字段即时重新排序。 | `src/managed_order.c` |
@@ -116,6 +116,40 @@
 | `lks_group_batch_merge_all` | 将已排序 chunk 按宽度翻倍的稳定归并合成一个新 Group；早期 chunk 相等项优先。 | `src/immutable_group.c` |
 | `lks_group_snapshot_capture` | 将不可变 Group 的当前顺序捕获到通用 Snapshot 格式；使用与 Order 相同的导出逻辑。 | `src/immutable_group.c` |
 | `lks_group_snapshot_is_current` | 同一 Group 标记且 Snapshot revision 为 0 才为真；不代表 Group 的业务字段仍未变化。 | `src/immutable_group.c` |
+
+### B8. 按家族核对输入、失败和所有权
+
+本表是头文件与实现的关键摘要；错误检查有先后顺序，不承诺多个非法条件同时出现时返回某个统一状态。所有借用对象必须仍然存活，NULL 处理不能检测悬空指针。
+
+| 家族 | 必填、NULL 与空输入 | 输出、主要错误 | 重入、分配和生命周期 |
+| --- | --- | --- | --- |
+| Status / sort | status 接受未知枚举；sort 的 compare 必填，count=0 允许 items=NULL | 未知 status 返回静态文字；sort 非法参数 INVALID_ARGUMENT、数组分配失败/过大 OUT_OF_MEMORY，原数组不变 | count<2 不分配；否则 copied/scratch 两数组；借用 item/context，调用方保证比较器和数组不被回调破坏；无容器 busy guard |
+| Explicit 创建/读取 | create 无参数；destroy(NULL) 无动作；size(NULL)=0，指针 getter(NULL)=NULL | create 分配失败 NULL；空 first/last、越端 next/previous 返回 NULL；compare 必须有同源 live Handles 和输出，失败输出 0 | create 分配；读取/compare 不分配；busy 时 getter 为 NULL/0、compare 为 REENTRANT、destroy 忽略；Order 拥有结构、借用 item |
+| Explicit insert/remove/move | Order/item/out_handle 为插入必填；相对 anchor 必须同源 live；remove 的 out_item 可省略；空 Order 可插入，不能删除/移动不存在的 occurrence | 插入失败 out_handle=NULL；删除失败 out_item=NULL；INVALID_ARGUMENT、REENTRANT、CAPACITY_LIMIT；insert/需要 spare 的 move 可 OUT_OF_MEMORY | 插入先分配 Handle/可选块；remove 不分配；实际修改增长 revision；no-op move 即使 revision 上限也可 OK；存活 Handle 不变，删除只使目标失效 |
+| Managed | create 要求 callable comparator；复制描述符、借用 context；插入 item/out_handle 必填；locate query 与三个互异输出必填，可查询非 resident | create 非法/OOM 为 NULL；Status API 可 INVALID_ARGUMENT/REENTRANT；insert 继承核心容量/OOM；locate 输出先清 NULL，未匹配仍 OK；compare 输出先置 0 | bound/locate/remove/compare 不分配，remove 不调用比较器；busy getter 为 NULL/0、destroy 忽略；不得改变 resident 比较语义，无公开 move/core |
+| Cursor | source/out_cursor 必填，reverse 只能 0/1；空来源可创建 | 创建失败输出 NULL：INVALID_ARGUMENT/REENTRANT/OUT_OF_MEMORY；next 输出先清 NULL，结束 OK/NULL，真实修改 INVALIDATED/NULL | 创建分配，next/destroy 不分配；destroy(NULL) 安全；next 在源回调期间 REENTRANT；Cursor 必须先于源销毁 |
+| Snapshot capture/currentness | source/options/out 必填；namespace 为有效的 1..UINT32_MAX 字节；association 可 NULL，空来源可捕获 | capture 输出先清 NULL：INVALID_ARGUMENT/REENTRANT/OUT_OF_MEMORY/CAPACITY_LIMIT，或回调错误透传；currentness 在 NULL/busy/加载快照/不同来源时假 | 捕获分配 rows/域/关联数据和可选 marker；容量/算术边界在发布前检查；失败不改来源 revision；Snapshot 拥有副本，回调 span 见 E |
+| Snapshot views / LS1 / wire | view 的两个输出均必填；association/key_format 要求合法行；format/serialize 的目标必填；NULL count/length/serialized_size 为 0 | view 错误输出 NULL/0；key_compare 输出先为 0；INVALID_ARGUMENT、BUFFER_TOO_SMALL；跨 LS1 域 DOMAIN_MISMATCH；deserialize 输出 NULL，可 INVALID_ARGUMENT/OUT_OF_MEMORY | 只读 view/编码不分配；不足 buffer 不写；deserialize 完整验证后分配；views 借用到 Snapshot 销毁，destroy(NULL) 安全 |
+| Restore / LK1 import | restore 的 Snapshot/out 必填，import 的 out 必填；非空 restore 要求 Resolver，空允许 NULL；空 import 允许 entries=NULL，非空 key/item 必须有效非 NULL | 输出先清 NULL；INVALID_ARGUMENT/OUT_OF_MEMORY，回调错误透传；LK1 重复坐标 ALREADY_EXISTS；超出目标平台表示范围拒绝、不截断 | restore 逐行短路后 bulk build，import 先解析排序；空结果也可能分配失败；新 Order 归调用者，items 始终借用；回调副作用不回滚 |
+| Group / Batch | build/merge 要 callable comparator/out；空 build 允许 items=NULL；非空条目非 NULL；Batch group_size>0；merge 来源必须排序兼容 | 输出先清 NULL；INVALID_ARGUMENT/REENTRANT/OUT_OF_MEMORY；size 类 NULL/busy 为 0，item/group_at 越界或 busy 为 NULL | 构建/归并分配；build/merge 的计数/数组算术检查可 INVALID_ARGUMENT，实际分配失败 OUT_OF_MEMORY，勿统一写成 CAPACITY_LIMIT；busy destroy 忽略；Batch 拥有 chunk，借用 chunk 不可单独销毁；merge_all 仅多 chunk 分配 scratch |
+
+### B9. ManagedOrder 的共享 Handle 访问器
+
+以下函数片段可放在包含 `layerkeysort.h` 的 C 文件中。调用期间应用保证来源和 item 存活且无冲突修改；`visit` 不修改或销毁该来源。
+
+```c
+static void visit_managed(const LksManagedOrder *order, void (*visit)(void *))
+{
+    const LksOrderHandle *h;
+    if (!order || !visit) return;
+    for (h = lks_managed_order_first(order); h; h = lks_order_next(h))
+        visit(lks_order_item(h));
+    for (h = lks_managed_order_last(order); h; h = lks_order_previous(h))
+        visit(lks_order_item(h)); /* 第二轮为反向遍历，重复访问是本例有意行为。 */
+}
+```
+
+这是受支持的共享 Handle 访问方式，无需也不能取得私有 core。
 
 ## C. 类型、枚举、回调（公开头中的“非函数接口”）
 
@@ -166,17 +200,51 @@
 
 **不能这么做**：销毁业务 item 但 Handle 仍指向它；用旧 Handle 代表新恢复的记录；复制 raw Handle pointer 到磁盘；把 LS1 键用作跨 Snapshot 的业务主键；未经同步跨线程修改和遍历；在回调中修改正在捕获的同源容器。
 
+### D1. Handle 身份不冻结相邻关系
+
+存活 Handle 继续有效，不代表之前观察到的 next/previous 邻居或 compare 结果固定不变。插入和移动可以改变这些关系。普通遍历没有自动 revision 检测；需要检测修改时使用 Cursor，真实修改后返回 INVALIDATED，no-op/失败不使它失效。
+
+删除式遍历先保存下一个 live Handle，再删除当前 occurrence；保存不是延长生命周期，若保存的 Handle 自身随后被删除也立即失效：
+
+```c
+static LksStatus remove_all(LksOrder *order)
+{
+    const LksOrderHandle *h, *next;
+    if (!order) return LKS_STATUS_INVALID_ARGUMENT;
+    for (h = lks_order_first(order); h; h = next) {
+        LksStatus status;
+        next = lks_order_next(h);
+        status = lks_order_remove(order, h, NULL);
+        if (status != LKS_STATUS_OK) return status;
+        /* h 已失效；next 只在其自身未被删除且来源存活时有效。 */
+    }
+    return LKS_STATUS_OK;
+}
+```
+
 ## E. 错误处理中的几个“不直观”边界
+
+修改比较器可见字段前，应用必须处理每一个相关 ManagedOrder 中引用该对象的**全部 occurrence**，以及依赖该对象排序的 Group 等其他结构。仅删除一个 occurrence 不够；Full 不会自动追踪跨容器共享对象。Group 不可原地删除记录，应由应用安排重建或替换。
+
+“remove → 修改 → insert”是多个独立操作，**不是 Full 事务**：成功 remove 立即使原 Handle 的全部副本失效；后续 insert 可能因 OOM 等错误失败，Full 不会撤销先前删除，也不保证恢复原 Handle。应用应保留业务对象及足够的顺序/身份状态，在失败后重建相关容器或按应用策略恢复；恢复插入本身也可能失败，必须继续处理错误。
+
+**Association 返回 span 的生命周期**：数据必须在回调返回之后仍然有效，直到 Full 完成紧接着的复制。不能返回自动局部数组的地址，因为其生命周期在回调返回时结束；可使用仍存活的业务对象字段或由调用方管理的缓冲区。非零长度要求非 NULL 数据。
 
 1. `before/after` 的 anchor 必须是**当前活着且属于同一 Order** 的 Handle。代码可拒绝另一个活 Order 的 Handle，但不会安全检测已经 `free` 的悬空 Handle。
 2. 新插入的 `out_handle` 是调用者必须提供的有效输出地址；失败后为 NULL。删除的 `out_item` 可省略，存在时先清 NULL。
 3. Managed Locate 的 `out_predecessor`、`out_equal`、`out_successor` **要求三个不同的输出指针地址**。即使查询结果是 NULL，也不允许输出槽位别名。
 4. Snapshot 的 `namespace_size` 必须非零，Namespace 由应用选择；同一 Namespace 不自动保证两个不同时刻的历史 Key 唯一。
 5. `lks_snapshot_key_length` 不含 `\0`，所以 `key_format` 至少准备 `length+1` 字节。二进制 `serialized_size` 是精确字节数，不包含文本终止符。
-6. `lks_snapshot_restore_order` 先完成全部 Resolver 调用，后创建新的 Order；Resolver 失败导致输出 NULL，但它产生的外部副作用、对象分配须由调用方处理。
+6. `lks_snapshot_restore_order` 按行序调用 Resolver，首次非 OK 或 OK 但 item 为 NULL 时立即停止，后续行不调用；仅全部必需行成功后才进入未发布的 bulk Order 构建。空 Snapshot 不调用 Resolver，允许 NULL Resolver，仍需分配一个新的空 Order，因此可能 OOM。失败清理 Full 自有临时分配、输出为 NULL，但不回滚应用回调副作用、不释放已经解析出的调用方 item。
 7. Group 与 Batch 在比较器语义保持一致时才可安全归并；改变参与排序的字段会破坏它们“已排序”的前置条件。
 8. 满目标块的跨块 move 必须预先分配 spare；OOM 返回前**不发生逻辑顺序改变**。同块 move 不需要分配。
 9. 由于 V4 已冻结，任何拟新增 `rank`、`at` 或 `persistent ID` 都不是本文现成 API；新接口需要独立方案和版本契约审查。
+
+### E1. 并发读取与 LS1 排序
+
+完成后的不可变 Snapshot 可以并发读取，前提是应用从外部保护其整个读取期间的生命周期，不与销毁冲突。Group 的纯读取可在无并发销毁、merge/capture 等状态访问且业务对象读取安全时进行；merge/capture 会读写内部 busy/marker 状态，不能仅因 Group 逻辑不可变就与其他访问任意并发。Order/ManagedOrder 的访问若涉及修改或销毁，必须由调用者同步。回调重入 guard 与 SourceMarker 原子引用计数都不是容器锁。
+
+同一 namespace 的规范 LS1 键使用固定 16 位小写十六进制 ordinal，故其**字节级 ASCII 词典序与 ordinal 顺序一致**。外部数据库依赖该性质时须采用保持字节顺序的 collation，不能假定语言或忽略大小写的排序规则适用。不同 namespace 的 `lks_snapshot_key_compare` 返回 `DOMAIN_MISMATCH`；对这些字符串直接排序不建立有意义的业务记录先后。LS1 是历史快照坐标，不是跨快照版本的持久记录 ID；这与 V3 LK1 的 Path 顺序编码是不同契约。
 
 ## F. 低风险入门流程与进一步阅读
 

@@ -59,7 +59,24 @@ ctest --test-dir build -C Debug --output-on-failure
 | V3 旧 Tree/Path 回归 | [`tests/consumer_roundtrip.c`](../tests/consumer_roundtrip.c)、`v2_main.c` 等 | 历史私有声明与旧 API 行为；不是 Full V4 公开 Tree 消费者示例 |
 | 长负载与跟踪 | `tests/soak.c`、`benchmarks/v4_trace.c`、`benchmarks/workload_simulator.c` | 反复变更与 workload 族；不代表全部真实应用 |
 
-### 3.1 测试文件名容易误导的地方
+### 3.1 关键契约对应的具体函数与断言
+
+以下函数的相关断言已在本次文档修订中静态检查；“检查断言”不等于执行测试，更不证明任意输入。生产源码仍是行为依据。
+
+| 契约 | 测试函数及已检查场景 | 覆盖边界 |
+| --- | --- | --- |
+| 删除只使目标 Handle 失效，其他 Handle 保持身份 | `tests/v4_order.c` 的 `remove_model` 清除模型中的被删 Handle，检查返回 item；`random_campaign` 定期调用 `verify`，逐项核对剩余 Handle 地址、item、正反遍历和 compare | 检查存活者身份；不尝试读取已释放 Handle 来证明失效，这种使用本身非法；不是每一步都执行完整 verify |
+| no-op、revision、容量 | `tests/v4_mutation.c::cursor_tests` 在失败注入下执行端点/self/邻接 no-op，断言 revision 不变且无分配，失败插入后 Cursor 可用；UINT64_MAX 时首项 move_front OK、实际 move_back CAPACITY_LIMIT | 测试直接覆盖这些具体分支，不声称穷举全部 API 容量组合 |
+| 跨块 Move OOM 不改顺序 | `tests/v4_mutation.c::move_oom` 对满目的块 spare 分配注入失败，比较两块副本和 revision、live bytes/blocks，`sequence_check` 检查 Handle 序列，Cursor 仍可读取原首项 | 直接覆盖 spare 分配失败；同函数还检查非满目标/同块 move 不分配 |
+| 同 item 多 occurrence | `tests/v4_order.c::boundaries_and_checker` 多次插入同一个 `&item`，通过保存的不同位置 Handle 删除并检查合并/重分布、不变量 | 覆盖重复业务指针的结构行为；跨多个 ManagedOrder 共享对象后修改字段的应用恢复流程**未由此测试直接验证** |
+| Resolver 中途失败 | `tests/v4_snapshot.c::large_and_edges` 配合 `resolve_status_fail`，在第 0、中间、末行返回 NOT_FOUND，断言输出 NULL、Full live bytes 不增加；`resolve_fail` 的首行 OK/NULL 导致 INVALID_ARGUMENT | 首次错误停止由 `snapshot_restore.c` 的立即跳转确认；这些断言没有独立记录并验证失败后的每行调用次数，也不证明业务副作用已回滚 |
+| busy getter 与 destroy | `tests/v4_mutation.c::reentry_compare`（由 `managed_interactions` 驱动）检查 Managed 状态函数 REENTRANT、getter NULL/0、共享 Handle getter NULL，并调用 busy destroy；`tests/v4_snapshot.c::associate`（由 `callbacks_lifetime` 驱动）检查来源 getter/嵌套 capture；外层操作随后成功 | 检查列出的调用，不能扩展为所有 getter 的全部组合 |
+| Group/Batch busy destroy | `tests/v4_immutable_group.c::compare`、`association`（由 `campaign` 驱动）检查 Group getter NULL/0、嵌套 capture/merge_all REENTRANT，调用 Group/Batch destroy，外层继续使用来源并最终释放 | busy destroy 不破坏来源由后续使用/清理场景支持；未由这里直接验证并发 merge/capture 安全性 |
+| 空恢复、回调 buffer | `tests/v4_snapshot.c::capture_restore` 包含 count=0 场景；`associate` 使用文件作用域 scratch 返回字节 | 不能据此声称测试过返回自动局部数组（非法程序）的行为；空恢复 NULL Resolver 的允许性按公开头和 restore 实现确认 |
+
+证据分层：①这些测试代码存在；②本次读过表中相关断言；③本次执行的是文档结构/链接/API 清单与示例编译检查，**没有运行上述 CTest**；④历史 CI 和发布验证仍是历史证据，不转记为本次运行结果。本次检查命令和结果见 PR 修订报告，后续复测应另记 SHA、环境和日志。
+
+### 3.2 测试文件名容易误导的地方
 
 `tests/consumer_roundtrip.c` 顶部明确写有 “Historical V3 regression using private declarations”。请不要因为叫 “consumer” 就宣称它验证了一个使用 V4 稳定 API 的数据库消费者。
 
@@ -130,12 +147,12 @@ python tools/validate_release_assets.py
 
 | 变更类型 | 需要更新的文档和测试 |
 | --- | --- |
-| 块/AVL/Handle/Move | [内部详解](IMPLEMENTATION_INTERNALS.zh-CN.md) `2–`8、[总体导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) `2–`4、相关 Order/Mutation 测试 |
-| ManagedOrder | 内部详解 `7、API 索引与 Managed Mutation 测试 |
-| Snapshot/LS1/wire/Restore | 内部详解 `9–`11、公开 API/兼容/迁移说明、对应 Golden、Snapshot 测试 |
-| Group/Batch/sort | 内部详解 `12、API 索引、Group 与稳定排序测试 |
-| 旧 LK1 导入 | 内部详解 `13、V3 fixture 和迁移说明，不倒改旧发行版 |
-| 构建/安装/两文件发行 | 本篇 `2/`5、Integration 文档、发行验证脚本 |
+| 块/AVL/Handle/Move | [内部详解](IMPLEMENTATION_INTERNALS.zh-CN.md) §2–§8、[总体导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) §2–§4、相关 Order/Mutation 测试 |
+| ManagedOrder | 内部详解 §7、API 索引与 Managed Mutation 测试 |
+| Snapshot/LS1/wire/Restore | 内部详解 §9–§11、公开 API/兼容/迁移说明、对应 Golden、Snapshot 测试 |
+| Group/Batch/sort | 内部详解 §12、API 索引、Group 与稳定排序测试 |
+| 旧 LK1 导入 | 内部详解 §13、V3 fixture 和迁移说明，不倒改旧发行版 |
+| 构建/安装/两文件发行 | 本篇 §2 / §5、Integration 文档、发行验证脚本 |
 | 新公开 API | 先正式审查 4.x 冻结契约和版本，再修改 Manifest、API 文档、消费者测试 |
 | Full 对外版本升级 | 在 [尚未合并的 PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 所拟定的交接台账中记录精确前后 SHA、API/内部差异、消费者是否需改适配层 |
 

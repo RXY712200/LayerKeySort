@@ -71,7 +71,7 @@ Order: root + first/last + logical count + revision
 | `v4_detach` | 从双链及 AVL 删除一个块；两子节点时物理移植后继 Block，而不是复制其 resident 数组；从必要的位置再平衡。 |
 | `v4_locations` | 遍历一块现存居民，更新各 Handle 的 block/local 并清理剩余数组槽。 |
 | `v4_rank` | 计算左子树块数，沿 parent 上溯；从右子返回父节点时累计左子树块数+1。 |
-| `v4_mark_index / v4_begin` | 分配诊断构建的每次操作工作量跟踪；正常生产构建无动作。 |
+| `v4_mark_index / v4_begin` | `v4_begin` 清零已有的每操作计数；`v4_mark_index` 在已有固定长度数组中去重并记录 Block 指针，满时置 tracking_overflow；二者均不分配堆内存，正常生产构建无动作。 |
 
 当 AVL 旋转时，块在逻辑顺序中的位置不变。因此 AVL 只是**顺序索引**，不是将用户元素按比较器键重新排序。
 
@@ -132,7 +132,8 @@ Order: root + first/last + logical count + revision
 
 - 插入查 upper bound：新的等值 occurrence 放在所有已有等值 occurrence 后面。
 - Locate 运行 lower 和 upper 两次查找；predecessor 为 lower 前一个（若 lower 不存在，则最后一个），equal 仅在 lower 比较结果为零时才返回，successor 为 upper。
-- 比较相关字段变动时，先 remove、修改、再 insert，否则“Block 内按比较器有序”的前提可能被破坏。
+- 修改比较器可见字段前，应用必须处理每一个相关 ManagedOrder 中引用该对象的**全部 occurrence**，以及依赖该对象排序的 Group 等其他结构。仅删除一个 occurrence 不够；Full 不会自动追踪跨容器共享对象。Group 不可原地删除记录，应由应用安排重建或替换。
+- “remove → 修改 → insert”是多个独立操作，**不是 Full 事务**：成功 remove 立即使原 Handle 的全部副本失效；后续 insert 可能因 OOM 等错误失败，Full 不会撤销先前删除，也不保证恢复原 Handle。应用应保留业务对象及足够的顺序/身份状态，在失败后重建相关容器或按应用策略恢复；恢复插入本身也可能失败，必须继续处理错误。
 - ManagedOrder 没有任意相对 Move，也没有供调用者修改其 core 的逃逸接口。
 
 例：`[2a,2b,3,7a,7b,9]`，查询 7 得 predecessor=3、equal=7a、successor=9；新插入 7c 会位于 7b 和 9 之间。
@@ -145,7 +146,7 @@ Snapshot currentness 需要 **同一 SourceMarker 指针**和 **相同 revision*
 
 SourceMarker 的原子操作只是管理标记最后释放的时机，**不代表 Order 或 Group 已经能被任意线程并发修改**。
 
-## 9. Snapshot 的分配布局及所有内部 helper
+## 9. Snapshot 的分配布局及主要内部 helper
 
 `LksSnapshotRow { size_t end; }` 保存关联数据的累计结束偏移，空行也占一条 end 但 end 与上行相同。
 
@@ -165,15 +166,19 @@ SourceMarker 的原子操作只是管理标记最后释放的时机，**不代�
 
 `snap_marker_new` 以引用数 2 创建一个来源和首张 Snapshot 共用的 Marker。`retain/release` 原子增减并在引用数到 0 时释放 Marker；在引用数上限不能增加时报告容量错误。来源 Order/Group 可以比它的历史快照更早销毁。
 
+**Association 返回 span 的生命周期**：数据必须在回调返回之后仍然有效，直到 Full 完成紧接着的复制。不能返回自动局部数组的地址，因为其生命周期在回调返回时结束；可使用仍存活的业务对象字段或由调用方管理的缓冲区。非零长度要求非 NULL 数据。
+
 **失败原子性仅覆盖 Full 自有 Snapshot**：已执行的应用 Association 回调副作用不由 Full 回滚。
 
-## 10. LS1 与 LKS4SNP1 的全部关键分支
+## 10. LS1 与 LKS4SNP1 的主要编码与校验分支
 
 ### 10.1 LS1：历史行序号，不是永久记录 ID
 
 `snapshot_key.c` 里 `snap_nibble` 只识别数字及 a..f 小写；`snap_key_parse` 验证 `LS1.` 前缀、namespace 非空偶数位 hex、点号、正好 16 位 ordinal hex、无尾随字符。
 
 `key_length` 返回 `21+2*namespace_size`（不含 NUL）；`key_format` 写入 Namespace hex 和固定 16 位 ordinal；`key_compare` 先验证两方，Namespace 不同则 DOMAIN_MISMATCH，同域比较 ordinal。
+
+同一 namespace 的规范 LS1 键使用固定 16 位小写十六进制 ordinal，故其**字节级 ASCII 词典序与 ordinal 顺序一致**。外部数据库依赖该性质时须采用保持字节顺序的 collation，不能假定语言或忽略大小写的排序规则适用。不同 namespace 的 `lks_snapshot_key_compare` 返回 `DOMAIN_MISMATCH`；对这些字符串直接排序不建立有意义的业务记录先后。LS1 是历史快照坐标，不是跨快照版本的持久记录 ID；这与 V3 LK1 的 Path 顺序编码是不同契约。
 
 ### 10.2 Wire：明确字节序，不保存原生 C 指针
 
@@ -193,7 +198,7 @@ end-of-input，不能有尾随垃圾
 
 ## 11. Snapshot Restore 与 Bulk Build：为何不做 N 次公开 insert？
 
-`lks_snapshot_restore_order` 先分配 N 个临时 item 指针槽，逐行读取关联字节，调用应用 Resolver；要求每行返回非 NULL item。全部通过才调用 `lks_order_bulk_build`，最后释放临时指针槽。失败时清理 Full 自身临时结构，但 Resolver 创建的应用对象由应用负责。
+`lks_snapshot_restore_order` 对非空输入先分配 N 个临时 item 指针槽。按行序调用 Resolver，首次非 OK 或 OK 但 item 为 NULL 时立即停止，后续行不调用；仅全部必需行成功后才进入未发布的 bulk Order 构建。空 Snapshot 不调用 Resolver，允许 NULL Resolver，仍需分配一个新的空 Order，因此可能 OOM。失败清理 Full 自有临时分配、输出为 NULL，但不回滚应用回调副作用、不释放已经解析出的调用方 item。全部通过才调用 `lks_order_bulk_build`，最后释放临时指针槽。
 
 `lks_order_bulk_build`：
 
@@ -212,7 +217,7 @@ end-of-input，不能有尾随垃圾
 
 `LksGroup { items,count,marker,busy }` 拥有已排序的指针数组但不拥有每个 item。`ig_new` 分配 Group Header；`group_build` 调 stable_sort_copy；`group_merge` 分配新 Group/目标数组并做一次归并，旧 Group 不变。即使两个输入是同一 Group，逻辑上仍是两条借用序列。
 
-`LksGroupBatch { groups,count,group_count,group_size,busy }` 持有分片 Group。`batch_build` 逐片调用 group_build，失败释放已建片；`batch_group_at` 只返回 Batch 持有的借用 Group，不可自行销毁。`batch_merge_all` 将已排序片拷贝进新数组，若多片则额外申请 scratch；按 group_size 为初始宽度，依次翻倍，反复归并并交换输入/输出数组；结果是独立 Group，早片等值先于晚片。
+`LksGroupBatch { groups,count,group_count,group_size,busy }` 持有分片 Group。`batch_build` 逐片调用 group_build，失败释放已建片；`batch_group_at` 只返回 Batch 持有的借用 Group，不可自行销毁。`batch_merge_all` 将已排序片拷贝进新数组，仅当 `group_count > 1` 则额外申请 scratch（空和单 chunk 不分配此数组）；按 group_size 为初始宽度，依次翻倍，反复归并并交换输入/输出数组；结果是独立 Group，早片等值先于晚片。
 
 Group 所谓不可变，指 **指针顺序和容器结构**不经 API 变化；外部修改 comparator 参与的业务字段会使其“当前数组已正确排序”的前置条件失效。
 
