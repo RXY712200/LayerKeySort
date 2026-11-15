@@ -1,5 +1,9 @@
 # LayerKeySort V4 architecture
 
+> For a source-by-source execution walkthrough (including block/AVL maintenance,
+> snapshot wire/restore, legacy compatibility, and relevant tests), see the
+> [Chinese Full implementation walkthrough](IMPLEMENTATION_WALKTHROUGH.zh-CN.md).
+
 LayerKeySort V4 separates two problems that earlier versions coupled together:
 
 > **live position is contextual; historical/exported position is immutable.**
