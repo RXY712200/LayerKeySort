@@ -53,6 +53,32 @@ For code changes run as applicable:
 
 Legacy V3 regressions use private declarations only for migration/regression evidence.
 
+## Mandatory implementation-documentation gate
+
+**A Full implementation or contract change is not complete until its technical documentation is consistent with the target source SHA. This is a mandatory PR/acceptance gate, including private-only improvements that do not change the public API.** Do not defer documentation to a later PR or silently leave old mechanism descriptions behind.
+
+For **every change to Full production code, public headers, ordering/ownership/error semantics, private algorithms/structures, allocation behavior, wire/restore, or build/distribution behavior**, review **all four** current-source implementation guides in the **same PR**:
+
+| Guide | Review and synchronize |
+| --- | --- |
+| [Implementation walkthrough (zh-CN)](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) | Architecture and step-by-step execution, real call chains, relevant source modules, before/after behavior |
+| [Full public API index and contracts (zh-CN)](IMPLEMENTATION_API_REFERENCE.zh-CN.md) | All actual symbols, signatures/behavior, return codes, ownership, lifetime, callbacks, mapping to source; explicitly mark unaffected public API |
+| [Internal algorithms and data structures (zh-CN)](IMPLEMENTATION_INTERNALS.zh-CN.md) | Changed private helpers, invariants, Block/AVL, memory management, commit/OOM and hot paths |
+| [Validation and source-evidence map (zh-CN)](IMPLEMENTATION_VALIDATION.zh-CN.md) | Actual test functions/assertions, new/removed coverage, commands run, CI links, unverified behavior and resource evidence |
+
+The implementation agent must:
+
+1. Pin the **old Full source SHA**, verify the **target PR HEAD**, read the exact diff and affected source/tests, and establish the actual change. Do not infer behavior from chat memory or from another AI's report.
+2. Inspect **each of the four guides**, revise all affected explanations and examples, and ensure the documented **applicable Full implementation SHA**, release/development status, and independently verified scope are accurate. If a guide's behavior or API mapping is unchanged, record it explicitly in the PR synchronization matrix rather than inventing changes; still ensure its current-version applicability and review status are not stale.
+3. Update the [Full consumer handoff and change ledger](FULL_CONSUMER_HANDOFF.md) **in the same PR**: old/new exact SHA, modified functions/structures/call paths, real tests, and a **database core / intermediary-adapter impact judgment** (none, retest, adapter changes, possible core changes, or unknown, with reasons). The database owns its storage, transactions, persistent IDs, and adoption decision; Full remains independent.
+4. Update other current-facing API, Architecture, Compatibility, Usage, Integration, Development, README, examples, migration or release documentation **only when affected**. Never rewrite historical Stable/Preview/RC benchmarks, frozen fixtures or already-published facts to make a new change look older.
+5. Include a **four-row document synchronization matrix** in the PR evidence: guide, reviewed/updated sections or confirmed unchanged parts, affected source paths/functions, applicable SHA, tests and limitations. Recheck final **remote HEAD** after implementation.
+6. **FAIL / no merge** if any of the four guides is unreviewed or misleading, the ledger has no matching record, the database/adapter impact is omitted, or code and documentation source SHAs disagree. Repair within the same step/PR before claiming PASS, even if tests and CI otherwise succeed.
+
+A **documentation-only** change without implementation/contract changes does not create a fake new algorithm baseline or require cosmetic rewriting of all four guides; update only documents truly affected while preserving valid source provenance. Normal Full development still requires independently reviewed tests, compatibility and GitHub branch protections; documentation alone is not sufficient for PASS.
+
+**Workflow priority (2026-11-15):** Full's proactive memory/algorithm optimization is paused while an independent database project develops a realistic downstream workload. This is not a permanent technical freeze: a reproducible correctness or compatibility defect can be separately authorized for maintenance. An external database AI cannot unilaterally modify Full or demand a database-specific feature be added to its general-purpose public API.
+
 ## Documentation truth model
 
 Do not rewrite historical records to match the present.
