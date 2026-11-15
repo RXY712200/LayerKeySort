@@ -6,6 +6,8 @@ English | [简体中文](README.zh-CN.md)
 
 LayerKeySort maintains *live sequence order* as applications insert, remove, and move occurrences. It is not a replacement for one-shot array sorting. The application owns its items and business identities; each product defines its own order-management contract.
 
+**Want to understand how Full actually works?** Start with the [source-grounded implementation walkthrough (Chinese)](docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md), then the [complete public API mapping](docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md), [internal algorithm details](docs/IMPLEMENTATION_INTERNALS.zh-CN.md), and [validation map](docs/IMPLEMENTATION_VALIDATION.zh-CN.md). They document a pinned Full v4.1.0 source revision, not Mini.
+
 ## Choose a product
 
 | | **[Full](docs/FULL.md)** | **[Mini](mini/README.md)** |
