@@ -6,8 +6,6 @@
 
 LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实例的顺序管理问题，而不是 `qsort` 一类的一次性排序。业务对象及业务身份由应用自己管理；每个产品拥有独立的顺序管理契约。
 
-**想理解 Full 是怎么实现的？** 不必直接从复杂的源文件猜起。建议按顺序阅读：[完整实现导读](docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md) → [全部 64 个公开 API](docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md) → [16 个生产模块及内部算法](docs/IMPLEMENTATION_INTERNALS.zh-CN.md) → [测试与复现地图](docs/IMPLEMENTATION_VALIDATION.zh-CN.md)。这些说明对应固定的 Full v4.1.0 源码基线，不代表 Mini 的实现。
-
 ## 选择适合你的产品
 
 | | **[Full](docs/FULL.zh-CN.md)** | **[Mini](mini/README.zh-CN.md)** |

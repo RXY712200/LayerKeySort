@@ -129,10 +129,6 @@ LayerKeySort 的长期定位是 **dynamic ordering library**，而不是传统 s
 Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 的 API 契约；Embedded 等其他产品线仍只是未来设想，不代表已经实现。
 详见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
 
-## 完整的实现源码解读
-
-如果需要研究 Full 的内部工作方式，而不只是照着 API 使用，可以先读 [总体执行导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)，再读 [64 个公开 API 逐项分析](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[生产模块与内部算法详解](IMPLEMENTATION_INTERNALS.zh-CN.md) 和 [构建/测试/故障验证地图](IMPLEMENTATION_VALIDATION.zh-CN.md)。每篇都对应固定的源代码 SHA，并注明独立验证的限制。
-
 ## 文档
 
 - [架构](ARCHITECTURE.md)
