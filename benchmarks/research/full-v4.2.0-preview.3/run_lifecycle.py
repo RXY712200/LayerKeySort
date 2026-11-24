@@ -67,7 +67,7 @@ with gzip.open(out/'receipts.jsonl.gz','wt',encoding='utf-8') as f:
     (out/'metadata.json').write_text(json.dumps(meta,indent=2)+'\n',encoding='utf-8')
     with (out/'raw.csv').open('w',newline='') as stream:
         w=csv.writer(stream,lineterminator='\n')
-        w.writerow(['variant','mix','repeat','n','retention','association','namespace','build','edit','capture','key','encode','decode','restore','cleanup','wire_bytes','requested_retained','requested_peak','allocation_calls'])
+        w.writerow(['variant','mix','repeat','n','retention','association','namespace','build','edit','capture','key','encode','decode','restore','cleanup','wire_bytes','requested_retained','requested_peak','allocation_calls','wall'])
         for mix,conditions in enumerate((cells,[cells[i] for i in (0,1,2,5,12)])):
             variants=list(pins)+(['tree'] if mix else ['flat'])
             for i,cell in enumerate(conditions):

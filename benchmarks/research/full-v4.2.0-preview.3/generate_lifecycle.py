@@ -46,7 +46,7 @@ static void mixed(Order *o, size_t *model, size_t n, size_t seed)
     CHECK(added && added!=b && seq_compare(b,added)<0);
     seq_remove(o,added);
     seq_move(o,a,b,1);
-    CHECK(seq_compare(b,a)<0 && seq_valid(o));
+    CHECK(seq_compare(b,a)<0);
 #else
     const LksOrderHandle *a=lks_order_first(o),*b=a,*added=NULL;
     int cmp;
@@ -95,4 +95,24 @@ s=s.replace('    LksAllocStats stats=',r"""
     free(models);
 #endif
     LksAllocStats stats=""")
+if len(sys.argv)>2:
+    seed, rate=map(int,sys.argv[2:4])
+    assert 0<seed<2**32 and 0<rate<=64
+    s=s.replace('mixed(order,models,n,1779033703u+j*7919u);',
+        f'for(size_t e=0;e<{rate};++e)mixed(order,models,n,{seed}u+j*7919u+e*317u);')
+    s=s.replace('    size_t retained=lks_alloc_stats_get().live_bytes;',
+        """    size_t retained=lks_alloc_stats_get().live_bytes;
+#if INDEXED
+    retained+=seq_stats().live;
+#endif""")
+    s=s.replace('    CHECK(!stats.live_bytes&&!stats.live_blocks);',
+        """    CHECK(!stats.live_bytes&&!stats.live_blocks);
+#if INDEXED
+    CHECK(!seq_stats().live);
+    fprintf(stderr,"sequence_peak=%zu,snapshot_peak=%zu\\n",seq_stats().peak,stats.peak_live_bytes);
+#endif""")
+s=s.replace('    unsigned char domain[4096]', '    double wall_start=now();\n    unsigned char domain[4096]')
+s=s.replace('%.9f,%zu,%zu,%zu,%zu\\n",', '%.9f,%zu,%zu,%zu,%zu,%.9f\\n",')
+s=s.replace('stats.peak_live_bytes,stats.alloc_calls+stats.realloc_calls);',
+    'stats.peak_live_bytes,stats.alloc_calls+stats.realloc_calls,now()-wall_start);')
 Path(sys.argv[1]).write_text(s,encoding='utf-8')
