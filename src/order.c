@@ -117,6 +117,50 @@ static LksOrderBlock *v4_new_block(LksOrder *owner)
     }
     return block;
 }
+/* Bounded ordered-range redistribution for block precedence.
+ * Zero denotes a block that still uses AVL precedence. */
+static void v4_tag_attach(LksOrder *order, LksOrderBlock *block)
+{
+    LksOrderBlock *left = block, *right = block;
+    size_t width = 1;
+    for (;;) {
+        uint64_t lower = left->previous ? left->previous->tag : 0;
+        uint64_t upper = right->next ? right->next->tag : UINT64_MAX;
+        int bounded = (!left->previous || lower) && upper;
+        if (bounded && upper > lower) {
+            uint64_t stride = (upper - lower) / (width + 1);
+            /* Spread a repaired range to leave room for further insertions. */
+            if (stride >= (width == 1 ? 1 : width)) {
+                if (width == 1 && !right->next && stride > UINT64_C(1099511627776))
+                    stride = UINT64_C(1099511627776);
+                uint64_t label = lower;
+                for (LksOrderBlock *p = left;; p = p->next) {
+                    label += stride;
+                    p->tag = label;
+                    if (p == right) break;
+                }
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+                order->tag_writes += width;
+                if (width > 1) ++order->tag_repairs;
+                if (width > order->max_tag_writes) order->max_tag_writes = width;
+#else
+                (void)order;
+#endif
+                return;
+            }
+        }
+        if (width == 64 || (!left->previous && !right->next)) {
+#ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
+            ++order->tag_fallbacks;
+#endif
+            return;
+        }
+        if (left->previous && (!right->next || !lower || width % 2 == 0)) left = left->previous;
+        else right = right->next;
+        ++width;
+    }
+}
+
 /* Called only with a prepared block; an implicit insertion has no search key. */
 static void v4_link_after(LksOrder *order, LksOrderBlock *anchor,
     LksOrderBlock *block)
@@ -139,6 +183,7 @@ static void v4_link_after(LksOrder *order, LksOrderBlock *anchor,
     }
     v4_mark_index(order, block);
     ++order->blocks;
+    v4_tag_attach(order, block);
     v4_balance(order, parent);
 }
 /* Physically transplant the successor. Copying its array would break stable
@@ -389,6 +434,10 @@ LksStatus lks_order_compare(const LksOrder *order, const LksOrderHandle *a,
     const LksOrderBlock *left = a->block, *right = b->block;
     if (left == right) {
         *out = (a->local > b->local) - (a->local < b->local);
+        return LKS_STATUS_OK;
+    }
+    if (left->tag && right->tag) {
+        *out = left->tag < right->tag ? -1 : 1;
         return LKS_STATUS_OK;
     }
     /* Height strictly increases along each parent edge. Advance the lower

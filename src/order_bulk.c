@@ -30,7 +30,7 @@ LksStatus lks_order_bulk_build(void *const *items, size_t count, LksOrder **out)
         LksOrderBlock *b = (LksOrderBlock *)lks_alloc(sizeof(*b));
         size_t j, n = base+(i < extra);
         if (!b) goto oom;
-        memset(b, 0, sizeof(*b)); b->owner = o; b->previous = o->last;
+        memset(b, 0, sizeof(*b)); b->owner = o; b->tag = ((uint64_t)i+1)*(UINT64_MAX/((uint64_t)blocks+1)); b->previous = o->last;
         if (o->last) o->last->next = b; else o->first = b;
         o->last = b; ++o->blocks;
         for (j = 0; j < n; ++j, ++row) {
