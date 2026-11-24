@@ -77,7 +77,7 @@ Contributors making a Full implementation or contract change must:
 
 A **documentation-only** change without implementation/contract changes does not create a fake new algorithm baseline or require cosmetic rewriting of all four guides; update only documents truly affected while preserving valid source provenance. Normal Full development still requires independently reviewed tests, compatibility and GitHub branch protections; documentation alone is not sufficient for PASS.
 
-**Workflow priority (2026-11-15):** Full's proactive memory/algorithm optimization is paused while an independent database project develops a realistic downstream workload. This is not a permanent technical freeze: a reproducible correctness or compatibility defect can be separately authorized for maintenance. External consumers do not control Full's implementation or public API; database-specific requirements remain subject to Full's independent general-purpose API review.
+**Current priority (2026-11-24):** Full live-core work has resumed under the Preview.1 task. The November 15 pause was a historical decision. OrdWeave now implements native checkpoints and WAL recovery on pinned Full v4.1.0. Database policy remains outside the Full contract.
 
 ## Documentation truth model
 

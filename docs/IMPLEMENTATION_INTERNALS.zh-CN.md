@@ -12,7 +12,7 @@
 | --- | --- |
 | `lks_alloc.c` | `lks_alloc / lks_realloc / lks_free` 封装内存；诊断构建追加带对齐的统计 Header、按 Tag 记录请求字节并可确定性注入分配失败 |
 | `lks_base.c` | `lks_status_string` 返回冻结的状态文字，不分配 |
-| `order.c` | `v4_refresh/replace/rotate_left/rotate_right/balance` 维护块级 AVL；`v4_link_after/detach` 维护块链和树节点；`v4_place/insert/repair/move/locations/rank` 实现实时顺序 |
+| `order.c` | `v4_refresh/replace/rotate_left/rotate_right/balance` 维护块级 AVL；`v4_link_after/detach` 维护块链和树节点；`v4_place/insert/repair/move/locations/shifted_locations` 实现实时顺序 |
 | `managed_order.c` | `v4_managed_compare_item` 包装用户比较回调；`v4_managed_bound` 做块 AVL + 块内二分，复用 Explicit 核心 |
 | `snapshot.c` | `snap_marker_new/retain` 原子生命期计数；`lks_snapshot_new`、`snap_append`、`lks_snapshot_capture_sequence` 完成 Snapshot 的建造；`snap_live_next` 顺序遍历 |
 | `snapshot_key.c` | `snap_nibble`、`snap_key_parse` 及 LS1 格式化/验证/同域比较 |
@@ -54,7 +54,7 @@ AVL: indexes Block1/Block2 by implicit in-order sequence
 Order: root + first/last + logical count + revision
 ~~~
 
-`subtree_blocks` 数的是**块**，不等于子树内的 item 数。`lks_order_compare` 得到的是 Block 的隐式序号，不是全部记录的绝对数字排名。Full 当前也没有公开的随机第 N 项访问 API。
+`subtree_blocks` 数的是**块**，不等于子树内的 item 数。候选的比较不读取该字段，仍由诊断核对其值。Full 当前也没有公开的随机第 N 项访问 API。
 
 多块情形每块正常至少半满（当前最小为 32）；唯一块可以低于半满。AVL 的中序顺序、块链顺序、块内 Handle 指针顺序应当一致。
 
