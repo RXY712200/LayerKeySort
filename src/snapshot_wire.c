@@ -2,10 +2,25 @@
 #include "lks_alloc_internal.h"
 #include <string.h>
 _Static_assert(CHAR_BIT == 8, "snapshot wire requires eight-bit bytes");
+/* Fixed-width portable shifts, with no alignment or host-byte-order premise. */
 static uint64_t snap_be_read(const unsigned char *p, size_t width)
-{ uint64_t v = 0; size_t i; for (i = 0; i < width; ++i) v = (v << 8) | p[i]; return v; }
+{
+    uint32_t high = ((uint32_t)p[0]<<24)|((uint32_t)p[1]<<16)|((uint32_t)p[2]<<8)|p[3];
+    if (width == 4) return high;
+    uint32_t low = ((uint32_t)p[4]<<24)|((uint32_t)p[5]<<16)|((uint32_t)p[6]<<8)|p[7];
+    return ((uint64_t)high<<32)|low;
+}
 static void snap_be_write(unsigned char *p, uint64_t v, size_t width)
-{ while (width) { p[--width] = (unsigned char)(v & 255); v >>= 8; } }
+{
+    if (width == 8) {
+        p[0]=(unsigned char)(v>>56); p[1]=(unsigned char)(v>>48);
+        p[2]=(unsigned char)(v>>40); p[3]=(unsigned char)(v>>32);
+        p+=4;
+    }
+    p[0]=(unsigned char)(v>>24); p[1]=(unsigned char)(v>>16);
+    p[2]=(unsigned char)(v>>8); p[3]=(unsigned char)v;
+}
+
 size_t lks_snapshot_serialized_size(const LksSnapshot *s)
 { return s ? 24+s->namespace_size+8*s->count+s->association_size : 0; }
 LksStatus lks_snapshot_serialize(const LksSnapshot *s, void *buffer, size_t size)
