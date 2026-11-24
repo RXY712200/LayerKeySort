@@ -378,6 +378,55 @@ static void preview1_precedence_and_shifts(void)
     lks_order_destroy(order);
 }
 
+static void preview12_block_tags(void)
+{
+    enum { PREFIX = 130, INSERTS = 10000 };
+    const LksOrderHandle **expected = calloc(PREFIX + INSERTS, sizeof(*expected));
+    LksOrder *order = lks_order_create();
+    int payload = 3;
+    CHECK(expected && order);
+    for (size_t i=0; i<PREFIX; ++i)
+        CHECK(lks_order_insert_back(order,&payload,&expected[i ? INSERTS+i : 0]) == LKS_STATUS_OK);
+    for (size_t i=1; i<=INSERTS; ++i) {
+        int result;
+        CHECK(lks_order_insert_before(order,expected[INSERTS+1],&payload,&expected[i]) == LKS_STATUS_OK);
+        CHECK(lks_order_compare(order,expected[i-1],expected[i],&result) == LKS_STATUS_OK && result == -1);
+        CHECK(lks_order_compare(order,expected[INSERTS+1],expected[i],&result) == LKS_STATUS_OK && result == 1);
+    }
+    sequence_check(order,expected,PREFIX+INSERTS);
+    CHECK(order->tag_repairs > 0 && order->tag_fallbacks == 0 && order->max_tag_writes <= 64);
+    uint64_t tag = 0;
+    for (LksOrderBlock *b=order->first; b; b=b->next) {
+        CHECK(b->tag > tag);
+        tag=b->tag;
+    }
+
+    /* Saturate a wide interior section without changing logical precedence.
+     * A split here cannot leave slack within the 64-block update budget. */
+    tag = 0;
+    for (LksOrderBlock *b=order->first; b; b=b->next) b->tag=++tag;
+    const LksOrderHandle *anchor=expected[INSERTS/2], *fresh;
+    size_t fallbacks=order->tag_fallbacks;
+    for (size_t i=0; i<LKS_ORDER_BLOCK_CAPACITY && order->tag_fallbacks==fallbacks; ++i)
+        CHECK(lks_order_insert_before(order,anchor,&payload,&fresh) == LKS_STATUS_OK);
+    CHECK(order->tag_fallbacks==fallbacks+1);
+    size_t untagged=0;
+    const LksOrderHandle *previous=NULL;
+    for (LksOrderBlock *b=order->first; b; b=b->next) {
+        const LksOrderHandle *first=b->records[0];
+        int result;
+        if (!b->tag) ++untagged;
+        if (previous) {
+            CHECK(lks_order_compare(order,previous,first,&result) == LKS_STATUS_OK && result==-1);
+            CHECK(lks_order_compare(order,first,previous,&result) == LKS_STATUS_OK && result==1);
+        }
+        previous=first;
+    }
+    CHECK(untagged==1 && lks_order_internal_valid(order));
+    lks_order_destroy(order);
+    free(expected);
+}
+
 int main(int argc, char **argv)
 {
     unsigned p;size_t steps=30000;
@@ -386,6 +435,7 @@ int main(int argc, char **argv)
     else if(argc!=1){fputs("usage: v4_mutation [--long]\n",stderr);return 2;}
     CHECK(lks_alloc_stats_reset()==0);
     preview1_precedence_and_shifts();
+    preview12_block_tags();
     cursor_tests();move_boundaries();move_oom();
     explicit_random(17,steps);explicit_random(UINT32_C(1779033703),steps);explicit_random(UINT32_C(3144134277),steps);long_moves();
     for(p=0;p<7;++p)managed_campaign(p,p==3?100001:4096);
