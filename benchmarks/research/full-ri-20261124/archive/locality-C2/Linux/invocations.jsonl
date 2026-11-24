@@ -1,0 +1,2 @@
+{"id": "locality-prod", "command": ["/home/runner/work/lks0011/lks0011/.local/build/locality_prod"], "available": 7442116608, "utc": "2026-11-24T00:55:00Z", "status": "ok", "returncode": 0}
+{"id": "locality-diag", "command": ["/home/runner/work/lks0011/lks0011/.local/build/locality_diag"], "available": 7442231296, "utc": "2026-11-24T00:55:00Z", "status": "ok", "returncode": 0}

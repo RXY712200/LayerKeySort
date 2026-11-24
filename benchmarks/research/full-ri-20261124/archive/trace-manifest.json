@@ -1,0 +1,407 @@
+[
+  {
+    "name": "1000-17-compare-heavy.trace",
+    "n": 1000,
+    "seed": 17,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "ddb30ce582b919ca77b5ba5a79b0f2255044cce0d5781a0144709ad5e9e267a6",
+    "final_n": 976
+  },
+  {
+    "name": "1000-17-update-heavy.trace",
+    "n": 1000,
+    "seed": 17,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84",
+    "final_n": 1033
+  },
+  {
+    "name": "1000-17-short.trace",
+    "n": 1000,
+    "seed": 17,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "99cf87c2e720f454946b59697eeb708bc5df88eb4772f76251c98fa4b370ecce",
+    "final_n": 890
+  },
+  {
+    "name": "1000-17-long.trace",
+    "n": 1000,
+    "seed": 17,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b",
+    "final_n": 890
+  },
+  {
+    "name": "1000-17-hotspot.trace",
+    "n": 1000,
+    "seed": 17,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "2ab2ea962d8387332453a6e39f9152630818800cc4e49ee136469531ce10a26f",
+    "final_n": 5077
+  },
+  {
+    "name": "1000-305419896-compare-heavy.trace",
+    "n": 1000,
+    "seed": 305419896,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "3475e56ea359a3895025b9b066601f2f1a2cb3680db6a99e7e5f6eb3acd0080f",
+    "final_n": 965
+  },
+  {
+    "name": "1000-305419896-update-heavy.trace",
+    "n": 1000,
+    "seed": 305419896,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a",
+    "final_n": 904
+  },
+  {
+    "name": "1000-305419896-short.trace",
+    "n": 1000,
+    "seed": 305419896,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "2155885e7ac15cb3dba37f05e942caf7cd27191699f125121400877c2556e58a",
+    "final_n": 912
+  },
+  {
+    "name": "1000-305419896-long.trace",
+    "n": 1000,
+    "seed": 305419896,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "2704d5c602bc3359c6c520e70ef8e44ea45d211a46f7a5fc686efeaeba42328b",
+    "final_n": 912
+  },
+  {
+    "name": "1000-305419896-hotspot.trace",
+    "n": 1000,
+    "seed": 305419896,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "9bed0221bdfd0191198193164eca60d30608785d1da7459e4dfc128eaa6f3ccc",
+    "final_n": 5200
+  },
+  {
+    "name": "1000-2654435769-compare-heavy.trace",
+    "n": 1000,
+    "seed": 2654435769,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "7e124d0ef5c8c93048a7a1835e5f1f0cb59835b93c830995cbc88385923110d1",
+    "final_n": 992
+  },
+  {
+    "name": "1000-2654435769-update-heavy.trace",
+    "n": 1000,
+    "seed": 2654435769,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "068436dd4342af7e4f278afb1ab9df930b5d144c358e8983781ffa88eeeb65e8",
+    "final_n": 1093
+  },
+  {
+    "name": "1000-2654435769-short.trace",
+    "n": 1000,
+    "seed": 2654435769,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "97c81d8a6b8ea583dd2e8cb63ad1fd10db7e547a8aaa4a5da1c58edc89a3b3ca",
+    "final_n": 935
+  },
+  {
+    "name": "1000-2654435769-long.trace",
+    "n": 1000,
+    "seed": 2654435769,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "dbbc1ef3ca7afd0206abb01d867f5cdb9ce5122940cb24c32c801e36ff9c7ceb",
+    "final_n": 935
+  },
+  {
+    "name": "1000-2654435769-hotspot.trace",
+    "n": 1000,
+    "seed": 2654435769,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "eedca1a601c8b3be5104667ec12f4d218451798eab70ead332c1305734ef63a7",
+    "final_n": 5110
+  },
+  {
+    "name": "10000-17-compare-heavy.trace",
+    "n": 10000,
+    "seed": 17,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "7f8df6c378d56ea9cf43c81ae891e678a6967b44eec9f7070594cf4e4bebc9fe",
+    "final_n": 9944
+  },
+  {
+    "name": "10000-17-update-heavy.trace",
+    "n": 10000,
+    "seed": 17,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc",
+    "final_n": 9979
+  },
+  {
+    "name": "10000-17-short.trace",
+    "n": 10000,
+    "seed": 17,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "ea0e7c73c7f11fccbea772d5d56559700c57df1890f89cc92bd73fd22efb6650",
+    "final_n": 9896
+  },
+  {
+    "name": "10000-17-long.trace",
+    "n": 10000,
+    "seed": 17,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad",
+    "final_n": 9896
+  },
+  {
+    "name": "10000-17-hotspot.trace",
+    "n": 10000,
+    "seed": 17,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "e69304d247ee0822ebc6dddc43b5e235688df0398b5575d663ef207e8c3a0832",
+    "final_n": 13937
+  },
+  {
+    "name": "10000-305419896-compare-heavy.trace",
+    "n": 10000,
+    "seed": 305419896,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "9d53cf46034ebbf084195b01fc443b1d86e4fe475ac61ec37213646cf0179283",
+    "final_n": 10002
+  },
+  {
+    "name": "10000-305419896-update-heavy.trace",
+    "n": 10000,
+    "seed": 305419896,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "0bf5a5f05ae6b3a02b68b5e252e706af015c8565a9cdff28ab6dd6a61ddfd455",
+    "final_n": 10180
+  },
+  {
+    "name": "10000-305419896-short.trace",
+    "n": 10000,
+    "seed": 305419896,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "f0396a7a3e613dd14b018e8eea2d2829a2385e92fe4c394addd1418edb21b90a",
+    "final_n": 9973
+  },
+  {
+    "name": "10000-305419896-long.trace",
+    "n": 10000,
+    "seed": 305419896,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "0ffba2c8dd15a4e4b3dcd5e916827fd20d3da0ba565328c79641bfeb2f898ee6",
+    "final_n": 9973
+  },
+  {
+    "name": "10000-305419896-hotspot.trace",
+    "n": 10000,
+    "seed": 305419896,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "a39a7907143d03f9f2d714613b2d3b594a1da2b926b37e3a74b024f2dd29709a",
+    "final_n": 13979
+  },
+  {
+    "name": "10000-2654435769-compare-heavy.trace",
+    "n": 10000,
+    "seed": 2654435769,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "36f96dc493d6d7a155ebc69777ba4763cafbfb5e3bc6942051b129ea08fde97f",
+    "final_n": 9991
+  },
+  {
+    "name": "10000-2654435769-update-heavy.trace",
+    "n": 10000,
+    "seed": 2654435769,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "74c012bda71fbf33fa63f48f039c54c567b17c33554d4e4a488f8d181e71d656",
+    "final_n": 9972
+  },
+  {
+    "name": "10000-2654435769-short.trace",
+    "n": 10000,
+    "seed": 2654435769,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "185195b2ad8a05c6b25accf91b6ef82d0c690882f30610eb602e1d1f1c3f3404",
+    "final_n": 9998
+  },
+  {
+    "name": "10000-2654435769-long.trace",
+    "n": 10000,
+    "seed": 2654435769,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "ac78c99b973765dc1fe5cfe0ddc2bd19f3a4d0dbbecd1cf1feaca61782fb74f1",
+    "final_n": 9998
+  },
+  {
+    "name": "10000-2654435769-hotspot.trace",
+    "n": 10000,
+    "seed": 2654435769,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "ce20dcb00280abc992314bca86c1e8dca97faf911b5a77574ee851d76792b720",
+    "final_n": 14002
+  },
+  {
+    "name": "100000-17-compare-heavy.trace",
+    "n": 100000,
+    "seed": 17,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "d9f01ee5bd30d4b1d437680338abe146758cda6fd6e3f516d2ceccee4f767f9b",
+    "final_n": 99988
+  },
+  {
+    "name": "100000-17-update-heavy.trace",
+    "n": 100000,
+    "seed": 17,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d",
+    "final_n": 99848
+  },
+  {
+    "name": "100000-17-short.trace",
+    "n": 100000,
+    "seed": 17,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "e8916981e7d63006330451e5e1734bc99cb9b5e42383c650b5c51f9c8796d991",
+    "final_n": 100027
+  },
+  {
+    "name": "100000-17-long.trace",
+    "n": 100000,
+    "seed": 17,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6",
+    "final_n": 100027
+  },
+  {
+    "name": "100000-17-hotspot.trace",
+    "n": 100000,
+    "seed": 17,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "0661db24012d41299439bd54f17a70694d46e60d47915f669bd3ba31e9f3dc9e",
+    "final_n": 104141
+  },
+  {
+    "name": "100000-305419896-compare-heavy.trace",
+    "n": 100000,
+    "seed": 305419896,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "0951688fb4eacab653d0449e3514797005f0f1f1c07bf0e7cd19fbaa40002f1d",
+    "final_n": 100028
+  },
+  {
+    "name": "100000-305419896-update-heavy.trace",
+    "n": 100000,
+    "seed": 305419896,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "d2fca5db3129e3df739491717bd44d403d6da43f446dc960838f2ee3b5d8fa94",
+    "final_n": 100040
+  },
+  {
+    "name": "100000-305419896-short.trace",
+    "n": 100000,
+    "seed": 305419896,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "1f2065342fca08d057a939fc6415ee2e726eabff72297eecaf8c14b909adb450",
+    "final_n": 100075
+  },
+  {
+    "name": "100000-305419896-long.trace",
+    "n": 100000,
+    "seed": 305419896,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "258bfb47fcbc25198fab873ab8bb832a10f426b666e69d7ce9258fe0ee62bde5",
+    "final_n": 100075
+  },
+  {
+    "name": "100000-305419896-hotspot.trace",
+    "n": 100000,
+    "seed": 305419896,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "fe7624df03e437335bcf7280df42fc3522a244c7443e7735562401247e058c3f",
+    "final_n": 104099
+  },
+  {
+    "name": "100000-2654435769-compare-heavy.trace",
+    "n": 100000,
+    "seed": 2654435769,
+    "scenario": "compare-heavy",
+    "operations": 20000,
+    "sha256": "a55b1bbb99eeb80b6900043180988c08403a33282dfc08fd25910f72e881ffde",
+    "final_n": 99974
+  },
+  {
+    "name": "100000-2654435769-update-heavy.trace",
+    "n": 100000,
+    "seed": 2654435769,
+    "scenario": "update-heavy",
+    "operations": 20000,
+    "sha256": "022eec496d2ebbaf22a482f2e73ecf2a006ab9ddf419826ed3da4554a2112da7",
+    "final_n": 99986
+  },
+  {
+    "name": "100000-2654435769-short.trace",
+    "n": 100000,
+    "seed": 2654435769,
+    "scenario": "short",
+    "operations": 20000,
+    "sha256": "95ea11661b2000c2b58176131d2eda13ba40214ece18472aabb9ab6388cb1759",
+    "final_n": 100041
+  },
+  {
+    "name": "100000-2654435769-long.trace",
+    "n": 100000,
+    "seed": 2654435769,
+    "scenario": "long",
+    "operations": 20000,
+    "sha256": "766db0d650481683a7d51d4d01c8404d5fbdd0bcc2b096f4d12cefdfc0e0e62c",
+    "final_n": 100041
+  },
+  {
+    "name": "100000-2654435769-hotspot.trace",
+    "n": 100000,
+    "seed": 2654435769,
+    "scenario": "hotspot",
+    "operations": 20000,
+    "sha256": "d235dd4051e8fdcd6c03753c08efd2fc36d8721a607c042f565d4687f884373f",
+    "final_n": 103843
+  }
+]

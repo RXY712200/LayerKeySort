@@ -1,0 +1,18 @@
+{
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "processor": "AMD64 Family 25 Model 17 Stepping 1, AuthenticAMD",
+  "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+  "cpus": 2,
+  "research_sha": "2a01efa2b082300f1dcb1f53cb24a03fbd224a06",
+  "started_utc": "2026-11-24T00:55:16Z",
+  "suite": "locality",
+  "guard_bytes": 536870912,
+  "timeout_seconds": 120,
+  "compiler": "gcc (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+  "finished_utc": "2026-11-24T00:55:17Z",
+  "binaries": {
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\locality_prod.exe": "f94272071b69934ae7425f7568ce81c09219a87e006cb585761226e77b1b955f",
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\locality_diag.exe": "c115c3bc17461e17deb670a3af54355d1851443e513effe6ba141e1f1cf86b04"
+  },
+  "completed_rows": 0
+}

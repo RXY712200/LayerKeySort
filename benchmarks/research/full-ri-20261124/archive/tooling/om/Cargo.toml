@@ -1,0 +1,15 @@
+[package]
+name = "ist-v05-om"
+version = "0.5.0"
+edition = "2021"
+publish = false
+
+[features]
+diagnostic = []
+
+[dependencies]
+order-maintenance = { git = "https://github.com/j-hui/order-maintenance", rev = "ac4b902d103beb30cee3316d20cd10701f52d15a" }
+
+[profile.release]
+opt-level = 3
+debug = false

@@ -1,0 +1,1 @@
+PCG32 reference: imneme/pcg-c-basic at bc39cd76ac3d541e618606bcc6e1e5ba5e5e6aa3. Copyright 2014 Melissa O'Neill; Apache License 2.0 (PCG-LICENSE.txt). workload.py adapts the reference seeding/output/rejection algorithm to Python with explicit masks and SHA-256 stream derivation. No Full production source is copied.

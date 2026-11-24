@@ -1,0 +1,2 @@
+{"id": "locality-prod", "command": ["D:\\a\\lks0011\\lks0011\\.local\\build\\locality_prod.exe"], "available": 6046605312, "utc": "2026-11-24T00:55:17Z", "status": "ok", "returncode": 0}
+{"id": "locality-diag", "command": ["D:\\a\\lks0011\\lks0011\\.local\\build\\locality_diag.exe"], "available": 6044368896, "utc": "2026-11-24T00:55:17Z", "status": "ok", "returncode": 0}

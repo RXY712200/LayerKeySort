@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/j-hui/order-maintenance",
+  "revision": "ac4b902d103beb30cee3316d20cd10701f52d15a",
+  "license": "MIT; complete upstream LICENSE retained in archive",
+  "sha256": "81afcb1f1775011c69150fa5e21b48f785c043fe808ea9badaf22277c656a60a",
+  "role": "unmodified external classical OM source used by Cargo git dependency; not a new algorithm"
+}

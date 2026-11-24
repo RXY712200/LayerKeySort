@@ -1,0 +1,24 @@
+{
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "processor": "AMD64 Family 25 Model 1 Stepping 1, AuthenticAMD",
+  "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+  "cpus": 2,
+  "research_sha": "691c0551511063d10bb1b380daa39bb4bc6c764e",
+  "started_utc": "2026-11-24T01:01:15Z",
+  "suite": "components",
+  "guard_bytes": 536870912,
+  "timeout_seconds": 120,
+  "compiler": "gcc (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+  "finished_utc": "2026-11-24T01:05:39Z",
+  "binaries": {
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\full_diag.exe": "28db63558540aa498293421d94c5f92cc6a41a995a4e70187e69c715c650eac0",
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\list_diag.exe": "08b322b7c0a3d0ee49f1bc02ce2718ad1f2ee2d19ee12add4c1d67e4102a4ba7",
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\tree_diag.exe": "91e03ddc7a753b82ec8cfe5390d7edbaacd9c81db1310ca5af00b8a76b2eb4ca",
+    "D:\\a\\lks0011\\lks0011\\.local\\om-diag\\release\\ist-v05-om.exe": "d17296e57158f552a5a1c8a6b03412e2243fbb857c48acb6392ed00349e1330c",
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\full_prod.exe": "559daedb684446aaa81ebd126aba01c5f30e20a5864114d52890a9af9b558985",
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\list_prod.exe": "b48cedb749cb8962e1fe1e12346365a06fd9d883db7ac9ee4ecd5be02868b67d",
+    "D:\\a\\lks0011\\lks0011\\.local\\build\\tree_prod.exe": "47c775129e66f9557dd2a750ed296cb26df5e061372773febb5db3e3423b5561",
+    "D:\\a\\lks0011\\lks0011\\.local\\om-prod\\release\\ist-v05-om.exe": "29d986cf88e64cf84a3c370ad02428f9ae70e4cdebd230e8240bd6eda51732bf"
+  },
+  "completed_rows": 2025
+}
