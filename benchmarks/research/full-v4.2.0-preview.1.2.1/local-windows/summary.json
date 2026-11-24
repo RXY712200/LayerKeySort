@@ -1,0 +1,43 @@
+{
+  "raw_sha256": "4eb9ed1825a6d3a3f3b6a5b8dc031cbd19c40987b35eb87365305defeebbc4ae",
+  "calls": 746,
+  "rows": 540,
+  "variants": {
+    "transfer": {
+      "overall": 0.9928695317016766,
+      "maximum_live": 1.0,
+      "maximum_peak": 1.0,
+      "worst": "100000-17-long.trace",
+      "wins": 11,
+      "compare-heavy": 0.997387669801463,
+      "update-heavy": 0.989969801553063,
+      "long": 1.0082679225536368,
+      "hotspot": 0.9753103640675128,
+      "short": 0.9876319437040196
+    },
+    "b32": {
+      "overall": 0.9836027034969144,
+      "maximum_live": 1.0837952115261797,
+      "maximum_peak": 1.064330546866674,
+      "worst": "100000-17-short.trace",
+      "wins": 9,
+      "compare-heavy": 0.9704480457578646,
+      "update-heavy": 0.9331277702832916,
+      "long": 0.9027734170591314,
+      "hotspot": 1.0274066126987222,
+      "short": 1.1179104477611939
+    },
+    "b128": {
+      "overall": 1.1380083877889398,
+      "maximum_live": 0.9931992065741003,
+      "maximum_peak": 0.9910054609701253,
+      "worst": "1000-17-update-heavy.trace",
+      "wins": 0,
+      "compare-heavy": 1.1148713060057196,
+      "update-heavy": 1.2608402389670457,
+      "long": 1.209329073482428,
+      "hotspot": 1.0767889524340912,
+      "short": 1.0218905472636817
+    }
+  }
+}

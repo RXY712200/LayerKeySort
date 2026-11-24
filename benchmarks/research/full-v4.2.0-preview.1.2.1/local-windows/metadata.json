@@ -1,0 +1,169 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "compiler": "gcc (Rev4, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "pin": "61e9290ec5ba47b9092bcb8ae7d61f13104ea839",
+  "guard_bytes": 536870912,
+  "binaries": {
+    "base\\build\\prod.exe": "2cfa287b28264dd6125c3acc27aa5cf3c10f52e0c3193a85f2422574965a7743",
+    "base\\build\\structure-prod.exe": "2342349b4c32b2bd08987889b7f4e09b9dc2811f1677bff3026d561fa7638b21",
+    "base\\build\\diag.exe": "48944c6bba4d9b61c5014654d0dbb65947ce8c5be2fd213ce1f3b60d793ba9b3",
+    "base\\build\\structure-diag.exe": "da33653c55603f04f4ffdd27e3b0ff3a46a2b5b47dfd764ada40f2936a2a3d83",
+    "transfer\\build\\prod.exe": "5fa33c96670614a68775ab0e55b62a3de3c83d44e8ea3e32bcf464c3f1c9c13a",
+    "transfer\\build\\structure-prod.exe": "d0bfad7c0cda14824bcaf0d1de4924cff9f90b194489a8fee0ffec9a7b3ca9f2",
+    "transfer\\build\\diag.exe": "fd12c3e0ed3c9e6b1688b1769afd10860f2118c88a35614c9664c05087d314dd",
+    "transfer\\build\\structure-diag.exe": "958426c14327edc42dd7c17a9728e7fe6ff5de6c3f9c3cb7c105813b792a43a1",
+    "b32\\build\\prod.exe": "b59a2da1b9d7f0ca92a676aae1c9a0b146181d46b23ab4daa5e3ac9915fbf3a2",
+    "b32\\build\\structure-prod.exe": "1dd50dc4ef998b985beb3c5fc1744e838faa0817fce5681d989d10b48fec7e32",
+    "b32\\build\\diag.exe": "6348a5fdc7299412c4821f93c75945e912fd83be42ac0d5c91bcf7c387026d0f",
+    "b32\\build\\structure-diag.exe": "e6f77cdab38bfa62fb5f857dc698b0286a4e4b766a4564730ff97f2b0ffef5be",
+    "b128\\build\\prod.exe": "25f773f077f915e596a48117d1d10af63b12f094c1ae8afab7e8cf2db662e3a1",
+    "b128\\build\\structure-prod.exe": "32427c91db810bd2eb53d5579505f763f6e17d5d76eb9113f0b3117130e323f5",
+    "b128\\build\\diag.exe": "d773d5283366074327109f68a5a286acb9e5eb9ff4a07ca090b065c7f4d23510",
+    "b128\\build\\structure-diag.exe": "e046c15b453dfcc3d8c9843eebe63597b19c52894ad2fdf4f051a6d07e7196a6"
+  },
+  "patched_sources": {
+    "base": "88001dadc8d9d7de153ebca5e05e41d123ea998418b06cb27b6883e38ff3da43",
+    "transfer": "9c7148fe4e7d629a637516ed778d4bfaea355a6523419b4f5ad3ffb9bed16acd",
+    "b32": "88001dadc8d9d7de153ebca5e05e41d123ea998418b06cb27b6883e38ff3da43",
+    "b128": "88001dadc8d9d7de153ebca5e05e41d123ea998418b06cb27b6883e38ff3da43"
+  },
+  "source_tar_sha256": "278aac557b55f6551b2f86e5732f5e3b68a1c20ee9abb2351fa2ff1efe7d9471",
+  "traces": [
+    {
+      "name": "1000-17-compare-heavy.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "ddb30ce582b919ca77b5ba5a79b0f2255044cce0d5781a0144709ad5e9e267a6",
+      "final_n": 976
+    },
+    {
+      "name": "1000-17-update-heavy.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84",
+      "final_n": 1033
+    },
+    {
+      "name": "1000-17-short.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "99cf87c2e720f454946b59697eeb708bc5df88eb4772f76251c98fa4b370ecce",
+      "final_n": 890
+    },
+    {
+      "name": "1000-17-long.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b",
+      "final_n": 890
+    },
+    {
+      "name": "1000-17-hotspot.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "2ab2ea962d8387332453a6e39f9152630818800cc4e49ee136469531ce10a26f",
+      "final_n": 5077
+    },
+    {
+      "name": "10000-17-compare-heavy.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "7f8df6c378d56ea9cf43c81ae891e678a6967b44eec9f7070594cf4e4bebc9fe",
+      "final_n": 9944
+    },
+    {
+      "name": "10000-17-update-heavy.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc",
+      "final_n": 9979
+    },
+    {
+      "name": "10000-17-short.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "ea0e7c73c7f11fccbea772d5d56559700c57df1890f89cc92bd73fd22efb6650",
+      "final_n": 9896
+    },
+    {
+      "name": "10000-17-long.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad",
+      "final_n": 9896
+    },
+    {
+      "name": "10000-17-hotspot.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "e69304d247ee0822ebc6dddc43b5e235688df0398b5575d663ef207e8c3a0832",
+      "final_n": 13937
+    },
+    {
+      "name": "100000-17-compare-heavy.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "d9f01ee5bd30d4b1d437680338abe146758cda6fd6e3f516d2ceccee4f767f9b",
+      "final_n": 99988
+    },
+    {
+      "name": "100000-17-update-heavy.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d",
+      "final_n": 99848
+    },
+    {
+      "name": "100000-17-short.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "e8916981e7d63006330451e5e1734bc99cb9b5e42383c650b5c51f9c8796d991",
+      "final_n": 100027
+    },
+    {
+      "name": "100000-17-long.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6",
+      "final_n": 100027
+    },
+    {
+      "name": "100000-17-hotspot.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "0661db24012d41299439bd54f17a70694d46e60d47915f669bd3ba31e9f3dc9e",
+      "final_n": 104141
+    }
+  ]
+}

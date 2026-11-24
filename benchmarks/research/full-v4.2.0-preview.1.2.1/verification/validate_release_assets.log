@@ -1,0 +1,7 @@
+source version: 4.2.0-preview.1.2
+assets: D:\LayerKeySort\.local\full-current-v05\build\release-check-wo75gx5z\first\LayerKeySort-4.2.0-preview.1.2-amalgamation.zip, D:\LayerKeySort\.local\full-current-v05\build\release-check-wo75gx5z\first\LayerKeySort-4.2.0-preview.1.2-SHA256SUMS.txt
+sha256: 3782b53f36c3e8636f271a49bd965ad0177ea27f7e13c362606342be3ff2c1ff
+source version: 4.2.0-preview.1.2
+assets: D:\LayerKeySort\.local\full-current-v05\build\release-check-wo75gx5z\second\LayerKeySort-4.2.0-preview.1.2-amalgamation.zip, D:\LayerKeySort\.local\full-current-v05\build\release-check-wo75gx5z\second\LayerKeySort-4.2.0-preview.1.2-SHA256SUMS.txt
+sha256: 3782b53f36c3e8636f271a49bd965ad0177ea27f7e13c362606342be3ff2c1ff
+release asset validation passed
