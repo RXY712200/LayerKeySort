@@ -119,6 +119,12 @@ static void wire(void)
         size_t n=strlen(hex[v])/2;
         for(i=0;i<n;++i) { unsigned x; CHECK(sscanf(hex[v]+2*i,"%2x",&x)==1); bytes[i]=(unsigned char)x; }
         CHECK(lks_snapshot_deserialize(bytes,n,&s)==LKS_STATUS_OK);
+        { _Alignas(uint64_t) unsigned char input[101], output[101];
+          memcpy(input+1,bytes,n);
+          CHECK(lks_snapshot_deserialize(input+1,n,&t)==LKS_STATUS_OK);
+          CHECK(lks_snapshot_serialize(t,output+1,n)==LKS_STATUS_OK && !memcmp(bytes,output+1,n));
+          lks_snapshot_destroy(t); t=NULL;
+        }
         CHECK(lks_snapshot_serialized_size(s)==n && lks_snapshot_serialize(s,out,n)==LKS_STATUS_OK && !memcmp(bytes,out,n));
         { size_t items[2]; LksOrder *o=build(v==0?0:v==3?2:1,items);
           LksSnapshot *captured=NULL; LksSnapshotOptions opt=options;
