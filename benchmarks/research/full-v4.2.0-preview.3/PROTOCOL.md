@@ -1,0 +1,5 @@
+# Preview.3 prospective protocol
+
+Use exact unchanged Preview.2 operational source fe00536e7bd7f4e5128432ea4a29e54158074903. Compare 45 immutable replay traces on native Windows/Linux to v4.0.0, v4.1.0, accepted Preview.1.2, List, Treap and locked native tag/list-range OM. Seven serial formal samples plus warmup and diagnostic, rotated, 512 MiB admission and 120s child timeout. Compare per-cell medians within each host, report dispersion, adverse cells and recurring non-target slowdown above 10%. Preserve all raw receipts.
+
+Reuse 13 lifecycle conditions, then arbitrary relative mixed edits and indexed history with seed 1779033703 and 17, 1k/10k/100k independent states. Compare common successful behavior, exact encoding, association/ordinal oracle, immutable history after source destruction and fresh restore. Report stronger Full guarantees separately. Keep memory guard with case estimates. Native OrdWeave: original 27 traces, both modes and three exact dependencies, three formal processes plus warmup to bound I/O cost; separate profiles, 4096 holdout and fault sweep. Keep prior source and all negative outcomes. No automatic production replacement or RC.
