@@ -1,5 +1,12 @@
 # Full 外部消费者交接与变更台账
 
+## Preview.3 consolidated verification
+
+- **Baseline and current operational source:** fe00536e7bd7f4e5128432ea4a29e54158074903. [PR #32](https://github.com/RXY712200/LayerKeySort/pull/32), [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3), [evidence and validation](V4_2_0_PREVIEW3.md).
+- **Behavior:** No production path changes. Wire validation, LS1/LK1, restore, ownership, callback and lifetime rules remain as in Preview.2. New tests verify offset-one buffers and restored tag fallback.
+- **Core/adapter:** No migration or adapter changes. Exact native application substitution and retained tradeoffs are recorded in the stage evidence. The official dependency stays v4.1.0.
+- **Consumer actions:** Use the same existing source/install/amalgamation choices and rerun application-specific recovery and failure checks before any separately approved upgrade.
+
 ## Full Preview.1.2 → Preview.2 — 2026-11-24 — development candidate
 
 - **From / To:** `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`（含独立诊断 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`）→ `fe00536e7bd7f4e5128432ea4a29e54158074903`。见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3) 与 [阶段报告及 PR](V4_2_0_PREVIEW2.md)。已发布 Stable 仍为 v4.1.0。

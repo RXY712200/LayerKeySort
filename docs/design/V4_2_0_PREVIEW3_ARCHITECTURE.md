@@ -1,0 +1,24 @@
+# Full Preview.3 consolidated engineering audit
+
+This engineering milestone retains the Preview.2 production implementation `fe00536e7bd7f4e5128432ea4a29e54158074903` and its development version. The diagnostic baseline is `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`, plus the snapshot independence test `92fb7fad977f792a7d9e3e0e430a5d5f32e8914a`. The source-bound document baseline is Preview.2 `01bc01e2d9ddbda448d9ef0807150f419203b580`. Stable source and accepted guide snapshots remain `70d7f0ef5857b54381b863d292a213909d87459f` and `1a175f91e4c338c2afe6a73a9f8f9c5b149768e5`.
+
+| Source and private headers inspected | Invariant or contract | Evidence and limit |
+| --- | --- | --- |
+| `order.c`, `order_bulk.c`, `lks_order_internal.h` | B64 occupancy, stable resident allocation, physical slots and owner, AVL height/count/parents, bounds on tag spacing and assign-or-fallback | Independent order/Handle model, internal invariant checker, fallback and concentrated probes. Zero tags use AVL ordering and have no general recovery deadline. |
+| `managed_order.c`, `lks_order_internal.h` | Stable comparator-equal insertion, locate bounds, external synchronization, busy flags around callbacks, failed-operation revision preservation | Existing managed mutation, callback/reentry and foreign-cursor tests. Caller comparator must remain consistent with its ordering. |
+| `immutable_group.c`, `lks_immutable_group_internal.h`, `sort.c`, `lks_sort_internal.h` | Stable ordering and ties, independent history association capture, allocation/cleanup before publication | Group/Batch/sort smoke and allocation checks. Historical mutable group/tree sources are separate regression objects. |
+| `lks_alloc.c`, `lks_alloc_internal.h`, `lks_base.c`, public header | Status/sentinel handling, failure injection versus production requests, checked sizing, stable opaque surface | Frozen interface manifest, reached failure tests, MSVC Win32 and sanitizers through CI. Passing a dangling Handle is outside the contract. |
+| `path.c`, `path_text.c`, `path_order_key.c`, `slot_codec.c`, `path_compare.c`, their private headers and `lks_legacy_internal.h` | LK1 parser/order, checked lengths, stable legacy import and cleanup | Frozen LK1 and large migration fixtures. Production retains compatibility helpers; `gap.c`, `tree.c`, `group.c`, `bulk.c` and the associated legacy headers serve the explicit diagnostic/regression source set. |
+| `snapshot.c`, `snapshot_key.c`, `lks_snapshot_internal.h` | Immediate copy, independent namespace/association ownership, cumulative ends, refcounted provenance and immutable views, LS1 domain rules | Same-revision mutation case, retained lifetime/destruction, marker and key fixtures. Currentness identifies revision and source and does not compare application bytes. |
+| `snapshot_wire.c`, `snapshot_restore.c`, `order_bulk.c` | Fixed-width bytewise shifts, full validation before allocation, ordinal resolution before bulk construction, fresh restored Handles and no partial output | Existing golden/legacy, truncation, length and reached OOM tests. This extension tests both reader and writer with offset-one buffers and literal golden bytes. |
+| `cmake/ProductionSources.cmake`, CMake install and `tools/amalgamate.py` | Shared actual source inventory, legacy diagnostic separation, C17/C++ linkage and deterministic distribution | API manifest, examples, external source/install/amalgamation and local asset validation. |
+
+## Structural and failure findings
+
+Cross-block comparison operates directly on two nonzero tags. If either tag is zero, the AVL path remains authoritative. Strict monotonicity is checked across the entire nonzero subsequence in diagnostics. Attachment only probes and writes a bounded range; large concentrated edits can still exhaust local slack. Bulk reconstruction gives fresh labels and Handles, with spacing within the unsigned tag domain. Stored histories carry no live block topology.
+
+The audit retained the prepared-spare ordering for live mutation, complete wire validation before allocating decoded storage, immediate callback copies and resolve-first construction. Those boundaries keep failures from publishing partial state or changing the resolver prefix through an interleaved allocation failure. Requested memory accounting is separate from process memory, and bounded structural work is separate from latency guarantees.
+
+This extension changes only tests, research and documents. The explicit unaligned-buffer gap was a coverage deficiency. The bytewise implementation already accepts those buffers. No production semantic defect was established by this bounded audit. Earlier B32/B128/transfer, midpoint exhaustion, metadata ablation and retention investigations remain at their permanent recorded revisions.
+
+[Stage evidence and remaining checks](../V4_2_0_PREVIEW3.md)

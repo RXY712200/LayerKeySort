@@ -1,0 +1,32 @@
+{
+  "pins": {
+    "final": "fe00536e7bd7f4e5128432ea4a29e54158074903",
+    "preview12": "c977b0fd14a501d769b9783bfdcc61266bd1b5ae",
+    "stable41": "70d7f0ef5857b54381b863d292a213909d87459f",
+    "stable40": "80004ae732daf696f7e9192e417de0edb0b2aafa"
+  },
+  "platform": "Linux-7.0.0-1020-azure-x86_64-with-glibc2.43",
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "binaries": {
+    "final-0-0": "42254f4671af0a87f0f068acc20cb979f7e570a5343276fcb119462ea62b1057",
+    "final-0-1": "88d38ab39bf37169b32f21ebc367eebe18d1c6bf49d803c2a2be26f9fd9ad4c6",
+    "flat-0-0": "aaa3de812841d3f7244cb7a7efe219868e69fa2f697e1b4917fb05fe4c599310",
+    "flat-0-1": "3254f24b6ff7b037a60a14b4631b926a7b0952cbbfe3931557bff7b1a82c9dfe",
+    "final-1-0": "ec9ba8367d5bd8a96dcf375f3e36d7e7d0baa0882efab23f6abc52a9336354b5",
+    "final-1-1": "f03d0602e75fc8c5ff4fe4fdde0c6b0a7f1a6d577cc1411918146c219c06c8e8",
+    "tree-1-0": "2cdf630df0bfb58927291be7a41a617cddb0234c7b968e2559f2083123e447f1",
+    "tree-1-1": "a63d018e8158a4063a61b34018fa2330085174862e7b8984084d07ae346701d8",
+    "preview12-0-0": "a5b34b920150abdf67eac195b8a49e14eb4f01170cca0a43be99b16be5d3cfb7",
+    "preview12-0-1": "5e67a506318a5a0a1d697156f375403b03f5e2134b36ff6d98cf5c003b980cd6",
+    "preview12-1-0": "6746bc5bcc1e4f93f4a0c31b7952a8bd02f612f21d9fd907639e4caddc4193ee",
+    "preview12-1-1": "dcb56aa9e7dfb3d13d8076515037d2a62fc60d2dfee5f7d18fd8d1b2e61818d4",
+    "stable41-0-0": "ce7eeb44c2e471bd63e03621428a04a8d2168f0f2bc9b8c44f827480cdcb0da9",
+    "stable41-0-1": "933c638825efbd5298d707eeb6a7169fe842550d5754aa35d13b6a1725b9af6d",
+    "stable41-1-0": "bdb9295d44547088831130f2ecf51ef61b8f797dd82ce9243821451cb61d2bcd",
+    "stable41-1-1": "563b3d3e0c532c4f8623ba0664d452ff40c5fd4d8e116a7d57a36b932dc7b757",
+    "stable40-0-0": "5a6b7e16cb88cd2bb66f4bcae5516b6a8d0b2ce6063ade649c51efdbc92f5c58",
+    "stable40-0-1": "7199a1db5e6e8108ef35ad13fe0354bc75fbf89effbfadd0ab2743c779111589",
+    "stable40-1-0": "9b304ed381e8f1744eed524984b2a85cb4849360cb2667c710f2170aa75dcc83",
+    "stable40-1-1": "87aacf75e90c4839a610b6faa58d2cbc68f08c6d433fc50b73ea7bf4baab1cd0"
+  }
+}

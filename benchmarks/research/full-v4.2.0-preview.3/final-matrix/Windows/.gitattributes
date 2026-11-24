@@ -1,0 +1,3 @@
+raw.csv -text whitespace=cr-at-eol
+metadata.json -text whitespace=cr-at-eol
+invocations.jsonl -text whitespace=cr-at-eol
