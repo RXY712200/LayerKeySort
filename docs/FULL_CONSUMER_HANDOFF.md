@@ -2,7 +2,7 @@
 
 ## Preview.1 implementation ledger
 
-Base `c108acd72b37614f4be271c9747484c2dde5eac4`, implementation `22544cf283694dd27cef203caba9cf1838845947`. The comparison and ordinary location paths in order.c changed. OrdWeave already implements checkpoint and WAL recovery with its v4.1.0 pin. Source review found no interface change requiring database or adapter edits. Exact candidate integration is unverified. [Candidate evidence](V4_2_0_PREVIEW1.md).
+Base `c108acd72b37614f4be271c9747484c2dde5eac4`, implementation `22544cf283694dd27cef203caba9cf1838845947`. The comparison and ordinary location paths in order.c changed. OrdWeave already implements checkpoint and WAL recovery with its v4.1.0 pin. Source review found no interface change requiring database or adapter edits. An isolated Windows GCC Release build of OrdWeave at b12a007c50c2f9efcbee500a14d3cf09dcc74f10 substituted the exact implementation 22544cf283694dd27cef203caba9cf1838845947 and passed all 12 CTests, including checkpoint, persistence, history and adversarial recovery. The official dependency remains v4.1.0. [Candidate evidence](V4_2_0_PREVIEW1.md).
 
 > **项目归属：LayerKeySort Full** · **首次建立：2026-11-15** · **维护者：Full 项目维护者**
 >
@@ -17,7 +17,7 @@ Base `c108acd72b37614f4be271c9747484c2dde5eac4`, implementation `22544cf283694dd
 - 数据库的永久记录 ID、查询、索引、磁盘存储、事务、服务、以及 ID→Handle 转换，原则上是数据库侧职责。Full 不因数据库存在而变成数据库专用库。
 - 数据库提出新 API 需求时，须提交明确的使用场景、现有接口不足及复现证据；Full 项目独立评估它是否具有**通用的顺序管理价值**。允许拒绝数据库专属功能，或建议留在适配层。
 - Mini 是另外一条独立产品线；数据库未来是否接入 Mini 由数据库项目评估。本文**只维护 Full**。Full 和 Mini 版本、API、发布契约不应混同。
-- 目前数据库是**计划中的外部消费者**；未经真实接入提交和验证，不宣称它已在生产使用 Full。
+- OrdWeave 已通过公开 Full 接口实现集合顺序、原生快照、检查点及 WAL 恢复。当前源码为 `b12a007c50c2f9efcbee500a14d3cf09dcc74f10`，正式依赖仍固定于 Full v4.1.0 `70d7f0ef5857b54381b863d292a213909d87459f`。候选验证在隔离副本进行。
 - **历史工作优先级（2026-11-15，已由 Preview.1 授权重启取代）：** 用户决定暂缓 Full 的主动内存/算法优化，先让独立数据库及中转层形成真实使用场景和负载。它是阶段性安排，**不是永久冻结**：已证实的正确性/兼容性问题仍可按授权维护；未来优化依证据和用户重新授权立项，不为版本号或想象的数据库需求提前改 Full。
 
 ## 二、强制同步：四份源码实现文档必须与 Full 当前实现一致

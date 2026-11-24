@@ -103,7 +103,7 @@ Order
 - 每个存活 Handle 分开分配，移动记录时可以调整其 `block/local`，但**不会改变 Handle 自身的地址**。
 - 每个块的 `height` 与 `subtree_blocks` 必须匹配 AVL 实际子树；`subtree_blocks` 数的是**块数**，不是记录数。
 - AVL 中序遍历与块双向链顺序必须相同；块的 `records` 顺序与真实逻辑顺序相同。
-- `v4_locations` 在块内插入、分裂或合并后重写受影响 Handle 的 `block/local`，并清掉不用的数组槽位。
+- 普通插入设置新 Handle 的 `block`，再由 `v4_shifted_locations` 回填位移后缀的 `local`。普通删除清除刚腾出的尾槽。分裂、合并、重分配由 `v4_locations` 完整更新成员位置及空槽。
 
 调试构建的 `lks_order_internal_valid` 检查高度、父子指针、占用范围、块双链、Handle 所在位置、总量和正反遍历；**这是私有检查器，不是公开 API，也不能检测已经释放的悬空指针**。
 

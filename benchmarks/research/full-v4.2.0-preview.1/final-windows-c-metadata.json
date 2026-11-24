@@ -1,0 +1,110 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "compiler": "gcc (Rev4, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "binaries": {
+    "stable40": {
+      "file": "D:\\LayerKeySort\\.local\\preview1-final-c\\stable40.exe",
+      "command": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Iinclude",
+        "-Isrc",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview1-stable40\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\stable40.exe"
+      ],
+      "sha256": "04a9de23956622f863a611d08bcc7892a8df60816d6bf16df461c1cd90424af4",
+      "library_sha256": "1fbd958440033dae8b866a406dfc507b26280aee3eb044cbb8c0d065ca5efde6"
+    },
+    "stable41": {
+      "file": "D:\\LayerKeySort\\.local\\preview1-final-c\\stable41.exe",
+      "command": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Iinclude",
+        "-Isrc",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\baseline.c",
+        "D:\\LayerKeySort\\.local\\lks0011\\.local\\v05-build\\libfull_library_prod.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\stable41.exe"
+      ],
+      "sha256": "d39a25911db97665b5c8dfffe7e2749a72c30b01aa9bd0a9058df1082acb7e4e",
+      "library_sha256": "32093d0cbacdbe7a37d4aac414def5b7c49187c322b83899ac1817ab01b4b97e"
+    },
+    "candidate": {
+      "file": "D:\\LayerKeySort\\.local\\preview1-final-c\\candidate.exe",
+      "command": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Iinclude",
+        "-Isrc",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview1-release\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\candidate.exe"
+      ],
+      "sha256": "d718ffe1bf44d305feb687b8b78fd12d5754a6715ca0826f4d1a7a2a0b16c8d9",
+      "library_sha256": "1bad4fb910abfbc8c84b62380abfc122c92438c0af4d7dee2ccd1424a761e091"
+    },
+    "list": {
+      "file": "D:\\LayerKeySort\\.local\\preview1-final-c\\list.exe",
+      "command": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Iinclude",
+        "-Isrc",
+        "-DFULL=0",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\baseline.c",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\list.exe"
+      ],
+      "sha256": "cb08d64246496565dfee0c04f5f54409a0eb1a0abd57ff6364db13b898aa65b6",
+      "library_sha256": null
+    },
+    "tree": {
+      "file": "D:\\LayerKeySort\\.local\\preview1-final-c\\tree.exe",
+      "command": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Iinclude",
+        "-Isrc",
+        "-DFULL=0",
+        "-DTREE=1",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\baseline.c",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview1-final-c\\tree.exe"
+      ],
+      "sha256": "5fae91db7923159234f9010f05021ab4fef1b29b2bf3adc3b3c5ff3dc97fd9fc",
+      "library_sha256": null
+    }
+  }
+}

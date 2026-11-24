@@ -2,7 +2,7 @@
 
 > Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
 
-跨块比较利用 AVL 的高度严格递增性质提升较低的一侧，直到找到祖先或兄弟关系。subtree_blocks 保留用于内部诊断。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+跨块比较利用 AVL 的高度严格递增性质提升较低的一侧，直到找到祖先或兄弟关系。生产 AVL 更新及批量构建继续维护 subtree_blocks，诊断检查其值；比较不读取它。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
 > 固定代码基线：`70d7f0ef5857b54381b863d292a213909d87459f`。根据本提交的全部 16 个生产 .c、主要内部头、公开 API、构建清单检查所得。`v4_*`、`snap_*`、`ig_*` 等是**私有函数，不属于外部可调用 API**。本文与 [总导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[64 API 清单](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[测试与证据](IMPLEMENTATION_VALIDATION.zh-CN.md) 相互补充。
 
@@ -98,7 +98,7 @@ Order: root + first/last + logical count + revision
           → 块内 Handle* 右移
           → 插入新 Handle 指针
           → 如满块溢出，把最多 65 个 Handle* 分到旧块/spare
-          → v4_locations 修正 block/local
+          → 普通路径更新新成员 block 和位移后缀 local；分裂走 v4_locations
           → v4_link_after 与 AVL 平衡
                  ↓
         count++ / revision++ / 输出 Handle
