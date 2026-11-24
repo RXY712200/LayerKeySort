@@ -44,7 +44,7 @@
 | `lks_order_next` | 同块访问下一个下标，跨块跳至下一块首项，尾部返回 NULL。 | `src/order.c` |
 | `lks_order_previous` | 同块向前一项，跨块跳至上一块末项，首部返回 NULL。 | `src/order.c` |
 | `lks_order_item` | 从存活 Handle 取出调用者提供的原始 item 指针；不复制、不转移所有权。 | `src/order.c` |
-| `lks_order_compare` | 比较同一 Order 内两个存活 Handle 的先后；同块比较局部下标，跨块比较隐式 AVL 块 rank；输出负/零/正。 | `src/order.c` |
+| `lks_order_compare` | 比较同一 Order 内两个存活 Handle 的先后；同块比较局部下标，跨块沿 AVL 父链按高度推进，由祖先或兄弟的左右关系确定先后；输出负/零/正。 | `src/order.c` |
 | `lks_order_move_front` | 将现有 occurrence 移动到开头；Handle 本身保持有效；本来就在首部则是 noop。 | `src/order.c` |
 | `lks_order_move_back` | 将现有 occurrence 移动到尾部；本来就在尾部则 noop。 | `src/order.c` |
 | `lks_order_move_before` | 将存活 occurrence 移到同一 Order anchor 之前；自己/已邻接位置 noop，不递增 revision。 | `src/order.c` |
