@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.2.0-preview.2] - Unreleased
+
+- Specialize fixed-width snapshot wire conversion while retaining exact LKS4SNP1 bytes and validation order.
+- Verify that same-revision snapshots independently own distinct namespaces and associations.
+
 ## [4.2.0-preview.1.2] - Unreleased
 
 - Maintain private block order labels with bounded range redistribution and AVL fallback for untagged blocks.

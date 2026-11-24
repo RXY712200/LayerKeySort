@@ -1,5 +1,13 @@
 # Full 外部消费者交接与变更台账
 
+## Full Preview.1.2 → Preview.2 — 2026-11-24 — development candidate
+
+- **From / To:** `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`（含独立诊断 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`）→ `fe00536e7bd7f4e5128432ea4a29e54158074903`。见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3) 与 [阶段报告及 PR](V4_2_0_PREVIEW2.md)。已发布 Stable 仍为 v4.1.0。
+- **Source:** `src/snapshot_wire.c::snap_be_read/snap_be_write` 从通用字节循环改为固定宽度无符号组合与逐字节写入。`lks_snapshot_deserialize` 仍先完整验证，再分配并拷贝。`tests/v4_snapshot.c` 加入同 revision 不同内容的独立快照断言。
+- **Contracts:** 64 个函数、14 个类型不变。调用者载荷、Handle、借用生命周期、外部同步、回调/重入、revision、OOM、LS1、LKS4SNP1、LK1 导入及恢复顺序保持兼容。C17/C++ 源码、安装与 amalgamation 不变。保留 B64、AVL、标签回退。
+- **Measurements:** 反序列化改善集中在行长度处理，较宽的 association 仍受字节拷贝支配。替代组合、内存、端到端及不利样本见报告。
+- **DB core / adapter:** 不需要修改数据库核心或适配层。隔离测试使用 OrdWeave `b12a007c50c2f9efcbee500a14d3cf09dcc74f10`；其正式依赖仍为 `70d7f0ef5857b54381b863d292a213909d87459f`。依赖升级前应重跑实际业务恢复测试。全局索引构建与 WAL 仍是数据库职责；阶段报告分列实测兼容与性能归因。
+
 ## Preview.1.2 ceiling study — 2026-11-24 — diagnostic only
 
 - **From / To:** accepted `61e9290ec5ba47b9092bcb8ae7d61f13104ea839` → diagnostic `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`; [engineering Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3), [study and verification](V4_2_0_PREVIEW1_2_1.md), [draft PR #30](https://github.com/RXY712200/LayerKeySort/pull/30).

@@ -1,0 +1,20 @@
+{
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "compiler": "gcc (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "sources": {
+    "stable41": "70d7f0ef5857b54381b863d292a213909d87459f",
+    "base": "c977b0fd14a501d769b9783bfdcc61266bd1b5ae",
+    "wire": "c977b0fd14a501d769b9783bfdcc61266bd1b5ae"
+  },
+  "executables": {
+    "stable41-prod": "522ff2a66f668ed1880e524304df30bd7c6634c24aeabf0bc2e7b641de404d64",
+    "stable41-diag": "54896478458a1617fc58f6a81d46a5567e6180559669c88277702b292b4f6c42",
+    "base-prod": "7d3fe3345f68f86dd7b9655db0b11b2253acdb59414a5e806f486c6cfd522685",
+    "flat-prod": "872413bfc52b2ac9d1010083d415bfd8b6fc9adb947c54f435883a782464af19",
+    "base-diag": "b35db01ad694b403c3d83a0ef3f8681b3535167d2f85480057d90fec3d219555",
+    "flat-diag": "c1dcba5c5eea2ae0f7808a7c7c3ea465d0d75eb80a30be3da82e254857585b6d",
+    "sparse-diag": "fc7e343fd91d16e27ba259c0ed6e2dc3c96b3e63814c0f90ad8eb8117c69e17b",
+    "wire-prod": "40aa301b87deb70bc02042f5c67ae3a42050bf7a174b6c244a20768159c1a0d4",
+    "wire-diag": "205299e269a26715a8bdcc4c3b8c0e484ebf9a6b6574fda74a88998f0d6c89f7"
+  }
+}

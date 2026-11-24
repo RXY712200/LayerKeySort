@@ -103,7 +103,7 @@
 | `lks_snapshot_key_compare` | 验证双方 LS1，同 Namespace 比较 ordinal；不同 Namespace 返回 `DOMAIN_MISMATCH`。 | `src/snapshot_key.c` |
 | `lks_snapshot_serialized_size` | 计算此 Snapshot 的 **LKS4SNP1** 二进制字节总数；NULL 为 0。 | `src/snapshot_wire.c` |
 | `lks_snapshot_serialize` | 通过调用者提供的二进制缓冲区生成精确 wire；**不创建文件**，空间不足目标不变。 | `src/snapshot_wire.c` |
-| `lks_snapshot_deserialize` | 先完整验证 magic/flags/行长度/溢出/尾部，再分配、复制完整 Snapshot 字节。 | `src/snapshot_wire.c` |
+| `lks_snapshot_deserialize` | 用固定宽度大端读取先完整验证 magic/flags/行长度/溢出/尾部，再分配、复制完整 Snapshot 字节；输出和错误契约不变。 | `src/snapshot_wire.c` |
 | `lks_snapshot_restore_order` | 逐行 Resolver 取得非 NULL item，批量建一个新 Order；新的 Handle 不继承老进程地址。 | `src/snapshot_restore.c` |
 
 ### B7. Group/Batch：不可变数组与分组稳定排序（14）

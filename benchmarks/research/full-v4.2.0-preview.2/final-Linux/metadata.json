@@ -1,0 +1,26 @@
+{
+  "platform": "Linux-7.0.0-1020-azure-x86_64-with-glibc2.43",
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "sources": {
+    "stable41": "70d7f0ef5857b54381b863d292a213909d87459f",
+    "base": "c977b0fd14a501d769b9783bfdcc61266bd1b5ae",
+    "wire": "fe00536e7bd7f4e5128432ea4a29e54158074903"
+  },
+  "executables": {
+    "stable41-prod": "c919f0b66c9f2cf292a19867d7c77aab011c0c5e54e2b2417b4d27d830ac0b28",
+    "stable41-diag": "f9a50f4c1c81206a51ebfc6e06cd1addfa7e4001174680a96097856841d695fa",
+    "base-prod": "e9321be7e06b282a353b08ed64c977a76e1d86b454f960dfc7a9d603504b6ac1",
+    "flat-prod": "5cf057549555e0bda45f29c006257f68493823c49585abd0908ca17547906dbc",
+    "base-diag": "0b3a908695909b77455bd3c85e61390e0d9e534f61bb658966008ce21d37355b",
+    "flat-diag": "2c6e2a934c2b08dff9b29135b36def42d06afc09ba2b01db02392390c3120241",
+    "sparse-diag": "72119ad20bb99b5b92f6a157e9aea78563d4322a26fb800471389446109f9c68",
+    "wire-prod": "f6d7696e39932299902a59d10389da2640521d079f5e307b18712ca64f36b975",
+    "wire-diag": "aff0835c96e7dcef4a273caaed59bfae8bdf9533601cbb39d7aa9631335ac6d3",
+    "base-live-prod": "a120de8226330240567b4fb2f34ff23cb27cee7b8bf54d34825f11b3e1553c06",
+    "base-live-diag": "4f95af7c12ce4dc1563f1e064b6cc7f475879998ee9b30b7af6e677531117941",
+    "stable41-live-prod": "477a3223717f05ae3abe363242e349e4615e1951a889e7fe3a6d2b7b17905bea",
+    "stable41-live-diag": "9fea00465380c5b06bb9da15846fb7a37b4c10c026fb09890987ccd286fe8e7e",
+    "wire-live-prod": "a120de8226330240567b4fb2f34ff23cb27cee7b8bf54d34825f11b3e1553c06",
+    "wire-live-diag": "4f95af7c12ce4dc1563f1e064b6cc7f475879998ee9b30b7af6e677531117941"
+  }
+}
