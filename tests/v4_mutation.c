@@ -401,6 +401,19 @@ static void preview12_block_tags(void)
         tag=b->tag;
     }
 
+    /* Invalid nonzero tags must be rejected even across zero-tag blocks. */
+    LksOrderBlock *a = order->first, *zero = a->next, *c = zero->next;
+    uint64_t old_zero = zero->tag, old_c = c->tag;
+    zero->tag = 0;
+    CHECK(lks_order_internal_valid(order));
+    c->tag = a->tag;
+    CHECK(!lks_order_internal_valid(order));
+    c->tag = a->tag - 1;
+    CHECK(c->tag && !lks_order_internal_valid(order));
+    c->tag = old_c;
+    zero->tag = old_zero;
+    CHECK(lks_order_internal_valid(order));
+
     /* Saturate a wide interior section without changing logical precedence.
      * A split here cannot leave slack within the 64-block update budget. */
     tag = 0;
