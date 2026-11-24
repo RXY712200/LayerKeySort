@@ -28,3 +28,9 @@ The focused regression in tests/v4_mutation.c checks 103,041 ordered pairs in a 
 The isolated OrdWeave candidate build used git archive of b12a007c50c2f9efcbee500a14d3cf09dcc74f10 and substituted git archive of 22544cf283694dd27cef203caba9cf1838845947 into third_party/LayerKeySort. CMake Ninja Release and ctest --output-on-failure passed 12/12, including native checkpoint, history and recovery cases. The official Full dependency remains 70d7f0ef5857b54381b863d292a213909d87459f. No database core or adapter change emerged from this test.
 
 The earlier continuation head af5e5ff25d700d38b2381ad80235c10716a55f52 passed Full CI 45352740204 across MSVC x64/Win32, GCC, Clang with and without sanitizers, and AppleClang. Final-head results must be checked separately because the new regression is a subsequent test change.
+
+## Windows operation profiles
+
+The existing v4_trace oracle ran endpoint, local, hotspot, large moves, churn, managed churn and random managed operations at 10,000 initial occurrences and 5,000 operations, seed 1779033703. Four repeats per implementation in each of production and diagnostic builds yielded 112 successful process receipts. Production timing and diagnostic allocation/work records are separate. The two existing Release build configurations were reused, so the profile timing is supplemental to the controlled C matrix.
+
+Endpoint assignments decreased from 741,324 to 44,888, large moves from 945,471 to 276,797 and managed churn from 729,142 to 226,442. Peak requested bytes agreed for both implementations in all seven profile families. Median p99 was 0.2 us for both in five families. It increased from 0.2 to 0.3 us in managed churn and declined from 0.45 to 0.4 us in random managed insertion. These short measurements are close to timer granularity. All model and cleanup assertions passed. Raw commands, hashes, timestamps as captured by the harness, and stdout/stderr are retained in windows-operation-profiles.jsonl.
