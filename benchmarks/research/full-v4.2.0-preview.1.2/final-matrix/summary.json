@@ -1,0 +1,98 @@
+{
+  "Linux": {
+    "rows": 3240,
+    "sha256": "c19fcaf2b9c4521553d314f7f81e4d955b38df37fd53a4b1af5105f196bdd7d4",
+    "comparisons": {
+      "stable40": {
+        "median": 0.5391121863275697,
+        "compare_heavy": 0.19650915013331038,
+        "worst": 0.7034575514203164,
+        "candidate_faster": 45
+      },
+      "stable41": {
+        "median": 0.5720170523146603,
+        "compare_heavy": 0.2061181406494712,
+        "worst": 0.7720747288716134,
+        "candidate_faster": 45
+      },
+      "preview1": {
+        "median": 0.8858624766844461,
+        "compare_heavy": 0.3434381855570963,
+        "worst": 0.9894538202980272,
+        "candidate_faster": 45
+      },
+      "list": {
+        "median": 0.045961214792340194,
+        "compare_heavy": 0.004470818460998369,
+        "worst": 1.0144655190815253,
+        "candidate_faster": 44
+      },
+      "tree": {
+        "median": 0.13654699670112763,
+        "compare_heavy": 0.07998377290449625,
+        "worst": 0.22348909600771533,
+        "candidate_faster": 45
+      },
+      "tag": {
+        "median": 0.9173064939892064,
+        "compare_heavy": 0.6523211155053614,
+        "worst": 1.6298384266005768,
+        "candidate_faster": 28
+      },
+      "list_range": {
+        "median": 0.880424574686346,
+        "compare_heavy": 0.518150092233714,
+        "worst": 1.5679304169864416,
+        "candidate_faster": 33
+      }
+    }
+  },
+  "Windows": {
+    "rows": 3240,
+    "sha256": "710d540a64a061fb9d54e19cc20ccf07d835f6c2d3c7468d5758494a87004110",
+    "comparisons": {
+      "stable40": {
+        "median": 0.5963417798149269,
+        "compare_heavy": 0.21220697136927502,
+        "worst": 0.8363708556680565,
+        "candidate_faster": 45
+      },
+      "stable41": {
+        "median": 0.6416939495726859,
+        "compare_heavy": 0.21850412821758133,
+        "worst": 0.8689410502867043,
+        "candidate_faster": 45
+      },
+      "preview1": {
+        "median": 0.8980201077445699,
+        "compare_heavy": 0.3706541440105454,
+        "worst": 1.1556482141877435,
+        "candidate_faster": 44
+      },
+      "list": {
+        "median": 0.0348876312729998,
+        "compare_heavy": 0.003161632620160752,
+        "worst": 0.9892501310959623,
+        "candidate_faster": 45
+      },
+      "tree": {
+        "median": 0.1460771082325769,
+        "compare_heavy": 0.08325006476444248,
+        "worst": 0.2976907204839029,
+        "candidate_faster": 45
+      },
+      "tag": {
+        "median": 0.9792517006802721,
+        "compare_heavy": 0.9107992984214482,
+        "worst": 1.5911439114391144,
+        "candidate_faster": 23
+      },
+      "list_range": {
+        "median": 0.9836872768276639,
+        "compare_heavy": 0.7501707650273224,
+        "worst": 1.5839630562552478,
+        "candidate_faster": 23
+      }
+    }
+  }
+}

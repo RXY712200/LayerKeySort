@@ -1,5 +1,14 @@
 # Full 外部消费者交接与变更台账
 
+## Full Preview.1 → Preview.1.2 — 2026-11-24 — development candidate
+
+- **From / To:** `22544cf283694dd27cef203caba9cf1838845947` → `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`; [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3), [scope #27](https://github.com/RXY712200/LayerKeySort/issues/27), and [extension report and exact-head evidence](V4_2_0_PREVIEW1_2.md). Stable remains v4.1.0.
+- **Source:** `src/order.c` compares two tagged blocks directly and uses the existing height-guided AVL walk when a tag is absent. `v4_tag_attach` attaches or redistributes tags for at most 64 blocks. `src/lks_order_internal.h` stores the private tag and diagnostic fields. `src/order_bulk.c` seeds tags after bulk restore. Versions are in `include/layerkeysort.h`.
+- **Contract:** The 64 functions, 14 types, order, statuses, ownership, surviving Handle identity, callbacks, synchronization, OOM atomicity, revision/no-op rules, LS1, LKS4SNP1 and LK1 import are unchanged. Restore still creates fresh handles. Public source/install and amalgamation integrations remain the consumer paths.
+- **Performance and resources:** A block carries one more 64-bit word. Concentrated attachment may trigger bounded relabeling or AVL fallback. See the stage report for both platform comparisons, adverse cells and scope of memory results.
+- **Core and adapter:** Windows strict GCC Debug/Release passed 39/39 each. Isolated Windows OrdWeave `b12a007c50c2f9efcbee500a14d3cf09dcc74f10` passed 12/12 with the exact candidate substituted. Its official v4.1.0 pin `70d7f0ef5857b54381b863d292a213909d87459f` remains unchanged. External independent approval is pending.
+- **Consumer action:** Rebuild against the chosen revision and rerun application-specific ordering, persistence and failure checks before switching the official pin. No source conversion or key migration is required by this internal representation change.
+
 ## Preview.1 implementation ledger
 
 - **From:** Full v4.1.0 `70d7f0ef5857b54381b863d292a213909d87459f`; development base `c108acd72b37614f4be271c9747484c2dde5eac4` has matching production source.

@@ -1,0 +1,29 @@
+Test project D:/LayerKeySort/.local/preview12-ow/build
+      Start  1: ordweave_smoke
+ 1/12 Test  #1: ordweave_smoke ...................   Passed    0.04 sec
+      Start  2: ordweave_core
+ 2/12 Test  #2: ordweave_core ....................   Passed    0.42 sec
+      Start  3: ordweave_failures
+ 3/12 Test  #3: ordweave_failures ................   Passed    0.05 sec
+      Start  4: ordweave_persistence
+ 4/12 Test  #4: ordweave_persistence .............   Passed    1.99 sec
+      Start  5: ordweave_format
+ 5/12 Test  #5: ordweave_format ..................   Passed    1.14 sec
+      Start  6: ordweave_checkpoint
+ 6/12 Test  #6: ordweave_checkpoint ..............   Passed    1.40 sec
+      Start  7: ordweave_checkpoint_format
+ 7/12 Test  #7: ordweave_checkpoint_format .......   Passed    1.28 sec
+      Start  8: ordweave_history
+ 8/12 Test  #8: ordweave_history .................   Passed    2.35 sec
+      Start  9: ordweave_history_format
+ 9/12 Test  #9: ordweave_history_format ..........   Passed    0.87 sec
+      Start 10: ordweave_audit_format
+10/12 Test #10: ordweave_audit_format ............   Passed    0.27 sec
+      Start 11: ordweave_adversarial
+11/12 Test #11: ordweave_adversarial .............   Passed    1.03 sec
+      Start 12: ordweave_external_consumer
+12/12 Test #12: ordweave_external_consumer .......   Passed    3.00 sec
+
+100% tests passed out of 12
+
+Total Test time (real) =  13.96 sec
