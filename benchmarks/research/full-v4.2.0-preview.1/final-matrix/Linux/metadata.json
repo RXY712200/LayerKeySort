@@ -1,0 +1,29 @@
+{
+  "platform": "Linux-7.0.0-1020-azure-x86_64-with-glibc2.43",
+  "processor": "",
+  "python": "3.13.18 (main, Oct 26 2026, 14:19:33) [GCC 15.2.0]",
+  "cpus": 2,
+  "research_sha": "42987c5eb8eaa85cfe791d8efc65865951999dbc",
+  "started_utc": "2026-11-24T08:52:59Z",
+  "suite": "components",
+  "guard_bytes": 536870912,
+  "timeout_seconds": 120,
+  "cpuinfo": "processor\t: 0\nvendor_id\t: AuthenticAMD\ncpu family\t: 25\nmodel\t\t: 17\nmodel name\t: AMD EPYC 9V74 80-Core Processor\nstepping\t: 1\nmicrocode\t: 0xffffffff\ncpu MHz\t\t: 3694.908\ncache size\t: 1024 KB\nphysical id\t: 0\nsiblings\t: 2\ncore id\t\t: 0\ncpu cores\t: 1\napicid\t\t: 0\ninitial apicid\t: 0\nfpu\t\t: yes\nfpu_exception\t: yes\ncpuid level\t: 28\nwp\t\t: yes\nflags\t\t: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid extd_apicid aperfmperf tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves user_shstk avx512_bf16 clzero xsaveerptr rdpru arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid fsrm\nbugs\t\t: sysret_ss_attrs null_seg spectre_v1 spectre_v2 spec_store_bypass srso spectre_v2_user tsa\nbogomips\t: 5192.25\nTLB size\t: 3584 4K pages\nclflush size\t: 64\ncache_alignment\t: 64\naddress sizes\t: 48 bits physical, 48 bits virtual\npower management:",
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+  "finished_utc": "2026-11-24T08:55:53Z",
+  "binaries": {
+    "/home/runner/work/lks0011/lks0011/.local/candidate-build/full_diag": "a9827ca8390337557cd5ee839b3b01da76acddfc764ef67fac8b9714d008567a",
+    "/home/runner/work/lks0011/lks0011/.local/candidate-build/list_diag": "cbed7f24f4ff7a65fdbfef83f81e81148f02787faece86cb8c87bbac323d8688",
+    "/home/runner/work/lks0011/lks0011/.local/candidate-build/tree_diag": "5c1ee5c1c27f4a6aa1a394496f23346b7372a239d74ad3ef1fdc1842e067fc04",
+    "/home/runner/work/lks0011/lks0011/.local/om-diag/release/ist-v05-om": "5bea072c24a5aa2c98362dd30753c8db28fcb7247bc01c5cee7e097f8c4415a2",
+    "/home/runner/work/lks0011/lks0011/.local/stable40-build/full_diag": "ac5ef4fead5447f702e49f9753a496b94337d9eb76aa5c7b99b3454a63f903e2",
+    "/home/runner/work/lks0011/lks0011/.local/stable41-build/full_diag": "9fea00465380c5b06bb9da15846fb7a37b4c10c026fb09890987ccd286fe8e7e",
+    "/home/runner/work/lks0011/lks0011/.local/stable40-build/full_prod": "411f97871b4797916a44ba8ea48b8866263db19f6ce8d8a34741b98ecbfe60ad",
+    "/home/runner/work/lks0011/lks0011/.local/stable41-build/full_prod": "477a3223717f05ae3abe363242e349e4615e1951a889e7fe3a6d2b7b17905bea",
+    "/home/runner/work/lks0011/lks0011/.local/candidate-build/full_prod": "c84308f4f10e0452ace73b87cd9062596e3893465a83a0c8e571b107f3228215",
+    "/home/runner/work/lks0011/lks0011/.local/candidate-build/list_prod": "37c408f79b9268f837ef7e4e4fa2a266f8768e8c60d794c1af778c0ab2809383",
+    "/home/runner/work/lks0011/lks0011/.local/candidate-build/tree_prod": "b796ccf5f01f1d84a0303fda37c7894493dd21221ab428045857e89d4a1f1e18",
+    "/home/runner/work/lks0011/lks0011/.local/om-prod/release/ist-v05-om": "d977b61afe5b29407ac7f95fc6b64a4128aa1413b6c1842f992e82296da2efdc"
+  },
+  "completed_rows": 2835
+}

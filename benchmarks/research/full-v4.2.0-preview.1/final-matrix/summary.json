@@ -1,0 +1,86 @@
+{
+  "Linux": {
+    "rows": 2835,
+    "sha256": "a607af5437309ca64a8f29f11e1859146860ade7bbbae7af49e6edda4a817fba",
+    "comparisons": {
+      "stable40": {
+        "median": 0.666181294993393,
+        "compare_heavy": 0.5654620989404608,
+        "worst": 0.7884427410411274,
+        "candidate_faster": 45
+      },
+      "stable41": {
+        "median": 0.7088850734620474,
+        "compare_heavy": 0.5689414294604427,
+        "worst": 0.8069965429959693,
+        "candidate_faster": 45
+      },
+      "list": {
+        "median": 0.04264997680353406,
+        "compare_heavy": 0.011779305598504642,
+        "worst": 0.9919232299106879,
+        "candidate_faster": 45
+      },
+      "tree": {
+        "median": 0.1398314949821033,
+        "compare_heavy": 0.20875800086256832,
+        "worst": 0.2545482482045713,
+        "candidate_faster": 45
+      },
+      "tag": {
+        "median": 1.3600489610933468,
+        "compare_heavy": 2.629206097572764,
+        "worst": 2.99097509795547,
+        "candidate_faster": 11
+      },
+      "list_range": {
+        "median": 1.1692154232912997,
+        "compare_heavy": 2.144018157547889,
+        "worst": 2.5732019043358787,
+        "candidate_faster": 15
+      }
+    }
+  },
+  "Windows": {
+    "rows": 2835,
+    "sha256": "e77b2eb8111b172f5a56f05088ce2d26a1f5c4414dd7940d28d1f3d29e8675a9",
+    "comparisons": {
+      "stable40": {
+        "median": 0.6258705657149839,
+        "compare_heavy": 0.5390021677279502,
+        "worst": 0.8000950796291895,
+        "candidate_faster": 45
+      },
+      "stable41": {
+        "median": 0.6978559084035428,
+        "compare_heavy": 0.5723045385887938,
+        "worst": 0.8281801033379808,
+        "candidate_faster": 45
+      },
+      "list": {
+        "median": 0.030837281549907804,
+        "compare_heavy": 0.005357952265600618,
+        "worst": 1.1438645005184929,
+        "candidate_faster": 43
+      },
+      "tree": {
+        "median": 0.17246488037638893,
+        "compare_heavy": 0.1814808314319384,
+        "worst": 0.27496222433326745,
+        "candidate_faster": 45
+      },
+      "tag": {
+        "median": 1.2814649939295832,
+        "compare_heavy": 3.071334214002642,
+        "worst": 3.575874238049407,
+        "candidate_faster": 9
+      },
+      "list_range": {
+        "median": 1.237044508889169,
+        "compare_heavy": 2.5596330275229358,
+        "worst": 2.912980068060282,
+        "candidate_faster": 10
+      }
+    }
+  }
+}

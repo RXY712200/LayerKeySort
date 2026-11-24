@@ -1,5 +1,6 @@
 from pathlib import Path
-p=Path('benchmarks/research/full-v4.2.0-preview.1')
+import subprocess
+p=Path(__file__).resolve().parent
 def mutation(s):
  old='    } else v4_locations(order, block);'
  assert s.count(old)==1
@@ -28,5 +29,7 @@ def mutation(s):
                 V4_COUNT(order, records_reassigned);
             }
         }''')
-for name,src in [('mutation',Path('src/order.c')),('combined',p/'ancestor-order.c.txt')]:
- (p/(name+'-order.c.txt')).write_text(mutation(src.read_text()),encoding='utf-8',newline='\n')
+stable = subprocess.check_output(['git','show','70d7f0ef5857b54381b863d292a213909d87459f:src/order.c'],text=True)
+for name,src in [('mutation',stable),('combined',(p/'ancestor-order.c.txt').read_text())]:
+ with (p/(name+'-reproduced.c.txt')).open('x',encoding='utf-8',newline='\n') as output:
+  output.write(mutation(src))
