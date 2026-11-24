@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.2.0-preview.1] - Unreleased
+
+- Shorten cross-block comparison and update only affected resident locations on ordinary shifts.
+
 ## [4.1.0] - 2026-10-25
 
 Compatible Full 4.x minor update from the fixed three-step optimization cycle. No

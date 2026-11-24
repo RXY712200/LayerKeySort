@@ -1,5 +1,9 @@
 # Full v4.1.0：内部结构、函数执行路径和算法分支详解
 
+> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
+
+跨块比较利用 AVL 的高度严格递增性质提升较低的一侧，直到找到祖先或兄弟关系。subtree_blocks 保留用于内部诊断。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+
 > 固定代码基线：`70d7f0ef5857b54381b863d292a213909d87459f`。根据本提交的全部 16 个生产 .c、主要内部头、公开 API、构建清单检查所得。`v4_*`、`snap_*`、`ig_*` 等是**私有函数，不属于外部可调用 API**。本文与 [总导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[64 API 清单](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[测试与证据](IMPLEMENTATION_VALIDATION.zh-CN.md) 相互补充。
 
 ## 1. 所有 16 个生产源文件，内部机制各是什么？
@@ -50,7 +54,7 @@ AVL: indexes Block1/Block2 by implicit in-order sequence
 Order: root + first/last + logical count + revision
 ~~~
 
-`subtree_blocks` 数的是**块**，不等于子树内的 item 数。`v4_rank` 得到的是 Block 的隐式序号，不是全部记录的绝对数字排名。Full 当前也没有公开的随机第 N 项访问 API。
+`subtree_blocks` 数的是**块**，不等于子树内的 item 数。`lks_order_compare` 得到的是 Block 的隐式序号，不是全部记录的绝对数字排名。Full 当前也没有公开的随机第 N 项访问 API。
 
 多块情形每块正常至少半满（当前最小为 32）；唯一块可以低于半满。AVL 的中序顺序、块链顺序、块内 Handle 指针顺序应当一致。
 
@@ -70,7 +74,7 @@ Order: root + first/last + logical count + revision
 | `v4_link_after` | 更新双向块链，并在 anchor 的 AVL 后继位置接入新块；空 Order 时直接建立 root/first/last；再平衡。 |
 | `v4_detach` | 从双链及 AVL 删除一个块；两子节点时物理移植后继 Block，而不是复制其 resident 数组；从必要的位置再平衡。 |
 | `v4_locations` | 遍历一块现存居民，更新各 Handle 的 block/local 并清理剩余数组槽。 |
-| `v4_rank` | 计算左子树块数，沿 parent 上溯；从右子返回父节点时累计左子树块数+1。 |
+| `v4_shifted_locations` | 普通操作仅回填受影响 local 后缀。 |
 | `v4_mark_index / v4_begin` | `v4_begin` 清零已有的每操作计数；`v4_mark_index` 在已有固定长度数组中去重并记录 Block 指针，满时置 tracking_overflow；二者均不分配堆内存，正常生产构建无动作。 |
 
 当 AVL 旋转时，块在逻辑顺序中的位置不变。因此 AVL 只是**顺序索引**，不是将用户元素按比较器键重新排序。
@@ -108,7 +112,7 @@ Order: root + first/last + logical count + revision
 
 - **唯一块被删空**：调用 `v4_detach`，释放 Block，Order 变空。
 - **多块且目标块少于半满**：`v4_repair` 选择目标及相邻 Block，先用**栈上的 Handle* 数组**串接两块记录。如果总数 <=64，就合并到左块、摘除右块；否则将其重新均分到左右两个块。
-- **不欠占**：`v4_locations` 更新局部数组及所有 Handle 的 block/local。
+- **不欠占**：清除腾出的尾槽，并回填受影响的 local 后缀。
 
 最后 revision++，释放被删 Handle；可选择输出原 item 指针。**没有业务 item 析构、没有释放未被删除的 Handle，也没有堆内存分配。**
 
@@ -245,7 +249,7 @@ requested memory 不等于进程 RSS；即使用户 item 由应用持有、Full 
 | --- | --- |
 | 次序不对但数量正确 | `records[]`、before/after 的目标下标修正、`block->previous/next` |
 | 跨块邻居错误 | 块链的首尾和 next/previous、各块的 count |
-| compare 结果有误 | `v4_rank`、`subtree_blocks`、AVL parent 链 |
+| compare 结果有误 | `lks_order_compare`、`subtree_blocks`、AVL parent 链 |
 | 删除之后损坏 | `v4_repair` 的合并/重分布、`v4_detach` 的两子物理移植 |
 | OOM 后原顺序改变 | `v4_insert/v4_move` 是否越过预分配边界 |
 | Managed 重复值定位错误 | upper/lower bound 的严格与非严格比较、比较器语义是否稳定 |

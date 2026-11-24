@@ -1,5 +1,9 @@
 # Full 外部消费者交接与变更台账
 
+## Preview.1 implementation ledger
+
+Base `c108acd72b37614f4be271c9747484c2dde5eac4`, implementation `22544cf283694dd27cef203caba9cf1838845947`. The comparison and ordinary location paths in order.c changed. OrdWeave already implements checkpoint and WAL recovery with its v4.1.0 pin. Source review found no interface change requiring database or adapter edits. Exact candidate integration is unverified. [Candidate evidence](V4_2_0_PREVIEW1.md).
+
 > **项目归属：LayerKeySort Full** · **首次建立：2026-11-15** · **维护者：Full 项目维护者**
 >
 > 本文为数据库及未来其他外部消费者提供**持续、可追溯的跨项目交接**。历史结论、精确源码变更、验证证据与升级动作应记录在可追溯的 GitHub 文档和变更台账中。本文不是数据库设计文档，也不构成修改 API 或发布新版本的授权。
