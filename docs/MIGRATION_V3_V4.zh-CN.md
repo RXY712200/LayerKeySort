@@ -6,14 +6,14 @@
 
 | 原流程 | V4 对应流程 |
 | --- | --- |
-| 以手动 Path 插入 Tree | 使用 LksOrder 相对位置或端点插入，获得居民 Handle |
+| 以手动 Path 插入 Tree | 使用 LksOrder 相对位置或端点插入，获得驻留句柄 |
 | 物理节点导航 | 逻辑遍历及同来源 lks_order_compare |
 | OrderedTree | 使用 LksManagedOrder，并保持对象参与比较的数据稳定 |
 | 基于 Path 的 Group/Batch | 平面的 LksGroup/LksGroupBatch，无 group_path_at |
 | 持久化实时 Path/LK1 | 捕获 Snapshot，持久化 LS1 与 LKS4SNP1 |
 | 加载已发布 V3 LK1 | 严格 lks_order_import_v3_lk1，业务对象仍由调用者拥有 |
 
-旧调用：`lks_tree_insert_path(tree, path, item, &node)`。V4 调用：`lks_order_insert_before(order, anchor, item, &handle)`。无关修改和移动保留 Handle，删除其所属实例或销毁来源时失效。业务身份独立保存；指针数值不表示顺序。托管顺序不提供任意移动，修改键时先删除、编辑、再插入。
+旧调用：`lks_tree_insert(tree, path, item, &node)`。V4 调用：`lks_order_insert_before(order, anchor, item, &handle)`。无关修改和移动保留 Handle，删除其所属实例或销毁来源时失效。业务身份独立保存；指针数值不表示顺序。托管顺序不提供任意移动，修改键时先删除、编辑、再插入。
 
 Preview.4 的 LksImmutableGroup/Batch 改为 LksGroup/Batch。14 个 lks_immutable_group_* 名称改为 lks_group_* 或 lks_group_batch_*。V3 中的同名 Group 语义不同，应迁移调用方式。指针数组输入会被复制，有效载荷所有权保持不变。
 

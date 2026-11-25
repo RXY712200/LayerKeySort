@@ -21,8 +21,8 @@ application-owned and preserving published V3 LK1 data through strict import.
 | Persist live Path/LK1 | Capture Snapshot, persist LS1 and LKS4SNP1 |
 | Load published V3 LK1 | Strict lks_order_import_v3_lk1 plus caller-owned items |
 
-Before V3: `lks_tree_insert_path(tree, path, item, &node)`.
-After V4: `lks_order_insert_before(order, anchor, item, &handle)`.
+V3 call: `lks_tree_insert(tree, path, item, &node)`.
+V4 call: `lks_order_insert_before(order, anchor, item, &handle)`.
 Handles survive unrelated mutations and moves; own removal/source destruction
 expires them. Keep business IDs independently; numerical pointer values are not order.
 Managed order has no arbitrary move facade: remove/edit/reinsert to change keys.
