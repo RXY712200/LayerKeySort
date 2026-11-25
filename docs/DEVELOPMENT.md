@@ -1,5 +1,7 @@
 # V4 Stable maintenance
 
+[简体中文](DEVELOPMENT.zh-CN.md)
+
 V4.0.0 completes the fixed V4 Preview.1–5 → RC.1 → Stable development cycle.
 
 [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable,

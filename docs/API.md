@@ -1,5 +1,7 @@
 # V4 API reference
 
+[简体中文](API.zh-CN.md)
+
 Preview.5 froze the V4.0 source contract: 64 functions, 14 public types.
 V4.0.0 Stable preserved it unchanged, and the released Full 4.1.0 retains
 the frozen API. See [4.1.0 record](V4_1_0.md) and historical [Stable record](V4_STABLE.md).

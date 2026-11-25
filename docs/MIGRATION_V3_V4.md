@@ -1,5 +1,7 @@
 # V3 to V4 migration
 
+[简体中文](MIGRATION_V3_V4.zh-CN.md)
+
 This guide describes the frozen Full **4.x** migration contract introduced in
 v4.0.0 Stable and preserved by the current published [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0).
 

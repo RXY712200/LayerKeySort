@@ -1,5 +1,7 @@
 # LayerKeySort V4 architecture
 
+[简体中文](ARCHITECTURE.zh-CN.md)
+
 > For a source-by-source execution walkthrough (including block/AVL maintenance,
 > snapshot wire/restore, legacy compatibility, and relevant tests), see the
 > [Chinese Full implementation walkthrough](IMPLEMENTATION_WALKTHROUGH.zh-CN.md),
