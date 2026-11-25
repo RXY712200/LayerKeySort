@@ -55,3 +55,11 @@
 | 有界赋值及计数 | 61e9290e；耗尽 21f6fc4；单调诊断 c977b0fd | 内部 §3 明确两哨兵、步长与最小值、确定扩张、宽度上限及计数范围 | `v4_tag_attach/v4_check_node` 及 `preview12_block_tags`。中点耗尽、B32/B128、直接转移为分别否决的方案。无任意恢复保证。 |
 | 批建间隔 | 61e9290e | 内部 §11 给出公式和先解析顺序 | `src/order_bulk.c`；3ac82d26 的 `capture_restore` 验证恢复遍历、标签及两种比较路径。新 Handle 不保留旧地址。 |
 | 验证出处 | d1132a26；初次候选 643d8f79 | 验证 §§1–5 与导读 §13 区分运行源码、测试检出点及实际运行 | 初次 RC CTest 和 sanitizer [45518848531](https://github.com/RXY712200/LayerKeySort/actions/runs/45518848531)。后续 HEAD 需自身证据。 |
+
+## API 与总导读重建复核
+
+在 `0701951`，API 指南新增完整英文版，64行函数与中文版及冻结头的顺序一致。复核重新阅读公开头及当前sort、managed、snapshot、key、wire、restore、immutable-group实现，以及Explicit compare/move/remove/Cursor入口。API §§B8,D,E保留状态优先级、输出初始化、可省输出、回调字节寿命、共享对象修改和非事务重插。英文两段C代码被提取，与中文代码去注释后比较，使用GCC C17 `-Wall -Wextra -Wpedantic -Werror` 链接既有Release库并执行成功。这是文档消费者检查，不是生产修改。
+
+在 `364b98b`，总导读0–14全部编号章节建立英文对应。以源码为先的复核在双语正文修复两处新发现：§2.1漏列实际块tag成员，§3.6把revision比较写成Cursor首个检查，实际先验证参数及拒绝回调重入。总结现已包含有界标签和AVL回退。核对了双语章节编号、精确构建命令块、六个当前耗时比和本地链接目标。这些检查仅建立上述具体性质，完整跨文档语义复核仍在持久清单中开放。
+
+上述文档修改后，既有本地严格GCC Release与Debug构建各执行CTest 39/39成功，包含API冻结、wire golden、Snapshot及修改测试。生产源码未变，未重复历史计时实验。Workbench托管[运行45535306231](https://github.com/RXY712200/LayerKeySort/actions/runs/45535306231)的job 138940331524在测试前extract_release.py下载包时返回HTTP 503；已请求一次失败job重试，没有改变执行规则。重试结果须另查，本凭据与初次RC CI均不能替代最终HEAD验证。
