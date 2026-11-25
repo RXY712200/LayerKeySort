@@ -16,7 +16,7 @@
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">Products</a>
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.md">Full docs</a>
         <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.md">Mini</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文</a>
+        <a href="#zh-cn" lang="zh-CN">简体中文</a>
         <a href="https://github.com/RXY712200/LayerKeySort/issues/3">Roadmap</a>
         <a href="v3/">V3 visualizer</a>
       </nav>
@@ -95,6 +95,101 @@
       <h2 id="limits-title">Measure the workload that matters to you</h2>
       <p>V4 avoids live Path growth and collection-wide coordinate relabel. Local block/index work, allocation and comparator costs remain; full snapshot export and retained history can dominate time and memory. The strongest fit is a long-lived editor-like collection with repeated insert/remove/move operations, not one-shot sorting or distributed/CRDT ordering. Read the <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">benchmark evidence</a>, test your own workload, and follow the <a href="https://github.com/RXY712200/LayerKeySort/issues/3">post-v4 roadmap</a>.</p>
     </section>
+  <section id="zh-cn" lang="zh-CN" aria-label="简体中文">
+    <nav class="shell" aria-label="中文主导航">
+      <a href="#main" lang="en">English</a> ·
+      <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md">产品</a> ·
+      <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.zh-CN.md">Full 文档</a> ·
+      <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.zh-CN.md">Mini</a> ·
+      <a href="https://github.com/RXY712200/LayerKeySort/issues/3">路线图</a> ·
+      <a href="v3/">V3 可视化</a>
+    </nav>
+    <section class="hero shell" aria-labelledby="zh-hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">LayerKeySort Full · C17 库 · v4.1.0 Stable</p>
+        <h1 id="zh-hero-title">让不断变化的集合保持顺序</h1>
+        <p class="lede">LayerKeySort 以显式或比较器托管方式维护变化中的集合。实时实例有稳定的上下文 Handle；不可变快照提供可排序的历史键。对象身份由应用管理。</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md">获取库</a>
+          <a class="button" href="#main" lang="en">English</a>
+        </div>
+      </div>
+      <div class="model" aria-label="效果图层插入到角色与界面之间">
+        <p class="model-title">一次局部位置变化</p>
+        <div class="model-row"><span class="row-label">之前</span><span>背景</span><span>角色</span><span>界面</span></div>
+        <div class="model-row"><span class="row-label">之后</span><span>背景</span><span>角色</span><span class="new-item">效果</span><span>界面</span></div>
+        <p>实时移动保留居民 Handle。需要历史或持久顺序时捕获不可变快照；快照键独立于实时位置和永久对象身份。</p>
+      </div>
+    </section>
+
+    <section class="section shell" aria-labelledby="zh-start-title">
+      <div class="section-heading">
+        <p class="eyebrow">从这里开始</p>
+        <h2 id="zh-start-title">选择下一步</h2>
+      </div>
+      <div class="card-grid">
+        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md">
+          <span class="card-kicker">构建</span><strong>获取库</strong>
+          <span>双文件下载、CMake 源码依赖、直接纳入源码以及本地安装。</span>
+        </a>
+        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/API.md">
+          <span class="card-kicker">参考</span><strong>阅读 API</strong>
+          <span>确切函数、所有权、错误、实时 Handle、快照和 LS1 键。</span>
+        </a>
+        <a class="card" href="v3/">
+          <span class="card-kicker">探索</span><strong>打开 V3 可视化</strong>
+          <span>历史 V3：回放已记录的顺序变化和 Path 重标。</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section shell split" aria-labelledby="zh-get-title">
+      <div>
+        <p class="eyebrow">获取源码</p>
+        <h2 id="zh-get-title">多种集成方式</h2>
+        <p>小型 C 项目可从 <a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">Full v4.1.0 发行页</a>下载双文件合并包。复制 <code>layerkeysort.h</code> 与 <code>layerkeysort.c</code> 到项目，并按 C17 编译实现。</p>
+        <p>使用 CMake 时可选择 <code>FetchContent</code>, <code>add_subdirectory</code>，或通过 <code>find_package</code>使用本地安装。<a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md">中文集成指南</a>给出完整命令。</p>
+        <p class="release-note"><a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">LayerKeySort Full v4.1.0</a>是当前已发布 Stable，含兼容的内存优化、经过验证的合并包及 SHA-256 清单。性能取决于负载；旧 Path/Tree 契约继续由 V3.1.0 提供。</p>
+      </div>
+      <aside class="aside" aria-labelledby="zh-models-title">
+        <h3 id="zh-models-title">如何选用 API？</h3>
+        <ul>
+          <li><code>LksManagedOrder</code>绑定比较器顺序；键变化时先删除、再修改、最后重新插入。</li>
+          <li><code>LksOrder</code>支持相对插入和保留居民实例的移动。</li>
+          <li><code>lks_sort()</code>执行一次稳定指针数组排序。</li>
+        </ul>
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/USAGE.zh-CN.md">使用指南 →</a>
+      </aside>
+    </section>
+
+    <section class="section shell visual" aria-labelledby="zh-visual-title">
+      <div>
+        <p class="eyebrow">观察模型</p>
+        <h2 id="zh-visual-title">观察位置变化</h2>
+        <p>历史 <a href="v3/">V3 可视化</a>回放从生产 C 实现采集的 Path 快照，帮助理解手动和比较器托管 Tree。浏览器仅回放记录。</p>
+      </div>
+      <a class="button primary" href="v3/">打开可视化</a>
+    </section>
+
+    <section class="section shell limits" aria-labelledby="zh-limits-title">
+      <p class="eyebrow">采用之前</p>
+      <h2 id="zh-limits-title">测量自己的目标负载</h2>
+      <p>V4 避免实时 Path 增长和全集坐标重标。仍有局部块及索引维护、分配和比较器成本；完整导出及历史保留可能主导耗时与内存。较适合反复执行插入、删除及移动的长期编辑型集合。一次性排序或分布式/CRDT 顺序有其他需求。参见 <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">基准证据</a>，运行自己的负载，并关注 <a href="https://github.com/RXY712200/LayerKeySort/issues/3">V4 之后的路线</a>。</p>
+    </section>
+    <div class="section shell">
+      <p>LayerKeySort Full · MIT 许可的 C17 库</p>
+      <nav aria-label="中文页尾导航">
+        <a href="https://github.com/RXY712200/LayerKeySort">GitHub 仓库</a> ·
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/LICENSE">MIT 许可</a> ·
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md">产品线</a> ·
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.zh-CN.md">Mini 文档</a> ·
+        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.zh-CN.md">Full 文档</a> ·
+        <a href="https://github.com/RXY712200/LayerKeySort/issues/3">路线与技术债</a> ·
+        <a href="v3/">V3 可视化</a> ·
+        <a href="demo/">历史 V1 可视化</a>
+      </nav>
+    </div>
+  </section>
   </main>
   <footer class="site-footer">
     <div class="shell">
