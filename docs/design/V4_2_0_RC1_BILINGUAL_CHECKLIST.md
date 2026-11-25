@@ -93,7 +93,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | repo | `docs/governance/RULESETS.md` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/history/BENCHMARK_HISTORY.md` | historical / 历史 | docs/history/BENCHMARK_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/history/DESIGN_HISTORY.md` | historical / 历史 | docs/history/DESIGN_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| repo | `docs/index.html` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| repo | `docs/index.html` | current / 现行 | `docs/index.html#zh-cn` at Repo `5a44bb8498d218c76330e71ec65b38e4f80ebfe2` | S3 semantic and final links / 语义及最终链接 | inline bilingual / 内嵌双语 | browser headings, IDs and language fragments checked / 已用浏览器核对标题、ID 及语言锚点 |
 | full | `docs/v3/README.md` | historical / 历史 | docs/v3/README.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/v3/index.html` | historical / 历史 | bilingual inline or owned companion | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `examples/README.md` | current / 现行 | examples/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
