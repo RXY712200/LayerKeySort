@@ -211,11 +211,11 @@ for each row: association_length u64 BE + raw bytes
 end-of-input，不能有尾随垃圾
 ~~~
 
-`serialize` 在检查容量之后将整个 Snapshot 编码进**调用方提供**的 buffer；`deserialize` 第一遍完整扫描所有行并做边界检查，第二遍才分配和拷贝。失败不返回半解码状态；加载结果没有 live SourceMarker。它不是磁盘 I/O，格式本身也没有校验和、WAL、文件写入提交或断电恢复协议。
+`serialize` 在检查容量之后将整个 Snapshot 编码进**调用方提供**的 buffer；`deserialize` 第一遍校验魔数、零标志位、命名空间、行数及每行长度，校验全部通过后才分配快照和关联数据存储。第二遍填写各行的结束偏移量并复制关联数据。失败不返回半解码状态；加载结果没有 live SourceMarker。它不是磁盘 I/O，格式本身也没有校验和、WAL、文件写入提交或断电恢复协议。
 
 ## 11. Snapshot Restore 与 Bulk Build：为何不做 N 次公开 insert？
 
-Resolver 的 N 个临时指针数组是恢复期间的独立峰值成本。失败清理未发布结构和数组。批量恢复按链表中序建立平衡索引，并为新块分配等距非零标签；编码中没有旧标签、AVL 指针或 Handle。
+恢复非空快照时，Resolver 的结果保存在一个含 N 个项目指针的临时数组中。此数组与批建中的新 Order 同时占用内存，是恢复期间一项独立的峰值成本。失败清理未发布结构和数组。批量恢复按链表中序建立平衡索引，并为新块分配等距非零标签；编码中没有旧标签、AVL 指针或 Handle。
 
 恢复先解析全部行，再批量构建；旧快照不携带实时标签、块或 Handle 地址。新增测试检查恢复后的标签间隔和 Handle 顺序，并对人为构造的有效混合标签状态验证双向 AVL 回退。
 

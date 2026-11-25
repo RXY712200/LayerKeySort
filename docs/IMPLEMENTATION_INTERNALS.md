@@ -124,7 +124,7 @@ for each row: association_length u64 BE + raw bytes
 end-of-input, with no trailing bytes
 ~~~
 
-Serialization checks capacity before encoding into caller memory. Deserialization scans every row and checks bounds before allocations and copies in a second pass. Failure publishes no partial snapshot; loaded snapshots have no live SourceMarker. Wire encoding does not perform disk I/O, checksum, WAL or commit and power-loss recovery.
+Serialization checks capacity before encoding into caller memory. Deserialization validates the magic, zero flags, namespace, row count, and every row length before allocating the snapshot and its association storage. The second pass fills the row endpoints and copies association bytes. Failure publishes no partial snapshot; loaded snapshots have no live SourceMarker. Wire encoding does not perform disk I/O, checksum, WAL or commit and power-loss recovery.
 
 ## 11. Resolve-first restore and bulk build
 
