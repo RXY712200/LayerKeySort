@@ -10,7 +10,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | Owner / 归属 | Original / 原文 | Kind / 类型 | Other edition / 对应版本 | Required action / 待办 | Completion / 状态 | Verification / 验证 |
 | --- | --- | --- | --- | --- | --- | --- |
 | repo | `.github/pull_request_template.md` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `CHANGELOG.md` | current / 现行 | CHANGELOG.zh-CN.md | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `CHANGELOG.md` | current + historical / 现行及历史 | [CHANGELOG.zh-CN.md](../../CHANGELOG.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | release headings, dates and bullet counts checked / 已核版本、日期和条目数 |
 | repo | `CONTRIBUTING.md` | current / 现行 | CONTRIBUTING.md#参与-layerkeysort-开发 | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `README.md` | current / 现行 | README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `benchmarks/README.md` | current / 现行 | benchmarks/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
@@ -97,6 +97,8 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/v3/README.md` | historical / 历史 | docs/v3/README.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/v3/index.html` | historical / 历史 | bilingual inline or owned companion | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `examples/README.md` | current / 现行 | examples/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
+
+| full | `docs/design/V4_2_0_RC1_RESUME.md` | task record / 任务记录 | [inline Chinese edition](V4_2_0_RC1_RESUME.md#中文执行说明与英文对应英文指令为准) | S3 semantic review; English authoritative / 语义复核，以英文为准 | inline bilingual / 内嵌双语 | read at 540f905 / 已读 |
 
 ## Scope boundaries / 范围边界
 
