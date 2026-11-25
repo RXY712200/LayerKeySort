@@ -98,13 +98,13 @@ repeat row_count:
     association bytes
 ```
 
-任意二进制有效载荷可含 NUL，允许空关联。空快照为零行和非空命名空间。未知 magic/flags、截断、计数/长度溢出、地址空间溢出或尾随字节均返回 INVALID_ARGUMENT。完整语法和计数校验先于分配。较小 SIZE_MAX 主机拒绝不可寻址输入，不截断或部分发布。OOM 返回空输出。解码后拥有不可变历史数据，无标记或当前性。重新序列化重现原始字节，LS1 从命名空间及序号重建。4.x 冻结宽度、端序、顺序、flags=0、禁止尾随及重建规则。未来不兼容格式须新增版本。格式不内置完整性、校验和或压缩；应用负责传输完整性。
+任意二进制有效载荷可含 NUL，允许空关联。空快照为零行和非空命名空间。未知 magic/flags、截断、计数/长度溢出、地址空间溢出或尾随字节均返回 INVALID_ARGUMENT。完整语法和计数校验先于分配。较小 SIZE_MAX 主机拒绝不可寻址输入，不截断或部分发布。OOM 返回空输出。解码后拥有不可变历史数据，无标记或当前性。重新序列化重现原始字节，LS1 从命名空间及序号重建。4.x 冻结宽度、端序、顺序、flags=0、禁止尾随及重建规则。未来不兼容格式须新增版本，解码器不得猜测未知 flags 的含义。格式不内置完整性、校验和或压缩；应用负责传输完整性。
 
 [线格式向量](../tests/fixtures/v4_wire_golden.json)包含七个 LS1、四个二进制向量、严格 V3 导入及 17 个已发布 LK1 冻结向量。快照压力及 OOM 仍为门槛。tests/path_external.c 的 V3 LK1 固定向量保留为私有证据。哈希见 tests/fixtures/v4_fixture_sha256.json。期望字节采用审查常量，独立于编码器。32/64 位任务共用，RC 不得在未经解冻时修改。
 
 ## 构建与发行包
 
-验证 Windows MSVC x64/x86、Linux GCC/Clang、macOS AppleClang，C17 实现和 C++17 消费者。Linux Clang ASan/UBSan 与本地 MSVC ASan 用于验证。实现按 C++ 编译及其他 C17 平台无普遍支持承诺。CMake>=3.21 支持 add_subdirectory、离线 FetchContent、安装/导出、find_package(LayerKeySort CONFIG REQUIRED) 和 LayerKeySort::layerkeysort。嵌入时示例、测试和安装默认关闭。普通库、安装版和合并版消费无需 Python。当时的包版本 4.0.0/SameMajorVersion 表示源码重建兼容，头文件为 4.0.0-preview.5。ZIP 使用固定时间戳并含五项：公开头、C 实现、V4 示例、LICENSE、README.txt。SHA256SUMS 覆盖 ZIP。须验证复现、散列、成员与篡改拒绝。安装版和合并版 API 符合清单，不引用私有头。
+验证 Windows MSVC x64/x86、Linux GCC/Clang、macOS AppleClang，C17 实现和 C++17 消费者。Linux Clang ASan/UBSan 与本地 MSVC ASan 用于验证。实现按 C++ 编译及其他 C17 平台无普遍支持承诺。CMake>=3.21 支持 add_subdirectory、离线 FetchContent、安装/导出、find_package(LayerKeySort CONFIG REQUIRED) 和 LayerKeySort::layerkeysort。嵌入时示例、测试和安装默认关闭。普通库、安装版和合并版消费无需 Python。当时的包版本 4.0.0/SameMajorVersion 表示源码重建兼容，当时的头文件声明 4.0.0-preview.5，包版本号不表示已经发布 Stable。ZIP 使用固定时间戳并含五项：公开头、C 实现、V4 示例、LICENSE、README.txt。SHA256SUMS 覆盖 ZIP。须验证复现、散列、成员与篡改拒绝。安装版和合并版 API 符合清单，不引用私有头。
 
 ## 已接受的成本和债务
 
