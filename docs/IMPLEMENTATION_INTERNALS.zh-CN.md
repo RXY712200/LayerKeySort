@@ -1,5 +1,7 @@
 # Full 4.2.0-rc.1：内部结构、函数执行路径和算法分支详解
 
+[English](IMPLEMENTATION_INTERNALS.md)
+
 恢复后同时构造非零标签和零标签块，分别核对标签路径与 AVL 回退；验证后恢复标签，不改生产算法。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
 
 > 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
@@ -62,7 +64,11 @@ Order: root + first/last + logical count + revision
 
 Stable 的 v4_rank 路径已在 22544cf2 移除。回退按两块的 AVL 高度推进较低子树，找到祖先关系或同父的分支后确定符号。61e9290e 增加标签快速路径：以外部标签差除以区间宽度加一，最宽 64 个块；开放右端的一块赋值步长另受 2^40 限制。局部空间不足则保持零标签。非零标签跨过零块仍严格递增。
 
-v4_tag_attach 的分配标签工作有固定探测和写入界限；耗尽局部空间时保留零标签。lks_order_compare 在任一标签为零时使用 AVL。诊断验证整个非零子序列严格递增，跨零标签块也要检查。
+标签窗口从新块自身开始，宽度为 1。左侧有块就取外邻的标签，否则下界为 0；右侧有块就取外邻标签，否则上界为 UINT64_MAX。真实外邻须为非零，且上界大于下界。步长为整数商 `(upper - lower) / (width + 1)`。单块须至少 1，多块须至少等于 width，以给后续插入留出间隙。仅在开放右端且宽度为 1 时，步长上限为 2^40。成功时从下界逐次加步长，按块链写到窗口右端。上界处保留间隔，无分配。
+
+失败后若宽度已为 64，或两端均无外邻，则退出并让新块保持零标签。否则若有左外邻且满足「无右外邻、下界为零、宽度为偶数」任一条件则向左扩一块，其余向右扩，然后宽度加一。尚未找到可用窗口时不写旧块。窗口内成功赋值也可能恢复已有零标签；没有恢复时限。
+
+仅诊断构建记录成功写入的标签数 `tag_writes`、宽度大于 1 的成功次数 `tag_repairs`、无标签退出次数 `tag_fallbacks` 和单次接入最大写入宽度 `max_tag_writes`。这些记录并非每操作 `v4_begin` 重置的结构工作表。诊断 `v4_check_node` 以核对过的块链顺序中序遍历；遇零不清除 `last_nonzero_tag`，每个非零必须严格大于前次非零。标签比较不依赖子树块数。回退提升高度较低的一侧；高度相同走右输入一侧。左输入的父节点为右输入时，它位于右输入左子树才返回 −1；右输入父节点为左输入时，它位于左输入右子树才返回 −1。同父时左输入在公共父节点左侧才返回 −1，其余各分支返回 +1。同块比较局部下标，结果可为 0。
 
 | 函数 | 实际逻辑 |
 | --- | --- |
@@ -75,7 +81,8 @@ v4_tag_attach 的分配标签工作有固定探测和写入界限；耗尽局部
 | `v4_balance` | 从改变的节点沿 parent 向上，每节点刷新并根据高度差选择单旋或双旋。 |
 | `v4_minimum` | 沿左链接找到子树最小 Block。 |
 | `v4_new_block` | 堆分配、清零并给新 Block 设置 owner、height=1、subtree_blocks=1。 |
-| `v4_link_after` | 更新双向块链，并在 anchor 的 AVL 后继位置接入新块；空 Order 时直接建立 root/first/last；再平衡。 |
+| `v4_link_after` | 更新块链并按后继位置接入 AVL；首块设置 root/first/last。增加 blocks 后调用 v4_tag_attach，再从父节点 v4_balance。 |
+| `v4_tag_attach` | 按上文检验外邻及步长，在至多 64 块内赋标签，或保留零。无分配。 |
 | `v4_detach` | 从双链及 AVL 删除一个块；两子节点时物理移植后继 Block，而不是复制其 resident 数组；从必要的位置再平衡。 |
 | `v4_locations` | 遍历一块现存居民，更新各 Handle 的 block/local 并清理剩余数组槽。 |
 | `v4_shifted_locations` | 普通操作仅回填受影响 local 后缀。 |
@@ -218,7 +225,7 @@ Resolver 的 N 个临时指针数组是恢复期间的独立峰值成本。失�
 
 - 根据 N、内部块容量计算块数，平均分配每块居民数；
 - 从左到右逐块分配 Block、每次 occurrence 的 Handle，建立块双链；
-- `snap_bulk_index` 以**中序从链表消耗块**的递归方法，先建左半子树、取中间块、再建右半子树，回填 parent/height/subtree_blocks。块按初始顺序以等距标签初始化；
+- `snap_bulk_index` 以**中序从链表消耗块**的递归方法，先建左半子树、取中间块、再建右半子树，回填 parent/height/subtree_blocks。第 i 块（从 0 起）标签为 `(i + 1) * (UINT64_MAX / (blocks + 1))`，使用 uint64_t，按初始顺序间隔赋值；
 - 建立全部成功后才交出新 Order，失败清理全部内部资源。
 
 恢复的 Handle 全是**新分配的**，不能跨进程恢复旧 Handle 地址；内部私有函数不会通过公共接口暴露。
@@ -259,7 +266,7 @@ requested memory 不等于进程 RSS；即使用户 item 由应用持有、Full 
 | --- | --- |
 | 次序不对但数量正确 | `records[]`、before/after 的目标下标修正、`block->previous/next` |
 | 跨块邻居错误 | 块链的首尾和 next/previous、各块的 count |
-| compare 结果有误 | `lks_order_compare`、`subtree_blocks`、AVL parent 链 |
+| compare 结果有误 | 先核对 Handle owner、local、非零标签单调性及是否走零标签路径；再查 AVL parent、height 和左右分支。`subtree_blocks` 另用于结构诊断。 |
 | 删除之后损坏 | `v4_repair` 的合并/重分布、`v4_detach` 的两子物理移植 |
 | OOM 后原顺序改变 | `v4_insert/v4_move` 是否越过预分配边界 |
 | Managed 重复值定位错误 | upper/lower bound 的严格与非严格比较、比较器语义是否稳定 |

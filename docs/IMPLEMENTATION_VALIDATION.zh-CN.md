@@ -82,7 +82,7 @@ Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解�
 | Group/Batch busy destroy | `tests/v4_immutable_group.c::compare`、`association`（由 `campaign` 驱动）检查 Group getter NULL/0、嵌套 capture/merge_all REENTRANT，调用 Group/Batch destroy，外层继续使用来源并最终释放 | busy destroy 不破坏来源由后续使用/清理场景支持；未由这里直接验证并发 merge/capture 安全性 |
 | 空恢复、回调 buffer | `tests/v4_snapshot.c::capture_restore` 包含 count=0 场景；`associate` 使用文件作用域 scratch 返回字节 | 不能据此声称测试过返回自动局部数组（非法程序）的行为；空恢复 NULL Resolver 的允许性按公开头和 restore 实现确认 |
 
-证据分层：①这些测试代码存在；②本次读过表中相关断言；③本次执行的是文档结构/链接/API 清单与示例编译检查，**没有运行上述 CTest**；④历史 CI 和发布验证仍是历史证据，不转记为本次运行结果。本次检查命令和结果见 PR 修订报告，后续复测应另记 SHA、环境和日志。
+证据分层：本表记录测试源码与断言。初次 RC 本地严格 GCC Debug/Release 各执行 39/39 CTest；[初次 Full PR CI](https://github.com/RXY712200/LayerKeySort/actions/runs/45518848531) 六配置各 39/39，并执行扩展 sanitizer。候选测试检出点含两个 Preview.3 回归；后续修复的 CI 必须按各自 HEAD 独立记录。旧测试、研究数据和复查范围不得当作新执行。
 
 ### 3.2 测试文件名容易误导的地方
 
@@ -168,9 +168,9 @@ python tools/validate_release_assets.py
 | 旧 LK1 导入 | 内部详解 §13、V3 fixture 和迁移说明，不倒改旧发行版 |
 | 构建/安装/两文件发行 | 本篇 §2 / §5、Integration 文档、发行验证脚本 |
 | 新公开 API | 先正式审查 4.x 冻结契约和版本，再修改 Manifest、API 文档、消费者测试 |
-| Full 对外版本升级 | 在 [尚未合并的 PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 所拟定的交接台账中记录精确前后 SHA、API/内部差异、消费者是否需改适配层 |
+| Full 对外版本升级 | 在 [消费者交接台账](FULL_CONSUMER_HANDOFF.zh-CN.md)中记录精确前后 SHA、API/内部差异、消费者是否需改适配层 |
 
-**如果 PR #24 尚未合并，则它的交接文件还不存在于 main**；不能在发行文档里假装已生效。
+[PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 已于 2026-11-23 06:02:54 UTC 合入。台账的后续候选更新须以实际审查分支为准。
 
 ## 9. 本轮文档化的验收范围与不足
 
