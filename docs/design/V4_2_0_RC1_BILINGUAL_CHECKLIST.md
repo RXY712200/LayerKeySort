@@ -14,7 +14,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | repo | `CONTRIBUTING.md` | current / 现行 | CONTRIBUTING.md#参与-layerkeysort-开发 | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `README.md` | current / 现行 | README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `benchmarks/README.md` | current / 现行 | benchmarks/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
-| full | `benchmarks/WORKLOADS.md` | historical / 历史 | benchmarks/WORKLOADS.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `benchmarks/WORKLOADS.md` | historical / 历史 | [benchmarks/WORKLOADS.zh-CN.md](../../benchmarks/WORKLOADS.zh-CN.md) | S3 semantic and index navigation / 语义和索引导航 | pair present / 已有双语 | command block checked / 已核命令 |
 | full | `benchmarks/research/full-v4.2.0-preview.1.2.1/PROTOCOL.md` | historical / 历史 | benchmarks/research/full-v4.2.0-preview.1.2.1/PROTOCOL.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `benchmarks/research/full-v4.2.0-preview.1.2.1/REPRODUCTION.md` | historical / 历史 | benchmarks/research/full-v4.2.0-preview.1.2.1/REPRODUCTION.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `benchmarks/research/full-v4.2.0-preview.1.2/PROTOCOL.md` | historical / 历史 | benchmarks/research/full-v4.2.0-preview.1.2/PROTOCOL.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
@@ -51,14 +51,14 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/MIGRATION_V3_V4.md` | current / 现行 | docs/MIGRATION_V3_V4.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |
 | repo | `docs/PRODUCT_LINES.md` | current / 现行 | docs/PRODUCT_LINES.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/USAGE.md` | current / 现行 | docs/USAGE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
-| full | `docs/V3_MIGRATION.md` | historical / 历史 | docs/V3_MIGRATION.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V3_MIGRATION.md` | historical / 历史 | [docs/V3_MIGRATION.zh-CN.md](../V3_MIGRATION.zh-CN.md) | S3 semantic and index navigation / 语义和索引导航 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/V4_1_0.md` | historical / 历史 | docs/V4_1_0.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW1_2.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW1_2_1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2_1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW2.md` | historical / 历史 | docs/V4_2_0_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW3.md` | historical / 历史 | docs/V4_2_0_PREVIEW3.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_2_0_RC1.md` | current / 现行 | docs/V4_2_0_RC1.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | commands and hashes checked / 已核命令与哈希 |
+| full | `docs/V4_2_0_RC1.md` | current / 现行 | [docs/V4_2_0_RC1.zh-CN.md](../V4_2_0_RC1.zh-CN.md) | S3 semantic and links / 语义及链接 | pair present / 已有双语 | commands and hashes checked / 已核命令与哈希 |
 | full | `docs/V4_FREEZE.md` | historical / 历史 | docs/V4_FREEZE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |
 | full | `docs/V4_PREVIEW1.md` | historical / 历史 | docs/V4_PREVIEW1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_PREVIEW2.md` | historical / 历史 | docs/V4_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
