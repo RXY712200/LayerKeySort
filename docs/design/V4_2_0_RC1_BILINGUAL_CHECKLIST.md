@@ -54,7 +54,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/V3_MIGRATION.md` | historical / 历史 | [docs/V3_MIGRATION.zh-CN.md](../V3_MIGRATION.zh-CN.md) | S3 semantic and index navigation / 语义和索引导航 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/V4_1_0.md` | historical / 历史 | docs/V4_1_0.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/V4_2_0_PREVIEW1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_2_0_PREVIEW1_2.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_2_0_PREVIEW1_2.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/control table/local links checked / 原件保留，已核 SHA、对照表及链接 |
 | full | `docs/V4_2_0_PREVIEW1_2_1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2_1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/V4_2_0_PREVIEW2.md` | historical / 历史 | docs/V4_2_0_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW3.md` | historical / 历史 | docs/V4_2_0_PREVIEW3.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
