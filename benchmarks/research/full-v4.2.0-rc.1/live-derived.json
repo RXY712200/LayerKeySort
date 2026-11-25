@@ -502,6 +502,26 @@
           "peak_requested_bytes": 4278776,
           "elapsed_ms": 0.6021000000000001
         },
+        "stable40": {
+          "peak_requested_bytes": 5028760,
+          "elapsed_ms": 3.2931000000000004
+        },
+        "stable41": {
+          "peak_requested_bytes": 4253752,
+          "elapsed_ms": 3.2323
+        },
+        "preview1": {
+          "peak_requested_bytes": 4278776,
+          "elapsed_ms": 0.6401
+        },
+        "list": {
+          "peak_requested_bytes": 2400168,
+          "elapsed_ms": 1664.2743
+        },
+        "tree": {
+          "peak_requested_bytes": 6400424,
+          "elapsed_ms": 7.846000000000001
+        },
         "tag": {
           "peak_requested_bytes": 13437504,
           "elapsed_ms": 0.5720999999999999
@@ -515,6 +535,26 @@
         "full": {
           "peak_requested_bytes": 4278800,
           "elapsed_ms": 2.5972
+        },
+        "stable40": {
+          "peak_requested_bytes": 5028792,
+          "elapsed_ms": 4.0849
+        },
+        "stable41": {
+          "peak_requested_bytes": 4253776,
+          "elapsed_ms": 4.1284
+        },
+        "preview1": {
+          "peak_requested_bytes": 4278800,
+          "elapsed_ms": 2.6115
+        },
+        "list": {
+          "peak_requested_bytes": 2400576,
+          "elapsed_ms": 259.8313
+        },
+        "tree": {
+          "peak_requested_bytes": 6401512,
+          "elapsed_ms": 18.1857
         },
         "tag": {
           "peak_requested_bytes": 13438184,
@@ -967,6 +1007,26 @@
           "peak_requested_bytes": 4278776,
           "elapsed_ms": 1.127721
         },
+        "stable40": {
+          "peak_requested_bytes": 5028760,
+          "elapsed_ms": 6.663075
+        },
+        "stable41": {
+          "peak_requested_bytes": 4253752,
+          "elapsed_ms": 5.580504
+        },
+        "preview1": {
+          "peak_requested_bytes": 4278776,
+          "elapsed_ms": 1.158808
+        },
+        "list": {
+          "peak_requested_bytes": 2400168,
+          "elapsed_ms": 1094.379312
+        },
+        "tree": {
+          "peak_requested_bytes": 6400424,
+          "elapsed_ms": 14.941654999999999
+        },
         "tag": {
           "peak_requested_bytes": 13437504,
           "elapsed_ms": 1.3707820000000002
@@ -980,6 +1040,26 @@
         "full": {
           "peak_requested_bytes": 4278800,
           "elapsed_ms": 4.322430000000001
+        },
+        "stable40": {
+          "peak_requested_bytes": 5028792,
+          "elapsed_ms": 8.847155
+        },
+        "stable41": {
+          "peak_requested_bytes": 4253776,
+          "elapsed_ms": 6.2888850000000005
+        },
+        "preview1": {
+          "peak_requested_bytes": 4278800,
+          "elapsed_ms": 4.402037
+        },
+        "list": {
+          "peak_requested_bytes": 2400576,
+          "elapsed_ms": 208.157465
+        },
+        "tree": {
+          "peak_requested_bytes": 6401512,
+          "elapsed_ms": 33.748477
         },
         "tag": {
           "peak_requested_bytes": 13438184,

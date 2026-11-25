@@ -6,11 +6,9 @@
 
 ## Current V4 evidence
 
-[Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) is
-historical V4-convergence evidence. The latest independently accepted three-step
-For the 4.2 development candidate, start with [matched Windows/Linux timing, resources and lifecycle evidence](FULL_RC1_EVIDENCE.md). The charts are derived from the final Preview.3 archive at unchanged operational source.
+The [4.2 candidate evidence](FULL_RC1_EVIDENCE.md) compares matched Windows and Linux live-order samples, lifecycle wall time, and memory. It uses the archived Preview.3 measurements at unchanged operational source.
 
-Full 4.1.0 research covers 100k–10m workloads, with raw runs preserved on the
+[Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) records historical V4 convergence. The accepted three-step Full 4.1.0 study covers 100k–10m workloads, with raw runs preserved on the
 [final research branch](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md).
 At 1m/16 retained histories, requested peak fell 513.594 to 355.751 MB; at
 admitted Linux 10m/2 histories, 1,822.185 to 1,317.500 MB. These are Full
@@ -120,11 +118,11 @@ timing and do not establish an asymptotic bound.
 Let `n` be the Tree size, `d` a Path depth, `b` an encoded text length, and
 `c` the cost of the caller's item comparator. An AVL visit may also compare
 Paths at cost up to `O(d)`; node visits alone are not whole-operation cost.
-The table describes the current implementation, with output size included
+The table describes the historical V3 implementation, with output size included
 where relevant. It is not a formal bound on every allocation or hardware
 cost.
 
-| Operation | Current structural work / important caveat |
+| Operation | Historical V3 structural work / caveat |
 | --- | --- |
 | Path compare | `O(min(d1,d2))` step comparisons. |
 | Display/key length and format | Iterative `O(d + b)` work, no library allocation for formatting. |

@@ -4,6 +4,7 @@ import hashlib
 import json
 from collections import defaultdict
 from pathlib import Path
+from math import ceil, floor, log10
 from statistics import median
 from xml.sax.saxutils import escape
 
@@ -25,9 +26,47 @@ def label(x, y, value):
     return f'<text x="{x}" y="{y}">{escape(str(value))}</text>'
 
 
+def plot_scatter(host, scenario, points, chinese):
+    colors = ('#176082', '#8c391b', '#4b538c', '#3f7130',
+              '#a13d68', '#784a18', '#00736f', '#655350')
+    chinese_names = ('Full', '稳定版 4.0', '稳定版 4.1', '预览版 1.2',
+                     '链表', 'Treap', '原生标签区间', '原生链表区间')
+    workload = {'compare-heavy': '比较密集', 'update-heavy': '更新密集'}[scenario] if chinese else scenario
+    size = '初始实例数 100,000，种子 17' if chinese else '100,000 initial occurrences, seed 17'
+    unit = '诊断运行的峰值请求内存（MiB）' if chinese else 'Diagnostic peak requested memory (MiB)'
+    elapsed = '正式运行耗时中位数（ms，对数轴）' if chinese else 'Formal median elapsed (ms, log scale)'
+    x_max = ceil(max(p['peak_requested_bytes'] for p in points.values()) / 2**20)
+    lo = floor(log10(min(p['elapsed_ms'] for p in points.values())))
+    hi = ceil(log10(max(p['elapsed_ms'] for p in points.values())))
+    body = label(60,23,f'{host} · {size} · {workload}') + label(60,45,elapsed)
+    body += '<path d="M85 70v220h580" fill="none" stroke="#172840"/>'
+    for exp in range(lo, hi+1):
+        y = 290 - 220*(exp-lo)/(hi-lo)
+        body += label(20,y+4,f'{10**exp:g}')
+        body += f'<path d="M85 {y}h580" stroke="#ddd"/>'
+    for x_tick in range(0,x_max+1,2):
+        body += label(80+580*x_tick/x_max,309,x_tick)
+    body += label(220,333,unit)
+    # Keep observed coordinates. Concentric outlines show near-coincident samples.
+    for i, (name, point) in enumerate(points.items()):
+        x = 85+580*point['peak_requested_bytes']/2**20/x_max
+        y = 290-220*(log10(point['elapsed_ms'])-lo)/(hi-lo)
+        radius = 4 + i % 4 * 2
+        legend_x, legend_y = 32+(i%4)*180, 354+(i//4)*25
+        color = colors[i]
+        value = escape(f"{name}: {point['peak_requested_bytes']} bytes; {point['elapsed_ms']:.6f} ms")
+        body += f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{radius}" fill="none" stroke="{color}" stroke-width="2"><title>{value}</title></circle>'
+        body += f'<circle cx="{legend_x}" cy="{legend_y-4}" r="5" fill="{color}"/>'
+        body += label(legend_x+10,legend_y,chinese_names[i] if chinese else CONTROLS.get(name,'Full'))
+    suffix = '.zh-CN' if chinese else ''
+    svg(HERE / f'{host.lower()}-{scenario}{suffix}.svg', f'{host} · {workload} · {elapsed}', body, height=400)
+
+
 def derive():
     result = {}
     bars = label(12, 21, 'Full / control elapsed ratio (lower is faster)')
+    bars_cn = label(12, 21, 'Full / 对照组耗时比（越小越快）')
+    names_cn = ('稳定版 4.0', '稳定版 4.1', '预览版 1.2', '链表', 'Treap', '原生标签区间', '原生链表区间')
     for host_index, host in enumerate(('Windows', 'Linux')):
         raw = (ARCHIVE / host / 'raw.csv').read_bytes()
         samples, diagnostics = defaultdict(list), {}
@@ -49,12 +88,14 @@ def derive():
                                     wins=sum(r < 1 for r,c in ratios), cells=len(ratios),
                                     worst=max(ratios), adverse_over_10_percent=[(r,c) for r,c in ratios if r>1.1])
             x, y = 15 + host_index * 375, 80 + 33*i
-            bars += label(x,y,name)
-            bars += f'<rect x="{x+98}" y="{y-11}" width="{overall*105:.2f}" height="13" fill="#266784"/>'
-            bars += label(x+104+overall*105,y,f'{overall:.3f}')
+            bar = f'<rect x="{x+120}" y="{y-11}" width="{overall*105:.2f}" height="13" fill="#266784"/>'
+            value = label(x+126+overall*105,y,f'{overall:.3f}')
+            bars += label(x,y,name) + bar + value
+            bars_cn += label(x,y,names_cn[i]) + bar + value
         x = 15+host_index*375
-        bars += label(x,45,host)+f'<path d="M{x+203} 54v242" stroke="#657483" stroke-dasharray="4 4"/>'
-        bars += label(x+186,318,'1.00')
+        axis = label(x,45,host)+f'<path d="M{x+225} 54v242" stroke="#657483" stroke-dasharray="4 4"/>' + label(x+208,318,'1.00')
+        bars += axis
+        bars_cn += axis
         scatter = {}
         for scenario in ('compare-heavy','update-heavy'):
             choices = [c for c in cells if c[:3] == (100000,17,scenario)]
@@ -62,29 +103,16 @@ def derive():
                 continue
             cell, = choices
             scatter[scenario] = {}
-            for control in ('full','tag','list_range'):
+            for control in ('full', *CONTROLS):
                 peak = diagnostics[cell,control]
-                if peak:
-                    scatter[scenario][control] = dict(peak_requested_bytes=peak, elapsed_ms=1000*times[cell,control])
+                assert peak and times[cell,control] > 0, (host, cell, control)
+                scatter[scenario][control] = dict(peak_requested_bytes=peak, elapsed_ms=1000*times[cell,control])
         result[host] = dict(raw_sha256=hashlib.sha256(raw).hexdigest(), comparisons=summary, scatter=scatter)
         for scenario, points in scatter.items():
-            max_x = max(p['peak_requested_bytes'] for p in points.values())/2**20*1.15
-            max_y = max(p['elapsed_ms'] for p in points.values())*1.15
-            body = label(70,25,f'{host}, 100,000 initial occurrences, seed 17, {scenario}')
-            body += '<path d="M90 45v230h590" fill="none" stroke="#172840"/>'
-            for i in range(6):
-                body += label(90+118*i-8,295,f'{max_x*i/5:.1f}')
-                body += label(28,280-46*i,f'{max_y*i/5:.1f}')
-            body += label(260,325,'Diagnostic peak requested memory (MiB)')+label(10,45,'ms')
-            for index, (name, point) in enumerate(points.items()):
-                x = 90+590*point['peak_requested_bytes']/2**20/max_x
-                y = 275-230*point['elapsed_ms']/max_y
-                color = ('#176082', '#a53b23', '#37704b')[index]
-                body += f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{7-index*2}" fill="{color}"/>'
-                body += f'<circle cx="{205+index*137}" cy="62" r="5" fill="{color}"/>'
-                body += label(214+index*137,66,CONTROLS.get(name,'Full'))
-            svg(HERE / f'{host.lower()}-{scenario}.svg', f'{host} memory and elapsed time',body)
+            plot_scatter(host, scenario, points, chinese=False)
+            plot_scatter(host, scenario, points, chinese=True)
     svg(HERE / 'live-ratios.svg', 'Matched median live-order elapsed ratios by host', bars)
+    svg(HERE / 'live-ratios.zh-CN.svg', 'Windows 与 Linux 的配对耗时比中位数', bars_cn)
     (HERE / 'live-derived.json').write_text(json.dumps(result, indent=2)+'\n',encoding='utf-8')
 
 
