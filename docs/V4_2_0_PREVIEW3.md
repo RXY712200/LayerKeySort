@@ -21,9 +21,9 @@ Prior provisional guides 01bc01e and implementation fe00536 remain the current o
 | Guide / reviewed sections | Current source and contract | Assertion and boundary |
 | --- | --- | --- |
 | Walkthrough §§2, 5–6, 12–14 | order.c bounded tags/AVL, snapshot.c independent bytes, snapshot_wire.c fixed unsigned shifts | Mixed tags, same-revision isolation and offset-one golden. No general label recovery deadline. |
-| API reference §§B–E | Public header and snapshot.c/snapshot_restore.c, same 64 entries/14 types and ownership | Borrowed views outlive only the live source, remaining valid until Snapshot destruction. Restore uses fresh Handles. Callback effects remain application-owned. |
+| API reference §§B–E | Public header and snapshot.c/snapshot_restore.c, same 64 entries/14 types and ownership | Borrowed row views remain valid while their Snapshot lives, even after destruction of the live source. Restore uses fresh Handles. Callback effects remain application-owned. |
 | Internals §§2–3, 9–11 | order.c nonzero subsequence across zero blocks; order_bulk.c fresh spacing; snapshot_wire.c two-pass decode | Restored tag spacing and bidirectional fallback, literal wire bytes. No live topology serialized. |
-| Validation §§1–6, 9 | Current checkout recipe, frozen fixtures, v4_snapshot.c and v4_mutation.c | New assertions at 754b3088c160564f6666ee520284168ee5da6ac7 and 3ac82d26301ea12876a3ebdba6319fe8233621f3. Archived phase sum and wall analyses are separate. |
+| Validation §§1–6, 9 | Current checkout recipe, frozen fixtures, v4_snapshot.c for both new cases | New assertions at 754b3088c160564f6666ee520284168ee5da6ac7 and 3ac82d26301ea12876a3ebdba6319fe8233621f3. Archived phase sum and wall analyses are separate. |
 
 ## Technical Debt Impact
 

@@ -56,7 +56,7 @@ ctest --test-dir build -C Debug --output-on-failure
 
 ## 3. 核心源码 → 测试源码 → 真实保障
 
-Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；tests/v4_mutation.c 对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.md)。
+Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.md)。
 
 | 修改或研究的能力 | 测试入口 | 实际测试意图与范围 |
 | --- | --- | --- |
