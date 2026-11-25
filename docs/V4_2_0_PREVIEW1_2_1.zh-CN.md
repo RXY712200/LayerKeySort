@@ -40,7 +40,7 @@
 
 Checker拒绝跨零相等/下降非零标签；回归检查两种错误后恢复tag，再继续饱和/顺序。GCC普通生产order.c预处理逐字节相同，公开头/版本/CMake/其他生产文件同已接受Preview.1.2。稳定Handle、managed等值/重入、callback/OOM/revision/no-op、快照及64函数/14类型继承。
 
-Windows严格GCC Debug/Release各39/39，冻结清单、C/C++源码/安装/合并、本地资产通过。transfer/B32/B128参数化修改模型通过，独立身份/顺序和最终零分配。隔离OrdWeave `b12a007c50c2f9efcbee500a14d3cf09dcc74f10` 替入诊断提交为12/12，官方仍 `70d7f0ef5857b54381b863d292a213909d87459f`。见[PR最终平台检查](https://github.com/RXY712200/LayerKeySort/pull/30/checks)和[凭据](../benchmarks/research/full-v4.2.0-preview.1.2.1/verification/)。
+Windows严格GCC Debug/Release各39/39，冻结清单、C/C++源码/安装/合并、本地资产通过。transfer/B32/B128参数化修改模型通过，独立身份/顺序和最终零分配。隔离OrdWeave `b12a007c50c2f9efcbee500a14d3cf09dcc74f10` 替入诊断提交为12/12，官方 v4.1.0 固定仍 `70d7f0ef5857b54381b863d292a213909d87459f`。见[PR最终平台检查](https://github.com/RXY712200/LayerKeySort/pull/30/checks)和[凭据](../benchmarks/research/full-v4.2.0-preview.1.2.1/verification/)。
 
 Stable实现/指南 `70d7f0ef5857b54381b863d292a213909d87459f` / `1a175f91e4c338c2afe6a73a9f8f9c5b149768e5`；先前临时指南 `83367fd9b3b7297db1642c2eea6159bf395ef286` 对应生产 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`；本轮诊断 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`。
 
