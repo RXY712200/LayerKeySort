@@ -1,5 +1,7 @@
 # RC.1 public API source index
 
+[简体中文](V4_2_0_RC1_API_INDEX.zh-CN.md)
+
 Validation checkout: d1132a26ca7b2c65bfd512fa2eb29f1b16793c08. Declarations come from the public header; see the [contract guide](../IMPLEMENTATION_API_REFERENCE.zh-CN.md) for status, ownership and failure rules. The fixture verifies the frozen surface.
 
 | Declaration | Header line | Definition | Contract guide line |

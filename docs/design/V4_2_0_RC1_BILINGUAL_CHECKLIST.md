@@ -82,8 +82,8 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/design/V4_2_0_PREVIEW2_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW2_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_PREVIEW3_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW3_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_PREVIEW3_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW3_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
-| full | `docs/design/V4_2_0_RC1_API_INDEX.md` | guide / 实现指南 | docs/design/V4_2_0_RC1_API_INDEX.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md` | guide / 实现指南 | docs/design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/design/V4_2_0_RC1_API_INDEX.md` | guide / 实现台账 | [Chinese](V4_2_0_RC1_API_INDEX.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | 64 exact declaration rows checked / 已核 64 条精确声明 |
+| full | `docs/design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md` | guide / 实现台账 | [Chinese](V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | added source/test trace for labels, spacing and initial validation SHA / 已增标签、间隔和验证出处 |
 | full | `docs/design/V4_2_0_RC1_REVIEW_REPAIR.md` | historical / 历史 | docs/design/V4_2_0_RC1_REVIEW_REPAIR.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_RC1_TASK.md` | historical / 历史 | docs/design/V4_2_0_RC1_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |

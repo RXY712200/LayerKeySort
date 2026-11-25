@@ -1,5 +1,7 @@
 # Full RC.1 source and documentation reconstruction
 
+[简体中文](V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)
+
 | Role | Exact revision |
 | --- | --- |
 | Published Stable source | 70d7f0ef5857b54381b863d292a213909d87459f |
@@ -44,3 +46,12 @@ Inspect the complete [Stable-to-RC reference diff](https://github.com/RXY712200/
 | Validation | §§1,3,7 exact checkout, actual assertions and failure triage | §§4–6 fixtures/consumer checks remain; archived timings are inherited and separate from RC CI. |
 
 Actual run links and qualification live in the [RC stage record](../V4_2_0_RC1.md). The complete [FULL-RI records](../V4_2_0_PREVIEW3.md#technical-debt-impact) are retained.
+
+## Repair-level traceability
+
+| Implementation obligation | Exact introducing change | Current explanation | Observed evidence and boundary |
+| --- | --- | --- | --- |
+| Compare dispatch and signed fallback | 22544cf2, then 61e9290e | Internals §3 explains same-block index, tagged comparison, each ancestor/sibling sign, height-equal direction, and unused subtree count | Source `lks_order_compare`; `preview1_precedence_and_shifts` in v4_mutation and restored mixed-tag tests. No constant-time worst-case promise. |
+| Bounded assignment and counts | 61e9290e; exhaustion test 21f6fc4; diagnostic monotonicity c977b0fd | Internals §3 includes both sentinel values, stride and minimum, deterministic growth, width cap and counter scopes | Source `v4_tag_attach/v4_check_node` plus `preview12_block_tags`. Historical midpoint exhaustion, B32/B128 and direct transfer remain distinct rejected designs. No arbitrary recovery guarantee. |
+| Bulk spacing | 61e9290e | Internals §11 gives the spacing formula and resolve-first behavior | `src/order_bulk.c`; `capture_restore` checks ordered restored traversal, tags and both comparison routes at 3ac82d26. New Handles do not restore earlier addresses. |
+| Validation provenance | d1132a26; initial candidate 643d8f79 | Validation §§1–5 and Walkthrough §13 distinguish frozen operational source, test checkout and actual run | Initial RC CTest and sanitizer [45518848531](https://github.com/RXY712200/LayerKeySort/actions/runs/45518848531). Later heads require their own evidence. |
