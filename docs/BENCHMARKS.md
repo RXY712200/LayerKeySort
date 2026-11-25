@@ -1,5 +1,7 @@
 # Benchmark and performance evidence
 
+[简体中文](BENCHMARKS.zh-CN.md)
+
 > [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable. See [4.1.0 evidence](V4_1_0.md), [historical Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
 > Historical result files keep the names and terminology that were correct when captured.
 > Stable promotion performs no new algorithm tuning.
@@ -104,7 +106,7 @@ one run without warmup. The diagnostic build was separate from timed runs.
 Its relabel and footprint counters are not extra timing observations. A
 separate per-insert probe sampled tail latency; treat observed maxima as
 workload evidence, not a guaranteed ceiling. The [harness guide](../benchmarks/README.md)
-explains reproduction. Current V3 benchmarks include ascending, descending,
+explains reproduction. The historical V3 benchmarks include ascending, descending,
 random, equal, duplicate, alternating, and fixed-hotspot patterns.
 
 In diagnostics, `relabel.nodes_relabelled` counts old coordinates replaced by

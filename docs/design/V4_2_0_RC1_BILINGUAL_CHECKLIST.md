@@ -9,7 +9,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 
 | Owner / 归属 | Original / 原文 | Kind / 类型 | Other edition / 对应版本 | Required action / 待办 | Completion / 状态 | Verification / 验证 |
 | --- | --- | --- | --- | --- | --- | --- |
-| repo | `.github/pull_request_template.md` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| repo | `.github/pull_request_template.md` | current / 现行 | inline / 内嵌双语 | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | English scopes and five checkboxes retained / 已核对五个归属选项 |
 | full | `CHANGELOG.md` | current + historical / 现行及历史 | [CHANGELOG.zh-CN.md](../../CHANGELOG.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | release headings, dates and bullet counts checked / 已核版本、日期和条目数 |
 | repo | `CONTRIBUTING.md` | current / 现行 | CONTRIBUTING.md#参与-layerkeysort-开发 | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `README.md` | current / 现行 | README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
@@ -36,7 +36,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `benchmarks/results/v4-preview4/README.md` | historical / 历史 | benchmarks/results/v4-preview4/README.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/API.md` | current / 现行 | docs/API.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |
 | full | `docs/ARCHITECTURE.md` | current / 现行 | docs/ARCHITECTURE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
-| full | `docs/BENCHMARKS.md` | current / 现行 | docs/BENCHMARKS.zh-CN.md | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/BENCHMARKS.md` | current / 现行 | [docs/BENCHMARKS.zh-CN.md](../BENCHMARKS.zh-CN.md) | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | matrix numbers, order and links checked / 已核矩阵数字、顺序和链接 |
 | full | `docs/COMPATIBILITY.md` | current / 现行 | docs/COMPATIBILITY.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/DEVELOPMENT.md` | current / 现行 | docs/DEVELOPMENT.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `docs/FULL.md` | current / 现行 | docs/FULL.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
@@ -88,9 +88,9 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/design/V4_2_0_RC1_TASK.md` | historical / 历史 | docs/design/V4_2_0_RC1_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_DECISIONS.md` | historical / 历史 | docs/design/V4_DECISIONS.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| repo | `docs/governance/BASELINE.md` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| repo | `docs/governance/OWNERSHIP.md` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| repo | `docs/governance/RULESETS.md` | current / 现行 | inline or Repo-class companion / 内嵌或 Repo 伴随文件 | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| repo | `docs/governance/BASELINE.md` | historical / 历史 | docs/governance/BASELINE.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | hashes and original checked / 已核哈希与原文 |
+| repo | `docs/governance/OWNERSHIP.md` | historical / 历史 | docs/governance/OWNERSHIP.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | original and policy files unchanged / 原文及配置不变 |
+| repo | `docs/governance/RULESETS.md` | historical / 历史 | docs/governance/RULESETS.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | checklist count and original checked / 已核条目数与原文 |
 | full | `docs/history/BENCHMARK_HISTORY.md` | historical / 历史 | docs/history/BENCHMARK_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/history/DESIGN_HISTORY.md` | historical / 历史 | docs/history/DESIGN_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | repo | `docs/index.html` | current / 现行 | `docs/index.html#zh-cn` at Repo `5a44bb8498d218c76330e71ec65b38e4f80ebfe2` | S3 semantic and final links / 语义及最终链接 | inline bilingual / 内嵌双语 | browser headings, IDs and language fragments checked / 已用浏览器核对标题、ID 及语言锚点 |
