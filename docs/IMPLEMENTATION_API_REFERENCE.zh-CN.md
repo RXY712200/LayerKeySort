@@ -1,10 +1,10 @@
 # Full 4.2.0-rc.1：完整公开 API 索引与关键契约指南
 
-serialize/deserialize 的字节、状态、所有权与借用规则保持不变。本轮在未对齐缓冲区上验证旧格式。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+[English](IMPLEMENTATION_API_REFERENCE.md) · [精确声明索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md) · [源码重建](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)
 
 > 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
 
-> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
+已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。serialize/deserialize 的字节、状态、所有权与借用规则保持不变，偏移一字节的缓冲区由回归测试覆盖。参见[实现审计与证据](V4_2_0_PREVIEW3.md)。
 
 ## A. 如何读取本手册
 
