@@ -76,10 +76,13 @@ def derive():
                 body += label(90+118*i-8,295,f'{max_x*i/5:.1f}')
                 body += label(28,280-46*i,f'{max_y*i/5:.1f}')
             body += label(260,325,'Diagnostic peak requested memory (MiB)')+label(10,45,'ms')
-            for name, point in points.items():
+            for index, (name, point) in enumerate(points.items()):
                 x = 90+590*point['peak_requested_bytes']/2**20/max_x
                 y = 275-230*point['elapsed_ms']/max_y
-                body += f'<circle cx="{x:.2f}" cy="{y:.2f}" r="5" fill="#266784"/>'+label(x+8,y-5,CONTROLS.get(name,'Full'))
+                color = ('#176082', '#a53b23', '#37704b')[index]
+                body += f'<circle cx="{x:.2f}" cy="{y:.2f}" r="{7-index*2}" fill="{color}"/>'
+                body += f'<circle cx="{205+index*137}" cy="62" r="5" fill="{color}"/>'
+                body += label(214+index*137,66,CONTROLS.get(name,'Full'))
             svg(HERE / f'{host.lower()}-{scenario}.svg', f'{host} memory and elapsed time',body)
     svg(HERE / 'live-ratios.svg', 'Matched median live-order elapsed ratios by host', bars)
     (HERE / 'live-derived.json').write_text(json.dumps(result, indent=2)+'\n',encoding='utf-8')
