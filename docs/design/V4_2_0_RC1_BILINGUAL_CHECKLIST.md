@@ -53,7 +53,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/USAGE.md` | current / 现行 | docs/USAGE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/V3_MIGRATION.md` | historical / 历史 | [docs/V3_MIGRATION.zh-CN.md](../V3_MIGRATION.zh-CN.md) | S3 semantic and index navigation / 语义和索引导航 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/V4_1_0.md` | historical / 历史 | docs/V4_1_0.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
-| full | `docs/V4_2_0_PREVIEW1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_2_0_PREVIEW1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original/hash/table/link checks; adverse and clock-correction records retained / 已核原件/哈希/表/链接，保留负面及修正时钟记录 |
 | full | `docs/V4_2_0_PREVIEW1_2.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/control table/local links checked / 原件保留，已核 SHA、对照表及链接 |
 | full | `docs/V4_2_0_PREVIEW1_2_1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2_1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/V4_2_0_PREVIEW2.md` | historical / 历史 | docs/V4_2_0_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
@@ -109,3 +109,29 @@ Mini 与 Workbench 产品自有文档不在这两份 PR 内。构建定义、原
 
 The trusted main ownership map classifies CHANGELOG.md exactly as Full but does not classify a new root CHANGELOG.zh-CN.md. The translation now lives at docs/CHANGELOG.zh-CN.md under the existing Full prefix. Both navigation links and its internal relative links were corrected; no ownership policy, exception or historical original was changed.
 可信 main 映射仅将根 CHANGELOG.md 精确归 Full，不覆盖新根 CHANGELOG.zh-CN.md。因此译本改放既有 Full 前缀下 docs/CHANGELOG.zh-CN.md，修正双向及内部链接，不修改归属规则、例外或历史原件。
+
+## Continuation queue after guide reconstruction / 指南重建后的继续队列
+
+The 89 original/task-record rows now have 69 bilingual counterparts or inline editions; 20 still need a required language. Presence is not final semantic acceptance. All four detailed guides have complete counterparts. Continue next at docs/V4_2_0_PREVIEW2.md, then the remaining rows below. Final all-document semantic/anchor review and immutable cross-PR navigation remain outstanding.
+89 个原始/任务记录条目现有 69 项具备对应译本或内嵌双语，20 项仍缺必需语言。存在文件不等于最终语义接受。四份详细指南均有完整对应版。下一项从 docs/V4_2_0_PREVIEW2.md 继续，再完成下列条目。全部文档语义/锚点复核及跨 PR 最终固定导航仍待完成。
+
+- `docs/V4_2_0_PREVIEW2.md`
+- `docs/V4_2_0_PREVIEW3.md`
+- `docs/V4_PREVIEW1.md`
+- `docs/V4_PREVIEW2.md`
+- `docs/V4_PREVIEW3.md`
+- `docs/V4_PREVIEW4.md`
+- `docs/design/V4_2_0_PREVIEW1_2_1_TASK.md`
+- `docs/design/V4_2_0_PREVIEW1_2_TASK.md`
+- `docs/design/V4_2_0_PREVIEW1_COMPLETION.md`
+- `docs/design/V4_2_0_PREVIEW1_CONTINUATION.md`
+- `docs/design/V4_2_0_PREVIEW1_TASK.md`
+- `docs/design/V4_2_0_PREVIEW2_TASK.md`
+- `docs/design/V4_2_0_PREVIEW3_TASK.md`
+- `docs/design/V4_2_0_RC1_REVIEW_REPAIR.md`
+- `docs/design/V4_2_0_RC1_TASK.md`
+- `docs/design/V4_ARCHITECTURE.md`
+- `docs/design/V4_DECISIONS.md`
+- `docs/history/BENCHMARK_HISTORY.md`
+- `docs/history/DESIGN_HISTORY.md`
+- `docs/v3/index.html`
