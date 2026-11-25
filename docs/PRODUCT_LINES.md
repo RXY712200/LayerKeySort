@@ -1,5 +1,7 @@
 # Product lines and release policy
 
+[简体中文](PRODUCT_LINES.zh-CN.md)
+
 LayerKeySort is **one repository with independently versioned products**, not one
 product with interchangeable build modes. This policy describes repository-wide
 naming and delivery; each product's own README and API contract remain authoritative.
