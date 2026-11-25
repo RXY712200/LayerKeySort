@@ -17,7 +17,7 @@ Before changing anything, inspect both remotes, branches, local HEADs, status an
 
 ## Read the actual authorities before proceeding
 
-Read the current private Development-Playbook in full through the already-authorized private access path, especially its complete workflow and release authorities. Keep private policy text, URL, and private prerequisites out of this public repository and public report.
+Read the current private collaboration and release policy authorities in full through the already-authorized private access path. Keep private policy text, repository identity, URL, and private prerequisites out of this public repository and public report.
 
 Read these project files in full at the exact current candidate revision, not from an old chat excerpt:
 
@@ -60,7 +60,7 @@ Deliver one consolidated English completion report only after the entire package
 
 ### 当前准确起点
 
-- Full PR #33：分支 \`dev/full-v4.2.0-rc.1\`，目标分支 \`dev/full-v4.2.0-preview.3\`，基线 \`168debfbd5dd82ef005a4af2fc8d8c06fc9abdd0\`，远端 HEAD \`84412320fffecdd60da2b89aef17adb6da4adfab\`。
+- Full PR #33：分支 \`dev/full-v4.2.0-rc.1\`，目标分支 \`dev/full-v4.2.0-preview.3\`，基线 \`168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\`，远端 HEAD \`84412320fffecdd60da2b89aef17adb6da4adfab\`。
 - Repo PR #34：分支 \`docs/full-v4.2.0-rc.1-navigation\`，目标 \`main\`，基线 \`c108acd72b37614f4be271c9747484c2dde5eac4\`，远端 HEAD \`693f42581aa0f3d954560cf034ab6fb21739e678\`。
 - main 和正式 Stable 仍为 v4.1.0；两个 PR 仍是开放的草稿，没有集成或发布。
 - 上次报告称本地有一个未提交修改：\`docs/design/V4_ARCHITECTURE.zh-CN.md\`。这只是线索，必须检查实际工作区。
@@ -69,7 +69,7 @@ Deliver one consolidated English completion report only after the entire package
 
 ### 必须先读的权威资料
 
-通过已授权的私有访问方式完整阅读当前 Development-Playbook，尤其是完整的工作流程和发布权威。不得把私有政策正文、URL 或私有前置条件复制到公开仓库或公开报告。
+通过已授权的私有访问方式完整阅读当前协作与发布政策权威文件，尤其是完整工作流程和发布政策。不得把私有政策正文、仓库身份、URL 或私有前置条件复制到公开仓库或公开报告。
 
 在当前候选精确版本上完整阅读以下项目文件，而不是依赖旧聊天摘要：
 
