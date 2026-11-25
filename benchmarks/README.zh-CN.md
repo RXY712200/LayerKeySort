@@ -45,14 +45,14 @@ V3 的 `relabel` 另给出分布、数量、直接插入、尝试、成功、扩
 
 ## 发布后负载证据
 
-[v3.1.0 负载证据](../docs/WORKLOAD_EVIDENCE.md)包含四个合成应用类负载、配对生产/诊断运行，以及逐插入延迟、重标和存储增长。精确假设与复现见[模拟方法](WORKLOADS.md)。发布算法、历史对照及数据保留。
+[v3.1.0 负载证据](../docs/WORKLOAD_EVIDENCE.zh-CN.md)包含四个合成应用类负载、配对生产/诊断运行，以及逐插入延迟、重标和存储增长。精确假设与复现见[模拟方法](WORKLOADS.zh-CN.md)。发布算法、历史对照及数据保留。
 
 ## 历史 V4 Preview.3 导出
 
-`layerkeysort_v4_snapshot_smoke` 分别测量捕获、键格式化、线格式、加载、恢复、导入和导出频率。独立诊断程序报告请求分配及居民字节。生产和插桩计时分开。[原始检查及方法](results/v4-preview3-smoke/README.md)属于阶段验证。
+`layerkeysort_v4_snapshot_smoke` 分别测量捕获、键格式化、线格式、加载、恢复、导入和导出频率。独立诊断程序报告请求分配及驻留字节。生产和插桩计时分开。[原始检查及方法](results/v4-preview3-smoke/README.zh-CN.md)属于阶段验证。
 
 ## V4 Preview.4 生产语义矩阵
 
-`v4_trace.c` 和 `run_v4_matrix.py` 使用单调计时器、独立平面实例模型、独立链接的生产和诊断版本，以及有限的 B64/B128/B256 筛选。既有研究实现保留在归档。[原始矩阵及定义](results/v4-preview4/README.md)说明规模、种子、百分位、保留快照、频率与 RSS 限制。Group/Batch 对比在 `v4_groups.c`。
+`v4_trace.c` 和 `run_v4_matrix.py` 使用单调计时器、独立平面实例模型、独立链接的生产和诊断版本，以及有限的 B64/B128/B256 筛选。既有研究实现保留在归档。[原始矩阵及定义](results/v4-preview4/README.zh-CN.md)说明规模、种子、百分位、保留快照、频率与 RSS 限制。Group/Batch 对比在 `v4_groups.c`。
 
-用 `-DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_CAPACITY_SCREEN=ON` 构建 Release，再运行 `python benchmarks/run_v4_matrix.py --build build --output build/new-evidence`。使用新输出目录，保留已采集证据。V4 正常修改计时和诊断计数分开。V3 无稳定居民 Handle，删除含比较器查找；该适配成本明确计入。V3 LK1 格式化逐行构造调用方分配的临时键，因此不能直接与 LS1 大小或成本相比。
+用 `-DLKS_BUILD_BENCHMARKS=ON -DLKS_BUILD_CAPACITY_SCREEN=ON` 构建 Release，再运行 `python benchmarks/run_v4_matrix.py --build build --output build/new-evidence`。使用新输出目录，保留已采集证据。V4 正常修改计时和诊断计数分开。V3 无稳定驻留句柄，删除含比较器查找；该适配成本明确计入。V3 LK1 格式化逐行构造调用方分配的临时键，因此不能直接与 LS1 大小或成本相比。
