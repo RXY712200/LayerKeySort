@@ -37,6 +37,9 @@ Release-facing changes also need a complete documentation and presentation
 review, including examples, diagrams, and GitHub Pages navigation. The
 [development guide](docs/DEVELOPMENT.md) describes the Stable-release check.
 
+
+[Governance baseline](docs/governance/BASELINE.md) · [Ownership](docs/governance/OWNERSHIP.md) · [Rulesets](docs/governance/RULESETS.md)
+
 ## 参与 LayerKeySort 开发
 
 [English](#contributing-to-layerkeysort)
@@ -64,3 +67,5 @@ review, including examples, diagrams, and GitHub Pages navigation. The
 提供简明的改动内容、理由、已执行测试及行为或兼容影响。
 
 影响发布的改动还须完整检查文档与公开呈现，包括示例、图表和 GitHub Pages 导航。[开发指南](docs/DEVELOPMENT.md)描述 Stable 发布检查。
+
+[治理基线](docs/governance/BASELINE.zh-CN.md) · [归属](docs/governance/OWNERSHIP.zh-CN.md) · [规则部署](docs/governance/RULESETS.zh-CN.md)
