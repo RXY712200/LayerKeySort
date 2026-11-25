@@ -2,15 +2,7 @@
 
 Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
 
-> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
-
-本轮 `preview12_block_tags` 还将中间块置零，验证跨零块的相等、递减标签均被拒绝，再恢复标签并运行原有饱和回退断言。诊断源码为 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`。原先的 Preview.1.2 证据如下；本轮结果见 [决策报告](V4_2_0_PREVIEW1_2_1.md)。
-
-tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整 Handle 顺序和标签单调性；再构造有效但饱和的标签，验证有界回退、双向先后与 AVL 不变量。Windows GCC Release 39/39，独立 OrdWeave 候选测试 12/12。 [候选验证](V4_2_0_PREVIEW1_2.md)。
-
-> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
-
-候选版本元数据完成后，本地 Windows GCC Debug 和 Release 分别通过 39/39 CTest；独立 C/C++ 分发消费者及发行资产验证通过。Windows 轨迹消融的原始结果见候选报告。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
 
 > 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
 >
@@ -21,7 +13,7 @@ tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout fe00536e7bd7f4e5128432ea4a29e54158074903
+git checkout d1132a26ca7b2c65bfd512fa2eb29f1b16793c08
 git rev-parse HEAD
 git status --short
 ~~~
@@ -55,6 +47,8 @@ ctest --test-dir build -C Debug --output-on-failure
 `docs/VALIDATION.md` 的“39 个 CTest”明确有 benchmark/Python 的配置前提。具体次数以本机 `ctest -N` 和实际日志为准。
 
 ## 3. 核心源码 → 测试源码 → 真实保障
+
+精确校验树包含 tests/v4_snapshot.c 的 offset-one golden 字节检查（754b3088）和恢复后混合标签回退检查（3ac82d26）。后者临时将两个中间块置零，断言有效性、两端标签比较以及跨零路径双向符号，随后还原标签并正反遍历全部 item。
 
 Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.md)。
 
@@ -156,6 +150,8 @@ python tools/validate_release_assets.py
 - 实际应用 trace 有价值，但没有 trace 不等于所有技术审计必须停止。
 
 ## 7. 哪些事实不能靠测试绿色直接推出？
+
+若 golden 失败，先比较偏移和字段宽度；不要刷新 fixture 绕过兼容检查。若恢复后比较失败，检查子树父指针、块链与标签单调性。若故障注入失败，先确认目标分配已达，再核对输出、原容器及清理。平台矩阵结果按确切 run 和 head 核对。
 
 不能推断：任意用户传入已释放 Handle 的操作可以安全检测；所有用户 Comparator 都定义总序；任何调用方的 C++ 回调可以抛异常穿越 C 库；一个 Order 可以并发读写；所有情况都有硬实时最坏延迟；库自动创建磁盘文件、支持 WAL、可崩溃恢复；动态顺序结构能在不载入 RAM 的情况下直接改磁盘页。
 

@@ -2,21 +2,11 @@
 
 固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
 
-> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
 
-普通块内操作不触碰标签。旋转保持中序；拆块后的新块插入可能触发有界标签更新。 [候选验证](V4_2_0_PREVIEW1_2.md)。
-
-> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
-
-普通插入仅设置新 Handle 的 block，之后仅回填受影响的 local 后缀。删除和移动源块的普通路径同样只回填后缀。分裂、合并和重分配继续完整回填。 见 [候选证据](V4_2_0_PREVIEW1.md)。
-
-> **定位：面向新维护者、独立审计者和直接集成 Full 的 C/C++ 开发者的源码执行导读。**
 >
-> **核对基线**：当前 Full 开发候选生产源码为 `fe00536e7bd7f4e5128432ea4a29e54158074903`；2026-11-15 原始审查使用已发布 v4.1.0 Stable `70d7f0ef5857b54381b863d292a213909d87459f`。本文覆盖根目录 Full，Mini 有独立文档。
 >
-> **证据及限制**：本次重新读取了 `cmake/ProductionSources.cmake` 指定的 **16 个生产 C 文件**，公开头 `include/layerkeysort.h`，核心私有结构/内部声明，根 `CMakeLists.txt`，既有架构与兼容文档，检索了主要 V4 测试的调用与测试入口，确认了旧版本回归源码的生产/诊断边界。以下实现结论依赖这些固定 SHA 下的真实源码，文末提供定位。**没有重新在本轮独立编译和运行全测试矩阵；历史 CI 的通过不能替代新环境复测。没有审完仓库内每一份历史研究数据及每一条测试断言，更不能保证 100% 不存在隐藏缺陷。**
 >
-> 如当前 `main`、版本、源清单变化，请先检查确切 Git diff；不要把本篇冻结基线导读当作未来版本的源码事实。项目历史/规范文件可能过时；生产行为必须以固定源码和可复现实验为准。
 
 ## 阅读导航：这不是唯一的一篇说明
 
@@ -127,6 +117,8 @@ Order
 
 ## 3. Explicit Order 的完整执行过程
 
+一次编辑的两个提交边界：插入先校验参数、回调状态和计数，再分配独立 Handle 及所需备用块。准备失败只释放临时对象。已准备的块进入链和 AVL 后，位移、位置回填、分裂及 revision 更新无需分配。删除完成块修复后释放本次 occurrence，返回借用的 item；其他 Handle 地址继续有效。
+
 核心入口在 [`src/order.c`](../src/order.c)。
 
 ### 3.1 创建和析构
@@ -189,6 +181,8 @@ Order
 存活 Handle 的有效性不冻结邻接关系或 compare 结果；普通遍历不会自动检测 revision。删除当前项前先保存 next，且保证 next 自身不被删除；需要修改检测时用 Cursor。可编译函数片段见 [API 指南 D1](IMPLEMENTATION_API_REFERENCE.zh-CN.md#d1-handle-身份不冻结相邻关系)。
 
 ## 4. ManagedOrder：不是另一个排序树
+
+托管序先使用比较器定位边界，再调用共享的内部 live 插入路径；等值项用上界插入。在比较器调用期间设置忙状态。应用若要更改参与排序的字段，应先移除该 occurrence，再修改并重新插入。业务指针相同仍可能对应多个 Handle。
 
 实现：[`src/managed_order.c`](../src/managed_order.c)，结构 `LksManagedOrder { core, comparator, active }`。
 
@@ -394,6 +388,8 @@ N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存�
 
 ## 11. 实际上从一次“编辑 → 保存 → 重新打开”会经过哪些函数？
 
+持久化由应用保存已编码的字节及应用身份。恢复时逐行调用 Resolver，全部成功后才构建并交出新的 Order。若回调失败，只撤销库拥有的临时资源；业务侧回调产生的副作用和磁盘提交由应用处理。
+
 假设外部程序维护有序图层列表 A/B/C：
 
 ~~~text
@@ -454,7 +450,7 @@ N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存�
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout fe00536e7bd7f4e5128432ea4a29e54158074903
+git checkout d1132a26ca7b2c65bfd512fa2eb29f1b16793c08
 git rev-parse HEAD
 cat cmake/ProductionSources.cmake
 

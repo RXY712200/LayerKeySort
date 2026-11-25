@@ -1,0 +1,46 @@
+# Full RC.1 source and documentation reconstruction
+
+| Role | Exact revision |
+| --- | --- |
+| Published Stable source | 70d7f0ef5857b54381b863d292a213909d87459f |
+| Independently accepted Stable guides | 1a175f91e4c338c2afe6a73a9f8f9c5b149768e5 |
+| Preview.3 provisional guides | 168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0 |
+| Operational source | fe00536e7bd7f4e5128432ea4a29e54158074903 |
+| RC metadata and validation checkout | d1132a26ca7b2c65bfd512fa2eb29f1b16793c08 |
+
+Inspect the complete [Stable-to-RC reference diff](https://github.com/RXY712200/LayerKeySort/compare/70d7f0ef5857b54381b863d292a213909d87459f...d1132a26ca7b2c65bfd512fa2eb29f1b16793c08), the [public declarations](V4_2_0_RC1_API_INDEX.md), and the [Preview.3 inventory and A–F lineage](../../benchmarks/research/full-v4.2.0-preview.3/AUDIT_INVENTORY.md). All current paths in the matrix refer to the validation checkout; unlisted experimental branches do not define current behavior.
+
+## Source evolution and guide impacts
+
+| Change / milestone | Replaced or added | Synchronized sections and checks |
+| --- | --- | --- |
+| 22544cf283694dd27cef203caba9cf1838845947 and 6d4099d | Replaced rank comparison with parent/height precedence; suffix location updates on ordinary shifts | Walkthrough §§2–4; Internals §§2–7; v4_mutation topology and failure oracle |
+| 61e9290ec5ba47b9092bcb8ae7d61f13104ea839 and 21f6fc4 | Nonzero tag fast path, bounded redistribution, zero fallback and bulk tag spacing | Internals §§2–6,11; Walkthrough §§2–3; concentrated insertion, exhaustion, full order and symbol checks |
+| c977b0fd14a501d769b9783bfdcc61266bd1b5ae | Diagnostic last nonzero tag across zero gaps; retained B64 | Internals §§3,14–15; Validation §§3–4; diagnostic equal and descending tag rejection. Rejected B32/B128/direct transfer remain evidence. |
+| fe00536e7bd7f4e5128432ea4a29e54158074903 and 92fb7fad977f792a7d9e3e0e430a5d5f32e8914a | Fixed 4/8-byte wire access and same-revision independent snapshots | Walkthrough §§5–6; API §§B,D,E; Internals §§9–11; Validation §§3–4. Frozen bytes preserved. |
+| 754b3088c160564f6666ee520284168ee5da6ac7 and 3ac82d26301ea12876a3ebdba6319fe8233621f3 | Offset-one writer/reader and restored mixed-tag fallback | Validation §§1,3,4,7 and Walkthrough §§6,13. Both in v4_snapshot.c and both reachable in RC checkout. |
+| 8e85584, 4b66ab0, 168debf | Preview.3 evidence, section synchronization and precise test path/timing correction | Keeps application operation latency, process wall and phase sum separate. Replaces operational-only checkout in Walkthrough and Validation. |
+
+## Module obligations
+
+| Files | Current contract or invariant and guide location | Evidence and exclusions |
+| --- | --- | --- |
+| order.c, order_bulk.c, lks_order_internal.h | Walkthrough §§2–3, Internals §§2–6,11. Stable independently allocated occurrence, B64/min32, AVL heights and exact chain order; prepares optional spare before releasing a moved occurrence. | v4_order and v4_mutation sequence/identity, probe bounds, zero fallback, revision and OOM. No arbitrary recovery guarantee. |
+| managed_order.c | Walkthrough §4 and Internals §7. Copy comparator descriptor, borrow context, stable equal upper bound, reject same-source reentry. | v4_order / v4_mutation: stable oracle, reentry and remove/edit/reinsert churn. Application compare consistency required. |
+| snapshot.c, lks_snapshot_internal.h | Walkthrough §5, API §§B,D,E, Internals §§8–9. Cumulative ends include empty rows; marker independent from source address; acquire/release before publication, borrow callback bytes only through immediate copy. | v4_snapshot and v4_marker_threads. Source destruction/revision and same-revision data independence; concurrency of immutable views does not make live mutation internally synchronized. |
+| snapshot_key.c, snapshot_wire.c, snapshot_restore.c | Walkthrough §§6,8,11; Internals §§10–11. Same-domain ordinal order, full parse before allocation, resolve-first immutable history and fresh Handles, strict V3 import. | Frozen literal wire, malformed/truncated input, offset-one access, old LK1, restored mixed tags, reached OOM. No built-in durable commit or application rollback. |
+| immutable_group.c, lks_immutable_group_internal.h, sort.c, lks_sort_internal.h | Walkthrough §7 and Internals §12. Stable left-biased merges, borrowed items, owned arrays, no partial output. | v4_immutable_group and API consumer assertions. Comparator state remains external. |
+| path.c, path_text.c, path_order_key.c, path_compare.c, slot_codec.c and path/slot/legacy headers | Walkthrough §8 and Internals §13. Private legacy decoding, checked arithmetic and semantic key validation. | LK1 fixtures and parser torture. V3 live tree, gap, mutable group and bulk and their private policy headers are historical regression-only paths. |
+| lks_base.c, lks_alloc.c, lks_alloc_internal.h | Walkthrough §9 and Internals §14. Frozen statuses, checked allocation accounting and ownership. | Public manifest and diagnostic allocation injection. Requested bytes exclude allocator internals. |
+| include/layerkeysort.h, cmake/ProductionSources.cmake, CMakeLists.txt, tools/amalgamate.py and validation tools | API §§A–F and Validation §§2,4–5. 64 functions and 14 types, 16 production modules, stable fixtures, source/install/single-file C and C++ interfaces. | API manifest, CTest, distribution consumers and release asset wrapper. Mini and Workbench are independent products. |
+
+## Four-guide synchronization
+
+| Guide | Current section changes | Confirmed retained content and limits |
+| --- | --- | --- |
+| Walkthrough | §§3–4 prepare/publish and comparator, §11 restore, §13 exact validation checkout | §§7–9 stable sort and V3 import remain; application transaction responsibility retained. |
+| API reference | §A frozen signature/definition index and compare validation order; §F view/owner boundaries | All 64 entries and type/status tables retained; no new ABI or public contract. |
+| Internals | §§3,6,11 retired rank, arithmetic, spare and bulk restore | §§8–10 compact rows and fixed width wire remain; allocator and layout conclusions remain platform-qualified. |
+| Validation | §§1,3,7 exact checkout, actual assertions and failure triage | §§4–6 fixtures/consumer checks remain; archived timings are inherited and separate from RC CI. |
+
+Actual run links and qualification live in the [RC stage record](../V4_2_0_RC1.md). The complete [FULL-RI records](../V4_2_0_PREVIEW3.md#technical-debt-impact) are retained.

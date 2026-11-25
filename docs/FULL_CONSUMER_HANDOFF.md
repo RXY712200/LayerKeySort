@@ -1,5 +1,12 @@
 # Full 外部消费者交接与变更台账
 
+## Full 4.2.0-rc.1 candidate
+
+- From Preview.3 `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0` to verification baseline `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`. Operational code remains `fe00536e7bd7f4e5128432ea4a29e54158074903`. Only the two public version strings changed. See the [reconstruction ledger](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md).
+- The live occurrence, borrowed payload/context, callback/reentry, revision, failure publication, LS1, LKS4SNP1, LK1 import and restore contracts are unchanged. Source, install and amalgamation distribution continue to use the public header.
+- The existing native dependency substitution evidence still applies to the same operational code. No OrdWeave adapter or database core change is indicated by the metadata update. Its official dependency remains Full v4.1.0. Before an approved upgrade, rerun exact-pin compilation, logical order, capture/reopen/recovery and the consumer allocation or transaction failure checks.
+
+
 ## Preview.3 consolidated verification — development candidate
 
 - **Baseline and current:** Preview.2 checkpoint `01bc01e2d9ddbda448d9ef0807150f419203b580`, unchanged operational source `fe00536e7bd7f4e5128432ea4a29e54158074903`. The executable verification delta is in `tests/v4_snapshot.c`. [PR #32](https://github.com/RXY712200/LayerKeySort/pull/32), [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3), [plan #27](https://github.com/RXY712200/LayerKeySort/issues/27).
