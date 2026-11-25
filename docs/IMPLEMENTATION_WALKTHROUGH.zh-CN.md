@@ -2,7 +2,7 @@
 
 固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
 
-> 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
+> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
 
 普通块内操作不触碰标签。旋转保持中序；拆块后的新块插入可能触发有界标签更新。 [候选验证](V4_2_0_PREVIEW1_2.md)。
 
@@ -12,7 +12,7 @@
 
 > **定位：面向新维护者、独立审计者和直接集成 Full 的 C/C++ 开发者的源码执行导读。**
 >
-> **核对基线**：2026-11-15，仓库 `RXY712200/LayerKeySort`、`main`、完整 SHA `70d7f0ef5857b54381b863d292a213909d87459f`，对应已发布 Full **v4.1.0 Stable**。审读范围为根目录 Full，**不是** `mini/` 产品。
+> **核对基线**：当前 Full 开发候选生产源码为 `fe00536e7bd7f4e5128432ea4a29e54158074903`；2026-11-15 原始审查使用已发布 v4.1.0 Stable `70d7f0ef5857b54381b863d292a213909d87459f`。本文覆盖根目录 Full，Mini 有独立文档。
 >
 > **证据及限制**：本次重新读取了 `cmake/ProductionSources.cmake` 指定的 **16 个生产 C 文件**，公开头 `include/layerkeysort.h`，核心私有结构/内部声明，根 `CMakeLists.txt`，既有架构与兼容文档，检索了主要 V4 测试的调用与测试入口，确认了旧版本回归源码的生产/诊断边界。以下实现结论依赖这些固定 SHA 下的真实源码，文末提供定位。**没有重新在本轮独立编译和运行全测试矩阵；历史 CI 的通过不能替代新环境复测。没有审完仓库内每一份历史研究数据及每一条测试断言，更不能保证 100% 不存在隐藏缺陷。**
 >
@@ -104,6 +104,8 @@ Order
 这是一个**按块顺序隐式组织的 AVL**，不是“以业务 ID 或排序字符串为键的 AVL”。AVL 节点包含块，不包含每一条记录；块内数组保持连续逻辑顺序，块间用 `previous/next` 直接遍历。
 
 ### 2.2 关键不变量
+
+非零块标签按块链严格递增，即使中间有零标签块。跨块双方标签非零时直接比标签；任一方为零时比较 AVL 中的块顺序。相同块仍读取 Handle 的 local。标签不是应用身份，也没有任意集中编辑下的标签恢复期限。
 
 - 默认每块提交后的容量上限为 **64**。多块场景下每块至少 **32** 条；全局唯一块允许低于 32，甚至删除成空后移除。
 - 每个存活 Handle 分开分配，移动记录时可以调整其 `block/local`，但**不会改变 Handle 自身的地址**。
@@ -210,6 +212,8 @@ Order
 
 ## 5. Snapshot：独立于实时结构的历史视图
 
+同一个来源在同一个 revision 下可以先后捕获不同的关联字节，因为应用可修改其载荷。每次捕获都独立复制 namespace 和返回的字节；currentness 判断来源标记及 revision，不比较载荷。
+
 生产实现：[snapshot.c](../src/snapshot.c)、[lks_snapshot_internal.h](../src/lks_snapshot_internal.h)。
 
 Snapshot 不持有 live Handle、AVL/块布局或旧业务指针；其数据包含：
@@ -260,6 +264,8 @@ LS1.<namespace lower-case hex>.<16位小写十六进制行序号>
 同一 namespace 的规范 LS1 键使用固定 16 位小写十六进制 ordinal，故其**字节级 ASCII 词典序与 ordinal 顺序一致**。外部数据库依赖该性质时须采用保持字节顺序的 collation，不能假定语言或忽略大小写的排序规则适用。不同 namespace 的 `lks_snapshot_key_compare` 返回 `DOMAIN_MISMATCH`；对这些字符串直接排序不建立有意义的业务记录先后。LS1 是历史快照坐标，不是跨快照版本的持久记录 ID；这与 V3 LK1 的 Path 顺序编码是不同契约。
 
 ## 6. LKS4SNP1：真正保存的二进制是什么？
+
+当前读写帮助函数对 4/8 字节字段执行无符号移位和逐字节访问。offset-one 测试核对编码与旧 golden 字节一致，并验证解码不要求调用方缓冲区对齐。解码完整校验输入后才分配。
 
 实现：[snapshot_wire.c](../src/snapshot_wire.c)。**由调用者提供缓冲区**，Full 负责字节格式，不直接创建文件。
 
@@ -448,7 +454,7 @@ N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存�
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout 70d7f0ef5857b54381b863d292a213909d87459f
+git checkout fe00536e7bd7f4e5128432ea4a29e54158074903
 git rev-parse HEAD
 cat cmake/ProductionSources.cmake
 

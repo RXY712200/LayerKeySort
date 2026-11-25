@@ -4,7 +4,7 @@
 
 ## Verification and scope
 
-Unaligned wire and restored mixed-tag precedence regressions are at 754b3088c160564f6666ee520284168ee5da6ac7 and 3ac82d26301ea12876a3ebdba6319fe8233621f3. Strict local GCC Debug and Release passed 39/39. API, C/C++ distribution and local asset checks passed. Exact hosted validation is attached to the PR. Two independent Preview.2 Workbench AppleClang attempts ended cancelled with empty runner assignment and no steps (jobs 138487623671 and 138579797624). The log endpoint returned HTTP 404 for the retry. The fail-closed aggregate gate failed. The unchanged workflow uses macos-latest. The public incident query identified no matching incident; the cause remains unknown.
+Unaligned wire and restored mixed-tag precedence regressions are at 754b3088c160564f6666ee520284168ee5da6ac7 and 3ac82d26301ea12876a3ebdba6319fe8233621f3. Strict local GCC Debug and Release passed 39/39. API, C/C++ distribution and local asset checks passed. Exact hosted validation is attached to the PR. Two independent Preview.2 Workbench AppleClang attempts ended cancelled with empty runner assignment and no steps (jobs 138487623671 and 138579797624). The log endpoint returned HTTP 404 for the retry. The fail-closed aggregate gate failed. The unchanged workflow uses macos-latest. The public incident query identified no matching incident; the initial cause remains unknown. One bounded retry [attempt 3](https://github.com/RXY712200/LayerKeySort/actions/runs/45406241385/attempts/3) succeeded at the original Preview.2 SHA. [AppleClang job 138872070896](https://github.com/RXY712200/LayerKeySort/actions/runs/45406241385/job/138872070896) passed 10/10 in Debug and 10/10 in Release. The aggregate gate passed.
 
 ## Step 7 findings
 
@@ -18,23 +18,25 @@ The first sparse build was launched before its diagnostic archive existed and fa
 
 Prior provisional guides 01bc01e and implementation fe00536 remain the current operational contract. Last accepted Stable source and documentation are 70d7f0e and 1a175f9. The matrix below maps test-only corrections to the operational source.
 
-| Guide | Reviewed path and bound evidence |
-| --- | --- |
-| Walkthrough | Wire decode and restore tutorial, unaligned buffer regression and fresh Handle identity. |
-| API reference | Snapshot serialize/deserialize, exact bytes and unchanged error and borrowed lifetime. |
-| Internals | Wire fixed-width fields and restored block label/fallback invariant checked. |
-| Validation | New exact offset-one and restored-tag test assertions and final CI evidence. |
+| Guide / reviewed sections | Current source and contract | Assertion and boundary |
+| --- | --- | --- |
+| Walkthrough §§2, 5–6, 12–14 | order.c bounded tags/AVL, snapshot.c independent bytes, snapshot_wire.c fixed unsigned shifts | Mixed tags, same-revision isolation and offset-one golden. No general label recovery deadline. |
+| API reference §§B–E | Public header and snapshot.c/snapshot_restore.c, same 64 entries/14 types and ownership | Borrowed views outlive only the live source, remaining valid until Snapshot destruction. Restore uses fresh Handles. Callback effects remain application-owned. |
+| Internals §§2–3, 9–11 | order.c nonzero subsequence across zero blocks; order_bulk.c fresh spacing; snapshot_wire.c two-pass decode | Restored tag spacing and bidirectional fallback, literal wire bytes. No live topology serialized. |
+| Validation §§1–6, 9 | Current checkout recipe, frozen fixtures, v4_snapshot.c and v4_mutation.c | New assertions at 754b3088c160564f6666ee520284168ee5da6ac7 and 3ac82d26301ea12876a3ebdba6319fe8233621f3. Archived phase sum and wall analyses are separate. |
 
 ## Technical Debt Impact
 
-| ID | Disposition |
-| --- | --- |
-| FULL-RI-001 | Retain the live design; no theoretical novelty claim. |
-| FULL-RI-002 | Contemporary live data, bounded gains, retained OM counterexamples. |
-| FULL-RI-003 | Equivalent-success lifecycle and restore comparison; scratch and copy costs retained. |
-| FULL-RI-004 | Native application compatibility and stage attribution, no official pin or core/adapter change. |
-| FULL-RI-005 | Revalidated sparse resource envelope through 1m; larger and long-retention cases remain open. |
-| FULL-RI-006 | Tightened wire and restore coverage, no confirmed Full production blocker found in checked paths. |
-| FULL-RI-007 | Evidence-linked selection with contrary conditions; no universal rule. |
+The active records are [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3) and the [seven-step plan #27](https://github.com/RXY712200/LayerKeySort/issues/27). The source-bound decisions and rejected candidates remain in the [inventory](../benchmarks/research/full-v4.2.0-preview.3/AUDIT_INVENTORY.md).
 
-RC recommendation depends on independent review and completion of the real gates, including the earlier Workbench prerequisite. No RC implementation or publication is implied.
+| ID | Evidence and disposition | Remaining limit and trigger |
+| --- | --- | --- |
+| FULL-RI-001 | Retained B64, exact location updates and bounded tags with fallback. [Live-core history](design/V4_2_0_LIVE_CORE_RESEARCH_HISTORY.md). Deliberate tradeoff. | Revisit if external long-lived traces show sustained zero-tag traversal or structural write costs materially dominate. |
+| FULL-RI-002 | Scoped comparison completed, 6,480 live rows, contemporary native OM controls, adverse cells and paired repeats preserved. | Native tag-range can win. Revisit if a failing target workload recurs across matched hosts and a same-semantics candidate clears the existing gates. |
+| FULL-RI-003 | Partial. Fixed-width wire at fe00536e, 1,620 lifecycle observations, separate phase and wall evidence. | Retained copies and N-pointer restore scratch cost remain. Test optimized bulk tree restore or alternative capture when measured lifecycle budgets warrant it. |
+| FULL-RI-004 | Scoped adapter compatibility supported by 702 native observations and retained recovery/fault evidence. | OrdWeave staging and WAL dominate, official pin unchanged. Revisit with owner-approved integration, actual traces, or a measured adapter/provenance mismatch. |
+| FULL-RI-005 | Partial. Guarded 10k/100k/1m and repeated sparse survival with unchanged Handles. | Longer retained histories, multi-million states and arbitrary zero-tag recovery remain unmeasured. Extend only on evidenced demand and safe admission. |
+| FULL-RI-006 | Scoped test gaps addressed by the offset-one and restored-tag regressions. No checked Full production defect established. | A reproducible portability, ownership, wire or publication defect reopens the corresponding invariant and platform gate. |
+| FULL-RI-007 | Evidence-backed selection for tested relative-history and endpoint classes, with contrary evidence and real downstream attribution. | No universal choice rule. Revisit with another production consumer, managed equivalence or a credible bulk alternative under matched success semantics. |
+
+Recommend RC-entry consideration after independent review and exact-head gates. The earlier Preview.2 Workbench prerequisite now passes at its own SHA. No RC implementation or publication is implied.

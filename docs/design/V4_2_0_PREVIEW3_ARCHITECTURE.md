@@ -21,4 +21,4 @@ The audit retained the prepared-spare ordering for live mutation, complete wire 
 
 This extension changes only tests, research and documents. The explicit unaligned-buffer gap was a coverage deficiency. The bytewise implementation already accepts those buffers. No production semantic defect was established by this bounded audit. Earlier B32/B128/transfer, midpoint exhaustion, metadata ablation and retention investigations remain at their permanent recorded revisions.
 
-[Stage evidence and remaining checks](../V4_2_0_PREVIEW3.md)
+[Module audit inventory and A–F lineage](../../benchmarks/research/full-v4.2.0-preview.3/AUDIT_INVENTORY.md) · [Stage evidence and remaining checks](../V4_2_0_PREVIEW3.md)
