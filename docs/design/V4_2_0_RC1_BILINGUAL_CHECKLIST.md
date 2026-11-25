@@ -64,8 +64,8 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/V4_PREVIEW2.md` | historical / 历史 | docs/V4_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_PREVIEW3.md` | historical / 历史 | docs/V4_PREVIEW3.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_PREVIEW4.md` | historical / 历史 | docs/V4_PREVIEW4.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_RC1.md` | historical / 历史 | docs/V4_RC1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_STABLE.md` | historical / 历史 | docs/V4_STABLE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_RC1.md` | historical / 历史 | docs/V4_RC1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical state labeled; original/hashes/links preserved / 历史状态已标，原件/哈希/链接保留 |
+| full | `docs/V4_STABLE.md` | historical / 历史 | docs/V4_STABLE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical state labeled; original/hashes/links preserved / 历史状态已标，原件/哈希/链接保留 |
 | full | `docs/VALIDATION.md` | current / 现行 | docs/VALIDATION.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/WORKLOAD_EVIDENCE.md` | historical / 历史 | [Chinese edition](../WORKLOAD_EVIDENCE.zh-CN.md) | S3 semantic and link review / 语义和链接复核 | pair present / 已有双语 | nine raw table bodies unchanged / 九个数据表正文一致 |
 | full | `docs/demo/index.html` | historical interactive / 历史交互页 | [Chinese interactive edition](../demo/index.zh-CN.html), [Chinese explanations](../demo/index.zh-CN.md) | S3 final links and language review / 最终链接及语言复核 | both editions present / 双语版本已建立 | browser confirmed 16 identical paths and randomized no-Path state / 浏览器已验 16 条一致 Path 及随机缺省状态 |
