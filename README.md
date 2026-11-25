@@ -1,5 +1,8 @@
 # LayerKeySort
 
+**Full 4.2 candidate status.** Main and published Stable remain 4.1.0. The separate candidate branch is unmerged, untagged and unpublished. In the [matched workload evidence](https://github.com/RXY712200/LayerKeySort/blob/226c440571eaa45e9bc3f10e70e5777a3a03cc1e/docs/FULL_RC1_EVIDENCE.md), Full/Stable 4.1 live elapsed ratios were 0.629 on Windows and 0.640 on Linux. A flat-history composition ran faster in the endpoint-only lifecycle comparison. Mini follows its own release line.
+
+
 English | [简体中文](README.zh-CN.md)
 
 **A family of independent C17 libraries for maintaining the order of changing collections.**
