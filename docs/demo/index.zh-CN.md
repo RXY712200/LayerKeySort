@@ -1,6 +1,6 @@
 # LayerKeySort 历史 v1 Path 演示
 
-历史英文原页：[index.html](https://github.com/RXY712200/LayerKeySort/blob/540f905316749732be5818e9168fe0a2f2dc3bb9/docs/demo/index.html) · [打开原始交互演示](index.html) · [转到 V3 可视化](../v3/)
+历史英文原页：[index.html](https://github.com/RXY712200/LayerKeySort/blob/540f905316749732be5818e9168fe0a2f2dc3bb9/docs/demo/index.html) · [打开原始交互演示](index.html) · [中文交互版](index.zh-CN.html) · [转到 V3 可视化](../v3/)
 
 此译文解释历史演示的界面、显示和限制。它保留原始英文页面和执行代码，适用于原页所示的历史 v1。
 
