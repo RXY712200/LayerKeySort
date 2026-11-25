@@ -35,9 +35,9 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `benchmarks/results/v4-preview3-smoke/README.md` | historical / 历史 | benchmarks/results/v4-preview3-smoke/README.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original and full SHA sets preserved; code blocks/local paths checked / 原件及全 SHA 保留，已核代码块与本地路径 |
 | full | `benchmarks/results/v4-preview4/README.md` | historical / 历史 | benchmarks/results/v4-preview4/README.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical original preserved; SHA/local links checked / 历史原件保留，已核 SHA 及本地链接 |
 | full | `docs/API.md` | current / 现行 | docs/API.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |
-| full | `docs/ARCHITECTURE.md` | current / 现行 | docs/ARCHITECTURE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
+| full | `docs/ARCHITECTURE.md` | current / 现行 | docs/ARCHITECTURE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | full bilingual bodies compared; integration omissions and architecture language navigation repaired; CMake/source manifest checked / 已对照双语全文，补集成遗漏、修架构语言导航，核CMake及源码清单 |
 | full | `docs/BENCHMARKS.md` | current / 现行 | [docs/BENCHMARKS.zh-CN.md](../BENCHMARKS.zh-CN.md) | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | matrix numbers, order and links checked / 已核矩阵数字、顺序和链接 |
-| full | `docs/COMPATIBILITY.md` | current / 现行 | docs/COMPATIBILITY.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
+| full | `docs/COMPATIBILITY.md` | current / 现行 | docs/COMPATIBILITY.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | full bilingual bodies compared; integration omissions and architecture language navigation repaired; CMake/source manifest checked / 已对照双语全文，补集成遗漏、修架构语言导航，核CMake及源码清单 |
 | full | `docs/DEVELOPMENT.md` | current / 现行 | docs/DEVELOPMENT.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `docs/FULL.md` | current / 现行 | docs/FULL.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/FULL_CONSUMER_HANDOFF.md` | current + historical / 现行及历史 | [English](../FULL_CONSUMER_HANDOFF.en.md), [简体中文](../FULL_CONSUMER_HANDOFF.zh-CN.md) | S3 semantic review / 语义复核 | two language editions present / 双语全篇已建立 | exact SHAs, local links and seven checklist entries matched / 已核 SHA、链接和七项验收 |
@@ -47,7 +47,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/IMPLEMENTATION_INTERNALS.zh-CN.md` | guide / 实现指南 | [English](../IMPLEMENTATION_INTERNALS.md) | S3 semantic review / 语义复核 | 15 sections paired / 15 节双语已建立 | source checked for label bounds, sign, counters and bulk spacing; sections and local links checked / 已核标签分支、符号、计数、批建及链接 |
 | full | `docs/IMPLEMENTATION_VALIDATION.zh-CN.md` | guide / 实现指南 | [English](../IMPLEMENTATION_VALIDATION.md) | S3 semantic review / 语义复核 | nine sections paired / 九节双语已建立 | exact command blocks, headings, local links and #24 merge timestamp checked / 已核命令、章节、链接及合并时间 |
 | full | `docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md` | guide / 实现指南 | docs/IMPLEMENTATION_WALKTHROUGH.md | S3 semantic review / 语义复核 | all 15 numbered sections paired / 15 个编号章节双语已建立 | fixed missing tag member and Cursor validation order; section/command/ratio/link checks passed / 补 tag 成员和 Cursor 校验顺序，已核章节、命令、比率与链接 |
-| full | `docs/INTEGRATION.md` | current / 现行 | docs/INTEGRATION.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
+| full | `docs/INTEGRATION.md` | current / 现行 | docs/INTEGRATION.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | full bilingual bodies compared; integration omissions and architecture language navigation repaired; CMake/source manifest checked / 已对照双语全文，补集成遗漏、修架构语言导航，核CMake及源码清单 |
 | full | `docs/MIGRATION_V3_V4.md` | current / 现行 | docs/MIGRATION_V3_V4.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |
 | repo | `docs/PRODUCT_LINES.md` | current / 现行 | docs/PRODUCT_LINES.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/USAGE.md` | current / 现行 | docs/USAGE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
@@ -96,7 +96,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | repo | `docs/index.html` | current / 现行 | `docs/index.html#zh-cn` at Repo `5a44bb8498d218c76330e71ec65b38e4f80ebfe2` | S3 semantic and final links / 语义及最终链接 | inline bilingual / 内嵌双语 | browser headings, IDs and language fragments checked / 已用浏览器核对标题、ID 及语言锚点 |
 | full | `docs/v3/README.md` | historical / 历史 | docs/v3/README.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original and full SHA sets preserved; code blocks/local paths checked / 原件及全 SHA 保留，已核代码块与本地路径 |
 | full | `docs/v3/index.html` | historical / 历史 | [Chinese interactive companion](../v3/index.zh-CN.html) | S3 final navigation / 最终导航 | complete companion present / 完整译本已建立 | original unchanged; Node controls and browser 35 managed + 5 manual states match; Chinese pages visually inspected / 原页不变，已核控制及浏览器35个托管和5个手动状态，中文页面已目视检查 |
-| full | `examples/README.md` | current / 现行 | examples/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
+| full | `examples/README.md` | current / 现行 | examples/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | full bilingual bodies compared; integration omissions and architecture language navigation repaired; CMake/source manifest checked / 已对照双语全文，补集成遗漏、修架构语言导航，核CMake及源码清单 |
 
 | full | `docs/design/V4_2_0_RC1_RESUME.md` | task record / 任务记录 | [inline Chinese edition](V4_2_0_RC1_RESUME.md#中文执行说明与英文对应英文指令为准) | S3 semantic review; English authoritative / 语义复核，以英文为准 | inline bilingual / 内嵌双语 | read at 540f905 / 已读 |
 
