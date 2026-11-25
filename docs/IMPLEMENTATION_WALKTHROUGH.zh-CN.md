@@ -1,6 +1,8 @@
 # LayerKeySort Full：从源码理解完整实现（4.2.0-rc.1）
 
-固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+[English](IMPLEMENTATION_WALKTHROUGH.md) · [验证与源码基线](V4_2_0_PREVIEW3.md)
+
+固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。
 
 > 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
 
@@ -76,6 +78,7 @@ Full 不是传统的一次性 `qsort` 替代品，也不是数据库。其职责
 - `previous/next`：整条块序列上的前后邻居；
 - `left/right/parent`、`height`、`subtree_blocks`：对**块**建立的 AVL 平衡索引；
 - `owner`：指向当前 `LksOrder`，这是 v4.1.0 相比 v4.0.0 下沉到 Block 级的元数据。
+- `tag`：内部 64 位顺序标签；非零标签递增，零表示该块比较时使用 AVL 回退。
 
 **`LksOrder`** 有 AVL `root`、顺序链首尾 `first/last`、记录数 `count`、块数 `blocks`、逻辑修改版本 `revision`、回调占用标记 `callback_active` 和快照来源标记 `source_marker`。
 
@@ -174,7 +177,7 @@ Order
 ### 3.6 读取、Cursor 和逻辑修改版本
 
 - `first/last/next/previous/item/size` 提供普通借用式读取；在外部保证无冲突修改的前提下使用。
-- `lks_order_cursor_create` 记录当前 `revision` 和下一 Handle；`lks_order_cursor_next` **首先比对版本**，若自创建后发生真实修改就返回 `INVALIDATED`，在读取可能已被释放的缓存 Handle 之前终止。
+- `lks_order_cursor_create` 记录当前 `revision` 和下一 Handle；`lks_order_cursor_next` 先检查参数和来源回调忙状态，然后**在读取缓存 Handle 前比对版本**。若自创建后发生真实修改就返回 `INVALIDATED`，不会读取可能已被释放的缓存 Handle。
 - 不改变顺序的 move、失败操作和纯查询不增加版本，所以不使 Cursor 失效。
 - Cursor 自身借用源容器；**Cursor 必须先于源容器销毁**。
 
@@ -474,4 +477,4 @@ ctest --test-dir build -C Debug --output-on-failure
 - 本文用于**先了解完整工作流程并快速定位源码**，不是把源码藏在文档后面。实质改动时必须按该提交及现行代码直接复核，并执行适当测试。
 - 后续如发现源码与本文冲突，标出函数、真实 diff 与复现证据并修正文档；不凭聊天记忆猜测、不将文档描述反过来当作源码行为。
 
-**一句话理解 Full：它把长期变化的逻辑顺序放在“稳定 occurrence Handle + 有序块链 + 块级 AVL”中；把需要离开运行时的历史顺序放在“独立 Snapshot + LS1 + 显式二进制格式”中；把一次性排序放在“稳定复制/归并”中。三者边界清晰，业务身份与物理持久化始终属于上层应用。**
+**一句话理解 Full：它把长期变化的逻辑顺序放在“稳定 occurrence Handle + 有序块链 + 有界标签维护与块级 AVL 回退”中；把需要离开运行时的历史顺序放在“独立 Snapshot + LS1 + 显式二进制格式”中；把一次性排序放在“稳定复制/归并”中。三者边界清晰，业务身份与物理持久化始终属于上层应用。**
