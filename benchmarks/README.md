@@ -6,6 +6,8 @@ The [4.2 RC evidence](../docs/FULL_RC1_EVIDENCE.md) derives charts and summaries
 > Measurements below retain historical names; Preview.4 is convergence evidence.
 > Stable promotion performs no new tuning. Old provisional names below are historical.
 
+With benchmarks enabled, the current build retains `layerkeysort_benchmark` for historical V3/V2 comparisons. CMake links it to `layerkeysort_legacy_bench`, which includes legacy sources and private headers. For current Full comparisons, use the archived RC evidence and its linked replay protocol.
+
 # Historical V3 benchmark harness (3.1.0 source)
 
 The V3 harness/data below remain preserved. V4 Preview.2 added separate production

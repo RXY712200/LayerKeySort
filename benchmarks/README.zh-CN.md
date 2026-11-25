@@ -5,6 +5,8 @@
 当前已发布的 Full Stable 为 [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。参见 [4.1.0 内存与性能研究及限制](../docs/V4_1_0.md)、[历史 Stable 记录](../docs/V4_STABLE.md)和[冻结契约](../docs/V4_FREEZE.md)。
 [4.2 RC 证据](../docs/FULL_RC1_EVIDENCE.zh-CN.md)从归档的最终 Preview.3 运行导出图表及汇总。重新生成时保留原始数据。以下旧测量仍用当时的名称，Preview.4 为收敛证据。Stable 发布未另作调优。
 
+当前构建启用基准测试后，仍可使用 `layerkeysort_benchmark` 复现 V3/V2 历史比较。CMake 将该程序链接到 `layerkeysort_legacy_bench`，并使用旧版源码和私有头文件。评估当前 Full 时，请参阅上方的 RC 归档证据及其链接的回放协议。
+
 ## 历史 V3 基准程序（3.1.0 源码）
 
 保留原有 V3 程序与数据。历史 V4 Preview.2 增加了区分生产和诊断的修改检查，见[方法](../docs/V4_PREVIEW2.md)。当时的本地 V4 Preview.1 分支启用基准后还构建 `layerkeysort_v4_smoke`。其有限的显式顺序检查和适配器差异见 [V4 Preview.1](../docs/V4_PREVIEW1.md)，适用于该阶段的基本检查。
