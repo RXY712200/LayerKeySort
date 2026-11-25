@@ -67,8 +67,8 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/V4_RC1.md` | historical / 历史 | docs/V4_RC1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_STABLE.md` | historical / 历史 | docs/V4_STABLE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/VALIDATION.md` | current / 现行 | docs/VALIDATION.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
-| full | `docs/WORKLOAD_EVIDENCE.md` | current / 现行 | docs/WORKLOAD_EVIDENCE.zh-CN.md | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/demo/index.html` | current / 现行 | bilingual inline or owned companion | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/WORKLOAD_EVIDENCE.md` | historical / 历史 | [Chinese edition](../WORKLOAD_EVIDENCE.zh-CN.md) | S3 semantic and link review / 语义和链接复核 | pair present / 已有双语 | nine raw table bodies unchanged / 九个数据表正文一致 |
+| full | `docs/demo/index.html` | historical interactive / 历史交互页 | [Chinese explanatory companion](../demo/index.zh-CN.md) | S1 live UI language parity still open / 交互界面双语待完成 | static explanatory companion present / 已有静态说明译文 | original preserved / 原页保留 |
 | full | `docs/design/V4_2_0_LIVE_CORE_RESEARCH_HISTORY.md` | current / 现行 | docs/design/V4_2_0_LIVE_CORE_RESEARCH_HISTORY.zh-CN.md | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_1_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_1_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
