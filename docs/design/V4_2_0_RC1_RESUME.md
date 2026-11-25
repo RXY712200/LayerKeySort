@@ -4,14 +4,16 @@ This is one continuation of the already-authorized RC.1 work package. It is NOT 
 
 ## One objective
 
-Complete **all remaining RC.1 acceptance work** and deliver the two existing draft PRs at final, independently reviewable heads. Continue in the same Codex conversation and the existing workspaces. The original three-step order in the task file remains the internal dependency order, but **step boundaries, document batches, commits, successful CI runs, and progress checkpoints are never stopping points**. Do not send a final progress report while authorized work remains and the next action is available. Do not ask the owner to issue another “continue” between internal parts.
+Complete **all remaining RC.1 acceptance work** and deliver the two existing draft PRs at final, independently reviewable heads. Continue in the same Codex conversation and the existing workspaces. The original three-step order in the task file remains the internal dependency order, but **step boundaries, document batches, commits, successful CI runs, and progress checkpoints are never stopping points**. Do not use `/goal` or another mechanism that turns this into repeated short execution windows. Do not send a final progress report while authorized work remains and the next action is available. Do not ask the owner to issue another “continue” between internal parts.
 
 ## Exact starting state to verify
 
-- Full PR #33: branch \`dev/full-v4.2.0-rc.1\`, base \`dev/full-v4.2.0-preview.3\` at \`168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\`, remote HEAD \`84412320fffecdd60da2b89aef17adb6da4adfab\`.
-- Repo PR #34: branch \`docs/full-v4.2.0-rc.1-navigation\`, base \`main\` at \`c108acd72b37614f4be271c9747484c2dde5eac4\`, remote HEAD \`693f42581aa0f3d954560cf034ab6fb21739e678\`.
+- Full PR #33: branch \`dev/full-v4.2.0-rc.1\`, base \`dev/full-v4.2.0-preview.3\` at \`168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\`, remote HEAD \`123c1c69558309d840f68598a2f64066433c9999\`.
+- Repo PR #34: branch \`docs/full-v4.2.0-rc.1-navigation\`, base \`main\` at \`c108acd72b37614f4be271c9747484c2dde5eac4\`, remote HEAD \`7114cc06bb02a14cd402c77e0bafd17ccef553f3\`.
 - Main and the published Stable remain v4.1.0. Both PRs remain open drafts. No integration or publication has occurred.
-- The last reported local state contains an uncommitted modification to \`docs/design/V4_ARCHITECTURE.zh-CN.md\`. This report is a lead, not a substitute for inspecting the actual workspace.
+- Exact-head CI at Full `123c1c69558309d840f68598a2f64066433c9999` was verified successful: push C17 [45590442976](https://github.com/RXY712200/LayerKeySort/actions/runs/45590442976), PR C17 [45590459659](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459659), Mini [45590459552](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459552), Workbench [45590459502](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459502), and Measurement Evidence [45590459533](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459533). All runs are tied to that exact Full head.
+- Exact-head CI at Repo `7114cc06bb02a14cd402c77e0bafd17ccef553f3` was verified successful: push C17 [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419), PR C17 [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140), Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871), Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968), Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818), and the actual main-target Trusted Scope Guard [45587380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487). Scope Guard Policy Tests [45587384473](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384473) also passed, but is not a substitute for the trusted gate.
+- The previous report of one uncommitted local architecture edit is stale: the architecture rewrite and later correction batches are present in the current remote history. Remote GitHub state cannot establish the current local worktree. Inspect the existing local workspace, preserve every dirty and untracked change, and reconcile it before editing; never assume the local workspace is clean or discard it.
 
 Before changing anything, inspect both remotes, branches, local HEADs, status and the complete local diff. **Preserve every existing local change.** In particular, do not reset, clean, checkout over, overwrite, or discard the architecture edits. Safely save/stash or patch any dirty work before incorporating this instruction-file commit, fast-forward only where ancestry permits, then restore and verify the exact local edits. If the actual state differs from the report, preserve it and reconcile without rewriting history. Do not create a fresh workspace merely to avoid understanding the existing one.
 
@@ -52,18 +54,20 @@ Do not modify production behavior, public API or persistent formats; do not chan
 
 ## Final report
 
-Deliver one consolidated English completion report only after the entire package reaches the independent-review checkpoint. Include exact local and remote SHAs, both PR bases/heads, full changed-file inventory, architecture section-by-section semantic review, cross-document findings and repairs, bilingual coverage and verification evidence, final immutable Repo-to-Full targets, actual commands/results, exact-head CI runs, ownership checks, remaining limitations, publication/integration status, workspace state and Technical Debt Impact. Distinguish completed implementation evidence from independent acceptance. Do not claim PASS on behalf of the independent reviewer.
+Deliver one consolidated English completion report only after the entire package reaches the independent-review checkpoint. Include exact local and remote SHAs, both PR bases/heads, full changed-file inventory, architecture section-by-section semantic review, cross-document findings and repairs, bilingual coverage and verification evidence, final immutable Repo-to-Full targets, actual commands/results, exact-head CI runs, ownership checks, remaining limitations, publication/integration status, workspace state and Technical Debt Impact. Distinguish completed implementation evidence from independent acceptance. Do not claim PASS on behalf of the independent reviewer. After the owner completes the personal review, conduct the separate ChatGPT-plus-owner review. Only after both reviews accept RC.1 may the owner authorize preparation of the demo version. Begin the post-Stable industrial comparison research only after the demo checkpoint and the user's subsequent authorization; do not start GLib/Boost/LLVM comparison work during RC closure.
 
 ## 中文执行说明（与英文对应，英文为执行权威）
 
-这是同一个已经获准的 RC.1 工作包，不是新阶段、新 Preview，也不是拆成多次分别交付的任务。唯一目标是完成全部剩余验收工作，使现有两个 Draft PR 达到可独立审查状态。原任务的三个步骤仍按依赖顺序作为内部工作顺序，但**步骤边界、文档批次、提交、CI 通过和进度检查点都不是停止点**。只要仍有已授权且可执行的下一项工作，就不要主动发最终进度报告，也不要要求用户在内部环节之间反复发送“继续”。
+这是同一个已经获准的 RC.1 工作包，不是新阶段、新 Preview，也不是拆成多次分别交付的任务。唯一目标是完成全部剩余验收工作，使现有两个 Draft PR 达到可独立审查状态。原任务的三个步骤仍按依赖顺序作为内部工作顺序，但**步骤边界、文档批次、提交、CI 通过和进度检查点都不是停止点**。不要使用 `/goal` 或其他会把任务切成反复短执行窗口的机制。只要仍有已授权且可执行的下一项工作，就不要主动发最终进度报告，也不要要求用户在内部环节之间反复发送“继续”。
 
 ### 当前准确起点
 
-- Full PR #33：分支 \`dev/full-v4.2.0-rc.1\`，目标分支 \`dev/full-v4.2.0-preview.3\`，基线 \`168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\`，远端 HEAD \`84412320fffecdd60da2b89aef17adb6da4adfab\`。
-- Repo PR #34：分支 \`docs/full-v4.2.0-rc.1-navigation\`，目标 \`main\`，基线 \`c108acd72b37614f4be271c9747484c2dde5eac4\`，远端 HEAD \`693f42581aa0f3d954560cf034ab6fb21739e678\`。
+- Full PR #33：分支 \`dev/full-v4.2.0-rc.1\`，目标分支 \`dev/full-v4.2.0-preview.3\`，基线 \`168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\`，远端 HEAD \`123c1c69558309d840f68598a2f64066433c9999\`。
+- Repo PR #34：分支 \`docs/full-v4.2.0-rc.1-navigation\`，目标 \`main\`，基线 \`c108acd72b37614f4be271c9747484c2dde5eac4\`，远端 HEAD \`7114cc06bb02a14cd402c77e0bafd17ccef553f3\`。
 - main 和正式 Stable 仍为 v4.1.0；两个 PR 仍是开放的草稿，没有集成或发布。
-- 上次报告称本地有一个未提交修改：\`docs/design/V4_ARCHITECTURE.zh-CN.md\`。这只是线索，必须检查实际工作区。
+- Full `123c1c69558309d840f68598a2f64066433c9999` 的精确 HEAD CI 已核实全部成功：push C17 [45590442976](https://github.com/RXY712200/LayerKeySort/actions/runs/45590442976)、PR C17 [45590459659](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459659)、Mini [45590459552](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459552)、Workbench [45590459502](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459502) 和 Measurement Evidence [45590459533](https://github.com/RXY712200/LayerKeySort/actions/runs/45590459533)。这些运行均对应该精确 Full HEAD。
+- Repo `7114cc06bb02a14cd402c77e0bafd17ccef553f3` 的精确 HEAD CI 已核实全部成功：push C17 [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419)、PR C17 [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140)、Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871)、Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968)、Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818)，以及真正针对 main 的 Trusted Scope Guard [45587380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487)。Scope Guard Policy Tests [45587384473](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384473) 也已通过，但不能替代真实可信门禁。
+- 上次报告中的单个架构中文未提交修改状态已经过时：架构全文改写及后续修订批次已进入当前远端历史。GitHub 远端状态不能证明本地工作区状态。必须检查现有本地工作区，保留全部已修改和未跟踪文件后再编辑；不得假定工作区干净或丢弃本地内容。
 
 先检查两个 remote、分支、本地 HEAD、状态和完整 diff。**保留所有现有本地改动。** 特别禁止 reset、clean、覆盖 checkout 或丢弃架构中文文档修改。先用可恢复的 stash 或补丁安全保存脏工作；再在祖先关系允许时快进纳入本指令文件提交，最后恢复并核对原改动。实际状态与报告不同则保留并安全协调，不重写历史。不要为逃避理解现有工作而重新创建工作区。
 
@@ -104,4 +108,4 @@ Deliver one consolidated English completion report only after the entire package
 
 ### 最终报告
 
-只有全部包达到独立审查检查点后，才提交一份完整英文报告。包括准确本地/远端 SHA、两个 PR 的基线/HEAD、完整变更文件清单、架构逐节语义审查、跨文档发现与修复、双语覆盖及验证证据、最终 Repo→Full 不可变链接、真实命令/结果、精确 HEAD 的 CI、归属检查、剩余限制、发布/集成状态、工作区状态及 Technical Debt Impact。区分实施证据和独立接受，不得代替独立审查者宣布 PASS。
+只有全部包达到独立审查检查点后，才提交一份完整英文报告。包括准确本地/远端 SHA、两个 PR 的基线/HEAD、完整变更文件清单、架构逐节语义审查、跨文档发现与修复、双语覆盖及验证证据、最终 Repo→Full 不可变链接、真实命令/结果、精确 HEAD 的 CI、归属检查、剩余限制、发布/集成状态、工作区状态及 Technical Debt Impact。区分实施证据和独立接受，不得代替独立审查者宣布 PASS。用户完成个人审核后，再由 ChatGPT 与用户进行单独的联合审核。只有两轮审核都接受 RC.1 后，才可由用户授权准备 demo 版本。Stable 发布及 demo 检查点完成、用户随后授权后，才能开始 GLib/Boost/LLVM 等工业级横向对照研究；RC 收尾期间不得提前启动该研究。
