@@ -56,13 +56,13 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/V4_2_0_PREVIEW1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original/hash/table/link checks; adverse and clock-correction records retained / 已核原件/哈希/表/链接，保留负面及修正时钟记录 |
 | full | `docs/V4_2_0_PREVIEW1_2.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/control table/local links checked / 原件保留，已核 SHA、对照表及链接 |
 | full | `docs/V4_2_0_PREVIEW1_2_1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2_1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
-| full | `docs/V4_2_0_PREVIEW2.md` | historical / 历史 | docs/V4_2_0_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_2_0_PREVIEW3.md` | historical / 历史 | docs/V4_2_0_PREVIEW3.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_2_0_PREVIEW2.md` | historical / 历史 | docs/V4_2_0_PREVIEW2.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical originals preserved; exact pins/commands/links checked / 历史原件保留，已核精确版本、命令及链接 |
+| full | `docs/V4_2_0_PREVIEW3.md` | historical / 历史 | docs/V4_2_0_PREVIEW3.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical originals preserved; exact pins/commands/links checked / 历史原件保留，已核精确版本、命令及链接 |
 | full | `docs/V4_2_0_RC1.md` | current / 现行 | [docs/V4_2_0_RC1.zh-CN.md](../V4_2_0_RC1.zh-CN.md) | S3 semantic and links / 语义及链接 | pair present / 已有双语 | commands and hashes checked / 已核命令与哈希 |
 | full | `docs/V4_FREEZE.md` | historical / 历史 | docs/V4_FREEZE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |
-| full | `docs/V4_PREVIEW1.md` | historical / 历史 | docs/V4_PREVIEW1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_PREVIEW1.md` | historical / 历史 | docs/V4_PREVIEW1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical originals preserved; exact pins/commands/links checked / 历史原件保留，已核精确版本、命令及链接 |
 | full | `docs/V4_PREVIEW2.md` | historical / 历史 | docs/V4_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_PREVIEW3.md` | historical / 历史 | docs/V4_PREVIEW3.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_PREVIEW3.md` | historical / 历史 | docs/V4_PREVIEW3.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical originals preserved; exact pins/commands/links checked / 历史原件保留，已核精确版本、命令及链接 |
 | full | `docs/V4_PREVIEW4.md` | historical / 历史 | docs/V4_PREVIEW4.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_RC1.md` | historical / 历史 | docs/V4_RC1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical state labeled; original/hashes/links preserved / 历史状态已标，原件/哈希/链接保留 |
 | full | `docs/V4_STABLE.md` | historical / 历史 | docs/V4_STABLE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical state labeled; original/hashes/links preserved / 历史状态已标，原件/哈希/链接保留 |
