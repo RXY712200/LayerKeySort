@@ -83,3 +83,5 @@ Read both complete Usage and Development editions. Usage Chinese omitted Batch b
 ## Local CTest rerun on 6f5f2df
 
 Debug and Release each passed 39/39 using the existing strict GCC build trees. The local CTest logs contain 39 passing records each. The tracked `src`, `tests`, `include`, `cmake` and root `CMakeLists.txt` trees match the `d1132a26` test baseline. This receipt records local test execution on the unchanged implementation and does not substitute for hosted checks on the final PR heads.
+
+The Preview.3 test patches were checked directly. `754b3088` uses aligned backing arrays but passes offset-one pointers for both deserialize and serialize, then compares the serialized bytes to the original fixture. `3ac82d26` deliberately clears two intermediate tags when a restored order has at least four blocks, checks invariant validity and both directions of mixed-tag comparison, then restores the tags and rechecks validity. This establishes fallback coverage in a constructed state. It does not establish that ordinary restore produces zero tags.
