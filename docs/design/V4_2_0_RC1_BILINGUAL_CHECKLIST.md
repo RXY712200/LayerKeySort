@@ -86,7 +86,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md` | guide / 实现台账 | [Chinese](V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | added source/test trace for labels, spacing and initial validation SHA / 已增标签、间隔和验证出处 |
 | full | `docs/design/V4_2_0_RC1_REVIEW_REPAIR.md` | historical / 历史 | [Chinese companion](V4_2_0_RC1_REVIEW_REPAIR.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | source read in full; original Git blob, full SHA, numeric literals and local links checked / 原文全文已读，已核原件 Git 对象、全部 SHA、数值和本地链接 |
 | full | `docs/design/V4_2_0_RC1_TASK.md` | historical / 历史 | [Chinese companion](V4_2_0_RC1_TASK.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | full source read; original blob, SHA and local links checked / 已读全文，已核原件对象、SHA和本地链接 |
-| full | `docs/design/V4_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/design/V4_ARCHITECTURE.md` | historical / 历史 | [Chinese companion](V4_ARCHITECTURE.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | fifteen sections, source SHAs and local links checked; final semantic acceptance pending / 已核十五节、源码SHA和本地链接，最终语义验收待完成 |
 | full | `docs/design/V4_DECISIONS.md` | historical / 历史 | [Chinese companion](V4_DECISIONS.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | source read in full; original Git blob, full SHA, commands and local links checked / 原文全文已读，已核原件 Git 对象、全部 SHA、命令及本地链接 |
 | repo | `docs/governance/BASELINE.md` | historical / 历史 | docs/governance/BASELINE.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | hashes and original checked / 已核哈希与原文 |
 | repo | `docs/governance/OWNERSHIP.md` | historical / 历史 | docs/governance/OWNERSHIP.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | original and policy files unchanged / 原文及配置不变 |
@@ -113,7 +113,5 @@ The trusted main ownership map classifies CHANGELOG.md exactly as Full but does 
 
 ## Continuation queue after guide reconstruction / 指南重建后的继续队列
 
-88/89 entries have counterparts or inline editions; 1 requires a language edition. Presence is not semantic acceptance. Final semantic review and cross-PR references remain open.
-88/89 项已有对应版或内嵌双语，1 项仍缺语言版本。文件存在非语义接受，最终复核及跨 PR 引用仍开放。
-
-- `docs/design/V4_ARCHITECTURE.md`
+89/89 entries have counterparts or inline editions; none lacks a language edition. Presence is not semantic acceptance. Final semantic review and cross-PR references remain open.
+89/89 项已有对应版或内嵌双语，无缺失语言版本。文件存在非语义接受，最终复核及跨 PR 引用仍开放。
