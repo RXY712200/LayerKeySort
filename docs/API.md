@@ -47,8 +47,12 @@ requires existing source marker/mutation generation; loaded snapshots never curr
 LS1 exact lower-hex namespace/ordinal grammar and LKS4SNP1 explicit BE format are
 frozen. Format/serialize allocate nothing; text length excludes NUL, binary length
 counts exact bytes; undersized destination remains untouched.
-Restore resolves non-NULL caller-owned objects into fresh live handles; failures
-publish NULL and free temporary state. Callback side effects are not rolled back.
+Deserialization validates the entire borrowed input before allocation. For a nonempty
+snapshot, restoration requires a resolver and calls it in ordinal order. The resolver
+must return a non-NULL borrowed item on success, and repeated item pointers are
+allowed. The library resolves all rows before building a fresh order with fresh handles.
+Failure leaves the output NULL and releases temporary storage. The caller retains
+ownership of resolved items and responsibility for resolver side effects.
 Strict LK1 import preserves legacy coordinates without public legacy live APIs.
 
 ## Complete frozen function list
