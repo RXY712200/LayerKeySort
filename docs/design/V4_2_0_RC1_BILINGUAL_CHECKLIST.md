@@ -84,15 +84,15 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/design/V4_2_0_PREVIEW3_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW3_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_RC1_API_INDEX.md` | guide / 实现台账 | [Chinese](V4_2_0_RC1_API_INDEX.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | 64 exact declaration rows checked / 已核 64 条精确声明 |
 | full | `docs/design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md` | guide / 实现台账 | [Chinese](V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | added source/test trace for labels, spacing and initial validation SHA / 已增标签、间隔和验证出处 |
-| full | `docs/design/V4_2_0_RC1_REVIEW_REPAIR.md` | historical / 历史 | docs/design/V4_2_0_RC1_REVIEW_REPAIR.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
+| full | `docs/design/V4_2_0_RC1_REVIEW_REPAIR.md` | historical / 历史 | [Chinese companion](V4_2_0_RC1_REVIEW_REPAIR.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | source read in full; original Git blob, full SHA, numeric literals and local links checked / 原文全文已读，已核原件 Git 对象、全部 SHA、数值和本地链接 |
 | full | `docs/design/V4_2_0_RC1_TASK.md` | historical / 历史 | docs/design/V4_2_0_RC1_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_DECISIONS.md` | historical / 历史 | docs/design/V4_DECISIONS.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | repo | `docs/governance/BASELINE.md` | historical / 历史 | docs/governance/BASELINE.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | hashes and original checked / 已核哈希与原文 |
 | repo | `docs/governance/OWNERSHIP.md` | historical / 历史 | docs/governance/OWNERSHIP.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | original and policy files unchanged / 原文及配置不变 |
 | repo | `docs/governance/RULESETS.md` | historical / 历史 | docs/governance/RULESETS.zh-CN.md | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | checklist count and original checked / 已核条目数与原文 |
-| full | `docs/history/BENCHMARK_HISTORY.md` | historical / 历史 | docs/history/BENCHMARK_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/history/DESIGN_HISTORY.md` | historical / 历史 | docs/history/DESIGN_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/history/BENCHMARK_HISTORY.md` | historical / 历史 | [Chinese companion](../history/BENCHMARK_HISTORY.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | source read in full; original Git blob, full SHA, numeric literals and local links checked / 原文全文已读，已核原件 Git 对象、全部 SHA、数值和本地链接 |
+| full | `docs/history/DESIGN_HISTORY.md` | historical / 历史 | [Chinese companion](../history/DESIGN_HISTORY.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | source read in full; original Git blob, full SHA, numeric literals and local links checked / 原文全文已读，已核原件 Git 对象、全部 SHA、数值和本地链接 |
 | repo | `docs/index.html` | current / 现行 | `docs/index.html#zh-cn` at Repo `5a44bb8498d218c76330e71ec65b38e4f80ebfe2` | S3 semantic and final links / 语义及最终链接 | inline bilingual / 内嵌双语 | browser headings, IDs and language fragments checked / 已用浏览器核对标题、ID 及语言锚点 |
 | full | `docs/v3/README.md` | historical / 历史 | docs/v3/README.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original and full SHA sets preserved; code blocks/local paths checked / 原件及全 SHA 保留，已核代码块与本地路径 |
 | full | `docs/v3/index.html` | historical / 历史 | [Chinese interactive companion](../v3/index.zh-CN.html) | S3 final navigation / 最终导航 | complete companion present / 完整译本已建立 | original unchanged; Node controls and browser 35 managed + 5 manual states match; Chinese pages visually inspected / 原页不变，已核控制及浏览器35个托管和5个手动状态，中文页面已目视检查 |
@@ -113,15 +113,12 @@ The trusted main ownership map classifies CHANGELOG.md exactly as Full but does 
 
 ## Continuation queue after guide reconstruction / 指南重建后的继续队列
 
-80/89 entries have counterparts or inline editions; 9 require a language edition. Presence is not semantic acceptance. Final semantic review and cross-PR references remain open.
-80/89 项已有对应版或内嵌双语，9 项仍缺语言版本。文件存在非语义接受，最终复核及跨 PR 引用仍开放。
+83/89 entries have counterparts or inline editions; 6 require a language edition. Presence is not semantic acceptance. Final semantic review and cross-PR references remain open.
+83/89 项已有对应版或内嵌双语，6 项仍缺语言版本。文件存在非语义接受，最终复核及跨 PR 引用仍开放。
 
 - `docs/design/V4_2_0_PREVIEW1_TASK.md`
 - `docs/design/V4_2_0_PREVIEW2_TASK.md`
 - `docs/design/V4_2_0_PREVIEW3_TASK.md`
-- `docs/design/V4_2_0_RC1_REVIEW_REPAIR.md`
 - `docs/design/V4_2_0_RC1_TASK.md`
 - `docs/design/V4_ARCHITECTURE.md`
 - `docs/design/V4_DECISIONS.md`
-- `docs/history/BENCHMARK_HISTORY.md`
-- `docs/history/DESIGN_HISTORY.md`
