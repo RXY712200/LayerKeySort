@@ -40,7 +40,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/COMPATIBILITY.md` | current / 现行 | docs/COMPATIBILITY.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/DEVELOPMENT.md` | current / 现行 | docs/DEVELOPMENT.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `docs/FULL.md` | current / 现行 | docs/FULL.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
-| full | `docs/FULL_CONSUMER_HANDOFF.md` | current / 现行 | docs/FULL_CONSUMER_HANDOFF.zh-CN.md | S1 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/FULL_CONSUMER_HANDOFF.md` | current + historical / 现行及历史 | [English](../FULL_CONSUMER_HANDOFF.en.md), [简体中文](../FULL_CONSUMER_HANDOFF.zh-CN.md) | S3 semantic review / 语义复核 | two language editions present / 双语全篇已建立 | exact SHAs, local links and seven checklist entries matched / 已核 SHA、链接和七项验收 |
 | full | `docs/FULL_RC1_EVIDENCE.md` | current / 现行 | docs/FULL_RC1_EVIDENCE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/FULL_SELECTION_GUIDE.md` | current / 现行 | docs/FULL_SELECTION_GUIDE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md` | guide / 实现指南 | docs/IMPLEMENTATION_API_REFERENCE.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |

@@ -1,5 +1,7 @@
 # Full 外部消费者交接与变更台账
 
+[English edition](FULL_CONSUMER_HANDOFF.en.md) · [简体中文全篇](FULL_CONSUMER_HANDOFF.zh-CN.md)
+
 ## Full 4.2.0-rc.1 candidate
 
 - From Preview.3 `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0` to verification baseline `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`. Operational code remains `fe00536e7bd7f4e5128432ea4a29e54158074903`. Only the two public version strings changed. See the [reconstruction ledger](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md).
