@@ -1,0 +1,7 @@
+# Preview.1 初始比较筛选（历史译本）
+
+原文：[PROTOCOL.md](PROTOCOL.md)，英文，固定于 [`c51e987aa1fda0b16bd61bae3f34ca1b6d091929`](https://github.com/RXY712200/LayerKeySort/blob/c51e987aa1fda0b16bd61bae3f34ca1b6d091929/benchmarks/research/full-v4.2.0-preview.1/PROTOCOL.md)。原始英文指令保持权威，本译本不授予新执行权限；[双语导航](../../../docs/design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
+
+在由append建立的1,024和100,000个occurrence状态上，回放同块或跨块的相同预计算对。比较不变公开API与采用相同验证的祖先行走原型，并测固定状态载入标量标签的比较下限；后者不含标签维护，不能据此采用。交替kernel顺序，保留每一批，计时前按输入ordinal独立验证符号。
+
+祖先行走若不通过独立配对预期或不能在初筛将广泛比较改善至少25%，则拒绝。该筛选不授权采用；通过者还须达到固定任务的跨主机矩阵、正确性及兼容门槛。祖先变体保持resident和block内存不变；标签维护需要独立的有界写入及内存预算才可获采用资格。
