@@ -1,5 +1,7 @@
 # LayerKeySort V4 usage
 
+[简体中文](USAGE.zh-CN.md)
+
 Use the [selection guide](FULL_SELECTION_GUIDE.md) to choose explicit order, comparator-managed order, or a smaller composition. The 4.2 candidate keeps published 4.1.0 usage and ownership contracts.
 
 **Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).

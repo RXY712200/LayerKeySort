@@ -63,10 +63,10 @@ For **every change to Full production code, public headers, ordering/ownership/e
 
 | Guide | Review and synchronize |
 | --- | --- |
-| [Implementation walkthrough (zh-CN)](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) | Architecture and step-by-step execution, real call chains, relevant source modules, before/after behavior |
-| [Full public API index and contracts (zh-CN)](IMPLEMENTATION_API_REFERENCE.zh-CN.md) | All actual symbols, signatures/behavior, return codes, ownership, lifetime, callbacks, mapping to source; explicitly mark unaffected public API |
-| [Internal algorithms and data structures (zh-CN)](IMPLEMENTATION_INTERNALS.zh-CN.md) | Changed private helpers, invariants, Block/AVL, memory management, commit/OOM and hot paths |
-| [Validation and source-evidence map (zh-CN)](IMPLEMENTATION_VALIDATION.zh-CN.md) | Actual test functions/assertions, new/removed coverage, commands run, CI links, unverified behavior and resource evidence |
+| [Implementation walkthrough](IMPLEMENTATION_WALKTHROUGH.md) | Architecture and step-by-step execution, real call chains, relevant source modules, before/after behavior |
+| [Full public API index and contracts](IMPLEMENTATION_API_REFERENCE.md) | All actual symbols, signatures/behavior, return codes, ownership, lifetime, callbacks, mapping to source; explicitly mark unaffected public API |
+| [Internal algorithms and data structures](IMPLEMENTATION_INTERNALS.md) | Changed private helpers, invariants, Block/AVL, memory management, commit/OOM and hot paths |
+| [Validation and source-evidence map](IMPLEMENTATION_VALIDATION.md) | Actual test functions/assertions, new/removed coverage, commands run, CI links, unverified behavior and resource evidence |
 
 Contributors making a Full implementation or contract change must:
 
