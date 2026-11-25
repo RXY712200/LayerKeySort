@@ -1,6 +1,6 @@
 # LayerKeySort
 
-**Full 4.2 候选进展。** 主分支与已发布 Stable 仍为 4.1.0。独立候选分支尚未合并、打标签或发布。[候选技术证据](https://github.com/RXY712200/LayerKeySort/blob/226c440571eaa45e9bc3f10e70e5777a3a03cc1e/docs/FULL_RC1_EVIDENCE.md)对比同一批工作负载：相对 Stable 4.1，实时操作用时比为 Windows 0.629、Linux 0.640；只操作端点并保存平面历史时，Flat 组合更快。Mini 的版本和发布路径独立。
+**Full 4.2 候选进展。** 主分支与已发布 Stable 仍为 4.1.0。独立候选分支尚未合并、打标签或发布。[候选技术证据](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/FULL_RC1_EVIDENCE.md)对比同一批工作负载：相对 Stable 4.1，实时操作用时比为 Windows 0.629、Linux 0.640；只操作端点并保存平面历史时，Flat 组合更快。Mini 的版本和发布路径独立。 [候选验证记录](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/V4_2_0_RC1.md)。主分支实际集成且正式发布后，再更新版本和下载入口。
 
 
 [English](README.md) | 简体中文

@@ -1,6 +1,6 @@
 # LayerKeySort
 
-**Full 4.2 candidate status.** Main and published Stable remain 4.1.0. The separate candidate branch is unmerged, untagged and unpublished. In the [matched workload evidence](https://github.com/RXY712200/LayerKeySort/blob/226c440571eaa45e9bc3f10e70e5777a3a03cc1e/docs/FULL_RC1_EVIDENCE.md), Full/Stable 4.1 live elapsed ratios were 0.629 on Windows and 0.640 on Linux. A flat-history composition ran faster in the endpoint-only lifecycle comparison. Mini follows its own release line.
+**Full 4.2 candidate status.** Main and published Stable remain 4.1.0. The separate candidate branch is unmerged, untagged and unpublished. In the [matched workload evidence](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/FULL_RC1_EVIDENCE.md), Full/Stable 4.1 live elapsed ratios were 0.629 on Windows and 0.640 on Linux. A flat-history composition ran faster in the endpoint-only lifecycle comparison. Mini follows its own release line. See the [candidate verification record](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/V4_2_0_RC1.md). Update version and download links after integration and publication.
 
 
 English | [简体中文](README.zh-CN.md)
