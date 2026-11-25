@@ -2,11 +2,11 @@
 
 [English](IMPLEMENTATION_INTERNALS.md)
 
-恢复后同时构造非零标签和零标签块，分别核对标签路径与 AVL 回退；验证后恢复标签，不改生产算法。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+恢复后同时构造非零标签和零标签块，分别核对标签路径与 AVL 回退；验证后恢复标签，不改生产算法。 [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)。
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
-> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
+> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
 ## 1. 所有 16 个生产源文件，内部机制各是什么？
 

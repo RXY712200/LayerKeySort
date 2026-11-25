@@ -2,13 +2,13 @@
 
 [English](IMPLEMENTATION_API_REFERENCE.md) · [精确声明索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md) · [源码重建](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
-已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。serialize/deserialize 的字节、状态、所有权与借用规则保持不变，偏移一字节的缓冲区由回归测试覆盖。参见[实现审计与证据](V4_2_0_PREVIEW3.md)。
+已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。serialize/deserialize 的字节、状态、所有权与借用规则保持不变，偏移一字节的缓冲区由回归测试覆盖。参见[实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
 ## A. 如何读取本手册
 
-以下 64 项与公开头逐项对照；实际原型、实现位置及说明行见[冻结 API 索引](design/V4_2_0_RC1_API_INDEX.md)。错误优先级以各入口校验顺序为准。例如 compare 先将输出归零，再查空参数和 owner，之后才检测回调重入。Handle 已失效时不得再传入。
+以下 64 项与公开头逐项对照；实际原型、实现位置及说明行见[冻结 API 索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md)。错误优先级以各入口校验顺序为准。例如 compare 先将输出归零，再查空参数和 owner，之后才检测回调重入。Handle 已失效时不得再传入。
 
 - **一次 occurrence** 指向一个非 NULL、由应用拥有的 `void *item`；同一 `item` 指针可被插入多次，但每次有独立 `LksOrderHandle`。
 - **生命周期**：Order/ManagedOrder/Group/Batch/Snapshot/Cursor 结构由 Full 分配，创建者负责销毁。业务对象、比较器上下文、关联字节来源与外部文件始终由应用负责。

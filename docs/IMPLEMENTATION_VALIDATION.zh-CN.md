@@ -2,11 +2,11 @@
 
 [English](IMPLEMENTATION_VALIDATION.md)
 
-Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)。
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
-> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
+> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
 > 文档体系：[总体实现导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) · [64 API 逐项索引](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [私有机制详解](IMPLEMENTATION_INTERNALS.zh-CN.md)。
 
@@ -52,7 +52,7 @@ ctest --test-dir build -C Debug --output-on-failure
 
 精确校验树包含 tests/v4_snapshot.c 的 offset-one golden 字节检查（754b3088）和恢复后混合标签回退检查（3ac82d26）。后者临时将两个中间块置零，断言有效性、两端标签比较以及跨零路径双向符号，随后还原标签并正反遍历全部 item。
 
-Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.md)。
+Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.zh-CN.md)。
 
 | 修改或研究的能力 | 测试入口 | 实际测试意图与范围 |
 | --- | --- | --- |

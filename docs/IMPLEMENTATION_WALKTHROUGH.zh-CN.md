@@ -1,10 +1,10 @@
 # LayerKeySort Full：从源码理解完整实现（4.2.0-rc.1）
 
-[English](IMPLEMENTATION_WALKTHROUGH.md) · [验证与源码基线](V4_2_0_PREVIEW3.md)
+[English](IMPLEMENTATION_WALKTHROUGH.md) · [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)
 
 固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
 
 
