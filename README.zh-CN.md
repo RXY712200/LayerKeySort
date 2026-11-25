@@ -1,6 +1,17 @@
 # LayerKeySort
 
-**Full 4.2 候选进展。** 主分支与已发布 Stable 仍为 4.1.0。独立候选分支尚未合并、打标签或发布。[候选技术证据](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/FULL_RC1_EVIDENCE.md)对比同一批工作负载：相对 Stable 4.1，实时操作用时比为 Windows 0.629、Linux 0.640；只操作端点并保存平面历史时，Flat 组合更快。Mini 的版本和发布路径独立。 [候选验证记录](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/V4_2_0_RC1.md)。主分支实际集成且正式发布后，再更新版本和下载入口。
+## Full：Stable 与候选版
+
+主分支和已发布 Stable 均为 **4.1.0**。需要可下载的源码或发行包时，请使用 [Stable 发行页](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。独立的 4.2 候选分支仍在审查，尚未合并、打标签或发布。Mini 使用独立的版本和发布路径。
+
+Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/FULL_RC1_EVIDENCE.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
+
+| 负载 | Windows | Linux |
+| --- | ---: | ---: |
+| 全部实时顺序条件 | 0.629（降低 37.1%） | 0.640（降低 36.0%） |
+| 比较密集条件 | 0.198（降低 80.2%） | 0.219（降低 78.1%） |
+
+比值为候选耗时除以对照耗时。比较使用同平台同条件的中位数，覆盖 1k、10k、100k 初始实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/V4_2_0_RC1.md) 与 [候选实现导读](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。下文仓库内链接描述主分支的 Stable 基线。
 
 
 [English](README.md) | 简体中文
