@@ -2,7 +2,7 @@
 
 [简体中文](VALIDATION.zh-CN.md)
 
-For the 4.2 candidate use checkout `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` for the RC metadata and both Preview.3 regressions. The earlier operational source pin alone lacks these tests. See the [candidate quantitative evidence](FULL_RC1_EVIDENCE.md).
+To reproduce the 4.2 candidate source and test baseline, use checkout `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` for the RC metadata and both Preview.3 regressions. The earlier operational source pin alone lacks these tests. See the [candidate quantitative evidence](FULL_RC1_EVIDENCE.md). For final PR validation, run the required checks at the actual PR head.
 
 **Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
 
@@ -50,7 +50,7 @@ The project does not claim every C17 compiler/platform or a universal binary ABI
 
 ## Release evidence
 
-RC extended campaigns include:
+Historical v4.0.0 RC extended campaigns include:
 
 - three 200k-step explicit mutation seeds,
 - long hostile parser campaigns,

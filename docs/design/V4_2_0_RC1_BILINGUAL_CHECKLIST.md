@@ -98,7 +98,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/v3/index.html` | historical / 历史 | [Chinese interactive companion](../v3/index.zh-CN.html) | S3 final navigation / 最终导航 | complete companion present / 完整译本已建立 | original unchanged; Node controls and browser 35 managed + 5 manual states match; Chinese pages visually inspected / 原页不变，已核控制及浏览器35个托管和5个手动状态，中文页面已目视检查 |
 | full | `examples/README.md` | current / 现行 | examples/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | full bilingual bodies compared; integration omissions and architecture language navigation repaired; CMake/source manifest checked / 已对照双语全文，补集成遗漏、修架构语言导航，核CMake及源码清单 |
 
-| full | `docs/design/V4_2_0_RC1_RESUME.md` | task record / 任务记录 | [inline Chinese edition](V4_2_0_RC1_RESUME.md#中文执行说明与英文对应英文指令为准) | S3 semantic review; English authoritative / 语义复核，以英文为准 | inline bilingual / 内嵌双语 | read at 540f905 / 已读 |
+| full | `docs/design/V4_2_0_RC1_RESUME.md` | task record / 任务记录 | [inline Chinese edition](V4_2_0_RC1_RESUME.md#中文执行说明与英文对应英文为执行权威) | S3 semantic review; English authoritative / 语义复核，以英文为准 | inline bilingual / 内嵌双语 | English and Chinese continuation read at cbc5649 / 已读新版中英文续办指令 |
 
 ## Scope boundaries / 范围边界
 
