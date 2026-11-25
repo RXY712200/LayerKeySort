@@ -45,7 +45,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/FULL_SELECTION_GUIDE.md` | current / 现行 | docs/FULL_SELECTION_GUIDE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md` | guide / 实现指南 | docs/IMPLEMENTATION_API_REFERENCE.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/IMPLEMENTATION_INTERNALS.zh-CN.md` | guide / 实现指南 | [English](../IMPLEMENTATION_INTERNALS.md) | S3 semantic review / 语义复核 | 15 sections paired / 15 节双语已建立 | source checked for label bounds, sign, counters and bulk spacing; sections and local links checked / 已核标签分支、符号、计数、批建及链接 |
-| full | `docs/IMPLEMENTATION_VALIDATION.zh-CN.md` | guide / 实现指南 | docs/IMPLEMENTATION_VALIDATION.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/IMPLEMENTATION_VALIDATION.zh-CN.md` | guide / 实现指南 | [English](../IMPLEMENTATION_VALIDATION.md) | S3 semantic review / 语义复核 | nine sections paired / 九节双语已建立 | exact command blocks, headings, local links and #24 merge timestamp checked / 已核命令、章节、链接及合并时间 |
 | full | `docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md` | guide / 实现指南 | docs/IMPLEMENTATION_WALKTHROUGH.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/INTEGRATION.md` | current / 现行 | docs/INTEGRATION.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/MIGRATION_V3_V4.md` | current / 现行 | docs/MIGRATION_V3_V4.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | token subset checked / 已核部分标记 |

@@ -1,5 +1,7 @@
 # Full 4.2.0-rc.1：可复现的源码、测试、发布与审计证据地图
 
+[English](IMPLEMENTATION_VALIDATION.md)
+
 Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
 
 > 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)。
@@ -135,7 +137,7 @@ python tools/validate_distribution.py
 python tools/validate_release_assets.py
 ~~~
 
-这些是**可执行命令建议**，不是本次对它们实际运行的记录。
+初次 RC 已执行分发及资产验证，完整参数及 SHA-256 见[验证记录](V4_2_0_RC1.zh-CN.md)。此处是供复现的通用命令。
 
 ## 6. 性能与内存报告怎样才能可信？
 
@@ -175,7 +177,7 @@ python tools/validate_release_assets.py
 ## 9. 本轮文档化的验收范围与不足
 
 - **已完成：** 固定 SHA 源码核对、全部 16 个生产 C 翻阅、主要私有头、64 个公开 API 枚举、关键内部函数/分支说明、测试入口/构建/分发工具对照、源码导航。
-- **验证边界：** 本次同步引用 Preview.3 已执行的构建及测试证据，未重复执行历史实验，也不提供任意输入的形式化正确性证明。
+- **验证边界：** 以初次 RC 和 Preview.3 的实际运行及相应 SHA 为证据；本次修复未重复历史实验，也不提供任意输入的形式化正确性证明。
 - **未授权：** 修改 Full 生产代码、修改 stable API/文件格式、直接合并 PR、打 tag 或发布新版。
 
 这份文件是一张**可复现审查地图**。将来要把“静态源码确认”升级为“实际测试 PASS”，必须记录实际运行的测试 SHA、命令、平台与日志，不得只复制上次 Codex 或 ChatGPT 的结论。
