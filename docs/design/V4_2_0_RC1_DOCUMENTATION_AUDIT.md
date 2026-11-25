@@ -79,3 +79,7 @@ Read both complete editions of examples/README, COMPATIBILITY, INTEGRATION and A
 ## Usage and development semantic review after 706842d
 
 Read both complete Usage and Development editions. Usage Chinese omitted Batch borrowed-view lifetime, independently owned merge results, deserialized snapshot provenance, and explicit item/context/Cursor lifetimes. These are now included, with reciprocal language links and the Chinese selection destination. Header GroupBatch ownership comments and immutable_group.c group_at/merge_all implementation confirm the ownership distinction; header currentness comments explicitly exclude loaded snapshots. Development's six synchronization obligations, frozen-contract restrictions, same-PR ledger, candidate/Stable distinction and historical evidence priority match across languages. Its English guide table now uses the existing English editions. These findings concern documentation parity only; remaining checklist entries are not implicitly accepted.
+
+## Local CTest rerun on 6f5f2df
+
+Debug and Release each passed 39/39 using the existing strict GCC build trees. The local CTest logs contain 39 passing records each. The tracked `src`, `tests`, `include`, `cmake` and root `CMakeLists.txt` trees match the `d1132a26` test baseline. This receipt records local test execution on the unchanged implementation and does not substitute for hosted checks on the final PR heads.
