@@ -37,7 +37,7 @@
 ![Linux、比较密集条件的耗时与峰值请求内存](../benchmarks/research/full-v4.2.0-rc.1/linux-compare-heavy.zh-CN.svg)
 ![Linux、更新密集条件的耗时与峰值请求内存](../benchmarks/research/full-v4.2.0-rc.1/linux-update-heavy.zh-CN.svg)
 
-每图固定种子 17 和 100,000 个初始实例，纵轴使用对数尺度以覆盖全部八种实现。空心标记保留实测位置；相近点请参看精确坐标。耗时为七次正式进程中位数，内存取同条件的独立诊断进程。比较密集时 Full 和原生 OM 的请求峰值分别为 4,278,776 和 13,437,504 字节，计数适用各自的分配器统计边界。请求峰值不包含未追踪的外部分配，也不等同保留字节、分配流量、线格式大小或进程工作集。原生 OM 在某些更新密集场景占优。Windows 短轨迹相对 Preview.1.2 最差为 1.424，配对复跑为 0.996；均保留。
+每图固定种子 17 和 100,000 个初始实例，纵轴使用对数尺度以覆盖全部八种实现。实心标记保留实测位置。先画较大的标记。线性放大图按原始坐标展示 Full 系列和原生 OM 的近邻点。精确值见坐标表。耗时为七次正式进程中位数，内存取同条件的独立诊断进程。比较密集时 Full 和原生 OM 的请求峰值分别为 4,278,776 和 13,437,504 字节，计数适用各自的分配器统计边界。请求峰值不包含未追踪的外部分配，也不等同保留字节、分配流量、线格式大小或进程工作集。原生 OM 在某些更新密集场景占优。Windows 短轨迹相对 Preview.1.2 最差为 1.424，配对复跑为 0.996；均保留。
 
 在根目录执行 `python benchmarks/research/full-v4.2.0-rc.1/generate.py`。[派生数据、哈希与不利条件](../benchmarks/research/full-v4.2.0-rc.1/live-derived.json) 使用原始 [Windows](../benchmarks/research/full-v4.2.0-rc.1/../full-v4.2.0-preview.3/final-matrix/Windows/metadata.json) 和 [Linux](../benchmarks/research/full-v4.2.0-rc.1/../full-v4.2.0-preview.3/final-matrix/Linux/metadata.json) 的源码、编译器、主机和二进制清单。按规模、种子、场景及轨迹哈希分组。每条轨迹含 20,000 次操作，预热、七次正式样本和分配诊断分别采集。[协议](../benchmarks/research/full-v4.2.0-rc.1/../full-v4.2.0-preview.3/PROTOCOL.md) · [原始归档](../benchmarks/research/full-v4.2.0-rc.1/../full-v4.2.0-preview.3/final-matrix)。
 

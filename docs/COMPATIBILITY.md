@@ -1,5 +1,7 @@
 # LayerKeySort V4 compatibility
 
+[简体中文](COMPATIBILITY.zh-CN.md)
+
 [V4 freeze](V4_FREEZE.md) defines the 4.x source/layout and persistent-format contract.
 V4.0.0 Stable preserves the Preview.5 freeze after independently reviewed RC.1.
 [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable and a compatible minor storage optimization.
