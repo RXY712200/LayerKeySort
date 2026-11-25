@@ -8,28 +8,30 @@ Complete **all remaining RC.1 acceptance work** and deliver the two existing dra
 
 ## Exact starting state to verify
 
-The following GitHub state was independently checked immediately before this continuation-file update. Re-fetch all PRs and branches at execution start; the SHAs below are the latest verified references, not permission to overwrite a divergent local workspace.
+The following GitHub state was independently rechecked immediately before this continuation-file update. Re-fetch all PRs and branches at execution start; the SHAs below are verified references, not permission to overwrite a divergent local workspace.
 
-- Full PR #33: open Draft, branch `dev/full-v4.2.0-rc.1`, base `dev/full-v4.2.0-preview.3` at `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0`, current remote HEAD `cae59fea09a9321be4325a58edde1b21b4a3e5ce`. The latest commit is `cae59fea` (parent `03f5ddb52fdf6b0f8c7be0d7dd286759968bcef4`), message `docs(full): reconcile historical experiment protocol terminology`. It modifies five historical Chinese protocol/reproduction companions plus the bilingual checklist. PR currently reports 80 commits and 123 changed files.
+- Full PR #33: open Draft, branch `dev/full-v4.2.0-rc.1`, base `dev/full-v4.2.0-preview.3` at `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0`, current remote HEAD `3ff26b1f16f74eac7e3acc877db3bee7313ebba8`. This is the continuation-file refresh commit (parent `cae59fea09a9321be4325a58edde1b21b4a3e5ce`); PR currently reports 81 commits and 123 changed files.
 - Repo PR #34: open Draft, branch `docs/full-v4.2.0-rc.1-navigation`, base `main` at `c108acd72b37614f4be271c9747484c2dde5eac4`, current remote HEAD `7114cc06bb02a14cd402c77e0bafd17ccef553f3`. PR currently reports 8 commits and 12 changed files.
 - Both PRs remain separate, open and unmerged. Public `main` and published Stable remain v4.1.0. No merge, tag, release or publication is authorized.
-- The last Codex report says four Repo documentation edits remain uncommitted in the existing Repo worktree. This is a reported local state, not independently visible from GitHub. Inspect the actual Full and Repo worktrees, branches, remotes, staged/unstaged/untracked diffs and preserve every existing change. Do not reset, clean, overwrite, recreate or silently discard either workspace. The previous report did not establish the complete current local state.
-- The latest Full commit `cae59fea` changed exactly these files:
+- Latest Codex report: it fast-forwarded the existing Full worktree to `3ff26b1`, read the sustained-task-execution Skill, and preserved four existing uncommitted Repo documentation edits. It then compared the Preview.2 reproduction companion against its English source and made Chinese terminology corrections for the wire prototype, correctness oracle and holdout validation, together with a bilingual checklist update. Those Full changes are reported as uncommitted. Inspect the actual local Full and Repo worktrees, branches, remotes, staged/unstaged/untracked diffs and exact changed paths before acting. Preserve every edit. Do not reset, clean, overwrite, recreate or silently discard either workspace.
+- The previous Full commit `cae59fea09a9321be4325a58edde1b21b4a3e5ce` (parent `03f5ddb52fdf6b0f8c7be0d7dd286759968bcef4`) corrected five historical Chinese protocol/reproduction companions and the checklist. It clarified independent correctness-oracle semantics, resident identity, wire-format terminology, requested-memory accounting, holdout validation and lifecycle semantics. Its six changed files were:
   - `benchmarks/research/full-v4.2.0-preview.1.2.1/PROTOCOL.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.1.2.1/REPRODUCTION.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.1.2/PROTOCOL.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.1.2/REPRODUCTION.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.2/PROTOCOL.zh-CN.md`
   - `docs/design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md`
-  The corrections clarify independent correctness-oracle semantics, resident identity, wire-format terminology, requested-memory accounting, holdout validation and lifecycle semantics. English historical originals were not modified. Codex reported `git diff --check` passed before commit; treat that as the implementer's report until locally reproduced where appropriate.
-- Exact-head CI for Full `cae59fea09a9321be4325a58edde1b21b4a3e5ce`:
-  - Push C17 [45621676783](https://github.com/RXY712200/LayerKeySort/actions/runs/45621676783): success.
-  - PR C17 [45621691877](https://github.com/RXY712200/LayerKeySort/actions/runs/45621691877): success.
-  - Mini [45621691818](https://github.com/RXY712200/LayerKeySort/actions/runs/45621691818): success.
-  - Workbench Measurement Evidence [45621691915](https://github.com/RXY712200/LayerKeySort/actions/runs/45621691915): success.
-  - Layer Order Workbench CI [45621692455](https://github.com/RXY712200/LayerKeySort/actions/runs/45621692455): failure because the required AppleClang job was cancelled/abandoned. GCC, Clang-ASan-UBSan, GCC-Published-Mini-ZIP, Clang and MSVC jobs succeeded. The fail-closed gate reports `required workbench did not succeed: abandoned`. The AppleClang job was cancelled before producing steps/logs; no compiler failure is evidenced. The cancellation cause is not established. Retry the cancelled AppleClang job (and any dependent gate that must be rerun) on this exact SHA, inspect the actual outcome, and do not label this as a source defect or as final CI success.
-- Exact-head CI for Repo `7114cc06bb02a14cd402c77e0bafd17ccef553f3` was rechecked: C17 push [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419), C17 PR [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140), Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871), Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968), Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818), and the actual main-target Trusted Scope Guard [45587380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487) all succeeded. Scope Guard Policy Tests [45587384473](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384473) and review-only Governance baseline backup [45587383944](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383944) also succeeded; neither substitutes for the trusted gate.
-- The bilingual checklist contains 89 inventory rows and all 89 currently have an English/Chinese counterpart or inline bilingual edition. This is presence only, not acceptance. Explicitly pending entries include the remaining full semantic review of `docs/design/V4_ARCHITECTURE.md`, final RC validation context in `docs/VALIDATION.md`, the rest of the Repo README and Full entry-page prose and their final immutable pins, and the full-corpus semantic/link review. Do not mark rows accepted merely because files exist or earlier batches checked hashes/links.
+  Historical English originals were preserved.
+- The formerly cancelled Workbench run at Full `cae59fea`, run [45621692455](https://github.com/RXY712200/LayerKeySort/actions/runs/45621692455), was retried. Current GitHub state is run attempt 2 with overall **success**. Its AppleClang job and dependent `workbench-gate` both completed successfully; all six compiler/configuration jobs succeeded. The earlier cancellation is no longer an outstanding CI blocker.
+- All 29 check-runs at the current Full HEAD `3ff26b1f16f74eac7e3acc877db3bee7313ebba8` are completed and successful:
+  - Push C17 [45628342727](https://github.com/RXY712200/LayerKeySort/actions/runs/45628342727).
+  - PR C17 [45628357354](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357354).
+  - Mini [45628357121](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357121).
+  - Layer Order Workbench CI [45628357119](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357119).
+  - Workbench Measurement Evidence [45628357105](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357105).
+  The PR C17 run includes successful MSVC x64/Win32, AppleClang, Clang, GCC, examples, frozen API, distribution consumers and reproducible amalgamation; the extended sanitizer campaign succeeded on its applicable Clang configuration.
+- All required checks previously rechecked at Repo PR #34 HEAD `7114cc06bb02a14cd402c77e0bafd17ccef553f3` succeeded, including the actual main-target Trusted Scope Guard [45587380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487), C17 push/PR [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419) / [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140), Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871), Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968), and Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818). Recheck after any Repo-head change; a policy self-test is not a substitute for the trusted gate.
+- The bilingual checklist contains 89 inventory rows and all 89 currently have a counterpart or inline bilingual edition. This is presence only, not semantic acceptance. The remaining semantic review, complete guide/source/history reconciliation, final Repo entry-page/navigation pins and exact-final-head verification remain mandatory. Do not mark rows accepted merely because files exist or earlier batches checked hashes/links.
 
 Before changing anything, inspect both remotes, branches, local HEADs, status and complete diffs. Preserve all existing local changes. Safely save/reconcile them before any fast-forward; never force, reset, clean or overwrite. The remote state above does not establish local workspace cleanliness.
 
@@ -78,30 +80,32 @@ Deliver one consolidated English completion report only after the entire package
 
 ### 当前准确起点
 
-以下 GitHub 状态是在本次更新续接文件前独立核实的。Codex 开始执行时仍须重新查询实时 PR 和分支；下列 SHA 是最近核实的参考，不代表可以覆盖发生分歧的本地工作区。
+以下 GitHub 状态是在本次更新续接文件前重新独立核实的。Codex 开始执行时仍须重新查询实时 PR 和分支；下列 SHA 是已核实参考，不代表可以覆盖发生分歧的本地工作区。
 
-- Full PR #33：开放的 Draft；分支 `dev/full-v4.2.0-rc.1`；目标分支 `dev/full-v4.2.0-preview.3`，基线 `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0`；当前远端 HEAD 为 `cae59fea09a9321be4325a58edde1b21b4a3e5ce`。最新提交 `cae59fea` 的父提交是 `03f5ddb52fdf6b0f8c7be0d7dd286759968bcef4`，提交说明为 `docs(full): reconcile historical experiment protocol terminology`。该提交修改五份历史中文协议／复现译本及双语清单。PR 当前显示 80 个提交、123 个变更文件。
-- Repo PR #34：开放的 Draft；分支 `docs/full-v4.2.0-rc.1-navigation`；目标 `main`，基线 `c108acd72b37614f4be271c9747484c2dde5eac4`；当前远端 HEAD 为 `7114cc06bb02a14cd402c77e0bafd17ccef553f3`。PR 当前显示 8 个提交、12 个变更文件。
+- Full PR #33：开放 Draft；分支 `dev/full-v4.2.0-rc.1`；目标分支 `dev/full-v4.2.0-preview.3`，基线 `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0`；当前远端 HEAD 为 `3ff26b1f16f74eac7e3acc877db3bee7313ebba8`。这是续接文件更新提交（父提交 `cae59fea09a9321be4325a58edde1b21b4a3e5ce`）；PR 当前显示 81 个提交、123 个变更文件。
+- Repo PR #34：开放 Draft；分支 `docs/full-v4.2.0-rc.1-navigation`；目标 `main`，基线 `c108acd72b37614f4be271c9747484c2dde5eac4`；当前远端 HEAD 为 `7114cc06bb02a14cd402c77e0bafd17ccef553f3`。PR 当前显示 8 个提交、12 个变更文件。
 - 两个 PR 仍独立开放且未合并。公开 `main` 和已发布 Stable 仍为 v4.1.0。未授权合并、tag、Release 或发布。
-- Codex 上次报告称 Repo 现有工作区仍有四处未提交文档修改。这是实施者报告，GitHub 远端无法独立证明。必须检查 Full 和 Repo 的真实工作区、分支、remote、已暂存／未暂存／未跟踪 diff，并保留所有既有修改。不得 reset、clean、覆盖、重建工作区或静默丢弃内容。上次报告没有证明当前本地状态的全部细节。
-- Full 最新提交 `cae59fea` 精确修改以下六个文件：
+- Codex 最新报告：已将现有 Full 工作区快进到 `3ff26b1`，读取了 sustained-task-execution Skill，并保留四处既有 Repo 未提交文档修改。随后对照 Preview.2 reproduction 译本与英文原文，修订了 wire prototype、correctness oracle、holdout validation 的中文术语，并更新双语清单。这些 Full 修改据报告仍未提交。执行前必须检查 Full 和 Repo 的真实本地工作区、分支、remote、已暂存／未暂存／未跟踪 diff 及准确修改路径。保留所有修改；不得 reset、clean、覆盖、重建工作区或静默丢弃内容。
+- Full 前一提交 `cae59fea09a9321be4325a58edde1b21b4a3e5ce`（父提交 `03f5ddb52fdf6b0f8c7be0d7dd286759968bcef4`）修订了五份历史中文协议／复现译本及清单，涉及独立正确性参考模型、驻留记录身份、线格式术语、请求内存统计、留出验证和生命周期语义。其六个修改文件为：
   - `benchmarks/research/full-v4.2.0-preview.1.2.1/PROTOCOL.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.1.2.1/REPRODUCTION.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.1.2/PROTOCOL.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.1.2/REPRODUCTION.zh-CN.md`
   - `benchmarks/research/full-v4.2.0-preview.2/PROTOCOL.zh-CN.md`
   - `docs/design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md`
-  修正涉及独立正确性参考模型、驻留记录身份、线格式术语、请求内存统计口径、留出验证和生命周期语义。历史英文原件未修改。Codex 报告提交前 `git diff --check` 已通过；在适用时仍应独立复核，不能把报告等同于本轮独立执行证据。
-- Full 精确 HEAD `cae59fea09a9321be4325a58edde1b21b4a3e5ce` 的 CI：
-  - Push C17 [45621676783](https://github.com/RXY712200/LayerKeySort/actions/runs/45621676783)：成功。
-  - PR C17 [45621691877](https://github.com/RXY712200/LayerKeySort/actions/runs/45621691877)：成功。
-  - Mini [45621691818](https://github.com/RXY712200/LayerKeySort/actions/runs/45621691818)：成功。
-  - Workbench Measurement Evidence [45621691915](https://github.com/RXY712200/LayerKeySort/actions/runs/45621691915)：成功。
-  - Layer Order Workbench CI [45621692455](https://github.com/RXY712200/LayerKeySort/actions/runs/45621692455)：失败，因为必需的 AppleClang job 被取消／放弃。GCC、Clang-ASan-UBSan、GCC-Published-Mini-ZIP、Clang 和 MSVC job 均成功。fail-closed gate 的实际错误为 `required workbench did not succeed: abandoned`。AppleClang job 在产生步骤／日志之前被取消，没有证据表明是编译失败；取消原因尚未确定。应在该精确 SHA 上重试被取消的 AppleClang job，并按需要重跑依赖 gate 的 job，检查实际结果；不得把它误报成源码缺陷，也不得宣称最终 CI 已通过。
-- Repo 精确 HEAD `7114cc06bb02a14cd402c77e0bafd17ccef553f3` 的 CI 已重新核实：C17 push [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419)、C17 PR [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140)、Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871)、Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968)、Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818)，以及真正针对 main 的 Trusted Scope Guard [45587380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487) 均成功。Scope Guard Policy Tests [45587384473](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384473) 和仅供审查的 Governance baseline backup [45587383944](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383944) 也成功；两者均不能替代真实可信门禁。
-- 双语清单有 89 行，当前 89 项均已存在中英文对应版或内嵌双语版。这只证明版本存在，不代表语义验收。明确待办包括：`docs/design/V4_ARCHITECTURE.md` 的完整语义复核、`docs/VALIDATION.md` 的最终 RC 验证语境、Repo README 与 Full 入口页剩余正文及最终不可变固定链接，以及全体文档的语义／链接复核。不得因为文件存在或此前检查过哈希／链接，就将条目标记为已接受。
+  历史英文原件保持不变。
+- Full `cae59fea` 上此前被取消的 Workbench 工作流 [45621692455](https://github.com/RXY712200/LayerKeySort/actions/runs/45621692455) 已经重试。GitHub 当前记录为 run attempt 2，整体 **成功**；AppleClang job 和依赖它的 `workbench-gate` 均成功，六种编译器／配置 job 全部通过。此前取消不再是待解决的 CI 阻碍。
+- 当前 Full HEAD `3ff26b1f16f74eac7e3acc877db3bee7313ebba8` 的 29 项 check-run 全部完成并成功：
+  - Push C17 [45628342727](https://github.com/RXY712200/LayerKeySort/actions/runs/45628342727)。
+  - PR C17 [45628357354](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357354)。
+  - Mini [45628357121](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357121)。
+  - Layer Order Workbench CI [45628357119](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357119)。
+  - Workbench Measurement Evidence [45628357105](https://github.com/RXY712200/LayerKeySort/actions/runs/45628357105)。
+  PR C17 run 中的 MSVC x64/Win32、AppleClang、Clang、GCC、examples、冻结 API、distribution consumers 和 reproducible amalgamation 均成功；适用的 Clang extended sanitizer campaign 也成功。
+- Repo PR #34 HEAD `7114cc06bb02a14cd402c77e0bafd17ccef553f3` 上此前复核的必需门禁均成功，包括真正针对 main 的 Trusted Scope Guard [45587380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487)、C17 push/PR [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419) / [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140)、Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871)、Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968) 和 Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818)。Repo HEAD 发生变化后必须重新核验；policy self-test 不能代替真实 trusted gate。
+- 双语清单有 89 行，目前 89 项均已有对应译本或内嵌双语版本。这只证明文件存在，不代表语义验收。剩余语义审查、完整指南与源码／历史核对、Repo 入口页最终导航固定链接，以及最终精确 HEAD 验证仍是必需工作。不得仅凭文件存在或之前检查过哈希／链接就标记验收通过。
 
-开始编辑前检查两个 remote、分支、本地 HEAD、状态及完整 diff。保留所有本地修改；任何快进前都要安全保存并协调既有修改。绝不 force、reset、clean 或覆盖。以上远端状态不能证明本地工作区干净。
+开始修改前检查两个 remote、分支、本地 HEAD、状态和完整 diff。保留所有既有本地修改；任何快进前都应安全保存并协调既有修改。绝不 force、reset、clean 或覆盖。上述远端状态不能证明本地工作区干净。
 
 ### 必须先读的权威资料
 
