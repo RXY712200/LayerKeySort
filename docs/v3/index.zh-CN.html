@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="LayerKeySort V3 历史树模型，回放生产 C 实现记录的 Path 快照。">
+  <title>LayerKeySort V3：排序坐标历史演示</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="fixtures.js" defer></script>
+  <script src="app.zh-CN.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <p class="eyebrow">LayerKeySort · V3 历史架构</p>
+    <h1>对象有身份，Path 表示位置。</h1>
+    <p class="lede">探索两种 V3 树模型。托管回放采用精确 <code>v3.0.0-rc.1</code> 生产 C 实现记录的 Path 快照；该排序源码至 3.1.0 保持不变。</p>
+    <nav aria-label="项目链接"><a href="../">项目首页</a><a href="index.html" lang="en">English original</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.1.0/README.zh-CN.md">V3 说明</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.1.0/docs/INTEGRATION.md">V3 集成</a><a href="https://github.com/RXY712200/LayerKeySort/blob/v3.1.0/docs/API.md">V3 API</a><a href="https://github.com/RXY712200/LayerKeySort">GitHub</a><a href="https://github.com/RXY712200/LayerKeySort/releases">发布记录</a><a href="../demo/index.zh-CN.html">历史 V1 演示</a></nav>
+  </header>
+  <main>
+    <p class="source-note">历史中文对应页；<a href="README.zh-CN.md">来源说明</a>。英文原页及记录数据保持不变；本页不描述当前 Full V4。</p>
+    <section class="explorer" aria-labelledby="explorer-title">
+      <div class="section-heading"><div><p class="eyebrow">交互说明</p><h2 id="explorer-title">分别观察两种排序模型</h2></div><p class="source-note">本页回放已记录结果，不运行生产 C，也不模拟 AVL 索引。</p></div>
+      <div class="mode-tabs" role="group" aria-label="树模型"><button type="button" id="managed-mode" class="active" aria-pressed="true">比较器托管 · LksOrderedTree</button><button type="button" id="manual-mode" aria-pressed="false">手动坐标 · LksTree</button></div>
+      <div id="managed-intro" class="model-intro"><p>创建树时绑定比较器。新项按数值排序，相等值保留插入顺序。树分配 Path，拥挤间隙可能导致既有坐标重标记。</p><label for="scenario">记录序列 <select id="scenario"><option value="mixed">混合值与稳定等值顺序</option><option value="hotspot">重复内部热点与重标记</option></select></label></div>
+      <div id="manual-intro" class="model-intro" hidden><p>应用选择坐标，按精确 Path 插入、删除或重设坐标。下方图层序列来自公开 C 示例。ID 是应用身份，Path 是可变排序状态。</p></div>
+      <div class="controls" role="group" aria-label="回放控制"><button id="step" type="button" class="primary">单步</button><button id="play" type="button">播放</button><button id="pause" type="button" disabled>暂停</button><button id="reset" type="button">重置</button><label for="speed">速度 <select id="speed"><option value="1100">慢</option><option value="600" selected>正常</option><option value="250">快</option></select></label><span id="progress" class="progress">0 / 10</span></div>
+      <div class="event" aria-live="polite"><p class="eyebrow">当前操作</p><h3 id="event-title">准备插入</h3><p id="event-detail">选择单步或播放。</p><p id="relabel-detail" class="relabel-detail">既有 Path 变化数：0</p></div>
+      <div class="table-wrap"><table><caption id="table-caption">按比较器与 Path 排列的当前逻辑顺序</caption><thead><tr><th scope="col">位置</th><th scope="col">应用对象</th><th scope="col">比较值</th><th scope="col">当前 Path</th><th scope="col">变化</th></tr></thead><tbody id="rows"></tbody></table></div>
+      <p id="fixture-note" class="fixture-note">精确 Path 来自已记录快照。重置或切换序列将从头开始。</p>
+    </section>
+    <section class="concepts" aria-label="如何阅读回放">
+      <article><h2>逻辑坐标</h2><p>表格行按 Path 顺序排列，<code>lks_path_compare()</code> 定义该顺序。显示文本可读，但不是词典序排序键。Path 变化不改变应用 ID。</p></article>
+      <article><h2>物理索引</h2><p>两种树使用 Path 键 AVL。物理父子关系由实现定义，不代表 Path 前缀或逻辑父子。托管重标记保留现有物理节点，只替换 Path 坐标。</p></article>
+      <article><h2>持久化</h2><p>规范显示文本表示可读 Path。版本化 <code>LK1:</code> 键可保存一个当前坐标并按字节排序；两者均不保存对象载荷、永久 ID 或整棵树。</p></article>
+    </section>
+    <section class="limits"><h2>需要考虑的限制</h2><p>托管插入可能重标记整个逻辑范围，造成明显同步尾延迟。Path 深度和存储取决于负载。完整插入没有已证明的最坏 <code>O(log n)</code> 保证或正式摊销界。</p><p>调用方对象与比较器上下文必须存活。先删除相关项、修改比较字段、再重插；不能在仍驻留时修改排序键。</p></section>
+  </main>
+  <footer><p>本历史演示源码版本：<code>3.1.0</code>。<a href="README.zh-CN.md">记录数据来源</a> · <a href="../demo/index.zh-CN.html">历史 V1 展示</a>。</p></footer>
+</body>
+</html>

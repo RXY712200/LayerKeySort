@@ -73,7 +73,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical original preserved; SHA/local links checked / 历史原件保留，已核 SHA 及本地链接 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_1_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_1_TASK.zh-CN.md | S3 semantic review / 语义复核; English task stays authoritative / 英文任务为准 | complete companion present / 完整译本已建立 | English historical authority retained; pins/permissions/thresholds checked / 英文历史权威保留，已核版本、权限及门槛 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
-| full | `docs/design/V4_2_0_PREVIEW1_2_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
+| full | `docs/design/V4_2_0_PREVIEW1_2_TASK.md` | historical / 历史 | [Chinese companion](V4_2_0_PREVIEW1_2_TASK.zh-CN.md) | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original Git blob preserved; full SHA sets checked / 原件 Git 对象保留，已核全部 SHA |
 | full | `docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/design/V4_2_0_PREVIEW1_COMPLETION.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_COMPLETION.zh-CN.md | S3 semantic review / 语义复核; English task stays authoritative / 英文任务为准 | complete companion present / 完整译本已建立 | English historical authority retained; pins/permissions/thresholds checked / 英文历史权威保留，已核版本、权限及门槛 |
 | full | `docs/design/V4_2_0_PREVIEW1_CONTINUATION.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_CONTINUATION.zh-CN.md | S3 semantic review / 语义复核; English task stays authoritative / 英文任务为准 | complete companion present / 完整译本已建立 | English historical authority retained; pins/permissions/thresholds checked / 英文历史权威保留，已核版本、权限及门槛 |
@@ -95,7 +95,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/history/DESIGN_HISTORY.md` | historical / 历史 | docs/history/DESIGN_HISTORY.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | repo | `docs/index.html` | current / 现行 | `docs/index.html#zh-cn` at Repo `5a44bb8498d218c76330e71ec65b38e4f80ebfe2` | S3 semantic and final links / 语义及最终链接 | inline bilingual / 内嵌双语 | browser headings, IDs and language fragments checked / 已用浏览器核对标题、ID 及语言锚点 |
 | full | `docs/v3/README.md` | historical / 历史 | docs/v3/README.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original and full SHA sets preserved; code blocks/local paths checked / 原件及全 SHA 保留，已核代码块与本地路径 |
-| full | `docs/v3/index.html` | historical / 历史 | bilingual inline or owned companion | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/v3/index.html` | historical / 历史 | [Chinese interactive companion](../v3/index.zh-CN.html) | S3 final navigation / 最终导航 | complete companion present / 完整译本已建立 | original unchanged; Node controls and browser 35 managed + 5 manual states match; Chinese pages visually inspected / 原页不变，已核控制及浏览器35个托管和5个手动状态，中文页面已目视检查 |
 | full | `examples/README.md` | current / 现行 | examples/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 
 | full | `docs/design/V4_2_0_RC1_RESUME.md` | task record / 任务记录 | [inline Chinese edition](V4_2_0_RC1_RESUME.md#中文执行说明与英文对应英文指令为准) | S3 semantic review; English authoritative / 语义复核，以英文为准 | inline bilingual / 内嵌双语 | read at 540f905 / 已读 |
@@ -113,10 +113,9 @@ The trusted main ownership map classifies CHANGELOG.md exactly as Full but does 
 
 ## Continuation queue after guide reconstruction / 指南重建后的继续队列
 
-78/89 entries have counterparts or inline editions; 11 require a language edition. Presence is not semantic acceptance. Final semantic review and cross-PR references remain open.
-78/89 项已有对应版或内嵌双语，11 项仍缺语言版本。文件存在非语义接受，最终复核及跨 PR 引用仍开放。
+80/89 entries have counterparts or inline editions; 9 require a language edition. Presence is not semantic acceptance. Final semantic review and cross-PR references remain open.
+80/89 项已有对应版或内嵌双语，9 项仍缺语言版本。文件存在非语义接受，最终复核及跨 PR 引用仍开放。
 
-- `docs/design/V4_2_0_PREVIEW1_2_TASK.md`
 - `docs/design/V4_2_0_PREVIEW1_TASK.md`
 - `docs/design/V4_2_0_PREVIEW2_TASK.md`
 - `docs/design/V4_2_0_PREVIEW3_TASK.md`
@@ -126,4 +125,3 @@ The trusted main ownership map classifies CHANGELOG.md exactly as Full but does 
 - `docs/design/V4_DECISIONS.md`
 - `docs/history/BENCHMARK_HISTORY.md`
 - `docs/history/DESIGN_HISTORY.md`
-- `docs/v3/index.html`

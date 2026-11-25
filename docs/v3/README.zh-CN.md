@@ -1,6 +1,6 @@
 # V3 可视化fixture来源（历史译本）
 
-原文：[README.md](README.md)，英文，固定于 [`c51e987aa1fda0b16bd61bae3f34ca1b6d091929`](https://github.com/RXY712200/LayerKeySort/blob/c51e987aa1fda0b16bd61bae3f34ca1b6d091929/docs/v3/README.md)。保留原始说明和fixture；[双语清单](../design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md)提供成对导航。本译本不意味着交互HTML已完成中文化。
+原文：[README.md](README.md)，英文，固定于 [`c51e987aa1fda0b16bd61bae3f34ca1b6d091929`](https://github.com/RXY712200/LayerKeySort/blob/c51e987aa1fda0b16bd61bae3f34ca1b6d091929/docs/v3/README.md)。保留原始说明和fixture；[双语清单](../design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md)提供成对导航。[中文交互页](index.zh-CN.html)提供完整对应界面，使用同一原始 fixtures.js；[英文交互原页](index.html)保持不变。
 
 默认Pages目标为[index.html](index.html)。浏览器不运行C或实现Path分配；fixtures.js含两条确定性LksOrderedTree插入序列的完整Path快照：混合值20, 10, 20, 30, 15, 20, 11, 12, 13, 14；内部热点0, 100之后插入23个50。
 
