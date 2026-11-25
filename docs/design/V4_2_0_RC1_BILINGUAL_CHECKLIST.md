@@ -52,10 +52,10 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | repo | `docs/PRODUCT_LINES.md` | current / 现行 | docs/PRODUCT_LINES.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/USAGE.md` | current / 现行 | docs/USAGE.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `docs/V3_MIGRATION.md` | historical / 历史 | [docs/V3_MIGRATION.zh-CN.md](../V3_MIGRATION.zh-CN.md) | S3 semantic and index navigation / 语义和索引导航 | pair present / 已有双语 | pending / 待核 |
-| full | `docs/V4_1_0.md` | historical / 历史 | docs/V4_1_0.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_1_0.md` | historical / 历史 | docs/V4_1_0.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/V4_2_0_PREVIEW1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW1_2.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
-| full | `docs/V4_2_0_PREVIEW1_2_1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2_1.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/V4_2_0_PREVIEW1_2_1.md` | historical / 历史 | docs/V4_2_0_PREVIEW1_2_1.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/V4_2_0_PREVIEW2.md` | historical / 历史 | docs/V4_2_0_PREVIEW2.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_PREVIEW3.md` | historical / 历史 | docs/V4_2_0_PREVIEW3.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
 | full | `docs/V4_2_0_RC1.md` | current / 现行 | [docs/V4_2_0_RC1.zh-CN.md](../V4_2_0_RC1.zh-CN.md) | S3 semantic and links / 语义及链接 | pair present / 已有双语 | commands and hashes checked / 已核命令与哈希 |
@@ -72,9 +72,9 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | full | `docs/design/V4_2_0_LIVE_CORE_RESEARCH_HISTORY.md` | historical / 历史 | [Chinese companion](V4_2_0_LIVE_CORE_RESEARCH_HISTORY.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | original, full SHAs, link destinations and three numerical table bodies checked / 已核原文、全 SHA、链接及三张数据表 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | historical original preserved; SHA/local links checked / 历史原件保留，已核 SHA 及本地链接 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_1_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_1_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
-| full | `docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/design/V4_2_0_PREVIEW1_2_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_2_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
-| full | `docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.zh-CN.md | S2 full counterpart / 完整译本 | open / 待完成 | pending / 待核 |
+| full | `docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.zh-CN.md | S3 semantic review / 语义复核 | complete companion present / 完整译本已建立 | original preserved; exact SHA/link checks and adverse outcomes retained / 原件保留，已核 SHA 及链接，负面结论保留 |
 | full | `docs/design/V4_2_0_PREVIEW1_COMPLETION.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_COMPLETION.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_PREVIEW1_CONTINUATION.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_CONTINUATION.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
 | full | `docs/design/V4_2_0_PREVIEW1_TASK.md` | historical / 历史 | docs/design/V4_2_0_PREVIEW1_TASK.zh-CN.md | S2 full counterpart / 完整译本; English task stays authoritative / 英文任务为准 | open / 待完成 | pending / 待核 |
