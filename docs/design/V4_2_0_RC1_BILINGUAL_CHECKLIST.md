@@ -10,7 +10,7 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 | Owner / 归属 | Original / 原文 | Kind / 类型 | Other edition / 对应版本 | Required action / 待办 | Completion / 状态 | Verification / 验证 |
 | --- | --- | --- | --- | --- | --- | --- |
 | repo | `.github/pull_request_template.md` | current / 现行 | inline / 内嵌双语 | S3 semantic and link review / 语义与链接复核 | pair present / 已有双语 | English scopes and five checkboxes retained / 已核对五个归属选项 |
-| full | `CHANGELOG.md` | current + historical / 现行及历史 | [CHANGELOG.zh-CN.md](../../CHANGELOG.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | release headings, dates and bullet counts checked / 已核版本、日期和条目数 |
+| full | `CHANGELOG.md` | current + historical / 现行及历史 | [docs/CHANGELOG.zh-CN.md](../CHANGELOG.zh-CN.md) | S3 semantic review / 语义复核 | pair present / 已有双语 | release headings, dates and bullet counts checked / 已核版本、日期和条目数 |
 | repo | `CONTRIBUTING.md` | current / 现行 | CONTRIBUTING.md#参与-layerkeysort-开发 | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | repo | `README.md` | current / 现行 | README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
 | full | `benchmarks/README.md` | current / 现行 | benchmarks/README.zh-CN.md | S3 semantic and links / 语义及链接 | pair present / 已有双语 | pending / 待核 |
@@ -104,3 +104,8 @@ Action codes / 操作代码: S1 ordinary / 普通文档; S2 implementation or ar
 
 Mini and Workbench product-owned documents are outside the two review units. Build definitions, raw results, manifests, fixture bytes, logs, generated binary receipts, and authoritative license texts are preserved. Embedded human-readable distribution instructions still need review.
 Mini 与 Workbench 产品自有文档不在这两份 PR 内。构建定义、原始结果、清单、固定向量、日志、二进制凭据及正式许可文本保留。嵌入的分发说明仍须审查。
+
+## Ownership correction / 归属修正
+
+The trusted main ownership map classifies CHANGELOG.md exactly as Full but does not classify a new root CHANGELOG.zh-CN.md. The translation now lives at docs/CHANGELOG.zh-CN.md under the existing Full prefix. Both navigation links and its internal relative links were corrected; no ownership policy, exception or historical original was changed.
+可信 main 映射仅将根 CHANGELOG.md 精确归 Full，不覆盖新根 CHANGELOG.zh-CN.md。因此译本改放既有 Full 前缀下 docs/CHANGELOG.zh-CN.md，修正双向及内部链接，不修改归属规则、例外或历史原件。

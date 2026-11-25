@@ -1,6 +1,6 @@
 # Changelog
 
-[简体中文](CHANGELOG.zh-CN.md)
+[简体中文](docs/CHANGELOG.zh-CN.md)
 
 ## [4.2.0-rc.1] - Unreleased candidate
 

@@ -1,6 +1,6 @@
 # 变更日志
 
-[英文原文](CHANGELOG.md)。除明确标为未发布的条目外，以下版本状态及后续计划均按原记录日期理解。当前已发布 Full Stable 为 v4.1.0。
+[英文原文](../CHANGELOG.md)。除明确标为未发布的条目外，以下版本状态及后续计划均按原记录日期理解。当前已发布 Full Stable 为 v4.1.0。
 
 ## [4.2.0-rc.1] - 未发布候选
 
@@ -34,7 +34,7 @@
 - **工具：** 修正分发验证器对 Windows 隐式单配置 Debug 的处理。保留可复现合并版及外部 C17/C++ 消费验证。
 - **证据：** [独立最终审核与原始数据](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)。确切受审核提交通过 Full 回归和跨平台 CI；原 4.0.0 资产及历史研究不变。
 
-参见 [v4.1.0 兼容说明](docs/V4_1_0.md)和[正式发布](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。
+参见 [v4.1.0 兼容说明](V4_1_0.zh-CN.md)和[正式发布](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。
 
 ## [4.0.0] - 2026-10-07
 
@@ -46,7 +46,7 @@
 - 冻结 64 函数、14 类型与精确状态和线格式值。
 - 保留强失败原子性和无分配契约；验证 x86/x64、GCC/MSVC/Clang/AppleClang、sanitizer、C17/C++17 集成。
 - 确定性双文件源码分发，ZIP 含五个成员及校验和。
-- RC.1 后只做发布提升，算法、向量、测试及块策略未变。[Stable 记录](docs/V4_STABLE.md)。
+- RC.1 后只做发布提升，算法、向量、测试及块策略未变。[Stable 记录](V4_STABLE.zh-CN.md)。
 
 仍有每记录分配、块空余及局部写入、比较与回调、O(N+A) 全快照/导出、历史内存、Group 暂存和调用方生命周期及序列化成本。无通用延迟、二进制 ABI 或全库形式界。未另测性能或调优。
 
