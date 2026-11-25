@@ -112,7 +112,7 @@ Insertion checks arguments, callback state and capacities, then allocates its ha
 
 ### 3.1 Construction/destruction
 
-Create allocates/zeros an Order without blocks or handles. Destroy follows first→next, frees each block's handles and then the block, releases provenance and the Order. Items remain application-owned. Cursors must no longer use the Order; callers prevent conflicting destruction/mutation and illegal callback access.
+`lks_order_create` allocates/zeros an Order without blocks or handles. `lks_order_destroy` follows first→next, frees each block's handles and then the block, releases provenance and the Order. Items remain application-owned. Cursors must no longer use the Order; callers prevent conflicting destruction/mutation and illegal callback access.
 
 ### 3.2 Insert: prepare, then non-failing commit
 
@@ -134,6 +134,8 @@ v4_link_after connects a block after a neighbor in the linked and implicit AVL o
 
 ### 3.4 Remove an occurrence, not its item
 
+Entry point: `lks_order_remove`.
+
 1. Validate live same-owner handle, reentry and revision capacity.
 2. Shift the array left, decrement block and Order counts.
 3. Detach an emptied sole block.
@@ -153,7 +155,7 @@ This removes V3's live-Path global relabel burden, while retaining local array m
 
 ### 3.6 Reads, Cursor and revision
 
-First/last/next/previous/item/size provide borrowed reads under caller-controlled access. Cursor creation captures revision/next handle. Next validates arguments and source busy state, then checks revision **before touching cached handles**. Actual mutation returns INVALIDATED without dereferencing a potentially freed cached handle. No-op moves, failures and queries do not increment revision. Destroy the Cursor before its source.
+First/last/next/previous/item/size provide borrowed reads under caller-controlled access. `lks_order_cursor_create` captures revision/next handle. `lks_order_cursor_next` validates arguments and source busy state, then checks revision **before touching cached handles**. Actual mutation returns INVALIDATED without dereferencing a potentially freed cached handle. No-op moves, failures and queries do not increment revision. Destroy the Cursor before its source.
 
 Surviving handle identity does not freeze adjacency or comparison results. Ordinary iteration does not check revision. Save next before removing current and keep that saved occurrence alive, or use Cursor for change detection. See the [compilable API example](IMPLEMENTATION_API_REFERENCE.md#d1-handle-identity-does-not-freeze-adjacency).
 
@@ -163,9 +165,9 @@ Managed insertion locates the comparator boundary, then uses shared live inserti
 
 [managed_order.c](../src/managed_order.c) implements `{ core, comparator, active }`: a private Order, copied descriptor, borrowed context. It creates no second tree, business-key registry or handle type and exposes no mutable core.
 
-Insertion sets active, searches AVL for the first block whose maximum is strictly greater, binary-searches that block's upper bound, then inserts before the found handle or at the back and clears active. New equal items follow old equals.
+`lks_managed_order_insert` sets active, searches AVL for the first block whose maximum is strictly greater, binary-searches that block's upper bound, then calls `lks_order_insert_before` before the found handle or at the back and clears active. New equal items follow old equals.
 
-Locate searches first ≥query and first >query to derive strictly lower predecessor, first equal and first strictly greater. All three output addresses must differ. Comparator equality is not occurrence identity.
+`lks_managed_order_locate` searches first ≥query and first >query to derive strictly lower predecessor, first equal and first strictly greater. All three output addresses must differ. Comparator equality is not occurrence identity.
 
 During comparison, core callback_active and facade active reject same-source reentry. Independent containers are unaffected. This is not a thread lock.
 
@@ -177,11 +179,11 @@ Remove→modify→insert is not transactional. Removal expires every copy of the
 
 Captures from the same source/revision may contain different association bytes if the application changes payloads. Every capture independently copies namespace/bytes. Currentness checks marker/revision, not payload equality.
 
-See [snapshot.c](../src/snapshot.c), [lks_snapshot_internal.h](../src/lks_snapshot_internal.h). Snapshot stores no live handles, AVL/block layout or old item pointers. It holds namespace byte copy (1..UINT32_MAX), occurrence count, cumulative row end offsets (equal adjacent ends mean empty association), concatenated copied association bytes, and marker/revision only for live-source currentness, not business identity.
+See [snapshot.c](../src/snapshot.c), [lks_snapshot_internal.h](../src/lks_snapshot_internal.h). Snapshot stores no live handles, AVL/block layout or old item pointers. It holds `namespace_data`, the namespace byte copy (1..UINT32_MAX), occurrence count, cumulative row end offsets (equal adjacent ends mean empty association), concatenated copied association bytes, and marker/revision only for live-source currentness, not business identity.
 
 ### 5.1 Capture call chain
 
-Order/Managed/Group capture enters common lks_snapshot_capture_sequence:
+`lks_order_snapshot_capture`, `lks_managed_order_snapshot_capture` and `lks_group_snapshot_capture` enter common `lks_snapshot_capture_sequence`:
 
 1. Validate options/reentry and copy the descriptor, preventing callback mutation of the original options from changing the operation.
 2. lks_snapshot_new makes one allocation for header, row array and namespace, then copies namespace.
@@ -196,7 +198,7 @@ Returned spans must remain valid after callback return through immediate copying
 
 ### 5.2 Historical survival
 
-SourceMarker atomics protect marker lifetime. Snapshot namespace/associations/keys survive source Order/Group destruction. Currentness requires same live marker/revision; deserialized history has no original live provenance. These atomics do not provide general concurrent source mutation/capture safety.
+`LksSourceMarker` atomics protect marker lifetime. Snapshot namespace/associations/keys survive source Order/Group destruction. `snapshot_is_current` requires same live marker/revision; deserialized history has no original live provenance. These atomics do not provide general concurrent source mutation/capture safety.
 
 ### 5.3 LS1 historical keys
 
@@ -207,7 +209,7 @@ LS1.<namespace lower-case hex>.<16-digit lowercase hexadecimal ordinal>
 Example: LS1.64656d6f.0000000000000002
 ~~~
 
-Length is `21 + 2 * namespace_size`, excluding NUL. Format encodes namespace bytes and Snapshot row as 16 lowercase hex digits. Validation rejects malformed syntax; compare requires same namespace or returns DOMAIN_MISMATCH, then compares ordinal. Different snapshots sharing namespace can assign the same key to different items, so applications separately identify snapshot/version.
+Length is `21 + 2 * namespace_size`, excluding NUL. Format encodes namespace bytes and Snapshot row as 16 lowercase hex digits. Validation rejects malformed syntax; `lks_snapshot_key_compare` requires same namespace or returns DOMAIN_MISMATCH, then compares ordinal. Different snapshots sharing namespace can assign the same key to different items, so applications separately identify snapshot/version.
 
 Canonical same-namespace bytewise ASCII lexical order matches ordinal. Databases require byte-order-preserving collation, not linguistic/case-insensitive assumptions. Cross-domain string sorting does not define business order. LS1 is historical position, not cross-version identity, and differs from V3 LK1 Path encoding.
 
@@ -230,7 +232,7 @@ Repeat N times; no trailing bytes
 
 Total is `24 + D + 8*N + sum(Ai)`. Preview.2 snap_be_write/read specialize fixed widths while retaining explicit big-endian byte access; this is not native-struct fwrite and has no native struct alignment premise.
 
-Serialize checks destination size, returns BUFFER_TOO_SMALL without writing on shortage, otherwise writes without heap allocation. Deserialize scans/validates magic, flags, domain/count, row lengths, arithmetic and exact tail, then allocates/copies independent history. Disk transactions and checksum protection against silent corruption belong to an upper persistence protocol; versioning alone is not database reliability.
+`lks_snapshot_serialize` checks destination size, returns BUFFER_TOO_SMALL without writing on shortage, otherwise writes without heap allocation. `lks_snapshot_deserialize` scans/validates magic, flags, domain/count, row lengths, arithmetic and exact tail, then allocates/copies independent history. Disk transactions and checksum protection against silent corruption belong to an upper persistence protocol; versioning alone is not database reliability.
 
 ### 6.2 Restoring editable Order
 
@@ -249,18 +251,18 @@ Restoration costs include a handle allocation per occurrence and N-pointer scrat
 See [immutable_group.c](../src/immutable_group.c), [sort.c](../src/sort.c), [private structures](../src/lks_immutable_group_internal.h).
 
 - Sort copies input pointers, recursively stable-merge-sorts the copy, and commits by memcpy after allocation/comparison completes. OOM leaves original input intact.
-- Group build stable-sorts copied pointers into its own array; never owns item contents.
-- Group merge requires compatible sorted sources; base/left wins equality, preserving source precedence.
-- Batch build partitions by group_size, builds each Group independently and owns those Groups.
-- Batch merge_all allocates scratch only for more than one chunk, doubles widths from group_size and returns a separately owned Group array. Empty/single chunk skips this scratch. Earlier source wins equality at every merge.
-- Group capture uses the same Snapshot/LS1/wire pipeline. Logical revision is zero; marker tracks source Group currentness.
+- `lks_group_build` stable-sorts copied pointers into its own array; never owns item contents.
+- `lks_group_merge` requires compatible sorted sources; base/left wins equality, preserving source precedence.
+- `lks_group_batch_build` partitions by group_size, builds each Group independently and owns those Groups.
+- `lks_group_batch_merge_all` allocates scratch only for more than one chunk, doubles widths from group_size and returns a separately owned Group array. Empty/single chunk skips this scratch. Earlier source wins equality at every merge.
+- `lks_group_snapshot_capture` uses the same Snapshot/LS1/wire pipeline. Logical revision is zero; marker tracks source Group currentness.
 - Busy guards reject source reentry/destruction during comparator/association callbacks; they are not thread mutexes.
 
 These structures have no dynamic handles/live AVL; Group is not another Mutable Order.
 
 ## 8. Why private V3 Path/LK1 remains
 
-Current production import follows `lks_order_import_v3_lk1` → strict key parse → temporary Path → Path comparison/sort → duplicate rejection → bulk-build Path-free V4 Order. All temporary Paths are freed on success/failure.
+Current production import follows `lks_order_import_v3_lk1` → `lks_path_order_key_parse` → temporary `LksPath` → `lks_path_compare`/sort → duplicate rejection → bulk-build Path-free V4 Order. All temporary Paths are freed on success/failure.
 
 - [path.c](../src/path.c): directions, 16-bit slots, size_t levels, append/clone/destroy, shared capacity-based step allocation.
 - [slot_codec.c](../src/slot_codec.c): private radix-54, three-character display slots excluding ambiguous characters.
@@ -280,7 +282,7 @@ Production wrappers use standard malloc/realloc/free without global diagnostic s
 
 ### 9.2 Errors
 
-INVALID_ARGUMENT covers NULL/invalid/foreign handles; OUT_OF_MEMORY fallible allocations; BUFFER_TOO_SMALL formatting/serialization; CAPACITY_LIMIT protected counts/revisions; INVALIDATED changed-source Cursor; REENTRANT same-source callback access; DOMAIN_MISMATCH different LS1 namespaces; ALREADY_EXISTS duplicate imported coordinates. Pointer getters may return NULL for invalid/busy input; this cannot make freed-handle access safe.
+`LKS_STATUS_INVALID_ARGUMENT` covers NULL/invalid/foreign handles; `LKS_STATUS_OUT_OF_MEMORY` fallible allocations; `LKS_STATUS_BUFFER_TOO_SMALL` formatting/serialization; `LKS_STATUS_CAPACITY_LIMIT` protected counts/revisions; `LKS_STATUS_INVALIDATED` changed-source Cursor; `LKS_STATUS_REENTRANT` same-source callback access; `LKS_STATUS_DOMAIN_MISMATCH` different LS1 namespaces; `LKS_STATUS_ALREADY_EXISTS` duplicate imported coordinates. Pointer getters may return NULL for invalid/busy input; this cannot make freed-handle access safe.
 
 ### 9.3 Synchronization
 

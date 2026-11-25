@@ -29,7 +29,7 @@ Validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` contains both Preview
 
 ## 2. Three layers of live order
 
-A heap-allocated `LksOrderHandle` has `block`, `local`, and borrowed `item`. Separate occurrences can refer to the same item, and a live Handle retains its address. A Block has `owner`, AVL child/parent pointers, `previous/next`, `subtree_blocks`, `height`, `count`, a private uint64_t tag (zero selects fallback), and `records[CAPACITY+1]`. The spare array slot is temporary; committed capacity is 64. With multiple blocks, each has at least 32 entries. A sole block may be smaller. Order owns root, first/last, count/blocks, revision, callback_active and source_marker.
+A heap-allocated `LksOrderHandle` has `block`, `local`, and borrowed `item`. Separate occurrences can refer to the same item, and a live Handle retains its address. A `LksOrderBlock` has `owner`, AVL child/parent pointers, `previous/next`, `subtree_blocks`, `height`, `count`, a private uint64_t tag (zero selects fallback), and `records[CAPACITY+1]`. The spare array slot is temporary; committed capacity is 64. With multiple blocks, each has at least 32 entries. A sole block may be smaller. Order owns root, first/last, count/blocks, revision, callback_active and source_marker.
 
 ~~~text
 Item A (caller owned) ← HA { block=Block1, local=0, item=&A }
@@ -61,7 +61,7 @@ Within one block compare local indices, allowing zero. With both tags nonzero us
 | `v4_height`, `v4_subtree` | Zero for NULL, otherwise stored height or block count. |
 | `v4_refresh` | Recompute height and subtree block count; instrument the work in diagnostics. |
 | `v4_replace` | Update the old node's parent link or root; install replacement's parent. |
-| `v4_rotate_left/right` | Pivot across the right/left child, preserve in-order sequence and refresh both roots. |
+| `v4_rotate_left`, `v4_rotate_right` | Pivot across the right/left child, preserve in-order sequence and refresh both roots. |
 | `v4_balance` | Walk parents, refresh and choose single or double rotations. |
 | `v4_minimum` | Follow left links to minimum block. |
 | `v4_new_block` | Allocate, zero, set owner and initialize height and subtree count to one. |
@@ -80,7 +80,7 @@ Front/back/before/after call `v4_insert`; relative entry first verifies the live
 
 ## 5. Removal and underfull repair
 
-Use the live Handle's block/local to remove the exact pointer, shift left and decrease both counts. A sole empty block is detached and freed. With several blocks, an underfull block and a neighbor are combined through a stack pointer buffer: merge left and detach right if total fits in 64, otherwise redistribute evenly. Without underfill, clear the vacated tail and update shifted locals. Increment revision, free only the removed Handle, and optionally return its item pointer. Removal allocates nothing. A removed Handle cannot be passed back for a liveness test.
+`lks_order_remove` uses the live Handle's block/local to remove the exact pointer, shift left and decrease both counts. A sole empty block is detached and freed. With several blocks, an underfull block and a neighbor are combined through a stack pointer buffer: merge left and detach right if total fits in 64, otherwise redistribute evenly. Without underfill, clear the vacated tail and update shifted locals. Increment revision, free only the removed Handle, and optionally return its item pointer. Removal allocates nothing. A removed Handle cannot be passed back for a liveness test.
 
 ## 6. Movement
 
@@ -94,7 +94,7 @@ All occurrences of a changed comparator-visible item in affected ManagedOrders m
 
 ## 8. Cursor revision and snapshot provenance
 
-A cursor records owner, next Handle, revision and direction. Next checks revision before touching a cached Handle and returns INVALIDATED on mutation. The cursor is transient and must be destroyed before its source. Snapshot currentness requires both matching SourceMarker identity and revision. A deserialized snapshot has no live provenance. Atomic marker lifetime does not synchronize arbitrary Order or Group mutation.
+`LksOrderCursor` records owner, next Handle, revision and direction. Next checks revision before touching a cached Handle and returns INVALIDATED on mutation. The cursor is transient and must be destroyed before its source. Snapshot currentness requires both matching SourceMarker identity and revision. A deserialized snapshot has no live provenance. Atomic marker lifetime does not synchronize arbitrary Order or Group mutation.
 
 ## 9. Snapshot allocation and capture
 
@@ -108,7 +108,7 @@ A cursor records owner, next Handle, revision and direction. Next checks revisio
 
 ### 10.1 LS1 historical row ordinal
 
-`snap_nibble` recognizes digits and lowercase a..f. `snap_key_parse` checks prefix `LS1.`, nonempty even-length namespace hex, dot separator, exactly 16 ordinal hex digits and no trailing characters. Key length is `21+2*namespace_size` without NUL. Formatting writes namespace hex and fixed-width ordinal. Comparison validates each operand first, returns DOMAIN_MISMATCH for different namespace bytes, and compares ordinals in the same domain. ASCII bytewise collation preserves same-domain order. Locale or case-folding collation is outside that guarantee, and lexically ordering different namespaces does not give business precedence. LS1 represents a historical ordinal, distinct from durable record identity and V3 LK1 coordinate order.
+`snap_nibble` recognizes digits and lowercase a..f. `snap_key_parse` checks prefix `LS1.`, nonempty even-length namespace hex, dot separator, exactly 16 ordinal hex digits and no trailing characters. Key length is `21+2*namespace_size` without NUL. `key_length` supplies the size; `key_format` writes namespace hex and fixed-width ordinal. `lks_snapshot_key_compare` (the `key_compare` entry) validates each operand first, returns DOMAIN_MISMATCH for different namespace bytes, and compares ordinals in the same domain. ASCII bytewise collation preserves same-domain order. Locale or case-folding collation is outside that guarantee, and lexically ordering different namespaces does not give business precedence. LS1 represents a historical ordinal, distinct from durable record identity and V3 LK1 coordinate order.
 
 ### 10.2 Wire encoding
 
@@ -128,7 +128,7 @@ Serialization checks capacity before encoding into caller memory. Deserializatio
 
 ## 11. Resolve-first restore and bulk build
 
-For nonempty snapshots, allocate N temporary item pointers and call Resolver in order. Stop at the first error or OK with NULL, and do not call subsequent rows. Only after all rows resolve does construction begin in an unpublished Order. Empty restore permits a NULL Resolver, calls no Resolver and still allocates a new Order, so it can fail with OOM. On failure release Full temporaries and output NULL. Caller-owned items and callback effects are not undone. Release temporary pointers after `lks_order_bulk_build`.
+`lks_snapshot_restore_order`: for nonempty snapshots, allocate N temporary item pointers and call Resolver in order. Stop at the first error or OK with NULL, and do not call subsequent rows. Only after all rows resolve does construction begin in an unpublished Order. Empty restore permits a NULL Resolver, calls no Resolver and still allocates a new Order, so it can fail with OOM. On failure release Full temporaries and output NULL. Caller-owned items and callback effects are not undone. Release temporary pointers after `lks_order_bulk_build`.
 
 Bulk build derives block count and evenly distributes residents. It allocates each block and a fresh Handle for every occurrence, building the linked list left to right. `snap_bulk_index` recursively builds the left half, consumes the midpoint from the list, then builds the right half, filling parent links, heights and subtree counts. Zero-based block i gets `(i + 1) * (UINT64_MAX / (blocks + 1))` in uint64_t. Publication follows complete construction; partial state is cleaned up. Neither old topology nor Handle addresses are restored. The N-pointer scratch is an independent peak cost. Mixed-tag regression checks order and fallback after restoration using a deliberately constructed valid mixed state.
 
@@ -136,23 +136,23 @@ Bulk build derives block count and evenly distributes residents. It allocates ea
 
 `lks_stable_sort_copy` allocates sorted and scratch arrays, copies input, and invokes recursive `stable_sort_range`. It returns only the sorted allocation. `lks_sort` writes back only after success. Stable two-way `lks_merge_sorted_pointers` chooses left on comparison <=0. The recursion divides ranges, merges into scratch and copies back.
 
-`LksGroup { items,count,marker,busy }` owns the sorted pointer array and borrows items. `ig_new` allocates the header. Build uses stable_sort_copy; merge allocates a new group and target array and performs one merge, preserving old groups. Self-merge treats inputs as two borrowed sequences.
+`LksGroup { items,count,marker,busy }` owns the sorted pointer array and borrows items. `ig_new` allocates the header. `group_build` uses stable_sort_copy; `group_merge` allocates a new group and target array and performs one merge, preserving old groups. Self-merge treats inputs as two borrowed sequences.
 
-`LksGroupBatch { groups,count,group_count,group_size,busy }` owns chunks. Build calls group_build for each and releases completed chunks on failure. `batch_group_at` returns a borrowed Group that cannot be separately destroyed. Merge-all copies chunks to a new array and allocates additional scratch only with group_count >1. It starts at group_size, doubles widths, alternates buffers and takes earlier-chunk equals first. The resulting Group is independent. Group immutability covers structure and pointer order; changing comparator-visible caller data can make the sequence unsuitable for ordered operations.
+`LksGroupBatch { groups,count,group_count,group_size,busy }` owns chunks. `batch_build` calls group_build for each and releases completed chunks on failure. `batch_group_at` returns a borrowed Group that cannot be separately destroyed. `batch_merge_all` copies chunks to a new array and allocates additional scratch only with group_count >1. It starts at group_size, doubles widths, alternates buffers and takes earlier-chunk equals first. The resulting Group is independent. Group immutability covers structure and pointer order; changing comparator-visible caller data can make the sequence unsuitable for ordered operations.
 
 ## 13. Private legacy V3 codecs
 
-- `path.c` stores direction, depth, capacity and compact steps. `path_storage_layout` guards offsets and alignment for uint16_t slots and size_t levels. Reserve typically doubles capacity and may memmove levels to the new aligned offset. Slots/levels are views; create, clone, append and destroy manage lifetimes.
+- `path.c` stores direction, depth, capacity and compact steps. `path_storage_layout` guards offsets and alignment for uint16_t slots and size_t levels. `lks_path_reserve_one` typically doubles capacity and may memmove levels to the new aligned offset. Slots/levels are views; create, clone, append and destroy manage lifetimes.
 - `slot_codec.c` uses 54 specific characters and three positions to encode a uint16 slot. Decode checks each digit and range <=65535. This belongs to display syntax.
-- `path_text.c` measures and formats direction, increasing levels expressed as differences or prefixes, slashes and three-character slots. Parsing is strict and separate from LK1.
-- `path_order_key.c` measures encoded levels with `byte_count`, checks size overflow, writes uppercase hexadecimal bytes, and formats canonical `LK1:` direction, level and slot fields ending in `!`. Parsing rejects noncanonical or unrepresentable values and rebuilds a Path.
-- `path_compare.c` orders NEGATIVE < ZERO < POSITIVE, checks consistency, and compares level, slot and prefix depth. Negative first-level slot order is reversed.
-- `lks_order_import_v3_lk1` parses temporary Paths, sorts with legacy comparison, rejects duplicates as ALREADY_EXISTS, extracts borrowed items, calls bulk build and destroys temporary Paths. New V4 Order retains no old Paths or coordinates.
+- `path_text.c` uses `measure_path_text` to measure and formats direction, increasing levels expressed as differences or prefixes, slashes and three-character slots. Parsing is strict and separate from LK1.
+- `path_order_key.c` measures encoded levels with `byte_count`, uses `measure` to check size overflow, uses `write_hex_byte` for uppercase hexadecimal bytes, and formats canonical `LK1:` direction, level and slot fields ending in `!`. Parsing rejects noncanonical or unrepresentable values and rebuilds a Path.
+- `path_compare.c` uses `direction_rank` for NEGATIVE < ZERO < POSITIVE and `path_is_consistent` for validation; `lks_path_compare` compares level, slot and prefix depth. Negative first-level slot order is reversed.
+- `lks_order_import_v3_lk1` uses `lks_path_order_key_parse` to parse temporary Paths, sorts with legacy comparison, rejects duplicates as ALREADY_EXISTS, extracts borrowed items, calls bulk build and destroys temporary Paths. New V4 Order retains no old Paths or coordinates.
 - `gap.c/tree.c/group.c/bulk.c` are separate historical target sources. They do not implement the current live core.
 
 ## 14. Allocation diagnostics and failure boundaries
 
-Production uses standard malloc/realloc/free. Diagnostics add an aligned size/tag header, track requested live and peak bytes, blocks, failures and category totals, and can fail the kth allocation. Global diagnostic accounting gives no additional thread guarantee.
+`lks_status_string` supplies static status descriptions. Production uses standard malloc/realloc/free. Diagnostics add an aligned size/tag header, track requested live and peak bytes, blocks, failures and category totals, and can fail the kth allocation. Global diagnostic accounting gives no additional thread guarantee.
 
 Insertion prepares the Handle and spare before commit; a cross-block move with a full destination also prepares a spare before changes. In snapshot capture, callback, growth, final shrink and marker retention happen before publication. Sort copies and sorts before writing back. Failure atomicity applies to the corresponding Full state. Caller items remain external. Requested bytes differ from process RSS and can return to zero while the allocator retains pages or fragmentation. B64 and the v4.1.0 smaller Resident do not remove per-occurrence allocation.
 

@@ -48,11 +48,11 @@ The 39-test baseline in [Validation](VALIDATION.md) assumes benchmark and Python
 | --- | --- |
 | Order index and Handle lifetime | [v4_order.c](../tests/v4_order.c): reference sequence, boundaries, invariants, two-child deletion, shared block owner and insert OOM. |
 | Move, cursor and revision | [v4_mutation.c](../tests/v4_mutation.c): randomized/adversarial and distant moves, no-ops, cursor invalidation and cross-block OOM. |
-| ManagedOrder | [v4_mutation.c](../tests/v4_mutation.c): duplicates, sorted insertion, neighbors, comparison calls, callback interaction and OOM. |
-| Snapshot and restore | [v4_snapshot.c](../tests/v4_snapshot.c): empty rows, history retention, callbacks and associations, Resolver failure, limits and OOM. |
-| LS1 and binary wire | [v4_snapshot.c](../tests/v4_snapshot.c), [v4_rc_torture.c](../tests/v4_rc_torture.c): canonical forms, exact vectors and malformed input. |
-| Bulk restore | [v4_snapshot.c](../tests/v4_snapshot.c): large and empty restore, new order and cleanup on failure. |
-| Group, Batch and sort | [v4_immutable_group.c](../tests/v4_immutable_group.c): stable construction and equality, merging, multiple OOM points and Group snapshots. |
+| ManagedOrder (managed_order.c) | [v4_mutation.c](../tests/v4_mutation.c): duplicates, sorted insertion, neighbors, comparison calls, callback interaction and OOM. |
+| Snapshot and restore (snapshot.c, snapshot_restore.c) | [v4_snapshot.c](../tests/v4_snapshot.c): empty rows, history retention, callbacks and associations, Resolver failure, limits and OOM. |
+| LS1 and binary wire (snapshot_key.c, snapshot_wire.c) | [v4_snapshot.c](../tests/v4_snapshot.c), [v4_rc_torture.c](../tests/v4_rc_torture.c): canonical forms, exact vectors and malformed input. |
+| Bulk restore (order_bulk.c) | [v4_snapshot.c](../tests/v4_snapshot.c): large and empty restore, new order and cleanup on failure. |
+| Group, Batch and sort (immutable_group.c, sort.c) | [v4_immutable_group.c](../tests/v4_immutable_group.c): stable construction and equality, merging, multiple OOM points and Group snapshots. |
 | Atomic markers | [v4_marker_threads.c](../tests/v4_marker_threads.c): marker lifetime under the tested synchronization conditions. |
 | Frozen public API | [v4_api_compile.c](../tests/v4_api_compile.c), [v4_freeze.c](../tests/v4_freeze.c): typed reference and link checks for 64 functions and representative semantics. |
 | Legacy import and parsing | [v4_snapshot.c](../tests/v4_snapshot.c), [parser_torture.c](../tests/parser_torture.c): V3 Path and LK1 boundaries. |
@@ -65,7 +65,7 @@ The 39-test baseline in [Validation](VALIDATION.md) assumes benchmark and Python
 | --- | --- | --- |
 | Removal ends one Handle lifetime | `remove_model` in v4_order.c verifies returned item and removes that Handle from the model. `random_campaign` periodically calls `verify` to compare surviving addresses, items, traversal both ways and comparison. | No access to freed Handles. Full verification is periodic. |
 | No-op, revision and capacity | `cursor_tests` runs endpoint/self/adjacent no-ops under failure injection without allocation or revision changes. A cursor survives a failed insert. At UINT64_MAX, no-op move_front succeeds and actual move_back returns CAPACITY_LIMIT. | These are reached cases, not every capacity/API combination. |
-| Cross-block move OOM | `move_oom` fails spare allocation for a full destination, checks original blocks, revision, live bytes/blocks and Handle sequence, and reads the unchanged first item through a cursor. | Also checks nonfull destination and same-block moves without allocation. |
+| Cross-block move OOM | `move_oom` fails spare allocation for a full destination, checks original blocks, revision, live bytes/blocks and `sequence_check` Handle sequence, and reads the unchanged first item through a cursor. | Also checks nonfull destination and same-block moves without allocation. |
 | Multiple occurrences of the same item | `boundaries_and_checker` inserts the same address and removes distinct saved Handles, checking repair and invariants. | Cross-container application recovery when compared fields mutate is separate. |
 | Resolver failure midstream | `large_and_edges` and `resolve_status_fail` return NOT_FOUND at first, middle and last rows; output remains NULL and Full live bytes unchanged. `resolve_fail` checks first-row OK with NULL yields INVALID_ARGUMENT. | Immediate source return establishes stop behavior. The test does not separately count every subsequent callback or establish application rollback. |
 | Busy getters and destroy | `reentry_compare` in managed_interactions checks REENTRANT, NULL/0 and shared Handle getters, and attempts busy destroy. `associate` in callbacks_lifetime checks getters and nested capture; outer operation succeeds. | Applies to listed calls. |
@@ -94,7 +94,7 @@ Fixed-width big-endian Preview.2 source is `fe00536e7bd7f4e5128432ea4a29e5415807
 
 ## 5. Distribution and external consumers
 
-Supported paths are source integration via add_subdirectory or offline FetchContent, install plus `find_package(LayerKeySort 4 CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort`, and the official two-file amalgamation built as C17 for C or C++ programs.
+Supported paths are source integration via add_subdirectory or offline FetchContent, install plus `find_package(LayerKeySort 4 CONFIG REQUIRED)` and link `LayerKeySort::layerkeysort`, and the official `layerkeysort.h` + `layerkeysort.c` amalgamation built as C17 for C or C++ programs.
 
 `tools/amalgamate.py` uses the production source manifest and required private headers, checking agreement with MSVC source lists. Maintain one generated version. `tools/validate_distribution.py` compiles source, installed and two-file C/C++ consumers. `tools/validate_release_assets.py` builds twice, checks byte equality and SHA-256, and exercises corrupted and extra-file rejection.
 
@@ -122,7 +122,7 @@ Green tests cannot establish stale-pointer safety, arbitrary user comparator con
 | Change | Update |
 | --- | --- |
 | Block/AVL/Handle/Move | [Internals](IMPLEMENTATION_INTERNALS.md) §§2–8, walkthrough §§2–4 and Order/mutation tests |
-| ManagedOrder | Internals §7, API index and managed mutation tests |
+| ManagedOrder (managed_order.c) | Internals §7, API index and managed mutation tests |
 | Snapshot/LS1/wire/restore | Internals §§9–11, API/compatibility/migration, goldens and snapshot tests |
 | Group/Batch/sort | Internals §12, API index and stable-order/Group tests |
 | Legacy LK1 import | Internals §13, V3 fixtures and migration guidance; preserve prior releases |

@@ -241,7 +241,7 @@ Before modifying comparator-visible fields, handle **every occurrence** referrin
 1. Relative anchors must be live handles belonging to the same Order. A live foreign handle can be rejected; detecting a freed dangling handle is not promised.
 2. Insert requires a valid `out_handle` address, cleared to NULL on failure. Remove's optional `out_item`, when supplied, is cleared first.
 3. Managed locate requires three distinct output addresses: `out_predecessor`, `out_equal`, `out_successor`. NULL query results do not permit aliasing their storage.
-4. Namespace size must be nonzero. The application selects namespace bytes; reusing a namespace does not automatically make keys from different captures unique.
+4. `namespace_size` must be nonzero. The application selects namespace bytes; reusing a namespace does not automatically make keys from different captures unique.
 5. Key length excludes `\0`, so allocate at least `length+1`. Binary serialized size is exact bytes, without a text terminator.
 6. Restore calls the resolver in row order, stopping at the first non-OK or OK/NULL item; later rows are not called. Only after all required rows resolve does unpublished bulk construction begin. Empty Snapshot accepts NULL resolver, calls none, but still allocates a new empty Order and may OOM. Failure frees Full temporary storage and clears output, never rolls back callback effects or frees resolved items.
 7. Group/Batch merging requires compatible comparator semantics. Changing comparator-visible fields can invalidate sorted-input prerequisites.
