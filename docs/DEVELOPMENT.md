@@ -77,7 +77,7 @@ Contributors making a Full implementation or contract change must:
 
 A **documentation-only** change without implementation/contract changes does not create a fake new algorithm baseline or require cosmetic rewriting of all four guides; update only documents truly affected while preserving valid source provenance. Normal Full development still requires independently reviewed tests, compatibility and GitHub branch protections; documentation alone is not sufficient for PASS.
 
-**Current priority (2026-11-24):** Full live-core work has resumed under the Preview.1 task. The November 15 pause was a historical decision. OrdWeave now implements native checkpoints and WAL recovery on pinned Full v4.1.0. Database policy remains outside the Full contract.
+**Current Full candidate:** The untagged 4.2.0-rc.1 branch freezes the accepted operational implementation and reconstructs its documentation and verification. Published Stable remains 4.1.0. OrdWeave keeps its official 4.1.0 dependency. See the [candidate evidence](FULL_RC1_EVIDENCE.md).
 
 ## Documentation truth model
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.2.0-rc.1] - Unreleased candidate
+
+- Reconstruct Full documentation against the frozen candidate, including reproducible comparative evidence.
+- Retain the Preview.3 unaligned wire and restored mixed-tag regression coverage.
+- Keep the accepted Preview.2 implementation and public contracts.
+
 ## [4.2.0-preview.2] - Unreleased
 
 - Specialize fixed-width snapshot wire conversion while retaining exact LKS4SNP1 bytes and validation order.

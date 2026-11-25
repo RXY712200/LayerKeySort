@@ -1,5 +1,7 @@
 # V4 integration
 
+The untagged 4.2 candidate uses the same C/C++ source and install interfaces. Pin an exact reviewed commit when evaluating it. The published download instructions below remain for Stable.
+
 **Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
 
 Tested: MSVC Windows x64/x86, Linux GCC/Clang, macOS AppleClang; C17 implementation,

@@ -1,0 +1,995 @@
+{
+  "Windows": {
+    "raw_sha256": "b653d1459e30b7dfcff3213f3d5ec0fe0f2ec804af93d04dbdf37fc6f0af5d69",
+    "comparisons": {
+      "stable40": {
+        "overall": 0.593973442288049,
+        "compare_heavy": 0.19129310851301334,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.9533857198292588,
+          [
+            1000,
+            2654435769,
+            "hotspot",
+            "eedca1a601c8b3be5104667ec12f4d218451798eab70ead332c1305734ef63a7"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "stable41": {
+        "overall": 0.6291057068113555,
+        "compare_heavy": 0.1977184064310202,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.7301120797011207,
+          [
+            1000,
+            17,
+            "hotspot",
+            "2ab2ea962d8387332453a6e39f9152630818800cc4e49ee136469531ce10a26f"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "preview1": {
+        "overall": 0.9945242197970515,
+        "compare_heavy": 0.9966694421315571,
+        "wins": 29,
+        "cells": 45,
+        "worst": [
+          1.4239331089151916,
+          [
+            1000,
+            2654435769,
+            "short",
+            "97c81d8a6b8ea583dd2e8cb63ad1fd10db7e547a8aaa4a5da1c58edc89a3b3ca"
+          ]
+        ],
+        "adverse_over_10_percent": [
+          [
+            1.3682403433476393,
+            [
+              1000,
+              2654435769,
+              "long",
+              "dbbc1ef3ca7afd0206abb01d867f5cdb9ce5122940cb24c32c801e36ff9c7ceb"
+            ]
+          ],
+          [
+            1.4239331089151916,
+            [
+              1000,
+              2654435769,
+              "short",
+              "97c81d8a6b8ea583dd2e8cb63ad1fd10db7e547a8aaa4a5da1c58edc89a3b3ca"
+            ]
+          ]
+        ]
+      },
+      "list": {
+        "overall": 0.027376038653623237,
+        "compare_heavy": 0.0025361099687192337,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.9807583873696081,
+          [
+            1000,
+            305419896,
+            "update-heavy",
+            "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "tree": {
+        "overall": 0.12447481023530049,
+        "compare_heavy": 0.0740470181963076,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.30290187859267365,
+          [
+            1000,
+            2654435769,
+            "hotspot",
+            "eedca1a601c8b3be5104667ec12f4d218451798eab70ead332c1305734ef63a7"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "tag": {
+        "overall": 1.0524383848977452,
+        "compare_heavy": 0.9078873239436619,
+        "wins": 21,
+        "cells": 45,
+        "worst": [
+          1.7431648018844115,
+          [
+            1000,
+            2654435769,
+            "update-heavy",
+            "068436dd4342af7e4f278afb1ab9df930b5d144c358e8983781ffa88eeeb65e8"
+          ]
+        ],
+        "adverse_over_10_percent": [
+          [
+            1.1164476665156322,
+            [
+              1000,
+              17,
+              "compare-heavy",
+              "ddb30ce582b919ca77b5ba5a79b0f2255044cce0d5781a0144709ad5e9e267a6"
+            ]
+          ],
+          [
+            1.6145178197064989,
+            [
+              1000,
+              17,
+              "long",
+              "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b"
+            ]
+          ],
+          [
+            1.6162973725632643,
+            [
+              1000,
+              17,
+              "update-heavy",
+              "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84"
+            ]
+          ],
+          [
+            1.5746867658574786,
+            [
+              1000,
+              305419896,
+              "long",
+              "2704d5c602bc3359c6c520e70ef8e44ea45d211a46f7a5fc686efeaeba42328b"
+            ]
+          ],
+          [
+            1.7048517520215634,
+            [
+              1000,
+              305419896,
+              "update-heavy",
+              "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+            ]
+          ],
+          [
+            1.1656387142687699,
+            [
+              1000,
+              2654435769,
+              "hotspot",
+              "eedca1a601c8b3be5104667ec12f4d218451798eab70ead332c1305734ef63a7"
+            ]
+          ],
+          [
+            1.4958708708708706,
+            [
+              1000,
+              2654435769,
+              "long",
+              "dbbc1ef3ca7afd0206abb01d867f5cdb9ce5122940cb24c32c801e36ff9c7ceb"
+            ]
+          ],
+          [
+            1.2747156605424321,
+            [
+              1000,
+              2654435769,
+              "short",
+              "97c81d8a6b8ea583dd2e8cb63ad1fd10db7e547a8aaa4a5da1c58edc89a3b3ca"
+            ]
+          ],
+          [
+            1.7431648018844115,
+            [
+              1000,
+              2654435769,
+              "update-heavy",
+              "068436dd4342af7e4f278afb1ab9df930b5d144c358e8983781ffa88eeeb65e8"
+            ]
+          ],
+          [
+            1.21015246015246,
+            [
+              10000,
+              17,
+              "long",
+              "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad"
+            ]
+          ],
+          [
+            1.2586382418108868,
+            [
+              10000,
+              17,
+              "update-heavy",
+              "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc"
+            ]
+          ],
+          [
+            1.2583258325832583,
+            [
+              10000,
+              305419896,
+              "long",
+              "0ffba2c8dd15a4e4b3dcd5e916827fd20d3da0ba565328c79641bfeb2f898ee6"
+            ]
+          ],
+          [
+            1.2722797062750333,
+            [
+              10000,
+              305419896,
+              "update-heavy",
+              "0bf5a5f05ae6b3a02b68b5e252e706af015c8565a9cdff28ab6dd6a61ddfd455"
+            ]
+          ],
+          [
+            1.2617288346835218,
+            [
+              10000,
+              2654435769,
+              "long",
+              "ac78c99b973765dc1fe5cfe0ddc2bd19f3a4d0dbbecd1cf1feaca61782fb74f1"
+            ]
+          ],
+          [
+            1.1952950250674894,
+            [
+              10000,
+              2654435769,
+              "update-heavy",
+              "74c012bda71fbf33fa63f48f039c54c567b17c33554d4e4a488f8d181e71d656"
+            ]
+          ],
+          [
+            1.3672851841278904,
+            [
+              100000,
+              17,
+              "long",
+              "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6"
+            ]
+          ],
+          [
+            1.4654403881961293,
+            [
+              100000,
+              17,
+              "update-heavy",
+              "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d"
+            ]
+          ],
+          [
+            1.3748050597816668,
+            [
+              100000,
+              305419896,
+              "long",
+              "258bfb47fcbc25198fab873ab8bb832a10f426b666e69d7ce9258fe0ee62bde5"
+            ]
+          ],
+          [
+            1.445125443922557,
+            [
+              100000,
+              305419896,
+              "update-heavy",
+              "d2fca5db3129e3df739491717bd44d403d6da43f446dc960838f2ee3b5d8fa94"
+            ]
+          ],
+          [
+            1.3766248839368618,
+            [
+              100000,
+              2654435769,
+              "long",
+              "766db0d650481683a7d51d4d01c8404d5fbdd0bcc2b096f4d12cefdfc0e0e62c"
+            ]
+          ],
+          [
+            1.248160281061577,
+            [
+              100000,
+              2654435769,
+              "update-heavy",
+              "022eec496d2ebbaf22a482f2e73ecf2a006ab9ddf419826ed3da4554a2112da7"
+            ]
+          ]
+        ]
+      },
+      "list_range": {
+        "overall": 0.9085318319618882,
+        "compare_heavy": 0.6239507554560717,
+        "wins": 25,
+        "cells": 45,
+        "worst": [
+          1.791784702549575,
+          [
+            1000,
+            305419896,
+            "update-heavy",
+            "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+          ]
+        ],
+        "adverse_over_10_percent": [
+          [
+            1.6974789915966384,
+            [
+              1000,
+              17,
+              "long",
+              "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b"
+            ]
+          ],
+          [
+            1.66487902220005,
+            [
+              1000,
+              17,
+              "update-heavy",
+              "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84"
+            ]
+          ],
+          [
+            1.5810319410319411,
+            [
+              1000,
+              305419896,
+              "long",
+              "2704d5c602bc3359c6c520e70ef8e44ea45d211a46f7a5fc686efeaeba42328b"
+            ]
+          ],
+          [
+            1.791784702549575,
+            [
+              1000,
+              305419896,
+              "update-heavy",
+              "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+            ]
+          ],
+          [
+            1.1256514518068839,
+            [
+              1000,
+              2654435769,
+              "hotspot",
+              "eedca1a601c8b3be5104667ec12f4d218451798eab70ead332c1305734ef63a7"
+            ]
+          ],
+          [
+            1.5439752034095313,
+            [
+              1000,
+              2654435769,
+              "long",
+              "dbbc1ef3ca7afd0206abb01d867f5cdb9ce5122940cb24c32c801e36ff9c7ceb"
+            ]
+          ],
+          [
+            1.2362590741962856,
+            [
+              1000,
+              2654435769,
+              "short",
+              "97c81d8a6b8ea583dd2e8cb63ad1fd10db7e547a8aaa4a5da1c58edc89a3b3ca"
+            ]
+          ],
+          [
+            1.7339748953974894,
+            [
+              1000,
+              2654435769,
+              "update-heavy",
+              "068436dd4342af7e4f278afb1ab9df930b5d144c358e8983781ffa88eeeb65e8"
+            ]
+          ],
+          [
+            1.234862547511712,
+            [
+              10000,
+              17,
+              "long",
+              "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad"
+            ]
+          ],
+          [
+            1.2175877650330205,
+            [
+              10000,
+              17,
+              "update-heavy",
+              "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc"
+            ]
+          ],
+          [
+            1.211123624707615,
+            [
+              10000,
+              305419896,
+              "long",
+              "0ffba2c8dd15a4e4b3dcd5e916827fd20d3da0ba565328c79641bfeb2f898ee6"
+            ]
+          ],
+          [
+            1.1823045905707197,
+            [
+              10000,
+              305419896,
+              "update-heavy",
+              "0bf5a5f05ae6b3a02b68b5e252e706af015c8565a9cdff28ab6dd6a61ddfd455"
+            ]
+          ],
+          [
+            1.245649499033222,
+            [
+              10000,
+              2654435769,
+              "long",
+              "ac78c99b973765dc1fe5cfe0ddc2bd19f3a4d0dbbecd1cf1feaca61782fb74f1"
+            ]
+          ],
+          [
+            1.1811737804878049,
+            [
+              10000,
+              2654435769,
+              "update-heavy",
+              "74c012bda71fbf33fa63f48f039c54c567b17c33554d4e4a488f8d181e71d656"
+            ]
+          ],
+          [
+            1.166147253603428,
+            [
+              100000,
+              17,
+              "long",
+              "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6"
+            ]
+          ],
+          [
+            1.2403056351480422,
+            [
+              100000,
+              17,
+              "update-heavy",
+              "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d"
+            ]
+          ],
+          [
+            1.1954196172969715,
+            [
+              100000,
+              305419896,
+              "long",
+              "258bfb47fcbc25198fab873ab8bb832a10f426b666e69d7ce9258fe0ee62bde5"
+            ]
+          ],
+          [
+            1.2945251167325158,
+            [
+              100000,
+              305419896,
+              "update-heavy",
+              "d2fca5db3129e3df739491717bd44d403d6da43f446dc960838f2ee3b5d8fa94"
+            ]
+          ],
+          [
+            1.1707630046392261,
+            [
+              100000,
+              2654435769,
+              "long",
+              "766db0d650481683a7d51d4d01c8404d5fbdd0bcc2b096f4d12cefdfc0e0e62c"
+            ]
+          ]
+        ]
+      }
+    },
+    "scatter": {
+      "compare-heavy": {
+        "full": {
+          "peak_requested_bytes": 4278776,
+          "elapsed_ms": 0.6021000000000001
+        },
+        "tag": {
+          "peak_requested_bytes": 13437504,
+          "elapsed_ms": 0.5720999999999999
+        },
+        "list_range": {
+          "peak_requested_bytes": 13437504,
+          "elapsed_ms": 0.7881
+        }
+      },
+      "update-heavy": {
+        "full": {
+          "peak_requested_bytes": 4278800,
+          "elapsed_ms": 2.5972
+        },
+        "tag": {
+          "peak_requested_bytes": 13438184,
+          "elapsed_ms": 1.7723
+        },
+        "list_range": {
+          "peak_requested_bytes": 13438184,
+          "elapsed_ms": 2.094
+        }
+      }
+    }
+  },
+  "Linux": {
+    "raw_sha256": "62778b816ed1f47011534322f7fa1f326a41d3bc2596d6fb1e085618c2a44398",
+    "comparisons": {
+      "stable40": {
+        "overall": 0.5402864517260487,
+        "compare_heavy": 0.19234092480933845,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.6830417618948681,
+          [
+            1000,
+            305419896,
+            "short",
+            "2155885e7ac15cb3dba37f05e942caf7cd27191699f125121400877c2556e58a"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "stable41": {
+        "overall": 0.6400470680254576,
+        "compare_heavy": 0.21917290904632308,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.7271696954059002,
+          [
+            1000,
+            305419896,
+            "hotspot",
+            "9bed0221bdfd0191198193164eca60d30608785d1da7459e4dfc128eaa6f3ccc"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "preview1": {
+        "overall": 0.9981393364661882,
+        "compare_heavy": 1.0020471705456526,
+        "wins": 24,
+        "cells": 45,
+        "worst": [
+          1.0686988425063724,
+          [
+            100000,
+            305419896,
+            "compare-heavy",
+            "0951688fb4eacab653d0449e3514797005f0f1f1c07bf0e7cd19fbaa40002f1d"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "list": {
+        "overall": 0.02869172973701907,
+        "compare_heavy": 0.0029822248804477368,
+        "wins": 43,
+        "cells": 45,
+        "worst": [
+          1.123152190522398,
+          [
+            1000,
+            305419896,
+            "update-heavy",
+            "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+          ]
+        ],
+        "adverse_over_10_percent": [
+          [
+            1.123152190522398,
+            [
+              1000,
+              305419896,
+              "update-heavy",
+              "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+            ]
+          ]
+        ]
+      },
+      "tree": {
+        "overall": 0.10694941677322539,
+        "compare_heavy": 0.07196573224669456,
+        "wins": 45,
+        "cells": 45,
+        "worst": [
+          0.19276697477574237,
+          [
+            100000,
+            17,
+            "hotspot",
+            "0661db24012d41299439bd54f17a70694d46e60d47915f669bd3ba31e9f3dc9e"
+          ]
+        ],
+        "adverse_over_10_percent": []
+      },
+      "tag": {
+        "overall": 1.02015406689429,
+        "compare_heavy": 0.9071989497317033,
+        "wins": 22,
+        "cells": 45,
+        "worst": [
+          1.5878453092618676,
+          [
+            1000,
+            305419896,
+            "update-heavy",
+            "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+          ]
+        ],
+        "adverse_over_10_percent": [
+          [
+            1.4922158796056046,
+            [
+              1000,
+              17,
+              "long",
+              "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b"
+            ]
+          ],
+          [
+            1.523842579179752,
+            [
+              1000,
+              17,
+              "update-heavy",
+              "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84"
+            ]
+          ],
+          [
+            1.577331360249342,
+            [
+              1000,
+              305419896,
+              "long",
+              "2704d5c602bc3359c6c520e70ef8e44ea45d211a46f7a5fc686efeaeba42328b"
+            ]
+          ],
+          [
+            1.5878453092618676,
+            [
+              1000,
+              305419896,
+              "update-heavy",
+              "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+            ]
+          ],
+          [
+            1.5125295252565143,
+            [
+              1000,
+              2654435769,
+              "long",
+              "dbbc1ef3ca7afd0206abb01d867f5cdb9ce5122940cb24c32c801e36ff9c7ceb"
+            ]
+          ],
+          [
+            1.5588105000235637,
+            [
+              1000,
+              2654435769,
+              "update-heavy",
+              "068436dd4342af7e4f278afb1ab9df930b5d144c358e8983781ffa88eeeb65e8"
+            ]
+          ],
+          [
+            1.3479143416865622,
+            [
+              10000,
+              17,
+              "long",
+              "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad"
+            ]
+          ],
+          [
+            1.401317127107626,
+            [
+              10000,
+              17,
+              "update-heavy",
+              "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc"
+            ]
+          ],
+          [
+            1.3780490239737768,
+            [
+              10000,
+              305419896,
+              "long",
+              "0ffba2c8dd15a4e4b3dcd5e916827fd20d3da0ba565328c79641bfeb2f898ee6"
+            ]
+          ],
+          [
+            1.3359626320566569,
+            [
+              10000,
+              305419896,
+              "update-heavy",
+              "0bf5a5f05ae6b3a02b68b5e252e706af015c8565a9cdff28ab6dd6a61ddfd455"
+            ]
+          ],
+          [
+            1.2917298078119503,
+            [
+              10000,
+              2654435769,
+              "long",
+              "ac78c99b973765dc1fe5cfe0ddc2bd19f3a4d0dbbecd1cf1feaca61782fb74f1"
+            ]
+          ],
+          [
+            1.3905075422014648,
+            [
+              10000,
+              2654435769,
+              "update-heavy",
+              "74c012bda71fbf33fa63f48f039c54c567b17c33554d4e4a488f8d181e71d656"
+            ]
+          ],
+          [
+            1.2926321210944727,
+            [
+              100000,
+              17,
+              "long",
+              "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6"
+            ]
+          ],
+          [
+            1.2235513313926039,
+            [
+              100000,
+              17,
+              "update-heavy",
+              "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d"
+            ]
+          ],
+          [
+            1.2088047936639887,
+            [
+              100000,
+              305419896,
+              "long",
+              "258bfb47fcbc25198fab873ab8bb832a10f426b666e69d7ce9258fe0ee62bde5"
+            ]
+          ],
+          [
+            1.1952155248436196,
+            [
+              100000,
+              305419896,
+              "update-heavy",
+              "d2fca5db3129e3df739491717bd44d403d6da43f446dc960838f2ee3b5d8fa94"
+            ]
+          ],
+          [
+            1.229035692733494,
+            [
+              100000,
+              2654435769,
+              "long",
+              "766db0d650481683a7d51d4d01c8404d5fbdd0bcc2b096f4d12cefdfc0e0e62c"
+            ]
+          ],
+          [
+            1.3552051784510821,
+            [
+              100000,
+              2654435769,
+              "update-heavy",
+              "022eec496d2ebbaf22a482f2e73ecf2a006ab9ddf419826ed3da4554a2112da7"
+            ]
+          ]
+        ]
+      },
+      "list_range": {
+        "overall": 0.9257236002708464,
+        "compare_heavy": 0.681448073609825,
+        "wins": 28,
+        "cells": 45,
+        "worst": [
+          1.6105189012667693,
+          [
+            1000,
+            305419896,
+            "update-heavy",
+            "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+          ]
+        ],
+        "adverse_over_10_percent": [
+          [
+            1.503577849672077,
+            [
+              1000,
+              17,
+              "long",
+              "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b"
+            ]
+          ],
+          [
+            1.5352308031789508,
+            [
+              1000,
+              17,
+              "update-heavy",
+              "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84"
+            ]
+          ],
+          [
+            1.555870168689764,
+            [
+              1000,
+              305419896,
+              "long",
+              "2704d5c602bc3359c6c520e70ef8e44ea45d211a46f7a5fc686efeaeba42328b"
+            ]
+          ],
+          [
+            1.6105189012667693,
+            [
+              1000,
+              305419896,
+              "update-heavy",
+              "0a771b4c833a24fdec71010cea06de889fdcfab405b4dc28a94a6ce8a8b0dd7a"
+            ]
+          ],
+          [
+            1.5076826831219172,
+            [
+              1000,
+              2654435769,
+              "long",
+              "dbbc1ef3ca7afd0206abb01d867f5cdb9ce5122940cb24c32c801e36ff9c7ceb"
+            ]
+          ],
+          [
+            1.548408238166238,
+            [
+              1000,
+              2654435769,
+              "update-heavy",
+              "068436dd4342af7e4f278afb1ab9df930b5d144c358e8983781ffa88eeeb65e8"
+            ]
+          ],
+          [
+            1.2632718253100903,
+            [
+              10000,
+              17,
+              "long",
+              "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad"
+            ]
+          ],
+          [
+            1.3252962113446685,
+            [
+              10000,
+              17,
+              "update-heavy",
+              "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc"
+            ]
+          ],
+          [
+            1.3099533770681189,
+            [
+              10000,
+              305419896,
+              "long",
+              "0ffba2c8dd15a4e4b3dcd5e916827fd20d3da0ba565328c79641bfeb2f898ee6"
+            ]
+          ],
+          [
+            1.2643913755837302,
+            [
+              10000,
+              305419896,
+              "update-heavy",
+              "0bf5a5f05ae6b3a02b68b5e252e706af015c8565a9cdff28ab6dd6a61ddfd455"
+            ]
+          ],
+          [
+            1.2157701578753068,
+            [
+              10000,
+              2654435769,
+              "long",
+              "ac78c99b973765dc1fe5cfe0ddc2bd19f3a4d0dbbecd1cf1feaca61782fb74f1"
+            ]
+          ],
+          [
+            1.3078229570720312,
+            [
+              10000,
+              2654435769,
+              "update-heavy",
+              "74c012bda71fbf33fa63f48f039c54c567b17c33554d4e4a488f8d181e71d656"
+            ]
+          ],
+          [
+            1.1260790618304353,
+            [
+              100000,
+              17,
+              "long",
+              "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6"
+            ]
+          ],
+          [
+            1.128677007230178,
+            [
+              100000,
+              17,
+              "update-heavy",
+              "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d"
+            ]
+          ],
+          [
+            1.1478952560451394,
+            [
+              100000,
+              2654435769,
+              "long",
+              "766db0d650481683a7d51d4d01c8404d5fbdd0bcc2b096f4d12cefdfc0e0e62c"
+            ]
+          ],
+          [
+            1.2091554617346272,
+            [
+              100000,
+              2654435769,
+              "update-heavy",
+              "022eec496d2ebbaf22a482f2e73ecf2a006ab9ddf419826ed3da4554a2112da7"
+            ]
+          ]
+        ]
+      }
+    },
+    "scatter": {
+      "compare-heavy": {
+        "full": {
+          "peak_requested_bytes": 4278776,
+          "elapsed_ms": 1.127721
+        },
+        "tag": {
+          "peak_requested_bytes": 13437504,
+          "elapsed_ms": 1.3707820000000002
+        },
+        "list_range": {
+          "peak_requested_bytes": 13437504,
+          "elapsed_ms": 1.7639610000000001
+        }
+      },
+      "update-heavy": {
+        "full": {
+          "peak_requested_bytes": 4278800,
+          "elapsed_ms": 4.322430000000001
+        },
+        "tag": {
+          "peak_requested_bytes": 13438184,
+          "elapsed_ms": 3.532692
+        },
+        "list_range": {
+          "peak_requested_bytes": 13438184,
+          "elapsed_ms": 3.8296430000000004
+        }
+      }
+    }
+  }
+}

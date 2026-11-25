@@ -1,5 +1,7 @@
 # LayerKeySort V4 使用指南
 
+4.2 候选版沿用已发布 4.1.0 的调用与所有权契约。先查[选型指南](FULL_SELECTION_GUIDE.md)，据此选择显式顺序、比较器托管顺序或更简单的组合。
+
 **版本状态：** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已发布的 Stable 版本。公开 API 和持久化格式保持兼容，详见 [4.1.0 说明](V4_1_0.md)。
 
 只包含 `<layerkeysort.h>` 即可。

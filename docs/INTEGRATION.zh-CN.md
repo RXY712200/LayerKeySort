@@ -1,5 +1,7 @@
 # LayerKeySort Full 4.x 集成指南
 
+未打标签的 4.2 候选版沿用 C/C++ 源码及安装接口。评估候选版时使用已审查的确切提交；下载说明仍适用已发布的 Stable。
+
 [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已公开发布的 Stable 版本。
 可固定到 `v4.1.0` 标签，或从该 Release 下载经过校验的 amalgamation ZIP 和 SHA-256 清单。
 历史 v4.0.0 发行记录保持不变。

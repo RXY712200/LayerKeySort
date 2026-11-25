@@ -1,4 +1,6 @@
 > Current published Full Stable: [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). See [4.1.0 memory/performance study and limitations](../docs/V4_1_0.md), [historical Stable record](../docs/V4_STABLE.md) and [freeze](../docs/V4_FREEZE.md).
+
+The [4.2 RC evidence](../docs/FULL_RC1_EVIDENCE.md) derives charts and summaries from archived final Preview.3 runs. Keep historical raw data unchanged when regenerating them.
 > Measurements below retain historical names; Preview.4 is convergence evidence.
 > Stable promotion performs no new tuning. Old provisional names below are historical.
 

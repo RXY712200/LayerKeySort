@@ -39,6 +39,8 @@ of 32 bytes, while Block size grows by 8 bytes. Handles remain at their stable
 separately allocated addresses. Allocation frequency, B64 and AVL algorithms
 are unchanged; not every workload is faster.
 
+Current 4.2 candidate comparison first uses local positions within a block, then compares two nonzero block labels directly. When either label is zero, AVL ancestry determines the block order. Attachment bounds label work and can leave an untagged block. Ordinary shifts update affected slots; full location repair is reserved for structural changes. See the [candidate evidence](FULL_RC1_EVIDENCE.md).
+
 The current B64/minimum-32 block policy is private implementation policy. It is not part
 of API, wire or persistence compatibility.
 

@@ -8,6 +8,8 @@
 
 [Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) is
 historical V4-convergence evidence. The latest independently accepted three-step
+For the 4.2 development candidate, start with [matched Windows/Linux timing, resources and lifecycle evidence](FULL_RC1_EVIDENCE.md). The charts are derived from the final Preview.3 archive at unchanged operational source.
+
 Full 4.1.0 research covers 100k–10m workloads, with raw runs preserved on the
 [final research branch](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md).
 At 1m/16 retained histories, requested peak fell 513.594 to 355.751 MB; at

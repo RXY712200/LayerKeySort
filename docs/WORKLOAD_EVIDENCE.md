@@ -1,5 +1,7 @@
 # Post-release synthetic workload evidence — v3.1.0
 
+For the 4.2 candidate, the [matched comparison and resource tables](FULL_RC1_EVIDENCE.md) summarize the later Preview.3 evidence. This page retains the original workload observations.
+
 **Recommendation: investigate compatible tail-cost improvements in future 3.2 research.**
 Recent-tail timeline runs produced rare but repeatable full-range relabel pauses. This is workload evidence, not a production correctness defect or a reason to declare a breaking V4. No production algorithm, API, version, Path/LK1 encoding, packaging, or release behavior changed.
 
