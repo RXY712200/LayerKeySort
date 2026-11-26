@@ -1,5 +1,19 @@
 # LayerKeySort
 
+## Full Stable and the 4.2 candidate
+
+Main now contains **4.2.0-rc.1**. Published Stable and Latest remain **4.1.0**. For downloadable source and distribution assets, use the [Stable release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). RC.1 has been integrated into main, but has not been tagged or published. Mini follows an independent release line.
+
+Full provides stable Handles for live occurrences. The application owns payload, durable identity and transactions. The 4.2 candidate uses bounded labels for cross-block precedence, with AVL fallback. The [pinned evidence](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/FULL_RC1_EVIDENCE.md) compares candidate elapsed time with Stable 4.1 on matched workloads.
+
+| Workload | Windows | Linux |
+| --- | ---: | ---: |
+| All live-order cells | 0.629 (37.1% lower) | 0.640 (36.0% lower) |
+| Compare-heavy cells | 0.198 (80.2% lower) | 0.219 (78.1% lower) |
+
+Each ratio divides candidate by control elapsed time, and the table reports the median of those ratios across matched conditions on each host. Initial populations were 1k, 10k and 100k occurrences. A flat-history composition was faster for endpoint-only lifecycle workloads. For relative edits with history and restore, compare using the target workload. See the [candidate verification record](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.md) and [candidate implementation walkthrough](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.md). The [historical V4 architecture design](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.md) remains available as design history. Local links below describe the integrated RC.1 on main; the published Stable remains v4.1.0.
+
+
 English | [简体中文](README.zh-CN.md)
 
 **A family of independent C17 libraries for maintaining the order of changing collections.**
@@ -8,7 +22,7 @@ LayerKeySort maintains *live sequence order* as applications insert, remove, and
 
 ## How Full works — start with the source guides
 
-**New to the Full implementation?** These four **Chinese-language, source-grounded guides** are the main entry point for understanding how Full works internally. They follow a pinned **Full v4.1.0** source revision, covering the 16 production C modules and their actual execution paths. They do **not** describe Mini, and they do not replace the public header or frozen compatibility contract.
+**New to the Full implementation?** These four **Chinese-language, source-grounded guides** are the main entry point for understanding how Full works internally. They describe the integrated **Full 4.2.0-rc.1** source revision, covering the 16 production C modules and their actual execution paths. They do **not** describe Mini, and they do not replace the public header or frozen compatibility contract.
 
 1. **[Implementation walkthrough · 从源码理解完整实现](docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)** — **Start here.** Understand why Full maintains live occurrence order rather than merely sorting an array; trace the Block/AVL/Handle structure, insert–move–remove workflows, ManagedOrder, Snapshot, LS1, serialization and restore, and the distinctions between current and legacy code.
 2. **[Public API index and key contracts · 64 个公开 API](docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md)** — Find all **64 frozen Full public functions**, grouped by purpose and mapped to implementation files. Check required parameters, error outcomes, borrowed ownership, Handle/Cursor lifetimes, callback restrictions, concurrency boundaries, and practical traversal examples before integrating.
@@ -22,7 +36,7 @@ LayerKeySort maintains *live sequence order* as applications insert, remove, and
 | | **[Full](docs/FULL.md)** | **[Mini](mini/README.md)** |
 | --- | --- | --- |
 | Latest published Stable | **[v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
-| Current `main` source | **4.1.0** ([released update](docs/V4_1_0.md)) | **1.0.0** (unchanged) |
+| Current `main` source | **4.2.0-rc.1** (integrated, untagged/unpublished; [historical 4.1.0 update](docs/V4_1_0.md)) | **1.0.0** (unchanged) |
 | Best fit | More complete ordering and historical workflows | Lightweight local, mutable sequences |
 | Live ordering | Relative operations, stable resident handles, comparator-managed option | Relative operations and stable occurrence handles |
 | Arbitrary live-order comparison | Available under the Full contract | O(n) worst case |

@@ -1,5 +1,7 @@
 # 产品线与发布管理规范
 
+[English](PRODUCT_LINES.md)
+
 LayerKeySort 采用**单仓库、多独立产品、独立版本号**。这不是将同一套源码用开关裁剪成
 “完整版”和“精简版”。各产品的公开 API、兼容性和生命周期，以各自文档为准。
 
@@ -56,7 +58,7 @@ Mini 独立包。Mini 应以额外上传的“仅 Mini”源码包作为主要�
 
 候选工作流只构建、验证、上传 Actions 临时工件供审查，**不会自行创建 Tag、
 GitHub Release 或公开发行**。正式发布必须另行明确授权，核查准确 SHA 对应的 CI、
-源码包校验值、Release 文案与链接。
+源码包校验值、版本、清单、Release 文案与发布文件。未合并或未打标签的候选不得标为已发布。
 
 Mini v1.0.0 使用 `mini-v1.0.0`，正式入口为[独立 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)。
 截至 2026-10-25，仓库级 Latest 已发布 Stable Release 为 Full v4.1.0。
@@ -75,7 +77,7 @@ Linux ASan/UBSan，以及独立提取、外部消费者和可选共存。PR 的�
 发行包验证。CI 通过是可复核的证据，并不等于已经得到发布授权。
 
 PR / Issue 描述建议明确写 `Full:`、`Mini:` 或 `Repo:`，并注明受影响接口。
-保留历史 Full 的 Release 与 Issues，不追溯改名，不凭设想建立尚不存在的产品。
+保留历史 Full 的 Release 与 Issues，不追溯改名，不改动无关 Issue 历史，也不把尚未实现的产品当作已存在。
 
 ## Mini 发布维护核对表
 
@@ -84,7 +86,7 @@ PR / Issue 描述建议明确写 `Full:`、`Mini:` 或 `Repo:`，并注明受影
 2. 检查最终 SHA 上 Full / Mini CI 均已完成且成功，Mini-only ZIP 经验证。
 3. 确认拟发布的 Mini 版本及新的 `mini-v*` 标签未被占用；
    不使用历史 Full 的 `v1.0.0`。
-4. **只有取得明确发布授权以后**才合并、对批准的提交创建 Mini Tag、
+4. **只有取得明确发布授权以后**才合并、对批准的提交创建带注释的 Mini Tag、
    编写 `LayerKeySort Mini v1.0.0` Release，上传经验证的 Mini ZIP
    及 SHA256SUMS，并检查链接。
 5. 另经审查更新 README 中的“候选/未发布”措辞和正式下载链接；
