@@ -26,7 +26,7 @@
 
 ## Step 4：精确原生OrdWeave集成
 
-[OrdWeave归档](https://github.com/RXY712200/OrdWeave/tree/1e40955a783f91ec835170bea664bfa8e324b465/benchmarks/research/full-preview2-20261124)保留独立27-trace ZIP成员/SHA验证、回放及指标。原轮486行，对4.1.0和Preview.1.2；最终234行，为九条seed17轨迹×内存/持久两模式×三依赖构建。manifest给精确替换、上游pin、应用源码；三构建各12上游测试过。生成4096 occurrence持久保留样本在三pin均过独立序列/checkpoint/history/reopen。最终候选原Full故障扫描到达37次insert、34次remove失败，顺序/revision不变，清理请求零。
+[OrdWeave归档](https://github.com/RXY712200/OrdWeave/tree/1e40955a783f91ec835170bea664bfa8e324b465/benchmarks/research/full-preview2-20261124)保留独立27-trace ZIP成员/SHA验证、回放及指标。原轮486行，对4.1.0和Preview.1.2；最终234行，为九条seed17轨迹×内存/持久两模式×三依赖构建。manifest给精确替换、上游pin、应用源码；三构建各12上游测试过。生成4096 occurrence持久化留出样本在三pin均过独立序列/checkpoint/history/reopen。最终候选原Full故障扫描到达37次insert、34次remove失败，顺序/revision不变，清理请求零。
 
 27对照的Preview.1.2/4.1.0操作中位比内存0.6555、持久0.9803。新候选/Preview.1.2为0.9963/0.9892；checkpoint/reopen/history为1.0057/0.9841/1.0001。最差checkpoint 2,048 hotspot为1.1024，范围0.203–0.240对0.196–0.219秒重叠。Full微基准收益不建立数据库整体收益。
 
@@ -36,7 +36,7 @@
 
 1m下所有准入聚集/散布存活轨迹经两收缩/再增长周期保持同10,000个Handle地址。两主机已接受/候选从42,753,776请求字节降431,576，最终稀疏312块、零无tag块，退出零残留。另覆盖10k/100k，零内存跳过，未尝试3m/10m。1m/1%锚点第二周期累计请求85,075,976，不等于retained。
 
-独立Windows40观察保留样本含100k churn/四capture、远距/热点drag、重保留10k。生产churn p99.9中位1.20→1.25µs，首Snapshot decode0.821→0.426ms；单独诊断p99.9为1.4→2.7µs，单诊断时间不证明反复生产tail。诊断peak11,492,708字节不变，归档QPC/支持工作集不同于请求。范围外大生命周期流量开放。
+独立Windows 的40项留出观察含100k churn/四capture、远距/热点drag、重保留10k。生产churn p99.9中位1.20→1.25µs，首Snapshot decode0.821→0.426ms；单独诊断p99.9为1.4→2.7µs，单诊断时间不证明反复生产tail。诊断peak11,492,708字节不变，归档QPC/支持工作集不同于请求。范围外大生命周期流量开放。
 
 新45轨迹原生live safeguard每主机1,215行，候选/Preview.1.2中位Windows1.0189、Linux0.9985，最差1.0585/1.0282；对Stable4.1中位0.6461/0.6107，两主机45/45更快。新轨迹及生产diff保留live架构；wire-only改动未重复历史OM/4.0。见[复现/全部凭据](../benchmarks/research/full-v4.2.0-preview.2/REPRODUCTION.zh-CN.md)。
 

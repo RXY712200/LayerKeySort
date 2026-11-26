@@ -2,6 +2,8 @@
 
 原文：[DESIGN_HISTORY.md](DESIGN_HISTORY.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/history/DESIGN_HISTORY.md)。原件保留；本译本保留原阶段事实，不把旧架构当当前 Full。[双语清单](../design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
+译注（归档导航）：原文中的“当前 V3”及其相对 API／架构链接，指归档当时的 V3 文档。需要该代契约时，使用固定的 [V3.1.0 API](https://github.com/RXY712200/LayerKeySort/blob/76152e5ae94bea6e88f6c19eee5ac96d24233da1/docs/API.md)、[兼容性](https://github.com/RXY712200/LayerKeySort/blob/76152e5ae94bea6e88f6c19eee5ac96d24233da1/docs/COMPATIBILITY.md)及[架构](https://github.com/RXY712200/LayerKeySort/blob/76152e5ae94bea6e88f6c19eee5ac96d24233da1/docs/ARCHITECTURE.md)。仓库当前路径已说明 V4，不能据此反推旧 Path／Tree 契约；历史英文原件保持不变。
+
 本文归档 V2 和 Preview 时代的工程决策、表示测量及范围处置，并非当前 V3 公共契约或托管插入架构；这些内容见 [API](../API.md)、[兼容性](../COMPATIBILITY.md)、[架构](../ARCHITECTURE.md)。归档章节中的“当前”指其描述的开发阶段。
 
 V3设计审查也比较了有界块/间接标签与几何原地重标记。块可能减少大规模重标记，却增加第二套顺序表示、分块不变量与查找同步。V3保留几何重标记，后来加入端点进位。这里记录当时决策，不约束未来架构。

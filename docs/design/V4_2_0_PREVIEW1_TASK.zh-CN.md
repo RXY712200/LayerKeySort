@@ -2,13 +2,15 @@
 
 原文：[V4_2_0_PREVIEW1_TASK.md](V4_2_0_PREVIEW1_TASK.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_2_0_PREVIEW1_TASK.md)。原件保留，英文执行指令为准；译本仅保存历史授权，不重启任务。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
-**签发2026-11-24。范围：** FULL-RI-001/002，[固定七步/三Preview计划#27](https://github.com/RXY712200/LayerKeySort/issues/27) Steps1–2，长期工程register[#3](https://github.com/RXY712200/LayerKeySort/issues/3)。一次实现任务、一份完成报告；同会话先Step1再Step2，含普通修正、测试、文档、有界自审。不得步间因例行决策停下、索第二prompt、只交架构提案或开Preview2。目标是实质可审候选，不是论文修订/空版本号。owner已要求开始；本任务仅本次有界授权记录，非未来永久权力。
+**签发：2026-11-24。范围：** FULL-RI-001／002，[固定七步／三 Preview 计划 #27](https://github.com/RXY712200/LayerKeySort/issues/27)的步骤1–2，长期记录在[Full 工程登记 #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
 
-## 0. 恢复精确上下文和工作状态
+同一会话完成步骤1再步骤2，包括普通实现修正、测试、文档和有界自审，交一份完成报告。不能为例行决策在步间停止、索取另一个提示、只交架构提案或开始 Preview.2。目标是实质可审候选，不是论文修订或空版本升级。所有者已要求开始；本文件保留本次有界授权，不是未来永久权限。
 
-仓库 `RXY712200/LayerKeySort`，仅Full；短期分支 `dev/full-v4.2.0-preview.1`，生产起点 `c108acd72b37614f4be271c9747484c2dde5eac4`，task文件另提交在其上。fetch核实际remote HEAD/task commit，实作前记完整local/remote SHA，确认task commit不动生产。优先验证既有checkout/worktree，保未知变更/其他agent工作，不reset覆盖。重核main及相关refs；base实质变化需调查，不暗纳无关实现，必要时isolated worktree。
+## 0. 恢复精确上下文及工作状态
 
-从另供私有环境/指令完整读授权owner policy，私记实际revision、完整文件、access/discovery；URL或旧报告非已读。公共任务不让私政策成为普通外部贡献门槛。完整读#27/#3、根README/contribution、Full DEVELOPMENT/V4_FREEZE/API/architecture/compatibility/integration/validation/V4_1_0/design history/decisions、四指南/FULL_CONSUMER_HANDOFF，查真实header/source manifest/实现/tests。执行Full文档与ownership gate，不止通用lifecycle；必要核live settings/checks，本地rules非实际执行证明。
+仓库 `RXY712200/LayerKeySort`，仅 Full；短期开发分支 `dev/full-v4.2.0-preview.1`，生产基点 `c108acd72b37614f4be271c9747484c2dde5eac4`，任务文件独立提交在其上。获取分支，核实际远端 HEAD 与任务提交；实质工作前记录完整本地／远端 SHA，确认任务提交不改生产源码。优先使用已验证检出／工作树，保留未知修改及其他代理的工作，不 reset 或覆盖。重核 main 及相关引用；基点实质变化则调查，不静默引入无关实现，必要时隔离工作树。
+
+通过另行提供的私有环境完整读取授权开发政策，私记真实修订号、完整读取文件、访问及发现情况；网址或旧报告不算读取。公共产品任务不要求普通外部贡献者先访问私有材料。完整读 #27／#3、根 README／贡献入口、Full 的 DEVELOPMENT、V4_FREEZE、API、架构、兼容、集成、验证、V4_1_0、设计史／决策、四指南和 FULL_CONSUMER_HANDOFF，查实际公共头、生产源码清单、相关实现及测试。执行 Full 文档及归属门槛，不只通用流程；必要时核实时设置／检查，本地规则不等于实际生效证明。
 
 ### 精确对照与研究来源
 
@@ -21,68 +23,73 @@
 | 经典OM | j-hui/order-maintenance `ac4b902d103beb30cee3316d20cd10701f52d15a`，archive source capsule及实际license |
 | OrdWeave只读参考 | `b12a007c50c2f9efcbee500a14d3cf09dcc74f10`，实际Full pin `70d7f0ef5857b54381b863d292a213909d87459f`；[integration archive](https://github.com/RXY712200/OrdWeave/tree/aa95b240b019c518a98bfb900ec374d24a537165/benchmarks/research/full-ri-20261124) |
 
-验证真实source/tag objects/license/main与Stable生产等价，不凭名字。前独立审已核39个Full archive原blob、40manifest entries/path lengths；trace ZIP member hashes及clean reproduction尚待。前archive-only任务没跑新profile/lifecycle；本包承接Full archive reproduction和core-profile余项，完整lifecycle/更广OrdWeave attribution/resource integration归Preview2。不重跑无关论文实验或改论文。
 
-已知起点：Windows/Linux各45条件tag-range median均快Full；Full/tag cell-ratio中位1.97x/2.21x，compare-heavy3.87x/5.18x，最大约5.45x。list-range在43/45 Windows、44/45 Linux快。100k/seed17/compare-heavy final representation requested：Full3,875,768bytes，两个经典wrapper均13,436,784。C/Rust API/runtime/allocator/timing差异重要。4.1历史memory改善真实且部分speed回归，但不证明全部外部gap由4.1引入。
+验证真实源码、标签对象、许可及 main／Stable 的生产等价性，不凭名称推断。旧独立审查核了39个原始 Full 归档对象、40清单项／路径长度；轨迹 ZIP 成员哈希和干净复现仍待完成。先前仅归档任务未跑新性能分析或生命周期实验；本包承接 Full 归档复现及核心分析余项，完整生命周期、更广 OrdWeave 归因及资源整合归 Preview.2。不重跑无关旧论文实验或改论文。
+
+起点实测：Windows／Linux各45条件中 tag-range 的中位耗时均胜 Full；Full/tag 条件比率中位为1.97x／2.21x，比较密集3.87x／5.18x，最大约5.45x。list-range 在43/45和44/45胜 Full。100k／seed17／比较密集的最终表示请求字节为 Full 3,875,768，两个经典包装均13,436,784。C／Rust接口、运行时、分配器及计时差异重要。4.1历史内存改善和部分速度回归是真实证据，但不能据此把全部外部差距归因于4.1。
 
 ## 目标与验收边界
 
-恢复Full core竞争力，同时针对原创性/机制协同与成熟替代的实测劣势；七RI最终需有证据的采用理由。Preview1选/集成可行live-core，不声称lifecycle/downstream/selection已解；只改善一benchmark不够，追实质speed、合理resource、有效结构组合。可接受有理memory增长，不以零增长教条或未评估就丢旧优点。
+恢复 Full 核心竞争力，调查机制协同及相对成熟替代的实测劣势；七项调查最终应给有力、有证据的采用理由。本包只选型并集成可行实时核心，不宣称生命周期、下游或选型调查已解决。只改一项基准不够，应有实质速度收益、合理资源成本及有用结构组合；有理由的内存增长允许，不要求零增长，也不未经评估就放弃已有优点。
 
-默认兼容Full4.x：保冻结64函数/14类型API、layouts/status、ownership/lifetime/callback/reentrancy/thread、cursor/revision、strong failure、LS1/LKS4SNP1 bytes/semantics、V3 LK1 import、C17、C++ consumer/distribution。isolated branch内可实质改private结构/算法，B64/AVL/index/stable-address allocation/representation/helpers不是承诺。不未经批准改public/persisted contract，不只为benchmark加runtime dependency。维护性和一致invariants重要。若需break/scope expansion，记录取舍/migration交owner另决，同时继续独立授权事项；兼容方案选择/分支集成在授权内，main adoption/publish不在。
+默认兼容 Full4.x：保冻结64函数／14类型、布局／状态值、所有权／生命期／回调／重入／线程边界、游标／修订号、强失败语义、LS1及LKS4SNP1字节／语义、V3 LK1导入、C17和C++消费者／分发。隔离候选可实质改变私有结构与算法；B64、AVL、索引策略、稳定地址的分配实现、表示及辅助函数划分不是公共承诺。不擅改公共／持久契约，不为跑分增加产品或运行时依赖，保持可维护性及一致不变量。需要破坏契约或扩大范围时，记录取舍／迁移交所有者另决，同时继续独立授权工作。兼容候选的选择与本分支集成已授权，main采用和发布未授权。
 
-## Step1/7 — FULL-RI-001：架构原创性与有意义机制协同
+## Step1/7 — FULL-RI-001：架构原创性及有意义机制协同
 
 ### 1.1 恢复可复用研究基础设施
 
-核Full archive manifest、精确内容、45trace member hashes；在可用/授权处对比raw captures/metadata/adapter/source identities。核byte lengths/SHA-256/membership/ZIP路径安全/source-license/派生或repack身份。保Windows CSV原字节和历史raw，不覆盖archive/静改receipt。新Full research目录如 `benchmarks/research/full-v4.2.0-preview.1/` 恢复standalone build/dependency staging/common trace runner/analysis/reproduction。只引用/复制必需公开授权asset，附origin/hash；不公开私论文/policy/review logs/confidential source。复用旧工具，明记CMake/source pin适配，clean isolated build，真实smoke replay Full/旧comparators并用独立expected order/results。记精确commands/toolchain/dependency/archive检查/失败。普通consumer无需装研究dependency。
+核 Full 归档清单、精确内容及45轨迹成员哈希；在可访问且获准处，将复制的原始采集、元数据、适配器和源码身份与原归档比较。核字节长、SHA-256、成员、安全 ZIP 路径、源码／许可及派生／重打包身份。保 Windows CSV 原字节和历史原始数据，不覆盖归档或静改凭据。在新目录如 `benchmarks/research/full-v4.2.0-preview.1/` 恢复独立构建、依赖暂存、共同轨迹运行器、分析及复现路径。仅引用／复制必要且公开获准的资产并附来源／哈希，不公开私有论文、政策、审查日志或保密源码。复用旧工具，显式说明CMake／源码固定版本的适配；干净隔离构建，实际冒烟回放 Full及既有对照，用独立预期顺序／结果检验。记录命令、工具链、依赖来源、归档核验及失败。普通消费者不应安装研究依赖。
 
-### 1.2 基于源码调查替代，不用口号
+### 1.2 从源码调查替代方案
 
-追当前Full order/block/index/handle、managed search、insert/move/remove/callback publication、snapshot capture/restore对live core的依赖；辨derived ranks与relative precedence。读固定V3/V4设计和拒绝实验（live coordinate relabel/tail、theory-guided、sparse-retention slab screen、4.0→4.1 memory/performance），恢复实际patch/raw；后来的SHA包含change不等于introducing fix。
+追踪实际 Order、块／索引／Handle维护、托管搜索、插入／移动／删除／回调发布、快照捕获及恢复对实时核心的依赖，区分派生秩与相对先后。读固定V3／V4决策及否决实验：实时坐标重标／尾部、理论导向变体、稀疏保留slab筛选、4.0→4.1内存／性能。恢复实际补丁和原始证据；包含变化的后续提交不冒充首次修复。
 
-研究经典OM（Dietz–Sleator、Bender-style indirection）、practical tag/list-range、balanced/blocked sequence、相关persistence/history的primary literature和可执行实现。给精确书目/source URL、假定/保证/反例；看真实实现/license，不只abstract。评估成熟替代加合理stable-identity wrapper/traversal/managed comparator/history能做什么，分操作语义重叠与完整lifecycle等价。不称block labels/indirection/persistence或已知结构组合本身新颖；找Full特定机制协同及可证伪benefit解释，记录旧方案失败和本次不同。
+读经典顺序维护（Dietz–Sleator、Bender式间接）、实用tag/list-range、平衡／块式序列及相关持久／历史的一手文献和可执行实现。给精确书目／源码链接、假设、保证、反例；看实际代码和许可，不只摘要。评估成熟替代加合理稳定身份包装、遍历、托管比较及历史表示的能力，分操作语义重叠与完整生命周期等价。不称块标签、间接、持久化或组合已知结构本身新颖；提出Full特定协同及可证伪收益解释，记录旧方案失败原因和本次差异。
 
 ### 1.3 选择有界可执行候选
 
-至多三个初始实质不同方向，非三产品：A优化blocked AVL（重复rank ascent/common ancestor/path/hot loads/local maintenance）；B hybrid precedence（block labels/OM/indirection加compact stable occurrence，保managed search等所需index）；C替换sequence core或调查所得有据更优方案，完整语义/lifecycle。相同预算内可用有据方向替换某family。按cost model/invariants/expected effects/旧失败/complexity/license筛选；有前景不同方向建最小可跑prototype。仅一个值得实现时，其他以具体证据拒，非偏好。Step2集成有前景private change。每存活方向写representation/metadata/operations/ownership/publication-cleanup次序/worst-adversarial/complexity假定/overflow-capacity/resources/compatibility，兼顾managed/snapshot restore，不只单操作。
+最多三个初始实质方向，非三个完整产品：
 
-### Step1交付与内部转段
+- A：优化块式AVL，减少重复秩遍历、共同祖先／路径成本、热路径读取或局部维护。
+- B：混合先后机制，如块标签／OM／间接与紧凑稳定实例Handle；保留托管搜索等需要的索引。
+- C：替换序列核心或调查中找到的有据更优方案，完整考虑语义和生命周期。
 
-建持久Full架构/决策文档如 `docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.md` 及research protocol/evidence。含current/candidate图或同等精确结构、算法/pseudocode、source-contract map、prior art/license、真实prototype/rejection、未决假说。是living design非最终实现声明，Step2后改准adopted/rejected。保可复现harness/核验archive报告，测前decision protocol后直接Step2，不为例行选择交owner。
+同预算内可有据替换某家族。按成本模型、不变量、预期效果、旧失败、复杂度及许可筛选；有前景的不同方案实际建最小可运行原型。仅一个值得实现时，用具体证据否决其他，不凭偏好。步骤2集成有前景私有变化。每存活方案说明表示／元数据／操作算法、所有权、更新／发布／清理次序、最坏／对抗行为、复杂度前提、溢出／容量、资源及兼容。不能只优化单操作而忽略托管及快照恢复。
 
-## Step2/7 — FULL-RI-002：根因测量及live-core实现
+### 步骤1交付与内部转段
 
-### 2.1 公平同期control与因果profile
+建立持久架构／决策文档如 `docs/design/V4_2_0_PREVIEW1_ARCHITECTURE.md` 及协议／证据。给当前与候选图或同等精确结构、算法／伪代码、源码／契约映射、先行研究／许可、实际原型及否决标准、未决假说。它是动态候选设计记录，不冒充最终实现；步骤2后修为真实采用／否决。保存可复现工具及归档核验报告，计时前确定决策协议，然后直接步骤2，不为例行候选选择交还所有者。
 
-同campaign测不变4.0/4.1、实际未改固定tag/list-range adapters、现有list/treap、候选。复用45条精确20,000-operation定义（三size1k/10k/100k、三seed、五profile）。核replay/identity/traversal/duplicate payload/相同成功操作/no-op，计等价wrapper全storage。recoverable OOM/foreign-handle/callback与共同成功benchmark分开，不给abort comparator编恢复保证。评API check/dispatch和C/Rust差异；可行找忠实有license同语言OM或port，核behavior/complexity/provenance，加为额外control非静替原。不可行则matched native/API/harness microcontrol并说明未解因果。
+## Step2/7 — FULL-RI-002：根因测量及实时核心实现
 
-profile/测量包含：
+### 2.1 公平同期对照与因果分析
 
-- 同/跨block compare、`lks_order_compare` 两rank ascents、path/load/branch/cache、API validation/dispatch。
-- explicit insert/remove/move：同块、跨nonfull/full、no-op、endpoint、short/long、source/dest occupancy；managed insert/search/remove和comparator工作。
-- allocation、pointer/local-index assignments、rotations/splits/merges/redistribution、label变化、requested/retained memory、latency/tails。
-- 同controls下4.0/4.1，区分owner metadata layout、snapshot等实际贡献，不假定memory优化导致所有慢。
+同一测量活动使用未变4.0／4.1、实际未改固定tag/list-range适配器、既有List／Treap及候选。复用全部45条精确20,000操作轨迹（三规模1k／10k／100k、三种子、五负载）。核回放、身份、遍历、重复项、共同成功语义及无操作，计合理包装和全部存储。可恢复OOM、外来Handle及回调保证与共同成功操作比较分开，不能给终止进程的对照编恢复保证。明确分析API检查／分派及C／Rust工具链差异。可行时找忠实获许可同语言OM或移植，核行为／复杂度／出处，作为新增对照而非静替原实现。不可行则做匹配原生／API／工具微对照，明确剩余归因。
 
-独立sequence expected结果，surviving occurrence地址稳定；分精确logical state与同block/occupancy/topology。重建/直接验起态，扩三append形至churn/hotspot/fragmented。prod/profile分开；无hardware counters如实记。monotonic clock/可比边界/release flags/rotated order/serial independent processes，记机器/compiler/allocator/source+binary hash/resource guards/timeouts/skips/failures。不同host不能旧新对比。选中候选对照每Windows/Linux trace/control至少一warmup、七formal fresh processes，diagnostic另跑；先bounded screen，仅selected/control跑full matrix，免无谓重跑。含独立预设adversarial及out-of-tuning条件。
+测量包括：
+
+- 同／跨块比较、`lks_order_compare` 两次秩上溯、路径／读取／分支／缓存、API验证／分派。
+- 显式插入／删除／移动：同块、跨非满／满块、无操作、端点、短／长距离、不同来源／目标占用；托管插入／搜索／删除及比较器工作。
+- 分配、指针／局部索引重写、旋转／分裂／合并／重分配、标签变化、请求／保留存储、延迟与尾部。
+- 同对照下4.0／4.1的所有者元数据、快照等真实贡献，不预设内存优化造成全部变慢。
+
+独立序列参考模型验结果及存活实例地址；区分相同逻辑状态与相同块成员／占用／拓扑。重建或直接核起态，从旧三种追加形扩到反复增删／热点／碎片。生产计时与诊断分离，无硬件计数器则实记。用单调时钟、可比边界、Release标志、轮换串行独立进程，记录机器／编译器／分配器／源码及二进制哈希、资源保护、超时／跳过／失败。不用不同主机旧新时间对比。选中候选每Windows／Linux轨迹／对照至少一预热七正式全新进程，诊断另跑。原型先有界筛选，全矩阵仅对可行选定候选及必需对照，另含独立预定对抗与未调参验证条件。
 
 ### 2.2 结果前预注册决策标准
 
-看候选测量前保存protocol/table：correctness/compatibility绝对gate，分负载timing目标、resource预算、baseline noise/variation、adverse/tail条件、边界及retain/reject。规划目标例如对4.1 compare-heavy和overall median cell-ratio至少降25%/15%，是工程screen非最终优越证明。量化双host及剩OM gap。系统性实质回归（例如相关组超过10%且超实测波动）、tail blowup、sparse retention、failure/capacity须调查。memory预算在测试前预期，测requested/peak/retained及可支持RSS，实质增长须解释；10–20%非自动不可或可接受。按baseline/application给每candidate具体预算；目标不适当则结果前有据替代，非看胜负后改。不得挑seed/profile、隐藏adverse或无据普遍/显著性声明。
+看候选测量前保存协议／决策表：正确性／兼容绝对门槛、负载计时目标、资源预算、基线噪声／变化、不利／尾部条件、边界及保留／否决标准。计划例如对4.1比较密集及整体匹配条件比率中位至少降25%／15%，这是工程筛选目标，不是产品优越证明。量双主机结果及剩余OM差距。调查实质系统回归（例如相关家族超10%且超实测变化）、尾部激增、稀疏保留或失败／容量问题。结果前按基线和应用定每候选预算，量请求／峰值／保留及支持时RSS，解释实质增长；10–20%增长非自动拒绝或接受。目标不合适时在结果前协议有据替换，不看胜负后改。不得挑有利种子／负载、隐不利结果或无据宣称普遍保证／统计显著。
 
-### 2.3 实现集成兼容live core
+### 2.3 集成兼容实时核心
 
-批准候选branch内实质改Full生产，旧controls另保。如block precedence令常见cross-block常数工作，须在split/merge/redistribution/insert/delete/rebuild中一致，不能依未检查midpoint gap。stress有限label exhaustion、单gap反复插入、relabel frequency/total writes/worst tail/counters-overflow/cleanup/OOM。对比低风险rank优化及合理screen方案；不能为compare快重引暴露live持久坐标或无界历史relabel隐患。
+在获准候选分支实质改Full生产源码，旧对照独立保留。如块先后元数据令常见跨块比较常数工作，须在分裂／合并／重分配／插删／重建中一致，不依未检查中点间隙。压力测试有限标签耗尽、同间隙反复插入、重标频率／总写／最坏观察尾部、计数溢出、清理和分配失败。对比低风险秩优化等合理筛选方案，不为比较速度重新暴露实时持久坐标或无界历史重标风险。
 
-审changed private routine所有caller，含managed和snapshot restore/bulk。保survivor handle地址、duplicate payload identity、comparator equal stability、actual/no-op revision/cursor、valid foreign、reentry、publication前prealloc、rollback/cleanup、immutable snapshot/wire。dangling handle不作有效输入测试。保owned/borrowed/status；不加推测public API/format/DB特性。清module/invariants/comments，不无谓framework或production双core。失败prototype不意外链接distributed Full。
+核所有受改私有函数调用者，包括托管及快照批建／恢复。保证存活Handle稳定地址、重复载荷身份、比较器等值稳定性、实际／无操作修订号／游标、有效外来Handle、重入、发布前预分配、回滚／清理、不可变快照和格式字节。悬空Handle不作有效输入；保借用／拥有及冻结状态。不加推测API、格式或数据库功能，模块／不变量／注释清楚，不引无谓框架或生产双核心，失败原型不意外链接分发库。
 
-若无可辩改善，保失败证据，报精确limitation/最小后续决策；不能伪称成功Preview1、空版本或自动开新研究阶段。普通fix/targeted remeasure仍两步内。
+无可辩改善时保失败证据，报告精确未决限制及最小后续决定，不伪称成功Preview.1、不造空版本、不自动开研究阶段。普通修复／针对重测留在两步内。
 
-### 2.4 验证实现/兼容/分发
+### 2.4 验证实现、兼容和分发
 
-运行真实Full gates，不仅benchmark；查expected assertion，覆盖原/新路径。isolated Debug/optimized及适用sanitizer，既有Windows MSVC x64/Win32、Linux GCC/Clang ASan/UBSan、现有CI可得macOS AppleClang、exact-head public consumers/distribution/API/golden。复用既有CI，不改shared workflow/control-plane求green。
-
-按实装generator/compiler/platform适配并记录实际命令输出：
+运行实际Full门槛，不只新基准；检查相关断言，覆盖原有及变更路径。隔离Debug／优化构建和适用sanitizer，既有MSVC x64／Win32、Linux GCC／Clang含ASan／UBSan、可用现有CI AppleClang，精确提交公共消费者／分发／API／固定向量。复用原CI，不改共享工作流或控制面求绿。按实际生成器／编译器／平台适配并记录命令输出：
 
 ```sh
 python tools/verify_v4_api.py
@@ -99,41 +106,41 @@ python tools/validate_distribution.py
 python tools/validate_release_assets.py
 ```
 
-用适当native MSVC generator/architecture和支持Clang sanitizer，验七public examples和真实distribution consumers；保API/golden字节，不弱assertion或刷新fixture掩break。新表示补adversarial model、reached allocation failure、resource reclamation、managed/bulk/restore，精确source/assertion引用。查source list/standalone/amalgamation/C++。可行用isolated只读origin OrdWeave临时本地Full替代做smoke/compatibility，报精确RC/current source和实际dependency pin；不称native Linux OrdWeave，完整paired lifecycle/DB attribution归Step4。真实缺测试需记impact，不能当成功。
+适当用原生MSVC生成器／架构及支持sanitizer的Clang；验证七公共示例及真实分发消费者。保API及固定预期字节，不弱断言或改向量容忍破坏。新表示补对抗模型、实际到达分配点故障、资源回收、托管／批建／恢复，附源码／断言位置。私有模块改后核源码清单、独立／合并版和C++。可行时只读来源隔离OrdWeave、本地替Full做冒烟／兼容，报精确候选／应用源和实际依赖；不称原生Linux OrdWeave，完整配对生命周期／DB归因归步骤4。真实不可测及影响实记，不当成功。
 
-## 强制version/architecture/documentation交付
+## 强制版本、架构及文档交付
 
-实质选中实现metadata为 `4.2.0-preview.1`，CMake numeric4.2.0，header version/prerelease依历史；查全部version source/generator/install/package/distribution，准确改Full-owned metadata/changelog/notes，不改历史tags/releases。公开Stable仍4.1.0，不能称Preview1已发布。无可行候选不把失败experiment标升级；需break则停止adoption报version/migration。
+实质选定实现使用 `4.2.0-preview.1` 元数据，CMake数值4.2.0、头版本／预发布串依旧惯例。查全部版本来源、生成器、安装／包消费者及分发检查，准确改受影响Full元数据／变更日志／说明，不动历史标签／发布。Stable仍4.1，不称Preview.1已发布。无可行候选不把失败实验标升级；需兼容破坏则停采用，报版本／迁移影响。
 
-建 `docs/V4_2_0_PREVIEW1.md` 持久stage报告及Step1架构/decision，附真实protocol/profile/independent checks/adopted-rejected/sourcepins/reproduction。避免双权威：design解释invariant/rationale，四指南解释实际实现，report记milestone/limits，Issue3为债务权威。给源码技术图/pseudocode/private-public call paths/ownership-failure，非泛说快，链prior design/research。其他research形式随仓库。
+交 `docs/V4_2_0_PREVIEW1.md` 及步骤1设计，附真实协议、分析、独立核验、采用／否决、固定源码及复现证据。设计说明不变量／理由，四指南解释实际实现，阶段报告记里程碑／局限，Issue#3为债务权威，避免双权威。提供绑定源码图／伪代码、精确私有／公共调用和所有权／失败边界，非泛说变快，链旧设计／研究；其他形式沿仓库习惯。
 
-Full same-PR文档gate即使仅private性能变更也强制，读四指南并更新受影响中文全文：
+即使只改私有性能，也必须同PR完整读并同步受影响中文指南：
 
-1. `docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md`：真实modules/data flow/operation call paths/examples。
-2. `docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md`：全public surface/status/ownership/lifetime/source mapping及明确核过不变部分。
-3. `docs/IMPLEMENTATION_INTERNALS.zh-CN.md`：representation/functions/invariants/update/publication/rollback/capacity/allocation/snapshot restore。
-4. `docs/IMPLEMENTATION_VALIDATION.zh-CN.md`：实际assertion/source links/commands/counts/environment-CI/benchmark/limits。
+1. `docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md`：模块、数据流、操作调用及示例。
+2. `docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md`：完整公开接口、状态／所有权／生命期／源码映射和明确核过未变部分。
+3. `docs/IMPLEMENTATION_INTERNALS.zh-CN.md`：表示、函数、不变量、算法、发布／回滚／容量、分配及快照恢复交互。
+4. `docs/IMPLEMENTATION_VALIDATION.zh-CN.md`：实际断言／源码链接、命令、数量、环境／CI、基准及局限。
 
-同change更新 `docs/FULL_CONSUMER_HANDOFF.md` 最新ledger：old/new精确implementation revision、changed paths/functions/structures/call chains、compatibility/performance/memory/failure、分别DB-core/adapter verdict、actual tests/unverified。以证据及本授权restart修DEVELOPMENT/handoff过时planning-only DB状态/Nov15暂停，保历史决策。其他Full-owned API/Architecture/Compatibility/Usage/Integration/Development/examples/notes按需。public README/family navigation/shared workflows归Repo，本Full-only任务不改，报将来另scope需求。保published truth，不把强制Full docs拖RC。
+同改 `docs/FULL_CONSUMER_HANDOFF.md` 最新台账：前后精确实现、路径／函数／结构／调用链、兼容、性能／内存、失败语义、DB核心／适配层分判、实际测试及未测路径。凭证据及本次重启授权纠正DEVELOPMENT／交接的“仅规划”数据库状态及11月15日暂停，保历史决定。其他Full API／架构／兼容／用法／集成／开发／示例按需；根README／产品导航／共享工作流归Repo，本包不改，列未来独立范围需要。不拖到RC才做强制文档，不误报发布状态。
 
-记录独立接受baseline：4.1source `70d7f0ef5857b54381b863d292a213909d87459f`、PR25指南实际document commit须核；本cycle原provisional snapshot起点无；新candidate implementation revision。先commit生产再在docs绑exact SHA，后docs-only commit非新algorithm；final PR HEAD另记免自引用。生产再变须重绑更新。stage report/PR四行sync matrix：每guide reviewed/updated sections或有据unchanged、files/functions/source SHA/actual validation/limits。Preview docs待独立acceptance，不能已知错误。不为新奇重写manual；RC虽重建final/history信任，不豁免当下同步。
+记录最后独立接受基线：4.1源码 `70d7f0ef5857b54381b863d292a213909d87459f`，PR#25指南需核真实文档提交；本轮起始无临时Preview快照；另记新候选源码。先提交实现再文档绑定精确SHA，文档提交非新算法，最终PR HEAD另记避免自引用。生产再改则重绑并修相关文档。报告及PR给四行同步矩阵：实际章节／有据未变、文件／函数、源码SHA、实际验证及限制。临时文档待独立接受，但不能留已知错误。不为新意重写全手册；RC信任重建不豁免当前门槛。
 
-## 证据、有界自审与停止条件
+## 证据、有界自审及停止
 
-raw measurements/inputs-hash manifests/code/candidates-rejections/logs/counters/models/environment-binary-source/analysis置新Full research目录或固定专用research branches，永久引用。保原captures/历史branches，不泄私。Git太大则可复现durable authorized archive+完整hash/ref，不只短期CI artifact。protocol改需前瞻记录、保旧失败。合理复用已验证infra/results，新performance须同期controls。记RI001/002发现/gaps，RI003–007附带影响仅证据更新非完成步骤。
+新Full研究目录或精确固定的专用Full研究分支存原始测量、输入／哈希清单、实验码、候选／否决、日志、计数、独立模型、环境／二进制／源码及分析。保原始采集／历史分支，不泄私。过大时用获准可复现持久归档附完整哈希引用，不只短期CI产物。协议变化前瞻记录、保旧失败。合理复用有效设施／结果，新性能宣称需同期对照。记录RI-001／002实际发现／缺口；附带RI-003–007仅证据更新，非完成后续步骤。
 
-先contract/evidence/critical assertions checklist，实作测，再读source/docs/assertions/task修真实问题；聚焦adversarial/new-maintainer审representation/fairness，核scope/provenance/contracts/docs。有界活动非无限fixed-point；普通failure两步内修。未解correctness/security/compatibility blocker或无viable architecture则有据停可审状态，不扩计划。保final covered/uncovered/repairs checklist，不自宣独立PASS。
+用一份编辑前契约／证据／关键断言清单；实际实现测试，再读受影响源码、文档、断言及任务修问题；对选定表示及公平性作聚焦新维护者／对抗复核，核范围／出处、契约及全部文档。活动有界，非无限不动点，普通失败两步内修。未解正确／安全／兼容阻碍或无可行架构时，有据停可审状态，不扩计划。存最终已／未覆盖和修复记录，不自授独立PASS。
 
-## 当前操作授权与交付
+## 操作授权及交付
 
-- **读/研究：** 列出的Full/archive、合法public comparator/primary sources、OrdWeave只读reference；无关private/global config不动。
-- **edit/test：** 指定Full branch private production、Full-owned build/version/tests/research/强制docs，可本地isolated prototypes/worktrees；不改未授权public contract/Mini/Workbench/governance/control-plane/Repo shared。
-- **commit/push：** 指定Full branch coherent implementation/evidence/docs提交，保历史，不force/direct main。另essential research remote branch不在授权，报需求；默认本branch+temporary local worktree。
-- **PR：** 一Full-only draft against main审完整两步，实际inventory/source/head/doc matrix/consumer ledger/exacthead CI；跑等既有required Full/Mini/Workbench/scope-guard适用context，分skip/missing/fail，不能弱保护/exception/admin bypass/模拟pass。Repo需要另列不改。
-- **merge不授权；tag/Release/publish assets/changeLatest不授权。** 可candidate准备验证；真实preview tag/Prerelease/exact target待独立accept后owner另决，不动旧tag/assets。
-- **其他repos：** 只读；本地isolated OrdWeave test/dependency替代可，不remotewrite/production pin/release/private research-manuscript。无global/credential/cloud/settings变更。
-- **停点：** 两步、实际integrated候选或精确failed selection、全部证据/docs、授权commit/push/reviewPR、完整英文报告后停；不开Preview2/RC。
+- 读取研究：列明Full／归档、合法公开对照／一手来源、OrdWeave只读参考；不改无关私有或全局配置。
+- 编辑测试：指定Full分支私有生产实现、Full构建／版本／测试／研究及强制文档；可本地隔离原型。无未批公共契约、Mini、Workbench、治理／控制面或Repo共享改动。
+- 提交推送：仅指定Full分支候选和可复现证据，连贯提交，保历史／标签，不强推或直写main。额外专用研究远端分支不在本授权，必要时报告；默认用本分支及本地临时工作树。
+- PR：一份Full-only草稿对main，审完整两步，真实文件清单／源码／HEAD、同步矩阵、交接及精确CI。运行并等待适用Full／Mini／Workbench／scope-guard。分清跳过／缺失／失败，不能弱保护、加例外、管理员绕过或模拟通过。Repo需要另列不改。
+- 不授权合并、标签、GitHub Release、公开资产或Latest变化。可准备验证候选，真实Preview.1标签／预发布及精确目标待独立接受后所有者另决；既有标签／资产不动。
+- 其他仓库只读，可本地隔离OrdWeave替依赖测试，不远端写、不改官方依赖、不发应用版、不改私有研究／论文、全局、凭据、云或仓库设置。
+- 两步、集成候选或精确否决、全部证据文档、授权提交推送／审查PR及英文总报告完成后停。不开Preview.2或RC。
 
-## 最终英文报告（两步共一份）
+## 英文完成报告（两步一份）
 
-含精确start/end local/remote SHA/base/branch，implementation source SHA、docs SHA、final review HEAD分开，worktree、真实PR/checks/runs/headSha、全file inventory、task/compatibility scope、候选架构/理由/实测、operation rootcause/uncertainty、4.0/4.1/OM/candidate前后resource/tail/adverse、raw/protocol/repro、actual tests/platform/assertions/unexecuted、package/version、四guide matrix、OrdWeave adapter/core impact。区分历史/新执行/独立acceptance，未完成/真实blocker实报，不编clean/green/published。**Technical Debt Impact：** FULL-RI001–007各disposition/evidence、新/派生问题、真正introducing commit与later diagnostics、partial/unresolved、不假关闭。独立技术验收、main集成、release、nextstage均另决。
+给精确起终本地／远端SHA、基点／分支、实现／文档／最终审查HEAD、工作树、真实PR／检查／运行／SHA、完整变更清单、任务／兼容范围、架构替代／理由／实测、操作根因及不确定性、4.0／4.1／OM／候选前后资源／尾部／不利结果、原始证据／协议／复现命令、实际平台／测试／断言／未执行、包／版本、四指南矩阵及OrdWeave适配／核心影响。分历史／新执行／独立接受，诚实报未完／阻碍，不编干净或绿色或发布。**Technical Debt Impact：** 每个FULL-RI-001–007给处置／证据、实际新衍生问题、首次引入与后诊断提交、部分未决，不假关闭。独立验收、main集成、发布及下一阶段另决。

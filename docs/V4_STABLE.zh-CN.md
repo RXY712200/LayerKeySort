@@ -18,13 +18,13 @@ Stage6完成固定V4 Preview.1–5/RC.1周期。RC.1通过独立审核，当时�
 
 64公开函数/14类型，回调/字段/签名不变，无公开Path/Tree/OrderedTree/过渡immutable_group API。状态OK0、INVALID_ARGUMENT1、OUT_OF_MEMORY2、BUFFER_TOO_SMALL3、NOT_FOUND5、INTERNAL_ERROR7、ALREADY_EXISTS8、CAPACITY_LIMIT9、INVALIDATED10、REENTRANT11、DOMAIN_MISMATCH12，空洞4/6仍unknown。
 
-LS1 v1保留七向量、小写namespace/ordinal hex、同域词典序及跨域拒绝。LKS4SNP1保留四二进制向量、flags0、显式大端、计数/溢出/尾拒绝；17条严格V3 LK1迁移向量/已发布语义不变，不重新解释格式。Win32/x64同fixture。4.x源码/布局兼容要求重建，不保证跨工具链/CRT/架构二进制ABI。普通库静态，私有归档符号不变公共承诺。
+LS1 v1保留七向量、小写namespace/ordinal hex、同域词典序及跨域拒绝。LKS4SNP1保留四二进制向量、flags0、显式大端、计数/溢出/尾拒绝；17条严格V3 LK1迁移向量/已发布语义不变，不重新解释格式。Win32/x64同fixture。4.x源码/布局兼容要求重建，不保证跨工具链/CRT/架构二进制ABI。普通库静态，私有归档符号不成为公共 API 承诺。
 
 ## 验证与发布条件
 
 本地GCC16.2严格C17 Release（-Wall -Wextra -Wpedantic -Werror）、MSVC x64 Debug/带符号Release/ASan、Win32 Debug，各需39/39及七示例。本地Clang/GCC sanitizer运行库不可用，由精确SHA远端覆盖。默认优化MSVC exe消失未无据归因，带符号Release为已验配置。
 
-修改oracle、managed、Group/Batch、parser torture、marker并发、OOM/failpoint、免分配断言不变。Preview.4聚焦回放timeline/churn/distant_drag/equal，原初始人数、seed7、10k操作，16次回放/16维护比较清理计数须匹配，无计时/调优。干净GCC/MSVC x64/Win32 C17/C++17消费者通过公开头引用全部64函数：add_subdirectory、离线FetchContent、install/export/find_package、LayerKeySort::layerkeysort、合并版；普通消费者不需Python。
+变更参考模型、managed、Group/Batch、parser torture、marker并发、OOM/failpoint、免分配断言不变。Preview.4聚焦回放timeline/churn/distant_drag/equal，原初始项数、seed7、10k操作，16次回放/16维护比较清理计数须匹配，无计时/调优。干净GCC/MSVC x64/Win32 C17/C++17消费者通过公开头引用全部64函数：add_subdirectory、离线FetchContent、install/export/find_package、LayerKeySort::layerkeysort、合并版；普通消费者不需Python。
 
 精确v4-stable候选及快进main各需六配置：Windows x64/Win32、Ubuntu GCC/Clang/Clang ASan+UBSan、macOS AppleClang，各39测试、七示例、清单、干净消费者，GCC验资产。Clang sanitizer保留600k修改、长parser、100k远移、200k churn。只有green main可注释tag及非draft/非prerelease latest Stable。历史Preview/RC分支/tag/Release/v3.1.0保留。
 

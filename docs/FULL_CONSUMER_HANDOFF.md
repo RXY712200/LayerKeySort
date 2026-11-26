@@ -8,6 +8,8 @@
 - The live occurrence, borrowed payload/context, callback/reentry, revision, failure publication, LS1, LKS4SNP1, LK1 import and restore contracts are unchanged. Source, install and amalgamation distribution continue to use the public header.
 - The existing native dependency substitution evidence still applies to the same operational code. No OrdWeave adapter or database core change is indicated by the metadata update. Its official dependency remains Full v4.1.0. Before an approved upgrade, rerun exact-pin compilation, logical order, capture/reopen/recovery and the consumer allocation or transaction failure checks.
 
+- Documentation packaging at `a13bab620ea289a64188c58af1b916f11cfb7d2b` adds the complete Chinese instructions to generated `README.txt`. Generated C/header, five-member layout, API and wire bytes are unchanged. Source/install/amalgamation C/C++ consumers and reproducibility/checksum checks passed. Package bytes have a new digest; see the reconstruction ledger. No adapter or database-core change is required.
+
 
 ## Preview.3 consolidated verification — development candidate
 

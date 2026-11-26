@@ -2,11 +2,11 @@
 
 原文：[V4_2_0_PREVIEW1_2_TASK.md](V4_2_0_PREVIEW1_2_TASK.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_2_0_PREVIEW1_2_TASK.md)。原件保留，英文执行权威；本译本不重启历史授权。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
-签发2026-11-24，owner批准[计划#27](https://github.com/RXY712200/LayerKeySort/issues/27)Steps1–2/FULL-RI-001/002一次扩展，七项在[#3](https://github.com/RXY712200/LayerKeySort/issues/3)。一次连续Codex/英文报告，非Step8/重复Preview1/Preview2，无自动1.3。调查且证据支持时缩小经典OM优势、保Full工程价值，不要求各算法/负载/指标都胜；有据拒激进方案是完成研究，不为版本制造发布/弱正确性。
+签发2026-11-24。所有者批准[计划#27](https://github.com/RXY712200/LayerKeySort/issues/27)步骤1–2（FULL-RI-001／002）一次扩展，七项调查在[#3](https://github.com/RXY712200/LayerKeySort/issues/3)。一次连续Codex任务和英文报告；非步骤8、重做Preview.1或Preview.2，不自动有1.3。调查且有证据时缩小经典OM优势，保Full工程价值；不要求所有算法／负载／指标都赢。有据否决激进方案是完成研究，不为版本制造发布或弱化正确性。
 
-## 0. 权威、状态、保护
+## 0. 权威、精确状态及保护
 
-授权私下完整读现行WORKFLOW/RELEASE_POLICY、模板及本地约束，私记policy revision/可用性；读#27/#3、原Preview1任务/最终报告架构交接、当前API/freeze/development/ownership/validation/四指南和实际source/tests，遵Full同PR文档更严格gate。不公开政策/凭据/论文/无关评审。
+通过授权私有访问完整读现行协作／发布政策、任务／报告模板及本地指令，私记政策修订号及可用性。读#27／#3、原Preview.1任务及最终阶段／设计／交接、当前API／冻结／开发／归属／验证／指南、相关源码测试，遵Full同PR文档门槛。私政策／凭据／论文／无关审查不公开。
 
 | 角色 | 精确revision |
 | --- | --- |
@@ -20,13 +20,14 @@
 | OrdWeave/官方Full | b12a007c50c2f9efcbee500a14d3cf09dcc74f10 / 70d7f0ef5857b54381b863d292a213909d87459f |
 | 实用经典OM | j-hui/order-maintenance ac4b902d103beb30cee3316d20cd10701f52d15a |
 
-dev/full-v4.2.0-preview.1.2从文档修正点创建再加任务commit。Fetch记录initial SHA/local/remote/worktree，核refs/生产/task-only diff。原draft#28独立保留，不改其branch/rebase/delete/merge/publish。扩展隔离，owner另决Preview1集成；commit非Release，签发两拟议4.2 tag不存在，Stable4.1，tag查询非授权。Preview1为已验fallback，结果/接受不依赖本实验。
 
-用短期叠加Full candidate及一个draft对dev/full-v4.2.0-preview.1；#28合后retarget由owner/独立决定，不能静默rebase。叠base不触checks则如实报并准备精确head验证，不改governance。无main/publication，不reset未知，用隔离worktree/输出。
+`dev/full-v4.2.0-preview.1.2` 从文档修正检查点建立，另加本任务提交。获取并记录精确初始SHA、本地／远端／工作树，核引用、生产文件和仅任务差异。#28独立草稿保留，不改其分支、rebase、删除、合并或发布。扩展有意隔离，可与所有者另决Preview.1并行；提交非发布，签发时两个拟议4.2标签不存在，Stable4.1；查询标签不代表授权。保已独立验收Preview.1为回退，不覆盖结果或使其接受依赖本实验。
 
-## 1. 起点证据和决定
+用短期叠加分支及一份草稿对 `dev/full-v4.2.0-preview.1`；#28合后重定向由所有者／独立审查决定，不静默rebase或改目标。叠加基点若不触保护检查，实报并准备精确提交验证，不改治理。不集成main或发布，不reset未知修改，用隔离工作树／临时输出。
 
-Preview1将高度祖先compare（不用两绝对rank）与普通插删移suffix local合并，结构成员变化保全修，无新字段，跨块最坏log。90primary均胜Stable，请求live/peak90/90相同。托管45×7×9双主机共5,670（4,410正式/630warm/630diag），独立630cells核中位/极值/IQR/存储/比。Linux主要CLOCK_MONOTONIC，旧wall保历史。Full45360683557六配置各39/39含扩san/distribution，OrdWeave12/12。CI后仅两说明修正，finalhead另验。
+## 1. 起点证据及技术决定
+
+Preview.1组合按高度引导父链先后比较（不算两个绝对秩）与普通插删移仅更新后缀位置，成员变化仍完整修复，无新增Handle／Block字段，跨块最坏对数工作。90主要条件均胜Stable，请求实时／峰值90/90相同。双主机45轨迹×7实现×9观测共5,670行（4,410正式、630预热、630诊断）；独立重算630条件的中位／极值／IQR／存储／比率一致。Linux主要为CLOCK_MONOTONIC，旧墙钟保历史。Full CI45360683557六配置39/39含扩san／分发，隔离应用12/12。CI后只修两处文档，最终新提交仍需验证。
 
 | Preview1/control中位 | Windows | Linux |
 | --- | ---: | ---: |
@@ -36,64 +37,59 @@ Preview1将高度祖先compare（不用两绝对rank）与普通插删移suffix 
 | list-range OM | 1.23704 | 1.16922 |
 | tag-range OM compare-heavy | 3.07133 | 2.62921 |
 
-对tag胜9/45及11/45，list10/45及15/45；最差tag3.576x。100k/seed17/compare-heavy Preview1 retained3,875,768对OM13,436,784，peak4,253,752对13,437,504，是请求非RSS/普遍内存优。比较剩余gap最佳目标，非组件整体不竞争证明；C/Rust native/语言/编译器/allocator/wrapper仍混合。旧中点原型1,057耗尽后AVL，非成熟动态OM实质评估，保否决历史。[阶段报告](https://github.com/RXY712200/LayerKeySort/blob/2d14510a8aae131bcd35679b940ab3d3b36fb8fa/docs/V4_2_0_PREVIEW1.md)及final-matrix。
 
-## Step1/7扩展：机制研究与有界prototype
+对tag-range胜9/45与11/45，list-range胜10/45与15/45；最坏candidate/tag为3.576x。100k／seed17／比较密集，Preview.1保留请求3,875,768 bytes，对两个OM均13,436,784；峰值4,253,752／13,437,504。请求字节非进程RSS或普遍内存优势。剩余比较差距是目标，非整组件不竞争证明；C／Rust原生适配、语言、编译器、分配器及包装仍混杂。旧中点原型在集中插入第1,057次耗尽后一直AVL回退，非成熟动态OM的实质评估；保否决历史。[阶段报告](https://github.com/RXY712200/LayerKeySort/blob/2d14510a8aae131bcd35679b940ab3d3b36fb8fa/docs/V4_2_0_PREVIEW1.md)及最终矩阵为证据。
+
+## Step1/7扩展 — 机制调查及有界原型
 
 ### A. 复用已验环境
 
-复用公开final-matrix、j-hui/notice、45不可变轨迹、native/API probe、diagnostics、独立oracle、prod/diag编译及旧授权lks0011。核pins/归档/构建/trace hash/边界，重读实际码/V3 tail/V4选择/4.1内存/1标签原型及proof。不为历史重跑无关。新capture cleanstage/锁deps/不可变control。Windows/nativeLinux已具Rust/GCC，用既有路径，本地无Rust非阻断，不全局装/改FullCI/论文。必要仅一个lks0011 research/preview1-2-matrix，从保留head，限captureworkflow/code，本包授权；保原研究/论文，不复制私内容公开。
+复用公开最终矩阵、归档j-hui源码／许可声明、45不可变轨迹、原生／API微探针、诊断／独立参考模型、生产及诊断编译方案、已获准lks0011托管。核精确版本、归档／构建／轨迹哈希及计时边界；复读实际代码、V3重标／尾部、V4选择、4.1内存、Preview.1标签原型及证明。不为重建历史重跑无关测试。新采集干净暂存、锁定依赖和不变对照。已有Windows／原生Linux Rust／Cargo／GCC成功路径，本地无Rust非阻碍；不全局安装、不改FullCI／论文。必要仅从保留研究顶端建私有 `research/preview1-2-matrix`，限本包采集工作流／代码／证据，保原研究及论文，不公开私密材料。
 
-### B. 成熟OM最高优先
+### B. 成熟顺序维护调查（最高优先）
 
-读Dietz–Sleator、Bender2002、锁定tag/list代码及需时可信现代/间接实现，比较最坏/摊销、relabel流量、update限制、word/overflow、稳定身份/query/任意相对insert/delete/merge/split；核实代码/许可/假设非仅渐进描述。分析仅维持block先后、既有AVL供managed/topology/bulk的协同，非新OM理论宣称。研究既有tag/range只施块层、分组/间接/受控localrelabel，及哪些AVL metadata不再要；对合理独立index/更好机制，不为跑分引大runtime。衍生代码许可/归属兼容，适宜优先独立实现并说明。
+读Dietz–Sleator、Bender等2002、固定tag/list-range及必要可信现代OM／间接实现的一手资料。比较最坏／摊还、重标流量、修改限制、字宽／溢出、稳定身份、查询、任意相对插入、删／合／分。核真实代码、许可、假设，非只渐进。研究仅维护块间先后、保AVL托管边界／拓扑／批建的协同，不宣新OM理论。研究块级成熟tag/range、分组／间接／局部重标，以及哪些AVL元数据不再需要，比较合理独立索引等。不能为跑分引入大型运行时。衍生代码许可兼容并署来源，适当优先独立实现并说明。
 
-### C. 范围与可证伪方案
+### C. 有界可证伪候选
 
-最多三实质家族含旧AVLcontrol，至多两新：真实有限label且集中插删持续维护的block OM，不是永久禁用唯一fast路；有据替代如去unused-rank降低index/mutation或不同廉价precedence，可与选定动态合并、消融归因，非三完整库；Preview1不变fallback。
+最多三家族，含既有优化AVL对照及至多两新家族：真实有限标签、有动态集中插删维护的块OM（非永久禁用唯一路径）；有据替代如去不用秩元数据或廉价索引／先后，可与动态机制组合并消融，不是三个完整库；未改Preview.1是回退。
 
-不为新颖强造算法，拒家族需primary/invariant-cost论证或可执行失败。可信动态维护需原型，除可证明契约/不变量不可行。各方案明确块/间接/tag对象、界/capacity、分配/relabel/清理/发布、init/rotate/split/merge/redistribute/crossmove/remove/bulk/managed/noop/revision/身份/owner/snapshot/wire。Fastpath有效及fallback/rebuild转换不能无界不安全/永久静默退化。坐标非ID，不改LS1/wire。subtree_blocks全读者/checker/restore搜后实测才删。保持C17/冻结。
+不强选某算法或为新颖造家族。否决须一手资料、具体不变量／成本或可执行失败／测量。可信新动态维护应实际原型，除有契约／不变量不可行证明。每方案说明块及间接／标签对象、界／容量、分配／重标／清理／失败发布次序、初始化／旋转／分裂／合并／重分配／跨块移动／删除／批建、托管、无操作／修订号／身份／所有权／快照／格式。说明快路有效性及回退／重建转换，无无界不安全或永久静默退化。坐标非永久ID，不改LS1／线格式。`subtree_blocks`先完整查读者／诊断／恢复及测量，不推测删除。保C17／冻结。
 
-建架构文档V4_2_0_PREVIEW1_2_ARCHITECTURE.md，精确diagram/pseudocode、invariant/proof、call/op、复杂度/实证限制、选择/反例、priorart/历史；另新研究目录前瞻协议。直接Step2，无普通选择中途owner交接。
+建 `docs/design/V4_2_0_PREVIEW1_2_ARCHITECTURE.md`，含图／伪代码、不变量／证明、调用／操作、复杂度保证与实证限制、选型／不利证据、先行研究及历史；新研究目录保存前瞻实验／采用协议。直接步骤2，不例行交还候选决定。
 
-## Step2/7扩展：实现、测量、决定
+## Step2/7扩展 — 实现、测量及决定
 
 ### A. 测前规则
 
-新计时前commit协议：固定trace/priority/threshold/resource-tail/选择/stop。对已接受Preview1非仅弱4.1。默认双主机compare-heavy至少20%elapsed下降、overall8%，或前瞻有理强取舍如目标明显改善、其他持平/额外内存tail有界。目标不强采用，精确exception先定，不事后改。量对两OM gap/wins，不要求普遍win/等memory，用baseline波动及真实目标优先。
+新计时前提交协议：轨迹、优先级、阈值、资源／尾部预算、选型及停止。对照已接受Preview.1，非仅较弱4.1。默认双主机最终同期矩阵比较密集中位耗时至少降20%、整体8%，或前瞻论证强取舍：目标比较实质改善、其他持平且额外资源／尾部有界。它是选型目标非强制采用，例外结果前定，不事后移门槛。量两个OM差距及胜场；不要求普遍赢或内存完全相等，按基线波动和实际目标优先。目标条件请求实时／峰值约15%增量可因重大收益合理，更大需结果前资源论证及采用前所有者审查，非自动否决研究。独立预设尾部／最坏工作预算，保所有不利条件／系统回归／尾增；不可隐瞒超噪声的>10%非目标系统慢、无界暂停或不可接受稀疏保留，除显式有据决定。正确／兼容／失败保证绝对。保前面对4.1整体15%／比较25%参考，不丢已接受收益。
 
-拟议目标cell最多约15%额外请求live/peak可为显著收益合理，更大需结果前资源论证及owner采用前审，不自动拒研究。单设tail/最坏工作预算，保反例、系统回归、tail大增；不隐>10%非目标系统慢（超噪声）、无界pause或不可接受稀疏保留，除明确有据决定。正确/兼容/失败绝对；保先前对4.1整体15%/compare25%参考，勿丢已接受收益。
+### B. 原型筛选、消融及对抗
 
-### B. 筛选、消融、对抗
+先既有条件和预选独立状态的有界子集，仅可行最终候选及必要对照跑全矩阵。公平公共调用边界、计时／诊断分开，比较简单快路、维护及整体混合，保否决原型测量。集中间隙反复插入足够超过1,057旧失败，持续热点、首尾增长、随机碎片／反复增删、不同占用分裂／合并／重分配、反转／远移、跨层比较、恢复批建、收缩再增。记录耗尽／重标／重建／回退次数、影响块／字节、写入最大及分布；分辨率和样本允许时给p50／p95／p99／p99.9／max，不把计时下限当精度。量纯比较、修改移动、托管搜索、分配、缓存索引、资源，确认比较加速不将巨大成本转移到变更。结构改变后验独立序列及全部有效Handle身份，非只追加形。故障注入实际到达分配及新准备失败点；饱和／溢出及安全转换不破Handle、修订号、快照／历史。消融隔离元数据和更新优化。
 
-先有界子集/预定独立状态，仅可行final及controls全matrix。公平外部API边界、diag/time分开，测fast/maintenance/mix，拒者亦留。窄gap超过1,057、持续hotspot/首尾、fragment/churn、变占用split/merge/redistribute、逆/long、层次compare、restore/bulk、shrink/regrow。记耗尽/relabel/rebuild/fallback/影响块字节、写max/分布、分辨支持p50/p95/p99/p99.9/max，计时floor非精度。比较-only、update/move、managed/search、分配/cache/index/资源，勿仅转移巨成本。实际演进状态独立序/全部live身份，非只append；新可失败preparation到达注入，saturation/overflow/failsafe不破Handle/revision/history；消融分metadata/update。
+### C. 可行集成候选最终测量
 
-### C. 最终可行候选campaign
+Windows／Linux原生托管同期七或八适配器：候选、未改Preview.1、已发布4.1／4.0、List／Treap、固定tag/list-range，全部不同为八。全部45条20,000操作冻结轨迹不改哈希，每条件每变体七正式新串行进程加一预热一诊断，45×8×9=每主机3,240行；另预设独立对抗／留出。轮换顺序、同优化构建、QPC／CLOCK_MONOTONIC／Rust Instant、源码／编译／链接／二进制／环境凭据、内存准入／超时／原始输出错误／失败跳过。旧计时不能作同期对照。量请求实时／峰值／保留、分配释放清理、实际可用RSS，不用零占位推缺失RSS。按风险做规模／增删筛查，广生命周期／数据库归Preview.2。C适配器五语义向量及Rust对应门槛，独立核顺序／身份／遍历／等值／无操作，说明失败保证、包装、内存及语言工具链差异。
 
-双原生host同时代：candidate、原Preview1、4.1、4.0、List/Treap、锁tag/list，distinct共八（七或八描述按实际）。45冻结20,000 op、七formal fresh串行+warm+diag，45×8×9=3,240每host；另预定独立对抗/holdout。轮换、匹配优化、QPC/CLOCK_MONOTONIC/RustInstant，source/compile/link/binary/env凭据、guard/admission/timeout/stdout/stderr/failed/skipped全留，旧timing不能作同时代。live/peak/retained、alloc/free/cleanup、真实可用RSS，不从0placeholder推RSS。按实际风险大/churnscreen，广lifecycle/DB留Preview2。五C语义fixture及Rustgate，独立order/identity/traversal/equal/no-op；区分failure/comparator/wrapper/memory/native。
+有界可行时忠实实现／选获许可C/C17经典OM或严格匹配C实验，不变无界移植。两新家族预算内不能证明忠实则用匹配C公开API／先后／变更探针并留语言／包装归因未知；C胜Rust是组件结果非抽象算法优越。加移植也保未改实际OM对照。不挑结果，保正负源码证据。无可行改善时跑足同期配对筛选给否决理由及协议／设计证据，生产／版本留Preview.1并建议后续Preview.2；已因绝对契约失败否决的候选不巨矩阵／空发布。有前景但实质门槛未解则精确报，不静采，不另开扩展。
 
-可行时忠实licensed C/C17经典或严格匹配C-facing归因，不开无界port；预算不能合理移植则匹配C API/precedence/mutation并留语言/wrapper未知，仍比锁定原OM。C胜Rust是组件非抽象更优证明，无cherrypick，保全部源/好坏证据。
+### D. 兼容候选及验证
 
-无viable：足够同时代pairedscreen定原因、完整负选择/design/protocol，生产版本保Preview1、建议下一Preview2，不为绝对契约失败者跑巨final或空prerelease。Promising但gate未决精确报非默采用，不再扩展。
+仅可行候选干净集成Full代码，保64函数／14类型、C17/C++、稳定Handle、回调／重入／外同步、状态／游标／修订号／失败原子、LS1／LKS4SNP1／V3 LK1。私有表示可变，未批公共或持久契约不改，研究原型不进生产。仅采用时元数据 `4.2.0-preview.1.2`，CMake4.2.0、头预发布，验版本／包／发布真实状态；无采用无升级。计划SemVer不授权标签／Release，不为广告改码。
 
-### D. 真实兼容候选与验证
+补标签维护／动态重标／修复、存活身份／重复稳定、独立模型、输出失败、批建／恢复／清理。查实际断言非数量。严格Debug／Release C17、MSVC x64／Win32、GCC／Clang、ASan／UBSan／扩san、既有AppleClang、API／线格式／固定旧数据、示例、C／C++源码安装合并版、资产。使用 `LKS_BUILD_BENCHMARKS=ON`、适当构建配置／ctest、`tools/verify_v4_api.py`／`tools/validate_distribution.py`／`tools/validate_release_assets.py`，Clang适用 `LKS_ENABLE_SANITIZERS=ON`；不弱化固定向量或必需测试。核精确Full／Mini／Workbench／归属门槛。固定原生Windows应用本地替候选，跑上游12或实际更新套件，验身份／检查点／历史／恢复及官方依赖不变，报SHA／命令／未测；不做广下游优化。
 
-Viable者清洁Full-owned生产，保64函数/14类型、C17/C++、Handle/callback/reentry/sync/status/Cursor/revision/原子、LS1/wire/LK1。私有可大变，公共/持久须另授权。原型不进生产；仅采用分支改4.2.0-preview.1.2、CMake4.2.0、按惯例头并验包/version/currenttruth，未采用不升。合法SemVer名非tag/release授权，不为宣传速度改码。
+## 必需产物、文档及有界复核
 
-新定向regression维护/relabel/repair、身份/等值、oracle/output/failure/bulk/restore/cleanup，查真实assert非计数。严格Debug/Release C17、MSVC x64/Win32、GCC/Clang、ASan/UBSan/扩san、AppleClang原CI、API/wire/golden/olddata/例/C/C++源码安装合并/assets。用benchmarks ON、适配generator/config、verify_v4_api.py/validate_distribution.py/validate_release_assets.py、适用Clang sanitizers ON，不弱fixture/tests。精确Full/Mini/Workbench/scope/governance。原生Windows隔离OrdWeave固定/候选，十二上游或实际更新suite、身份/checkpoint/history/recovery，officialpin不变，精确命令/未执行范围；无广下游优化。
+交 `docs/V4_2_0_PREVIEW1_2.md`：前后精确实现、候选／否决、设计理由、全部条件测量、源码／CI／测试、局限和七RI。`benchmarks/research/full-v4.2.0-preview.1.2/` 含协议、可运行工具或精确复现、原始凭据、源码／哈希／编译清单、分析、失败原型／不利结果，区分测量源码与诊断。证据持久归Full，私有托管只公开适当获许可技术资产，不私料或无关路径；复用原结构，不无谓重搭。含原对照SHA和精确托管运行，保旧归档及否决不变。
 
-## 强制产物、文档及有界审查
+生产／契约变更必须同PR全文审四中文指南并修受影响节：Walkthrough表示／流程／调用；API比较／身份／所有权／失败／回调／源码及核实未变；Internals标签／索引／不变量／维护／复杂度／内存／失败发布／批建／测试；Validation实际断言／命令／CI／源码及基准局限。四行矩阵含前后精确版本、章节、函数、实际测试、未变／未知。交接按真实模板列前后SHA／PR／Issue、文件／函数／前后路径、API／错误／所有权／Handle／回调／OOM／并发／LS1／格式／恢复／构建分发、实测性能／内存／回归、适配／核心分判、下游重测／CI和动作。其他Full API／架构／用法／集成／兼容／开发／CHANGELOG／版本按需；根导航／共享工作流／治理／归属不改。勿重复手册，明确独立Stable文档／源、已修Preview.1检查点及当前实现，临时快照不可留已知冲突。搜旧秩／标签／维护及受影响示例，不只开篇说明。先实现再精确绑定，最终PR另记。仅研究否决保原正确生产指南，实记未变，非造新基线。
 
-阶段V4_2_0_PREVIEW1_2.md给前后SHA/候选或负决定/理由/全部测量条件/CI/限制/七RI；对应研究目录含protocol/runnable或固定recipe/raw/source/hash/compile/scripts/分析/失败/反例、source/diag区别。Full耐久归档，私host仅公开许可授权技术，不带私物；复用旧结构不无故重建。记control及researchworkflow，旧证据不改。
+同会话有界自审：编辑前清单、实际源码／测试、复读改函数及调用者／契约／断言／文档、新维护者对抗维护／复杂度、范围／许可／出处／原始凭据／同步／精确CI。真缺陷两步内修；门槛完成或有据否决后停，无无尽循环／自授独立PASS。单总报告后独立复核。
 
-生产/契约变同PR审四中文指南：Walkthrough真实表示/调用；API compare/identity/owner/failure/callback/source/明确不变；Internals label/index/invariant/维护/复杂度/内存/发布/bulk/tests；Validation真实assert/命令/CI/source/limits。四行旧新revision/节/函数/tests/不变未知。交接按模板SHA/PR/Issue/文件函数/前后、全部错误owner寿命callbackOOMsyncLS1wire恢复build、性能内存反例、core/adapter各判断、下游测试/CI/动作。其他受影响Full-owned API/架构/用法/集成/兼容/开发/changelog/version，不改root/navigation/sharedworkflow/ownership/governance。
+## 授权及停止点
 
-不复制全手册，区分last accepted Stable、修正Preview1、当前source及临时快照，不能明知冲突。跨doc/example搜旧rank/label/maintenance，非仅intro。先实现commit，文档绑定真source另finalPR；research-only拒则保正确生产文档、记不变，不造source基线。
+指定Full分支源码／测试／版本／文档／研究、本地隔离／应用替依赖、上述一lks0011窄分支托管采集／代码／归档、提交推送及一Full叠加草稿获准，精确基点HEAD。普通修复沿本任务PR。无其他生产远端／官方依赖／论文／私料披露／任意工作流设置／全局改动，不触Full生产CI、Mini、Workbench。不合#28或扩展PR、不直推main／强推／标签／Release／资产／旧标签Latest／Preview.2。仅准备候选，真实发布集成由所有者精确授权。保回退即便否决，完成整个有界调查／实测／验证候选或有据不采用，不能初筛停下留实质项。
 
-同session有界自审：清单/实际实现tests/改函数callercontractdocs/维护复杂度对抗/范围许可provenance/raw/文档/精确CI，原两步修；达门槛或有据拒完即停，不无限loop/自PASS，一份报告后独立审。
-
-## 授权与停止
-
-仅dev/full-v4.2.0-preview.1.2 Full-owned源码/tests/版本/docs/新research、本地隔离OrdWeave替换；一个上述lks0011隔离branch窄workflow/code/run/archive；Full commit/push一个draftstackPR记base/head，普通修复复用。无其他生产remote/官方pin/论文/私内容公开/任意workflow-settings/global/FullCI/Mini/Workbench改。无merge28或新PR、mainpush/force/tag/Release/资产/旧tag-Latest/Preview2。准备非发布，owner精确目标另授权。拒也保Preview1，完成有界调查和实跑证据/已验candidate或负决定，不停在未探原计划的初筛。
-
-一英文双步报告：branch/base/start/final local/remote/source、PR/CI/research/run/main/pins、清单/范围、hypothesis/proof/limits/前瞻gate、逐host对Preview1/OM中位/wins/反例/memory/tail/relabel、同语言状态、实际命令/oracle/regression/platform/OrdWeave、source/docs/version/四指南交接、采用/拒理由、真阻断和每FULL-RI-001–007影响。范围进展非广研究关闭，不造执行/发布；返owner/独立，下一Preview2 Steps3–5。
+一英文报告含精确起终本地远端／源码／基点／分支／PR／CI／研究运行及不变main依赖、清单范围、候选假说／证明／边界、前瞻标准、各主机对Preview.1及两OM比率／胜场／不利、内存／尾部／重标、同语言归因、真实命令／模型／回归／平台／应用、源码文档版本／四指南／交接、采用或否决及理由、真实阻碍与 **Technical Debt Impact FULL-RI-001–007**。两步进展非广研究关闭，不编执行或发布。交所有者及独立审核，下一计划仍Preview.2步骤3–5。

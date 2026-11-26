@@ -2,27 +2,27 @@
 
 原文：[V4_2_0_PREVIEW1_COMPLETION.md](V4_2_0_PREVIEW1_COMPLETION.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_2_0_PREVIEW1_COMPLETION.md)。原文及历史授权保留，以英文为准；本译本不授权现在实施/实验/发布。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
-同原工作包、Issue#27 Steps1–2、draft#28、dev/full-v4.2.0-preview.1。读原任务/前续作，此指令仅收敛候选验证/完成，不开新阶段、不放宽门槛。保先前采集及历史。已审起点 `f0340a3c7b96ba6227b93c89a1256c4f92c4bae3`，实现 `22544cf283694dd27cef203caba9cf1838845947`。Fetch最新续作，核实际base/head。
+同原工作包、Issue#27步骤1–2、草稿#28及 `dev/full-v4.2.0-preview.1`。完整读原任务和前续作；本指令收敛候选验证，不开新阶段或放宽门槛。保全部旧采集／任务历史。审查起点 `f0340a3c7b96ba6227b93c89a1256c4f92c4bae3`，实现 `22544cf283694dd27cef203caba9cf1838845947`。获取新续作并核真实基点／HEAD。
 
 ## 独立检查点
 
-审者确认PR head/main未变、31路径、实现至审head的src/include/cmake/CMakeLists全部36blob精确一致。真实order.c补丁为高度引导祖先比较及变更区local更新，同块/repair/预分配/签名保留，无新resident/block字段。此聚焦源码审无实质缺陷，不是穷举执行/批准。重算全部1,440消融CSV：45轨迹×四变体各七正式。对Stable中位ancestor .9053786、mutation .8287413、combined .7142152；combined compare .5309342、update .6920400、long .6725386、short .8014858、hotspot .7404580。胜45/45、最差.8612037，两个Windowsscreen目标达。仅适用分离编译实验非最终生产binary。仅中点/fallback原型一次记录1057耗尽，不证明全部动态OM差。保combined验证目标，除实质必要不重开无界探索/删subtree。
+独立核PR顶端／main未变、31变更路径，实现至审查版本src／include／cmake／CMakeLists共36对象精确同。`order.c`是高度引导祖先比较及受影响局部更新；同块、结构修复、预分配次序、签名保留，无新增驻留／块字段。聚焦源码未见实质缺陷，非穷尽执行或批准。重算1,440消融观测：45轨迹×四变体×七正式（另含预热）。对Stable条件中位祖先.9053786、变更.8287413、组合.7142152；组合比较.5309342、修改.6920400、长移.6725386、短移.8014858、热点.7404580。45/45胜、最坏.8612037，两Windows初筛目标达，但适用分离编译实验非最终生产二进制。仅一个中点／回退试验第1057次耗尽，不证明全部动态OM更差。保组合为验证目标，无实质需要不再开放架构搜索或删除子树元数据。
 
-检查点f0340a3的Trusted Scope Guard/Policy Tests/Mini/Workbench过，Full C17及可选Measurement仍进行；查新finalhead，不能借中途状态。本地GCC Debug/Release/包为实施者报告，保真实命令凭据。
+f0340a3上Trusted Scope Guard、Policy Tests、Mini、Workbench通过，Full C17／可选Measurement仍运行；查最终精确版本，不借中间状态。GCC Debug／Release及打包为实施者报告，保实际命令／结果。
 
 ## 一次连续完成剩余证据
 
-1. 研究harness真可复现：隔离stage固定4.0/4.1/真实production candidate/List/Treap/归档实际tag/list-range，核source/trace/binary hash、compiler/link flags/许可。Variant生成用不可变旧source，mutation_variants.py读现order.c已非旧源；不覆盖历史或静默重生。给便携clean-checkout build/run、manifest及成功smoke；旧screen仅历史选择。
-2. 原最终同时代Windows/原生Linux、真实production、45轨迹/所有controls、轮换、预热后七fresh formal、精确边界/独立正确。需既有授权基础设施则用，不改公共workflow/control-plane/私有内容。逐host/cell绝对时间/比、对4.0/4.1/外部、波动/反例/请求保留/合适RSS峰值/tail。共同成功语义与额外保证分开。同语言可行做，否则原匹配native/API-overhead并实录残余未知，不用旧IST代当前control。保25%compare/15%overall，不事后改。
-3. 补mutation/managed/churn/演进split-merge-redistribute/restore拓扑profile。新聚焦回归含ancestor/sibling/root/equal/reverse、结构变更后pairs、shifted insert/remove/crossmove、未变prefix、stale tail、membership/local、存活地址、no-op/revision/cursor、callback/foreign/out、到达OOM。旧39有价值但PR当时无新定向生产测试；检查真实assert/diagnostics非假旧suite证明。仅原acceptance profile，不做Preview2的完整lifecycle/DB归因。隔离OrdWeave原生Windows实际固定替换、独立状态/身份/checkpoint/recovery，不写official库/pin；记前后source和结果。
-4. 补平台/API/wire/sanitizer/consumer/distribution/examples/精确CI证据。后续source变则重测受影响/candidate，纯doc保implementation SHA并核finalgate不冒改旧测量。报缺/失败/pending，不改governance/sharedworkflow。
+1. 工具真正可复现：隔离暂存固定4.0／4.1／当前生产候选／List／Treap／实际归档tag/list-range，核源码／轨迹／二进制哈希、编译链接标志及许可。变体生成用不可变历史输入，`mutation_variants.py`现读已改 `src/order.c` 不是旧源；不覆盖或静默重生旧实验。给便携干净检出构建／运行、清单及成功冒烟。旧筛选只作历史。
+2. Windows及原生Linux实际生产候选全45轨迹／必需对照、轮换、预热后七全新正式、边界及独立正确。需要时用已授权设施，不改公共工作流／控制面或无关私料。报各主机条件绝对时间／比率、对4.0／4.1／外部、中位变化、不利、请求／保留、适用RSS／峰值／尾部。共同成功与额外保证分开。同语言可行做，否则原匹配原生／API开销及未知归因实记，不拿旧IST时间当当前对照。保25%／15%目标，不结果后改。
+3. 补修改／托管／反复增删及独立检查结构演进分裂／合并／重分配／恢复分析。聚焦祖先／兄弟／根／相等／反向、结构后配对、后缀插删／跨移、未变前缀、旧尾槽、块成员／局部位置、存活地址、无操作／修订号／游标、回调／外来／输出及实际OOM。旧39有价值，但当时PR无新定向生产回归，查断言／诊断，不假旧套件证明。匹配边界，仅原验收分析，非Preview.2全生命周期／DB归因。原生Windows隔离应用精确替依赖，独立状态／身份／检查点／恢复，官方源码依赖不写；报前后源／结果。
+4. 补平台／API／格式／sanitizer／消费者／分发／示例／精确CI证据。后源码变则重跑相关测试／候选测量；仅文档保源码SHA并查最终门槛，不重标旧测量。缺失／失败／待定实报，不改治理共享工作流。
 
-## 独立审核指出的具体文档修正
+## 独立审核的具体文档修正
 
-阶段及四指南存在但同步不足，须正文修非再intro。Walkthrough约106/112仍称普通插用v4_locations、跨compare读subtree：换真实suffix及parent/height/child行为。Internals约101分普通placement与结构repair，查全部retired absolute rank；subtree_blocks仍生产维护/诊断，但compare不读。四指南历史4.1已审基线与临时candidate分清，真实status/sectionprovenance。Validation仍只pre-metadata Windows Release，须核后来的Debug/Release凭据，不推测。
+阶段和四指南存在但同步不足，须同PR改正文而非再加说明。Walkthrough约106／112行仍称普通插用 `v4_locations`、跨块读取子树块数；换真实后缀及父／高度／子方向。Internals约101行区分普通放置与结构修复，搜其余已淘汰绝对秩。`subtree_blocks`仍生产维护、诊断检查，但比较不用。四指南明确已审4.1历史及临时候选，状态和章节来源准确。Validation只述元数据前Windows Release，而后来已有Debug／Release报告，按实际凭据协调不推测。
 
-交接约20仍“planned external consumer”，实际已有checkpoint/WAL；按OrdWeave真实source/revision修当前句，分official依赖/候选测试。用真实完整change模板替短ledger：函数/结构/前后调用、API/owner/Handle/callback/OOM/wire/build是否变、性能资源、独立DB core/adapter判断及retests、CI/限制。历史保留。Preview1四行同步矩阵给真实节/函数/旧新source/tests/限制。架构补精确invariant/proof/复杂度（块数最坏仍log）、替代证据/限制、理由/primary refs，不凭两优化称原创/普遍选型。报告最终productionbinary对照/命令/处置，metadata与source/doc SHA分开。
+交接约20行仍称DB是计划消费者，虽新台账已有真实检查点／WAL集成；按实际应用源码／版本改现行状态，分官方依赖和候选验证。短段换真实模板：文件／函数／结构／前后调用、API／所有权／Handle／回调／OOM／格式／构建变化与未变、性能／资源、DB核心与适配层分判／重测、实际CI／边界，历史保留。阶段四行矩阵补每指南实际章节、函数、旧／新SHA、测试及限制。架构补不变量／证明、最坏块数对数、替代机制证据／边界、理由及一手资料，不只凭两优化称原创或通用选型。阶段补最终生产比较、真实命令／凭据／处置；保元数据和源码／文档SHA区别。
 
-## 停止与报告
+## 停止及报告
 
-完成以上及原Step1/2，范围内普通修复/重测获准。无新步骤/探索周期/分支/PR/merge/tag/release/Preview2/越Full生产。真阻断给实际命令/证据/范围非模糊待办。候选critical失败在原步修或有据不采用，不结果后降门槛。一份英文报告原字段、final remote HEAD/source/test/CI/证据/Technical Debt Impact，独立审者/owner保接受与发布决定。
+本次完成上述及原步骤1–2全部余项，范围内修复／重测获准。无新步骤、探索周期、分支／PR／合并／标签／发布／Preview.2或超Full生产变更。真阻碍给命令尝试、证据及影响范围，非泛清单。候选关键验证失败则原两步内修或有据不采用，不能结果后降门槛。一英文总报告含原字段、精确远端HEAD、源码／测试身份、当前CI、证据及Technical Debt Impact；独立审查及所有者保留接受／发布决定。

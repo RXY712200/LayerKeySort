@@ -43,7 +43,7 @@ Handle非Path/持久ID/序列键/指针值标签，应由容器比较，业务�
 
 ## 实际存储与维护
 
-order.c是隐式块AVL，含parent/children、height/subtree count、线程邻居和首尾缓存。块128提交槽+1临时槽；独立稳定record含owner/block/local/item。此版本无Path/label/序列key/物化全局rank。
+order.c是隐式块AVL，含parent/children、height/subtree count、前驱／后继链接和首尾缓存。块128提交槽+1临时槽；独立稳定record含owner/block/local/item。此版本无Path/label/序列key/物化全局rank。
 
 整体序为中序块串接局部数组；同块local，跨块用parent/subtree计算rank，无分配。空零块，唯一1..128，多块64..128；129拆64/65，删至63优先右邻否则左邻，合≤128则merge，否则均分（63+128→95/96）。单操作最多两数组，无repair级联/欠账；物理导航/局部位置不公开。
 
@@ -55,7 +55,7 @@ Insert先record/可选spare准备，提交仅移位、位置、链/平衡，无�
 
 边界128/129、首次merge、63+128→95/96；单/双旋、双子root物理移植、重复收缩、同item多次、foreign/NULL、revision/count容量、非悬空故意checker损坏。Failpoint扫构造/record/首块/满split/多块split：create一分配、普通插一、空/满两，无单独AVL节点或准备临时分配。逐失败后成功；失败保留精确块字节/revision/Handle/live字节与块。Remove/drain置下分配失败仍零尝试，最终诊断live零。
 
-诊断不进普通库，计位置重赋、局部数组、不同index/thread块、split/redistribute/merge/rotate。每操作≤一split/一repair、两数组、≤2B位置、保守16(h+2)索引范围。索引写非重写所有rank变化resident；checker递归受word位和预算限，生产维护/销毁迭代。
+诊断不进普通库，计位置重赋、局部数组、不同索引及前驱／后继链接涉及的块、split/redistribute/merge/rotate。每操作≤一split/一repair、两数组、≤2B位置、保守16(h+2)索引范围。索引写非重写所有rank变化resident；checker递归受word位和预算限，生产维护/销毁迭代。
 
 可选[v4_core_smoke.c](../benchmarks/v4_core_smoke.c)，benchmarks ON，单机合理性非最终证据：顺序100000，V3预定义短两层坐标/V4 append，非V3 managed relabel；同邻2000及随机显式10000，同seed17邻居意图，V3生成/拥有Path再克隆插入，V4直接相对Handle，应用flat记账在区间外。两者交替首尾排空、10000compare、精确遍历；V3无公开逻辑迭代，用已备buffer私有ordered-fill，V4公开neighbor，非相同API成本。
 

@@ -101,3 +101,34 @@
 嵌入分发包的 `README.txt` 原来只有英文。现于同一文件增加完整中文，保持两条编译命令及调用者所有权。这改变ZIP说明字节，不改生成C／头文件或生产行为；旧ZIP摘要继续作为历史凭据。新的打包及消费者验证须针对新版说明并记录新摘要。
 
 双语README包通过 `validate_distribution.py --generator Ninja --c-compiler gcc --cxx-compiler g++`，源码、安装及合并版C/C++消费者均成功执行。`verify_v4_api.py` 通过64函数；`package_release.py --output-dir build/rc-assets-bilingual` 及 `validate_release_assets.py --asset-dir build/rc-assets-bilingual` 通过两次确定性构建及破坏校验和拒绝验证。新文档包ZIP SHA-256 为 `b28e33b0351664ad03e6b55535934d28a477c9ebe0eb2398bf765168491d63ea`；此前摘要继续对应较早仅英文包。
+
+## a13bab6 之后的最终全文协调
+
+本轮复用上文已记录的源码／指南对照，不重复已接受回归；完成清单逐项所记的剩余全文双语比较。按实际含义核历史架构十五节／十三推演、决策九项／十八对抗／八风险、四完整指南、普通文档、历史阶段／发布／研究及任务译本。历史英文原件未改。最终仍须精确提交托管验证及独立审核，文件计数不是验收。
+
+具体发现与修正：
+
+- V4 Preview.1／3译本将前驱／后继链接写得像并发线程，现已改正；修复Stable的符号承诺、参考模型及初始项数措辞。holdout为独立留出验证，不是保留历史。
+- BENCHMARKS的V3历史还留无版本限定RC.1／Preview.3，现明确V3。证据改为匹配条件耗时比率的中位数，不是无关汇总中位数相除。双语保OM／链表反例、八变体及32散点。
+- 历史任务译本仍有拼接英文。按完整英文要求重写Preview.1及续作／完成、1.2、1.2.1、2、3和RC任务的起点权威、编号技术义务、协议阈值、比较与失败边界、指南交接、Git及停止权限。保原全部完整SHA集合、链接和行内字面值，实际阅读正文，不以哈希代语义。原英文仍为执行权威，翻译不重启旧授权。
+- 历史设计／基准相对链接曾指归档时V3 API，当前路径已是V4。译本补时间边界和不可变v3.1.0 API／兼容／架构链接；历史英文及结果保留。
+- 全文核CHANGELOG各版本、V3测量元数据、V4冒烟／容量、实时核心选择史、A–F及七RI处置，保历史接口数、B128→B64、未采用中点／计数／转移／容量、计时编译范围、反例、单样本及未测替代。未跑新基准。
+- 对照Repo治理译本的全部观察：403非无保护、Git引用非离线备份、例外由可信目标精确控制、自检非真实scope-guard。不改政策工作流或设置。Repo入口已双语读，最终候选引用在Full固定后另归Repo交付。
+
+### 源码及消费者核查
+
+src／tests／include／cmake／CMakeLists.txt跟踪树仍与d1132a26ca7b2c65bfd512fa2eb29f1b16793c08相同。实际重查order_bulk.c与内部指南11节的构建公式。API索引64项逐函数核精确公共头、实现及中文契约行，无不符；14类型未变。保留已接受普通VALIDATION及测试补丁审计补充。
+
+三版交接均记录a13bab620ea289a64188c58af1b916f11cfb7d2b的双语包README变化；生成C／头、示例、许可证和五成员布局不变。新ZIP摘要适用，初始候选旧摘要保历史。
+
+### 实际本地验证
+
+- 既有严格Ninja／GCC Debug和Release重建成功，CTest各39/39，日志build/rc-review-debug-ctest.log和build/rc-review-release-ctest.log。不弱化警告断言。
+- 七Release示例全部运行成功：example、ordered_example、layer_list_example、order_example、managed_order_example、snapshot_example、group_snapshot_example。
+- verify_v4_api.py核64函数；上文记录的新源码／安装／合并版C/C++消费者、确定性包及篡改校验拒绝通过。本地不是托管平台矩阵。
+- RC generate.py无差异重现派生JSON及十SVG。当前未改任何图坐标、样式或生成字节，先前逐图双语目视证据继续适用。
+- 本轮本地检查169个范围内跟踪Markdown、1,099本地链接／锚点，缺失为零；审计更新及Repo最终固定后再核。UTF-8解码通过。不修改历史原始数据、固定向量或私有政策。
+
+### 工程边界及技术债务影响
+
+FULL-RI-001／002保B64／标签／AVL／区间更新及有界原生比较证据。003仍部分解决，独立复制、N指针及未测批量Treap成本保留；004为范围内适配兼容，官方依赖不变、暂存／WAL仍主导；005保准入规模／稀疏存活，更长历史、多百万及任意标签恢复未测。006增加完整文档到源码测试协调，007改进双语选型／统计／导航。翻译不关闭生产债务，Preview.3七ID表及Issue#3／#27的证据、分类和触发条件继续有效。最终提交CI及未来真实main集成门槛另核，本包无合并、标签、发布或依赖提升。

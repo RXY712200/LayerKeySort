@@ -64,7 +64,7 @@ Historical V2 and Preview comparisons are in
 
 ## Comparable V3 insertion matrix
 
-RC.1 retains Preview.3's ordering algorithm. A one-machine validation at
+The historical V3 RC.1 retains V3 Preview.3's ordering algorithm. A one-machine validation at
 100k–1m managed Tree insertions found substantial workload differences. The
 [timed CSV](../benchmarks/results/v3-preview3-validation-timed.csv),
 [diagnostic capture](../benchmarks/results/v3-preview3-validation-diagnostics.txt),

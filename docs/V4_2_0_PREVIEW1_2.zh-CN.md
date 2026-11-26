@@ -32,7 +32,7 @@
 
 列依次是对照、Windows整体/比较密集/胜场、Linux同指标。唯一慢于Preview.1的条件为Windows1,000初始、seed2654435769 hotspot：2.1064对1.8227ms（1.156×）；候选范围1.7106–2.5839、IQR0.7388ms，对照1.7794–2.5822、IQR0.0579ms，重叠，两主机无该profile反复减速。最大OM落后为Windows1k/seed305419896 update-heavy（tag1.591×、list1.584×）及Linux同规模/种子long（1.630×/1.568×）。Linux List也胜一条件，无普遍优势。
 
-两主机相对Preview.1请求live最多升0.545%、peak0.600%。本地保留seed1779033703，10k初始/5k修改，端点/hotspot/local/random/churn/long/managed churn，112生产/诊断行全部预期/清理通过。最差家族中位p99.9比约1.21×（random6.00对4.95µs）、1.16×（hotspot5.85对5.05µs），无近反复2×。补充Windows受量化/本地负载限制，托管未测Linux逐操作tail。
+两主机相对Preview.1请求live最多升0.545%、peak0.600%。本地留出验证种子1779033703，10k初始/5k修改，端点/hotspot/local/random/churn/long/managed churn，112生产/诊断行全部预期/清理通过。最差家族中位p99.9比约1.21×（random6.00对4.95µs）、1.16×（hotspot5.85对5.05µs），无近反复2×。补充Windows受量化/本地负载限制，托管未测Linux逐操作tail。
 
 [复现/证据](../benchmarks/research/full-v4.2.0-preview.1.2/REPRODUCTION.zh-CN.md)含输入/对照/凭据/采集/资源/不利条件。OM固定j-hui，v4.1.0/v4.0.0/Preview.1/List/Treap新测。请求字节与工作集不同，缺RSS不等于零。
 

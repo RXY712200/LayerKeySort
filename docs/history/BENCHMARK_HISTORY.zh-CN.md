@@ -2,6 +2,8 @@
 
 原文：[BENCHMARK_HISTORY.md](BENCHMARK_HISTORY.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/history/BENCHMARK_HISTORY.md)。原件和数据保留；[双语清单](../design/V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
+译注（归档导航）：原文中的“当前 V3”及其相对 API／架构链接，指归档当时的 V3 文档。需要该代契约时，使用固定的 [V3.1.0 API](https://github.com/RXY712200/LayerKeySort/blob/76152e5ae94bea6e88f6c19eee5ac96d24233da1/docs/API.md)、[兼容性](https://github.com/RXY712200/LayerKeySort/blob/76152e5ae94bea6e88f6c19eee5ac96d24233da1/docs/COMPATIBILITY.md)及[架构](https://github.com/RXY712200/LayerKeySort/blob/76152e5ae94bea6e88f6c19eee5ac96d24233da1/docs/ARCHITECTURE.md)。仓库当前路径已说明 V4，不能据此反推旧 Path／Tree 契约；历史英文原件保持不变。
+
 归档Preview及V2/Stage比较、策略试验和外部生成器语境。数字只对应原commit、机器、harness和范围；归档“当前”指历史阶段，非V3.0.0 Stable。当时Stable代入口为[V3性能证据](../BENCHMARKS.md)；该链接随当前文档演进，历史数字以下列固定证据为准。
 
 ## V3 Preview.3 开发诊断

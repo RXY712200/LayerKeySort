@@ -2,32 +2,32 @@
 
 原文：[V4_2_0_PREVIEW1_CONTINUATION.md](V4_2_0_PREVIEW1_CONTINUATION.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_2_0_PREVIEW1_CONTINUATION.md)。原件保留，英文执行权威；以下仅历史说明不授当前实验/产品权限。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
-日期2026-11-24，同包、固定Steps1–2、[draft#28](https://github.com/RXY712200/LayerKeySort/pull/28)，为[完整原任务](V4_2_0_PREVIEW1_TASK.md)聚焦续作，不新Preview/步骤/扩公共契约。完整读两者，原范围/实验/目标/文档/gates/权限仍适用。Fetch后继续，保已审实验 `0dfb0a1ab2d59f77bb2068443525df8750f3e677` 和生产起点 `c108acd72b37614f4be271c9747484c2dde5eac4`，无变更/证据理由不重做已完检查。
+日期2026-11-24。同一工作包、固定步骤1–2、[草稿PR#28](https://github.com/RXY712200/LayerKeySort/pull/28)。这是[完整原任务](V4_2_0_PREVIEW1_TASK.md)聚焦续作，不是新Preview、新步骤或公共契约扩展。完整合读两者；原范围、未完实验、目标、文档门槛和权限仍适用。获取续作提交后沿现开发分支，保已独立审实验 `0dfb0a1ab2d59f77bb2068443525df8750f3e677` 及生产基点 `c108acd72b37614f4be271c9747484c2dde5eac4`。无变更或证据理由不重复已完检查。
 
-## 独立决定及观察
+## 独立决定及核实观察
 
-Preview1尚未完成接受。核GitHub head/main不变、九研究文件；该commit无已选生产、metadata、所需设计/实现指南、最终control/完整兼容，报告如实。该head Policy Tests/Trusted Guard/Mini/Workbench成功，Full/Measurement进行；这是research-only检查非未来candidate。
+Preview.1尚未接受为完整。已核GitHub分支／PR顶端、main未变和九研究文件。审查提交没有选定生产实现、候选元数据、必需设计／指南、最终对照或完整兼容验证，实施报告如实承认。该提交Scope Guard Policy Tests、Trusted Scope Guard、Mini、Workbench成功，Full C17及Measurement仍跑；这是研究提交的检查，不是未来候选验证。
 
-独立mixed-screen重算720行、45trace、排repeat0后每变体七formal。Ancestor/control整体0.9109085、compare0.5463694、short0.8664823、long0.9204201、hotspot0.9195249、update0.9802731；43/45快，最差1.0269735。8.91%overall未达15%，不得追降。Screen排0后100k跨99.441对39.365ns，同块3.131对3.112，固定ordinal2.459；micro允许原型内联不同外部control，分离编译mixed更实用。
+独立重算 `mixed-screen.csv` 为720行、45轨迹，排重复0后每变体七正式。ancestor/control条件比率中位整体0.9109085、比较0.5463694、短移0.8664823、长移0.9204201、热点0.9195249、修改0.9802731；43/45更快、最坏1.0269735。整体降8.91%未达原15%目标，不能事后下调。`screen.csv` 排0后100k跨块99.441对39.365ns，同块3.131对3.112，读取固定序号下限2.459。微基准允许原型内联而对照外部调用，分离编译混合测量更适合实际筛选。
 
-独立order.c与ancestor-order.c.txt仅移absolute-rank helper、换height-parent walk，无额外字段，块数log最坏。是候选非全可达正确证明/采用。item载入ordinal仅静态floor，不是动态标签或公平memory/update对照。审CSV/源码非独立执行/ZIP检查；实施者报40文件/45成员hash，应保并clean重现含compiler/deps/env/source/hash manifest。
+独立对照 `src/order.c` 与 `ancestor-order.c.txt`，变化限移除绝对秩助手并改按高度父链遍历，无新增块／驻留字段，块数最坏仍对数。它是有望候选，不是全部可达状态证明或已采用方案。项内固定序号只是静态下限，非动态标签，也非公平内存／更新比较。核CSV／代码不等于独立执行或核ZIP成员。实施者报40归档及45成员哈希，保留并用干净构建／回放、精确命令、依赖、环境、源码哈希清单使其可复现。
 
-## 继续Step1：完成架构选择
+## 继续步骤1：完成架构选择
 
-补原prior-art/source比较、机制协同、standalone harness及架构决定，保低风险ancestor参考。主要竞争为真实动态块precedence或原有界研究中可信替代，实际prototype，不把fixedordinal当已评家族。每家族记可行/旧失败/invariant/实现/否决证据。第三方向仅原预算内有理才加；A初筛不利不能在剩余alternatives/mutation未探时结束整包。
+补原任务先行研究／源码比较、机制协同、可复用独立工具及架构决策。保低风险祖先遍历参考；竞争家族是真动态块先后或有界调查中可信替代，应实际原型，不把固定序号下限算已评家族。各家族记可行性、旧失败、不变量、实现／否决证据。第三方向仅原预算内有理才加。A家族初筛不利不能在实质替代／变更未探时结束。
 
-## 继续Step2：更新/移动及比较
+## 继续步骤2：更新／移动及比较
 
-以下是源码支持假说，不强制最终设计/诊断缺陷：
+以下是源码支持假说，非强制设计或诊断缺陷：
 
-1. **Ancestor**：验所有祖先/后代/兄弟/root，高度沿parent严格增、旋转/bulk。双向/equal/同块/foreignlive/reentry/out、独立split/merge/redistribute状态。Micro匹配边界。查v4_subtree/subtree_blocks/bulk/checker全部读者，若rank不需，实测删冗余metadata/维护与保留取舍；未核读者不删，不能假内存/速度。
-2. **Update**：当时order.c:182–193的v4_locations重写全resident block/local并清空槽；普通插删/跨move调用，结构split/repair需求不同。Profile实际位置/指针/分配/repair/rotate/cache；筛变更区local（成员不变不写block）、精确尾槽或有界copy，保结构全修。测首尾中、满/近空、结构/重定位序；保API/失败/diagnostic定义，少真实写则精确说明。独立参考/地址，单改/合并消融归因，不无证广重构。
-3. **真实动态标签/替代**：先定有限宽表示/插耗尽重标/memory-write-tail界再称常数compare。测窄gap重复、churn/rotate/split/merge/bulk、overflow、分配顺序、写max/分布/tail。V3尾是设计约束非不同块方案自动否决，保ancestor-only/未改control；原screen有据可替为可信方向。
+1. **祖先遍历：** 验全部祖先／后代／兄弟／根，合法AVL中父方向高度严格增、旋转和批建；双向、相等、同块、有效外来Handle、重入／输出，独立检查演进分裂／合并／重分配。微基准调用边界匹配。查 `v4_subtree`、`subtree_blocks`、批建及诊断所有读者；若不需绝对秩，实测去冗余或保留取舍。未核全读者不删，不假内存速度。
+2. **变更成本：** 当时 `src/order.c:182–193` 的 `v4_locations` 重写每记录块及局部位置并清空余槽；普通放置／删除／跨块移调用，结构分裂修复要求不同。量位置写、指针移动、分配、修复、旋转、缓存，筛仅受影响局部下标（成员不变不重写块指针）、精确清尾或有界复制；成员变更仍全修。测首尾中、满／近空、结构和重定位次序，保API／失败发布／诊断含义，计数若减少因实际写少须明说。独立序列／存活地址，单独及组合消融，不无据广重构。
+3. **动态标签或替代：** 声称常数工作前确定有限宽标签、插入／耗尽／重标及有界内存／写／尾部。测窄间隙重复插入、增删、旋转、分裂／合并／批量恢复、耗尽／溢出、分配失败顺序，记最大／分布写及延迟。V3尾部是设计约束，非对新块级机制自动否决。保祖先及未改对照消融，原筛选有据时可换可信方向。
 
-预设screen/adopt，保原25%compare/15%overall对4.1，不达报告。不能只45trace调优，加前瞻定向/holdout。最终candidate补同时代4.0/4.1/classical/list/treap、Windows/Linux、同语言或无法时匹配control/限制、mutation/managed/churn、内存/tail/全matrix。未变事实复用，不能旧timing对新candidate。先子集，full仅viable/control。执行原独立语义/失败/兼容/分发/平台。完整有界调查无acceptable则实录差距/决定非伪接受。
+预设筛选采用阈值，保对4.1比较降25%、整体15%并如实报未达。不只优化45轨迹，另加聚焦和预设留出。最终集成候选补同期4.0／4.1／经典OM及所需List／Treap、双平台、同语言归因或不可行时匹配探针、变更／托管／增删、内存／尾部及完整矩阵。未变事实复用，不旧计时对新候选；先子集，最终仅可行候选和必要对照。原任务全部语义／失败／兼容／分发／平台门槛执行。真实完整有界调查无可行候选则报性能缺口及有据架构决定，不造接受。
 
-## 完成原产品交付
+## 完成原定产品交付
 
-不能因一个候选漏阈结束partialscreen；连续原工作，除真实技术/环境/授权阻断。可行兼容者集成真实Full/metadata/架构/阶段/四指南/交接/四行same-PR矩阵，查调用/真实assert/例/source/CI。无可行交完整负选择、不升版本。不得screen就闭RI001/002。保所有原协议/CSV，报哪些新发现改RI。
+不因一候选未达阈就再交部分筛选。无真实技术／环境／权限阻碍就连续完成。可行兼容候选实际集成Full源码、正确版本、设计、阶段报告、四指南、交接及四行矩阵；查真实调用／断言／示例／精确源码CI。无候选交完整否定证据，不升版本。筛选不等于RI-001／002关闭，保协议及CSV，记录哪些发现改变RI。
 
-同分支/draft28，无新PR/分支/merge/tag/Release/Mini/governance/其他remote。原Steps1–2内修，原任务权限/停止点，保任务/partialreview历史。一份英文双步完整报告实际source/branch/PR/CI/方法/结果/文档/兼容/Technical Debt Impact；不做Preview2、不自PASS。
+沿原分支／PR#28，无新PR／分支／合并／标签／Release／Mini／治理／其他远端变更，普通修复留步骤1–2；用原授权及停止点，保任务／部分审查历史。一英文总报告涵全部原定字段、真实源／分支／PR／CI、方法／结果／文档／兼容及Technical Debt Impact。不开始Preview.2、不自授PASS。

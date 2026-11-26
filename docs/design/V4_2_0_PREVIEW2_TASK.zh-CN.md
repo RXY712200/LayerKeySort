@@ -2,11 +2,11 @@
 
 原文：[V4_2_0_PREVIEW2_TASK.md](V4_2_0_PREVIEW2_TASK.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_2_0_PREVIEW2_TASK.md)。原件保留；译本为历史说明，英文执行指令权威，不重启授权。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
-**签发2026-11-24。** owner授权[计划#27](https://github.com/RXY712200/LayerKeySort/issues/27)下一主包：Step3/7 FULL-RI-003、Step4/7 FULL-RI-004、Step5/7 FULL-RI-005。同一连续Codex任务执行三步，含普通修正/证据/测试/文档，一份英文报告。不得步间为例行决定停、建新规划阶段或开始Preview3。目标是超越快速mutable order的完整lifecycle、真实integration、resource价值，非论文表面/功能数量/预定算法。保selected live core，不开Preview1.2.2或发布1.2.1；运行基线为Preview1.2，加PR30已核diagnostic-only提升及研究证据。
+**签发：2026-11-24。** 所有者授权[计划#27](https://github.com/RXY712200/LayerKeySort/issues/27)下一主要工作包：步骤3/7 FULL-RI-003、4/7 FULL-RI-004、5/7 FULL-RI-005。在一次连续Codex任务中完成三步、普通实现修正、证据、测试和文档，一份英文总报告。不得为例行决定在步间停止、创建规划阶段或开始Preview.3。目标是快速可变顺序之外的完整生命周期、真实集成及资源价值，不是论文修饰、功能数量或预设算法。保留选定实时核心，不开Preview.1.2.2、不发布1.2.1；运行基线是Preview.1.2，并保留PR#30已验仅诊断增强及研究证据。
 
-## 0. 权威、状态与保留
+## 0. 权威、状态及保护
 
-完整读现行授权Development-Playbook WORKFLOW.md/RELEASE_POLICY.md、英文task/completion模板、repo instructions及更严Full要求。签发policy main为ba0c6fb6b35650608b857adba4ad0f672d65cac7，核实时ref并私记read status。读#27、[#3](https://github.com/RXY712200/LayerKeySort/issues/3)、[永久live-core决策索引](V4_2_0_LIVE_CORE_RESEARCH_HISTORY.md)、前stage/design/consumer、header/development/freeze/ownership/validation/API/architecture/compatibility/四指南；OrdWeave读真实pin/source/HANDOFF/DEVELOPMENT/debt/API/persistence/checkpoint-history，勿把其TD当Full defect。设计前读source/tests；私policy/论文/reviewer材料不入public。
+完整读现行授权协作／发布政策、英文任务／完成模板、仓库指令和更严Full要求。签发政策main为 `ba0c6fb6b35650608b857adba4ad0f672d65cac7`，核实际引用并私记读取情况。读#27／[#3](https://github.com/RXY712200/LayerKeySort/issues/3)、[永久实时核心决策证据索引](V4_2_0_LIVE_CORE_RESEARCH_HISTORY.md)、前阶段／设计／交接、公共头、开发／冻结／归属／验证／API／架构／兼容及四指南。OrdWeave读实际固定源码、HANDOFF、DEVELOPMENT、债务、API、持久和检查点／历史契约；勿把应用自身TD列成Full缺陷。设计前读实际源码测试，私政策／论文／私有审查材料不公开。
 
 | 角色 | 精确起始revision |
 | --- | --- |
@@ -24,78 +24,81 @@
 | 上次private research source | lks0011 research/preview1-2-1-matrix，5c5540406af5a465ceaf12f8ea3b410f5566d81c |
 | classical OM | j-hui/order-maintenance ac4b902d103beb30cee3316d20cd10701f52d15a |
 
-`dev/full-v4.2.0-preview.2` 起于精确PR30 HEAD，上有永久研究决策及本task两docs-only签发commit。fetch核真实local/remote/clean或刻意isolated worktree、source、branch/PR和两文件。stacked base有意，#28–30保持open及research/tests，非release；不改/rebase/merge/retarget/delete/force旧分支PR。PR30未合时建一draft Preview2 targeting `dev/full-v4.2.0-preview.1.2.1`；若前集成另授权已完成，报状态并取精确base决定，非静改history。Stable4.1，不授权main merge/tag/release；有实质可行production改善才metadata4.2.0-preview.2，签发时tag不存在。子问题有实测等价证据的no-change有效；主包应有meaningful integrated progress或有据negative，非编version。
 
-继承证据：精确Preview1.2在90primary live cells全胜4.1，median ratios Windows .641694/Linux .572017；tag-range .979252/.917306，list-range .983687/.880425，较Preview1最大requested peak增.60%。仅native成功component非全lifecycle优越。保bounded64-bit tags/B64/AVL fallback/suffix updates/nonzero monotonic checker。B32/B128/direct-transfer已前瞻ceiling拒，不重探索/为新颖改capacity；真新scale/lifecycle bottleneck才可有据限定复议。不设零memory增长教条，保stable identity/immutable association-history/wire-restore-error。
+分支 `dev/full-v4.2.0-preview.2` 起于精确PR#30，上加永久研究决策和本任务两个仅文档签发提交。获取远端状态，核实际本地／远端起点、干净或有意隔离工作树、源码身份、分支／PR及两个新增文件。叠基点有意保留#28–30开放的研究／测试，非发布；不改、rebase、合并、重定向、删除或强推旧分支／PR。#30开放时一份草稿对 `dev/full-v4.2.0-preview.1.2.1`；先前集成若另获授权且完成，报告实际并取得明确基点决定，不静改历史。Stable4.1，不授权main合并／标签／发布。有实际可行生产改善才用4.2.0-preview.2元数据，签发时标签不存在。子路径有等价实测支持的“不改变”有效；整包应交实质整合收益或有据否决，不编版本升级。
 
-## 1. 共用protocol与效率
+继承证据：精确Preview.1.2在90主要实时条件全胜4.1，比率中位Windows .641694／Linux .572017，tag-range .979252/.917306、list-range .983687/.880425，较Preview.1最大请求峰值增.60%。这是原生成功操作组件结果，不代表完整生命周期优越。保留有界64位块标签、B64、AVL回退、后缀更新及非零单调诊断。B32/B128／直接转移已前瞻否决，不重做或为新颖改容量；真实新规模／生命周期瓶颈可支持限定复议。不设零内存增长，保稳定身份、独立关联／历史及格式／恢复／错误契约。
 
-复用精确public archives、trace/replay builder、strict C17/model/failpoint、4.0/4.1 scale/capture、成功双host recipe。新比较不得复制旧测量，changed behavior用新精确control及同logical inputs。核source/input/license/toolchain-flags/executable/raw hashes；clean staging和one-command reproduction。Windows QPC、Linux CLOCK_MONOTONIC、Rust Instant（适用）边界齐；serial/rotated、warmup分、fresh process，critical cells七formal samples；slow large end-to-end/scale可前瞻有据减样并报uncertainty；diagnostic别于timing，保每raw/dispersion/adverse。分setup/callback/resolver/build/operations/cleanup，不减unmatched totals作精确因果。RSS/working set仅支持且sampled时给，区分requested live/peak/retained、allocator traffic/process memory，unsupported记missing。prospective每case memory/time estimate、guard/timeout/skip reason，不耗尽机器或把skip当pass。
+## 1. 共用协议及高效执行
 
-结果前commit `benchmarks/research/full-v4.2.0-preview.2/PROTOCOL.md`：questions/semantics/baseline pins/factors-cells/generator/oracles/screen/未用validation/timing/budgets/pass-fail-no-adoption/priorities/contribution。bounded fractional/factorial+anchor+one-factor，非Cartesian爆炸。含sparse/retention-heavy/真实application、多初态/独立seeds。对baseline noise量化实益：默认受影响lifecycle/resource/application phase elapsed降>=15%或material workload requested peak/retained降>=15%，至少一个预设target class整体end-to-end/resource有益；非各phase必胜或可忽正确性。依baseline sensitivity预设分负载预算，重大总benefit可有理memory增；默认调查反复>10%non-target end-to-end/live slowdown或超variance的tail/retention回归，保live收益，结果后不放gate。预设exceptions/真negative，保4.1/精确1.2，历史memory归因需时加4.0。unchanged facts复用旧据。共runner/manifests，先screen再integrated final，不每小改无谓full rerun。
+复用精确公共归档、轨迹／回放构建器、严格C17、模型／故障注入、历史4.0／4.1规模／捕获研究和成功双主机托管方案。变更行为用新精确对照及同逻辑输入，不把旧测量复制为新比较。核源码、输入、许可、工具链／标志、可执行文件及原始输出哈希，提供干净暂存和一命令复现。采用Windows QPC／Linux CLOCK_MONOTONIC及适用Rust Instant，对齐计时边界；串行轮换、预热另计、全新进程，关键组件／生命周期条件七正式样本。慢速大型端到端／规模条件可前瞻论证较少样本并报不确定性；诊断与计时分离，保每样本、离散程度及不利结果。区分初始化、回调、解析、构建、操作和清理，不减不匹配总时间作因果。RSS／工作集仅实际支持且采样才报；区分请求实时／峰值／保留、分配流量及进程内存，未知记缺失。每条件前瞻估内存／时间，保护与超时，记录跳过原因，不耗尽机器、不把跳过当通过。
 
-授权隔离环境：Full指定branch；private lks0011 `research/preview2-lifecycle-matrix` 从上述last research ref，仅窄workflow/benchmark/source/results；OrdWeave `research/full-preview2-20261124` 从精确native pin（必要另读旧archive），仅可复现instrumentation/prototype/results。真实OrdWeave native Windows，不暗示Linux。无production remote/pin promotion/manuscript。research branches复用hosted，不改Full official CI/governance。Full证据归Full，application归OrdWeave，原件适当保private；不copy confidential public。仅这branches和一Full draft，不其他PR/release。disposable DB、分staging、精确local substitute，不production data/global config。
+结果前提交 `benchmarks/research/full-v4.2.0-preview.2/PROTOCOL.md`：问题、语义、基线版本、因素／条件、输入生成器／独立模型、筛选与未触碰验证条件、计时／预算／通过／失败／不采用规则、优先级和预期贡献。用有界部分因子设计、锚点和单因素干预，不造笛卡尔爆炸。含稀疏、重保留、实际应用、多初态和独立种子。对基线噪声量实益：默认受影响生命周期／资源／应用阶段耗时降≥15%，或实质负载请求峰值／保留降≥15%，并在至少一个预设目标类有端到端／资源净收益。它是筛选目标，非忽略正确性或强求每阶段改善。结果前依基线敏感度定预算，总收益显著可有理增内存；默认调查反复>10%非目标端到端／实时变慢、超变化的实质尾部／保留回归，保已有实时收益，不看结果后放门槛。预设例外及真否定结果。保4.1及精确1.2对照，历史内存归因有意义时加4.0。未变历史事实复用旧证据。统一运行器／清单，先筛后最终可复现验证，不每小改全跑。
 
-## Step3/7 — FULL-RI-003：live/history全生命周期与成本转移
+授权隔离环境：Full指定分支；私有lks0011从上述研究引用建 `research/preview2-lifecycle-matrix`，仅窄工作流／基准源码／结果；OrdWeave从精确原生应用建 `research/full-preview2-20261124`，必要时旧归档另读，限复现／仪器／原型／结果。真实应用仅原生Windows，不暗示Linux。无生产远端修改、官方依赖提升或论文。复用研究分支托管，不改Full官方CI／治理。Full证据归Full，应用资产归OrdWeave，适当保原件于私有研究；不复制私密材料到公共分支。仅这些分支及一Full草稿，无其他PR／发布。用临时数据库、独立暂存和精确本地替换依赖，不用生产数据或改全局配置。
 
-### 3.1 实际语义与等价组合baseline
+## Step3/7 — FULL-RI-003：完整实时／历史生命周期及成本转移
 
-追selected source：`src/snapshot.c` 的 lks_snapshot_new/snap_append/lks_snapshot_capture_sequence、marker retain/capture publication；`src/lks_snapshot_internal.h` 的累计association ends/header-rows-namespace coallocation/独立growable associations；`src/snapshot_key.c`、`src/snapshot_wire.c`、`src/snapshot_restore.c` 全resolve到临时items后bulk、`src/order_bulk.c`、Group/Batch capture、managed callback、revision/currentness。明确copy associations/namespace before publish，caller payload可变/毁，source毁后snapshot独立，duplicate occurrence/ordinal/namespace-domain keys、callback invocation/failure、marker ref lifetime、immutable borrowed views、caller buffer/old format。resolver序列/副作用/发布顺序重要，不能假定可重排或插入新的allocation failure，查真实契约测试。private storage与persisted format分开，当前capture O(N+A)另namespace/callback，完整storage/restore前提不能只渐进缩写。
+### 3.1 实际语义及等价组合基线
 
-至少一实际合理成熟**组合替代**有共同成功lifecycle语义，非raw OM对Full snapshot。优先固定practical OM adapter+stable occurrence wrapper/traversal+独立owned flat rows/association bytes/namespace-ordinal key/encode-decode/resolver/fresh restoration。可行C ordered tree/list/blocked sequence+flat history作matched language，按credible use/license选。baseline可合理高效layout/preallocate，但同输入信息；不故意加其不承诺Full checks，亦不给callback data先验。不用sleep/虚构overhead。实际实现source/license/domain/association/traversal/stable occurrences/edit/query/capture/retain/export/deserialize/restore/continued edit，以及场景所需managed。exact wire可合理实现就核，否则logical payload对齐、disclose format/size/guarantee。common-success与替代缺OOM/marker-currentness/foreign-handle/failure分开，不无据称安全。双方同inputs和独立flat sequence+historical association oracle。
+追实际 `src/snapshot.c` 的 `lks_snapshot_new`、`snap_append`、`lks_snapshot_capture_sequence`、标记保留及捕获发布；`src/lks_snapshot_internal.h` 的累计关联端点、合并分配的头／行／命名空间、独立可增长关联；`src/snapshot_key.c`、`src/snapshot_wire.c`、`src/snapshot_restore.c`（全部关联先解析至临时项再批建）、`src/order_bulk.c`、Group／GroupBatch捕获、托管回调及修订号／当前性。列清发布前复制关联／命名空间、调用者载荷可变或销毁、来源销毁后历史独立、重复实例身份／序号／命名空间键域、回调调用／失败、标记引用寿命、不可变借用视图、调用者缓冲和旧格式兼容。解析回调次序、副作用、发布顺序重要；不得假设可重排或插入新分配失败，查实际契约／测试。私有存储与持久格式分开；捕获O(N+A)另含命名空间／回调，存储／恢复成本和前提完整说明，不只渐进缩写。
 
-### 3.2 全lifecycle，非capture孤立
+建立至少一种有共同成功生命周期语义的实际合理成熟组合，非裸OM对Full快照。优先固定实用OM加稳定实例包装／遍历、独立平面快照行／关联、命名空间／序号键／编解码、解析及新结构恢复；可行时匹配语言的C有序树／链表／块序列加平面历史也可，按实际用途和许可选择。布局／预分配合理高效，输入信息相同；不额外强加未承诺检查，也不给回调数据先验。不造sleep或合成开销。实际实现源码／许可／域／关联／遍历／稳定实例／编辑／查询／捕获／保留／导出／解码／恢复／继续，以及场景要求的托管比较。精确格式可合理实现则验字节，否则匹配逻辑载荷并披露格式／大小／保证差异。共同成功结果与替代缺少的OOM、标记当前性、外来Handle、失败保证分开，无证据不称失败安全。双方同输入及独立平面序列／历史关联模型。
 
-预设trace含mutable/query、namespace-association capture、可选key format/compare、多snapshot跨mutation保留、caller-buffer serialize（I/O另）、deserialize/resolve-restore/continued edit、不同release序、source先destroy再history用。N1k/10k/100k及guarded larger anchor；低/高/no-capture cadence；retained1/2/8/16可行时；association empty/small/variable/wide如0/8/32/256/4096 bytes真实mix；namespace small/history-wide包括guard允许4096；mutation fraction/locality/churn、重复payload、same item/revision不同association。无需全交叉，明controlled comparison/exclusions。适用加Group/Batch/managed capture及真正history use，不纯复制。可instrument时callback/resolver另计；生成bytes和borrowed lifetime双方同。记count/size distribution、per-phase、association realloc calls/bytes、transient peak/retained/storage-sharing/wire/restore scratch/total-crossover/cleanup/tails。适用对4.1 history变化，新matched controls和旧数据保留；判断成本是否转到capture/query/serialize/recovery。
+### 3.2 测整个生命周期
 
-### 3.3 筛实改进，有据集成或保留
+预设代表轨迹：修改／查询、捕获命名空间关联、可选键格式／比较、跨修改保留多快照、序列化到调用者缓冲（I/O另计）、解码、解析恢复、恢复后继续编辑、不同释放顺序及先毁原来源再使用历史。规模1k／10k／100k及保护允许的大锚点；低／高捕获率和无捕获对照；可行保留1／2／8／16；空／小／变化／宽关联，例如0／8／32／256／4096字节合理混合；小／历史宽命名空间含准入时4096；修改率／局部性／反复增删、重复载荷、同项同修订号不同关联。无需全交叉，但说明受控比较及排除。适用时含Group／Batch或托管捕获，以及实际历史使用，非纯反复复制。仪器支持时回调／解析成本另计；双方生成字节及借用寿命相同。记数量／大小分布、阶段、关联重分配次数／字节、临时峰值／保留请求存储、共享、格式大小、恢复暂存、端到端／交叉条件、清理／尾部。适用对4.1历史变化，保旧数据和新匹配对照；判断成本是消除还是转至捕获／查询／序列化／恢复。
 
-依profile至多三机制family，非必须改：
+### 3.3 筛选真实改善，集成或有据保留
 
-- **直接write/serialize/format和buffer管理：** 保caller-buffer及exact bytes，减少冗余walk/copy/metadata/allocation-realloc/capacity-slack，研究immutable layout。4.1 trim为取舍，wide/variable/retention-heavy先测；不能假定callback可size两次或borrowed data复用，invocation count/order/content会变。
-- **sharing/chunks/dedup/incremental-COW-persistent：** 仅实测重复copy主导且独立性可证时。source revision不足保证association/namespace不变，caller callback/payload可同revision变。不借mutable caller memory，不全局cache破snapshot views；需独立byte/content/ownership等价或证明、release序/ref-capacity/concurrency、无hidden unbounded cache/mandatory dependency。测locality/serialization及unique-unshareable内容。不加推测public delta API/format/history特性。
-- **resolve/restore scratch/bulk：** 评可免temp/allocation phase，但不变callback顺序/副作用/strong failure/output publication。当前resolve-first N-pointer scratch，不可交错而改failure语义；证明等价，否则保成本。历史snapshot独立live topology，tags不persist。
+据实际分析最多三个实质机制家族，非强制都改：
 
-每promising family实际prototype和before/after ablation，记拒因/结果；非每phase必赢，要整合收益、清成本、无break。独立tests：capture后source item变/毁、无revision变更却namespace/association变化、duplicate/empty bytes、多destroy序、deserialize/restore继续、marker/currentness；malformed/old wire/golden、callback/resolver errors/reached OOM/newpoints、overflow-size/ownership-ref/cleanup。审external sync，不加unsolicited locks。Step3架构含before-after/pseudocode/invariant-ownership-failure/source/experiment。无安全子路优化则记实测保留。验收实际等价lifecycle/phase-resource-total、验证改进或有据保留、不弱format/lifetime/callback/failure；直接Step4。
+- 直接写入／序列化／格式和精确缓冲管理，兼容调用者缓冲API及字节。调查重复遍历／复制、元数据、分配／重分配、容量／空余和不可变存储。4.1裁剪是取舍，替换前测宽／变化／重保留。不能假定回调可调用两次定长或复用借用字节，调用次数／顺序／内容可变。
+- 仅在实测反复复制主导且独立性可证时研究共享快照存储、不可变块、去重、增量／COW／持久表示。来源修订号不能保证关联／命名空间未变。不得借用可变内存或用破坏视图寿命的全局缓存。共享需独立字节／内容／所有权等实际保证、安全释放、引用／容量检查、并发契约，无隐藏无界缓存或强制依赖；测局部性／序列化及不可共享独特内容。不推测新公共差量API、格式或历史功能。
+- 解析／恢复暂存和批建，评可省临时存储／分配阶段，不改回调次序／副作用、强失败及输出发布。当前先解析使用N指针；交错会改失败行为则不得替换。证明同契约或保留成本。历史逻辑快照独立于实时拓扑，私有标签不持久化。
 
-## Step4/7 — FULL-RI-004：真实下游价值
+每有前景家族用实际原型及前后消融，否决有理由并保结果。目标是集成净收益而非每阶段赢，已知成本精确且兼容。补独立隔离测试：捕获后改／毁来源载荷、无修订号变化但不同命名空间／回调关联、重复／空字节、不同销毁顺序、解码恢复继续、标记／当前性，以及畸形旧格式／固定字节、回调／解析错误、实际到达新OOM、溢出／大小、所有权／引用寿命和清理。核线程／外部同步，不擅加锁。架构步骤3含前后结构、伪代码、不变量／所有权／失败证明、实际源码实验。无安全收益则记录实测保留成本。验收要求实际等价语义生命周期、可归因资源／阶段／端到端结果、有据改善或取舍、无格式／寿命／回调／失败弱化。直接步骤4。
 
-### 4.1 native应用证据及配对
+## Step4/7 — FULL-RI-004：真实下游工程价值
 
-读OrdWeave `src/lks_adapter.c`、`src/ordweave.c` stage_occurrences/publish_occurrences、checkpoint/WAL/history/tests。补archive standalone reproduction：授权文件/trace SHA/member、精确native source/Full pin、build/runner、独立fixture/result。V0.5已有27 generated DB traces（3N×3seeds×3profiles，1,000ops，memory/persistent，含warmup324executions；Full insert37/remove34 reached OOM）仅起点非field telemetry/穷尽failure。用archive真实source。A精确未改OrdWeave b12a007+官方Full4.1；B同OrdWeave+accepted1.2；C同OrdWeave+Step3/5集成。disposable native Windows DB，source/pin/ABI/build hashes，官方dep与substitute分录。原27trace memory/persistent，匹配status/identity/order/revision/checkpoint/history/reopen/sampling，新增guard允许大状态。保旧behavior/generated/native data并诚实标generated。只为成本隔离按需typed records/repeated refs/multi collections-IDs/其他真实ops；独立model、persistent reopen/history/recovery/source/fault。精确timing scope/workload/IO/disk/cache/environment/uncertainty，不称human trace。
+### 4.1 恢复应用证据及配对测试
 
-### 4.2 真bottleneck归因及可复用API gap
+读OrdWeave实际 `src/lks_adapter.c`、`src/ordweave.c` 的 `stage_occurrences`／`publish_occurrences`、检查点／WAL／历史及测试。补原归档独立复现：获准文件及轨迹SHA-256／成员、精确应用／Full版本、二进制构建／运行器、独立验证数据／结果。旧V0.5有27生成DB轨迹（3规模×3种子×3负载、1000操作、内存／持久、324执行含预热；37插入／34删除到达Full OOM失败），只是起点，非现场或穷尽故障。A为未改应用`b12a007`及官方4.1；B相同应用加已接受1.2；C相同应用加步骤3／5候选。临时原生Windows数据库，记源码／依赖／ABI／构建哈希和官方／替换版本。原27轨迹双模式匹配状态／身份／顺序／修订号、检查点／历史／重开、采样，以及准入的新应用大状态。保旧行为及生成原生数据，诚实标生成；仅为隔离成本增加类型记录、重复引用、多集合／ID或现实附加操作。独立模型、持久重开、历史视图、恢复、来源身份和故障验证。报精确计时、负载／I/O／磁盘／缓存／环境及不确定性，不称人类轨迹。
 
-隔离OrdWeave variant instrument，非official：分Full操作/temp allocation、DB全局occurrence-index rebuild、adapter/comparator、WAL/FlushFileBuffers/IO、checkpoint/history、其他index/core/maintenance。不能减无关总耗时；matched timers/counters另于prod，防nested/doublecount，报residual。TD001 stage_occurrences建survivor alternate ManagedOrder再collection变后publish，O(N log N)/O(N)temp和prepare-before-publish属DB非Full defect。TD002 repeated semantic replay/retained WAL scan为保正确性debt（TD101历史security/correctness fix），不可删validation求快。TD003 whole-checkpoint temp/256MiB bound、TD004 copy backup、TD005 per-hash provider、TD006 interruption cleanup在到达时归因，别混DB/Full limit。保source/debt classification，confirmed/new issues另报，不无关DB优化让Full好看。
+### 4.2 归因瓶颈及通用接口缺口
 
-有TD001实测支持时查library facilities/internal可降integration负担：managed init、既有API、batch/prepare-commit/staged publication。先查现API足否、跨OrdWeave复用语义、revision exhaustion/multi-structure atomicity、transaction/persistent IDs/recovery归属；有据才research prototype。**不加未授权public API/break/Full DB-WAL engine，不改official OrdWeave dep/source。** 真general gap记精确proposal/evidence，非必须未经决策实现。adapter/core局部prototype为research，独立于same DB+dep swap比较，别把DB改进归Full；测failure/capacity/rollback/model，不假等价。可行且有益找另一真实ordering use或独立realistic semantic trace，不造新产品/field observation；不可得明scope/why。验收native真实paired end-to-end、defensible attribution、benefit或bounded lack、source integration建议、core/adapter分别影响，无未授权production。证据分归对应branch/pins，继续Step5。
+隔离应用变体仪器，不改官方源，分Full操作／临时分配与DB全局实例索引重建、适配／比较器、WAL／FlushFileBuffers／文件IO、检查点历史重建、其他索引／核心及维护。用匹配独立仪器计时／计数，不减无关总数，防嵌套重复并报剩余未归因。
 
-## Step5/7 — FULL-RI-005：规模/资源与集成候选
+TD-001 `stage_occurrences` 为存活实例构建替代ManagedOrder，集合变更后发布；这是自身O(N log N)／O(N)临时风险及准备后发布语义，非Full错误。TD-002反复语义回放／保留WAL扫描是保正确债务，TD-101为历史安全修复；不删验证求快。TD-003整检查点临时缓冲及256MiB界、TD-004复制备份、TD-005每哈希提供者、TD-006中断清理，到达则归因；DB限制非Full限制。保源码债务分类，新确认问题单记，不无关优化DB美化Full。
 
-### 5.1 实际接受表示的规模
+据TD-001实测调查通用库功能／内部变化能否减集成负担，如托管初始化、现有操作、批量／准备提交／暂存发布。先看现API是否足够、语义能否通用于其他应用、修订号耗尽／多结构原子性及事务／持久ID／恢复归属。有理由才隔离原型。禁止未经批公共API、兼容变化、把DB／WAL放Full、官方依赖或生产应用修改。真缺口给精确提案／证据，非必须无授权实现。改适配／核心原型仅研究，与相同DB只换依赖另比，不把DB改进归Full。验失败／容量／回滚／独立状态，不伪称等价保证。有用可行时找对照真实用例／独立现实语义轨迹，不另造产品或现场观察；不可得明确范围／理由。验收：原生兼容及配对端到端实测、有据归因、真实收益或有界缺乏、源码层集成建议、核心／适配分判，无越权生产变更。对应证据归各仓库及精确提交，继续步骤5。
 
-复用V4 scale/4.1 memory/保core research，测accepted1.2与integrated在10k/100k/1m guard可行处；3m/10m仅decision-relevant且安全admitted，不承诺全尺度。append/build/lookup/traversal、long/hotspot moves、sustained churn+capture、restore shapes、多cadence/association retained snapshots、destroy-release-shrink-regrow。**million-to-1% sparse survival**（1m不可则明最大admitted），cluster/scatter多arrangements、多cycle、全部survivor stable地址、shrink/release requested-retained。历史64-slot slab retention为具体拒绝约束，不等于pooling不可能；不为小bench引dead slots/cache bloat。计allocation traffic/count、built/live/peak/retained/occupancy-slack/actual block-handle、tag fallback/repairwrites/long zero clusters、scratch/association/wire、可支持RSS/peak、CPU/tails/cleanup。heldout independent skew/concentrated tag repair/delete-regrowth；B64/checker保留，长程tag recovery是经验非通用保证。按需对精确control/历史pin。
+## Step5/7 — FULL-RI-005：规模资源边界及整合候选
 
-### 5.2 优化实测集成资源，非废方案
+### 5.1 实测已接受表示
 
-依Step3/4择metadata/capacity/association/ownership-lifetime/allocation/restore scratch/transient overlap，量化跨phase。resident allocator仅真实profile和lifetime-safe sparse reclaim支持才复议；无新机制不重B32/B128/direct-transfer/rank ablation。新allocator/representation须stable Handles/recoverable OOM/sparse survivor/旧语义/sync/cleanup证明。snapshot独立source/payload，不未经决策改format/API。量化time-memory非零增长教条，affected path独立oracle/regression/fault，对peak/retained/total。每material concern分类improved/justified retained/regressed/unresolved，guard skip未验证。
+复用V4全规模、4.1内存及实时核心研究。已接受1.2和候选在资源允许时10k／100k／1m，3m／10m仅决策有关且安全准入，不承诺全规模。含追加／构建／查找／遍历、远移／热点、持续增删与混合捕获、恢复形态、不同频率／关联的保留快照、销毁／释放／收缩再增。必须百万降至1%（不准入时明确最大准入规模）、聚集／分散多存活布局、重复周期、全部存活地址稳定、收缩及释放后请求／保留字节。旧64槽slab稀疏保留失败是具体否决约束，非证明池不可能。不为小基准保死槽或缓存膨胀。量分配次数／流量、构建／实时／峰值／保留请求、占用／空余／块及Handle数、标签回退／修复写／长零簇、暂存／关联／格式、支持时进程RSS峰值、CPU／尾部和清理。独立偏斜／集中标签修复／删除再增留出；保B64及诊断，任意长期恢复仍实证，非普遍保证。按需对精确接受对照及历史版本。
 
-### 5.3 最终集成验证和决定
+### 5.2 优化有据资源成本
 
-重跑affected Step3/4对精确最终production，非早variant拼表。至少representative full lifecycle target/retention-heavy/callback-variable/no-capture live/high-scale-churn/persistent recovery。完整45冻结live replay对精确1.2及4.1、双host、七formal fresh+warmup+diagnostic、同source/input。classical adapters纳相关当前lifecycle，unchanged历史OM明pin复用，无需无关大矩阵；live core变或作general comparison则补相关full同期controls。历史time不冒充新测；新diagnostics/旧API-format-correctness/adverse保。报live gains保否、lifecycle/application总益是否抵成本、target/crossover。Step7最终selection非推迟Step3–5借口。验收有据兼容integrated product、真实total/resource/scale、bounded attribution、保留成本、source/compatibility/consumer/guide matrix。子路保旧明说；全stage无viable production改善交negative，不造prerelease；证据支持时应有实质实现/version。
+据步骤3／4选择元数据／容量／关联、所有权寿命、分配流量、恢复暂存及临时重叠改进，量跨阶段取舍。仅真实分配分析和安全稀疏回收设计支持时重访驻留分配器；机制／成本未实变不重复否决B32/B128／直接转移或秩消融。新表示／分配器需稳定地址、可恢复OOM原子、稀疏存活、旧语义、同步及清理证明。快照独立于来源和调用者载荷，无另决不改公共格式／API。量时间／内存而非零增长教条，补独立参考及故障回归，比较峰值／保留／端到端。每实质资源问题分类改善、合理保留、回归或未决，有证据；资源保护跳过的大条件未验证。
 
-## 2. 强制工程、架构与验证
+### 5.3 最终整合验证及决定
 
-建 `docs/design/V4_2_0_PREVIEW2_ARCHITECTURE.md`：starting source/lifecycle-downstream cost map/机制/design-invariants-ownership-operations/complexity/memory-callback-failure/experiments/rejected/source mapping；`docs/V4_2_0_PREVIEW2.md`：Steps3–5决定/evidence/measurements/limits/七RI。`benchmarks/research/full-v4.2.0-preview.2/` 含protocol/pins-license/clean staging-replay/raw receipts-analysis/models/phase-profile-allocation-tail/reject-fail-skip/commands-env-manifests。OrdWeave对应exact revisions链接，不能仅expiring CI artifact。保旧archive/design/adverse，不重写旧research支持新结论。implementation introducing commit与test/docs/evidence/finalHEAD分开，无自指SHA。version有理才4.2.0-preview.2，header prerelease/CMake4.2.0/真实package readers/local validators，无tag/release，Stable不变。
+精确最终实现重跑受影响步骤3／4条件，不混早期变体时间。至少完整生命周期目标、重保留、变化回调、无捕获实时对照、大规模／增删、持久恢复。双原生主机全部45冻结实时轨迹对精确1.2／4.1回归，七正式新进程加预热和诊断，同源码输入。相关当前生命周期加入经典适配器，未改历史OM证据精确引用，除新宣称需要不无谓重跑广矩阵。实时核心变或作通用比较时，补受影响同期对照。不称历史旧计时为新测量。验新诊断及旧API／格式／正确性，保不利条件。说明实时优势是否保留、生命周期／应用收益是否抵新成本、目标和交叉条件。步骤7最终比较不是推迟本包证据的理由。验收为有据兼容整合、实际端到端／资源／规模、有界归因、保留成本、完整源码／兼容／消费者／指南矩阵。某路径只支持保留则明说；整包无可行改善则诚实负证据／建议，不造预发布。有证据时预期实质实现及版本。
 
-兼容冻结64函数/14类型-layout-status、caller payload、stable occurrence、equal stability/no-op-revision-cursor/callback-reentry-external sync/recoverable atomicity/snapshot ownership-view/marker/currentness/LS1-LKS4SNP1/V3 LK1-old fixtures/restore fresh handles/C17-C++ source-install-amalgamation。break想法只experiment，明migration/version/owner决定。本包不实施breaking product。贯穿测试非仅结尾：独立oracle、reachedalloc failure含capture/marker/serialize/restore/source destruction、callback/resolver、malformed-legacy、retained data/order、tag/invariants/version-overflow-capacity；golden不静刷新，不dangling作有效。核assertion/cleanup和不变条件。strict GCC Debug/Release `-Wall -Wextra -Wpedantic -Werror`，native MSVC x64/Win32、Linux GCC/Clang ASan/UBSan、AppleClang/extended sanitizer、实际Full CTest（基线39非未来固定）、七examples、API/oldwire、C/C++ source/install/amalgamation/distribution/assets。`tools/verify_v4_api.py`、`tools/validate_distribution.py`、`tools/validate_release_assets.py`、CMake `LKS_BUILD_BENCHMARKS=ON`、适用 `LKS_ENABLE_SANITIZERS=ON` 按平台适配。exact final source/head Full/Mini/Workbench适用checks，不weak。native Windows isolated OrdWeave final candidate suite（当时12）+paired，不official pin改。local非independent acceptance，精确logs/source归档。
+## 2. 强制工程、架构及验证
 
-**同PR强制文档：** 全读四中文指南并更新所有受影响解释/来源：IMPLEMENTATION_WALKTHROUGH.zh-CN.md、IMPLEMENTATION_API_REFERENCE.zh-CN.md、IMPLEMENTATION_INTERNALS.zh-CN.md、IMPLEMENTATION_VALIDATION.zh-CN.md。区分accepted Stable source70d7f0.../guide merge `1a175f91e4c338c2afe6a73a9f8f9c5b149768e5`，prior provisional1.2 source61e9290...+diagnosticc977b0f.../guidehead07b739d...及当前精确新source。四行matrix sections/justified unchanged/functions-paths/SHA/assertions-tests-platform-evidence-limits。全文查row layout/association ownership/marker/callback count-order/scratch/allocation/serialization-restore/version，不只append开篇。consumer handoff同PR：old/new精确SHA、paths/functions/call chains、contract/ownership/errors/OOM/Handle/LS1/wire/restore/build、time-resource-adverse、OrdWeave真实结果，DB core/adapter分别none/retest/adapter change/possible core change/unknown及why/actions。按需Full API/Architecture/Compatibility/Usage/Integration/Development/examples/CHANGELOG/version-distribution，不shared root/workflows/Mini/Workbench/Repo policy。历史保，candidate/published准确；source再修重绑docs并重affected gates，不拖RC。
+建 `docs/design/V4_2_0_PREVIEW2_ARCHITECTURE.md`：起始源码、生命周期／下游成本、机制、设计／不变量／所有权／算法、复杂度、内存／回调／失败、实验决策及否决、精确源码映射；`docs/V4_2_0_PREVIEW2.md` 覆盖三步决定／证据／测量／局限及七RI。研究目录 `benchmarks/research/full-v4.2.0-preview.2/` 含协议、源码／构建／许可、可运行干净暂存／回放、每次原始凭据和分析、独立模型、阶段／计数／分配／尾部、否决／失败／跳过、命令／环境／清单；应用链接精确研究版本。不能只依赖会过期产物。保原归档／设计／负证据，不倒改研究迎新结论。首次实现、测试／文档／证据及最终HEAD分开，无自引用SHA。有理才头版 `4.2.0-preview.2`、CMake4.2.0，并验版本读者／本地分发；无标签／Release，Stable不变。
 
-有界自审：pre-edit evidence/contract checklist，实际implementation/verification，重读callers/tests/contracts/四指南，聚焦adversarial ownership/failure/resource，核source-data hashes/trace-receipt membership/permissions，修material并重测。不无限循环/人工拆task。真blocker需实际attempted commands/evidence，非泛partial。三步全部review-ready后停，不预授PASS或早关七RI；记phase/introduced defect/repair SHA/history。
+冻结64函数／14类型／布局／状态、借用载荷、稳定实时地址、重复等值稳定性、无操作／修订号／游标、回调／重入／同步、可恢复失败原子、快照独立所有权／借用寿命、标记当前性、精确LS1／LKS4SNP1／V3 LK1／旧向量、新恢复Handle、C17／C++源码／安装／合并版。不兼容想法仅实验，明确迁移／版本影响交所有者，不在此破坏。测试贯穿：独立语义模型、实际到达捕获／标记／序列化／恢复OOM及来源销毁、回调／解析、畸形旧格式、历史数据顺序、标签／不变量、版本／溢出／容量；不改旧固定字节、不传悬空Handle作有效输入。查真实断言及清理，验未变条件。严格GCC Debug／Release `-Wall -Wextra -Wpedantic -Werror`、MSVC x64／Win32、Linux GCC／Clang ASan／UBSan、AppleClang、扩san、实际CTest（当前39非未来固定）、七示例、API／旧格式、真实C／C++分发及资产。使用 `tools/verify_v4_api.py`、`tools/validate_distribution.py`、`tools/validate_release_assets.py`、`LKS_BUILD_BENCHMARKS=ON`、适用 `LKS_ENABLE_SANITIZERS=ON`，按平台命令。验最终精确Full／Mini／Workbench及适用门槛，不弱化CI。原生Windows隔离应用最终上游套件（当前12）及实际配对，不改官方依赖。本地不是独立接受，归档精确日志源码。
 
-## 3. 精确授权与一份英文报告
+同PR全文审四中文指南并改所有受影响正文／出处。分Stable源码`70d7f0...`及指南合并 `1a175f91e4c338c2afe6a73a9f8f9c5b149768e5`、临时1.2实现`61e9290...`加诊断`c977b0f...`／指南顶端`07b739d...`、当前新实现。四行矩阵含真实章节／有据未变、函数／路径、精确SHA、断言／测试／平台／证据／限制。全文查行布局、关联所有权、标记当前性、回调次数次序、暂存／分配／格式恢复／版本状态，不能只加说明却留错正文。交接同PR按模板列前后SHA／路径／函数／调用、API／所有权／错误／OOM／Handle／LS1／格式／恢复／构建、实测资源／不利结果、真实应用结果及核心／适配分判（无／重测／适配变／可能核心变／未知）、理由及动作。其他Full API／架构／兼容／用法／集成／开发／示例／CHANGELOG／版本／分发按需；无共享根导航／工作流／Mini／Workbench／Repo政策。保历史及候选／发布区别，源码后修则重绑重测，不拖RC。
 
-仅指定Full Preview2 branch、Full-owned source/tests/docs/research/version/local worktrees；精确上述lks0011/OrdWeave各一research branch做benchmark/repro/instrumentation/prototype/evidence，允许commit/push/窄hosted research，保application/pins/disposable。一draft stacked Full PR对PR30 branch，精确scope/base。无OrdWeave main/dep/其他production、global config/credentials/private paper/Full CI-controls-rulesets-ownership/Mini/Workbench实施。stacked不跑真实main Scope Guard，trustedbase核inventory，报absence、later main gate仍必需。无directmain/merge/retarget/rebase/force/tag/release/assets/Latest/Preview3。#28–30及旧据保，research非发布/采用。
+包内有界自审：编辑前契约／证据清单、实现测试、复读源码／调用者／断言／契约及全部指南、聚焦所有权／失败／资源对抗复核、核哈希／轨迹与凭据成员／权限，修实质问题重测。无无限审查或人为拆任务；真实阻碍需尝试命令及证据，非空泛部分报告。三步可独立审后停，不自授PASS／提前关闭七RI；记录阶段决定及真实引入／修复，保历史。
 
-一英文报告Steps3/4/5：source/base/start/final local-remote-PR/implementation-doc SHA、research branch/workflow/OrdWeave pins、file inventory、step findings/integrated choices、等价lifecycle semantics/phases-total-memory-crossover、paireddownstream/attribution/core-adapter、scale-sparse-tail-skips、prospective criteria/adopt-reject、repro/raw、correctness-failure-compatibility-CI、version、guidematrix/ledger、limitations/true blockers、Technical Debt Impact FULL-RI001–007。区分historical/new、verifiedimplementation/proposedcontract。无benefit诚实no-adoption不编release；独立accept/integration-publication/Preview3由owner，IST仍暂停。
+## 3. 精确授权及一份英文总报告
+
+仅指定Full分支的Full源码／测试／文档／研究／有理元数据、本地隔离、上述各一lks0011／OrdWeave研究分支用于基准复现／仪器／原型／证据及窄托管提交推送运行，保应用依赖，用临时数据。一叠加Full草稿对#30分支。禁止应用生产main／依赖或其他生产远端写、全局／凭据／私有论文、Full官方CI／规则／归属、Mini／Workbench实现。叠加目标无实际main Scope Guard，应按可信基点核文件并明说缺失，未来main门槛仍需。无直接main、合并、重定向、rebase、强推、标签／发布资产／Latest／Preview.3；保#28–30及历史。研究分支不等于发布或消费者采用。
+
+一英文报告涵盖三步：精确源码／基点／起终本地远端／PR／实现与文档、研究分支工作流／应用依赖、变更清单、阶段发现及整合、等价语义／阶段／总量／内存／交叉条件、真实下游配对及归因／核心适配、规模／稀疏／尾部／跳过、前瞻标准及采用／否决、复现／原始证据、实际正确／失败／兼容／CI、版本／指南矩阵／交接、局限及真实阻碍、**Technical Debt Impact FULL-RI-001–007**。分历史与新测、已验实现与提案，无候选收益则诚实不采用，不造发布。独立接受、集成发布及Preview.3由所有者决定。IST论文继续暂停。

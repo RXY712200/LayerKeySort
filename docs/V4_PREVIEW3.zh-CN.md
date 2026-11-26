@@ -20,7 +20,7 @@ Snapshot无item/Handle/block/context/旧source/Path，拥有namespace、row offs
 
 Order/Managed capture必填输出先NULL，成功调用方拥有。操作复制options不留descriptor/context，namespace在回调前复制；NULL/空INVALID_ARGUMENT。可选LksSnapshotAssociationFn(item,uint64_t ordinal,context,&data,&size)按逻辑序每行恰一次，无callback空关联，非零size须非NULL，错误透传无部分对象。返回span须至回调后立即复制结束仍有效，局部自动数组无效；可复用应用scratch因下次前已复制。item/context仍应用。
 
-回调正常返回，不能跨C longjmp/抛异常。同源getter NULL/0、Status REENTRANT、busy destroy忽略、递归capture拒绝，独立容器允许。Managed capture无compare。一次线程链遍历，无逐行rank/Path/revision变化，失败也不使Handle/Cursor失效。成本O(N+A+callback)，关联几何增长可留slack而非每行分配，失败清临时。
+回调正常返回，不能跨C longjmp/抛异常。同源getter NULL/0、Status REENTRANT、busy destroy忽略、递归capture拒绝，独立容器允许。Managed capture无compare。沿前驱／后继链接遍历一次，无逐行rank/Path/revision变化，失败也不使Handle/Cursor失效。成本O(N+A+callback)，关联几何增长可留slack而非每行分配，失败清临时。
 
 ## 来源与当前性
 
@@ -83,7 +83,7 @@ Parser先完整验证magic/flags/域/可用字节/count/逐长/受检总量/精�
 
 restore(snapshot,resolve,context,&order)逐行调用LksSnapshotResolveFn(association,size,uint64_t ordinal,context,&item)，非空需resolver，成功item非NULL借用，可重复指针独立occurrence。失败透传，已解析items仍应用，先全解析至临时指针再未发布构建。
 
-当时bulk O(N)：ceil(N/128)块，均匀，多块64..128/唯一1..128，独立record，线程链直接平衡AVL parent/height/count；无逐项search/rotate/relabel。129→65/64，索引递归O(log blocks)，遍历/清理/parser迭代；失败毁部分结构不发布。
+当时bulk O(N)：ceil(N/128)块，均匀，多块64..128/唯一1..128，独立record，沿块的前驱／后继链直接构建平衡 AVL parent/height/count；无逐项search/rotate/relabel。129→65/64，索引递归O(log blocks)，遍历/清理/parser迭代；失败毁部分结构不发布。
 
 LksV3Lk1ImportEntry{key,item}的import非空key/item，严格原LK1解析、实际Path排序、重复ALREADY_EXISTS、bulk新Order；无序输入/不同坐标同item合法，零count可NULL entries，不保留Path/string。成本含解码/稳定O(N log N)非仅bulk；V3实现/golden不变。
 
