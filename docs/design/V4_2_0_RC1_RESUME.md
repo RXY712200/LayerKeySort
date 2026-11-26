@@ -76,7 +76,13 @@ Do not modify production behavior, public API or persistent formats; do not chan
 
 ## Final report
 
-Deliver one consolidated English completion report only after the entire package reaches the independent-review checkpoint. Include exact local and remote SHAs, both PR bases/heads, full changed-file inventory, architecture section-by-section semantic review, cross-document findings and repairs, bilingual coverage and verification evidence, final immutable Repo-to-Full targets, actual commands/results, exact-head CI runs, ownership checks, remaining limitations, publication/integration status, workspace state and Technical Debt Impact. Distinguish completed implementation evidence from independent acceptance. Do not claim PASS on behalf of the independent reviewer. After the owner completes the personal review, conduct the separate ChatGPT-plus-owner review. Once both reviews have accepted RC.1, the owner decides whether a successor RC (for example RC.2) is warranted under RELEASE_POLICY §4. If required, execute that authorized candid### 当前准确起点
+Deliver one consolidated English completion report only after the entire package reaches the independent-review checkpoint. Include exact local and remote SHAs, both PR bases/heads, full changed-file inventory, architecture section-by-section semantic review, cross-document findings and repairs, bilingual coverage and verification evidence, final immutable Repo-to-Full targets, actual commands/results, exact-head CI runs, ownership checks, remaining limitations, publication/integration status, workspace state and Technical Debt Impact. Distinguish completed implementation evidence from independent acceptance. Do not claim PASS on behalf of the independent reviewer. After the owner completes the personal review, conduct the separate ChatGPT-plus-owner review. Once both reviews have accepted RC.1, the owner decides whether a successor RC (for example RC.2) is warranted under RELEASE_POLICY §4. If required, execute that authorized candidate and repeat the owner/joint review and successor decision until Stable; if not required, proceed to Stable only with the owner's explicit authorization. After Stable is completed and the owner authorizes it, prepare the demo version. Only after the demo checkpoint and further owner authorization may the industrial comparison research begin. Its durable plan is `POST_V4_2_0_STABLE_INDUSTRIAL_COMPARISON.md` (recorded at `9f0c6cd`); read its exact current revision and use its separate research branch. Do not begin GLib/Boost/LLVM comparisons during RC closure or before Stable.
+
+## 中文执行说明（与英文对应，英文为执行权威）
+
+这是同一个已经获准的 RC.1 工作包，不是新阶段、新 Preview，也不是拆成多次分别交付的任务。唯一目标是完成全部剩余验收工作，使现有两个 Draft PR 达到可独立审查状态。原任务的三个步骤仍按依赖顺序作为内部工作顺序，但**步骤边界、文档批次、提交、CI 通过和进度检查点都不是停止点**。不要使用 `/goal` 或其他会把任务切成反复短执行窗口的机制。只要仍有已授权且可执行的下一项工作，就不要主动发最终进度报告，也不要要求用户在内部环节之间反复发送“继续”。
+
+### 当前准确起点
 
 以下 GitHub 状态是在本次更新续接文件前独立核实的。Codex 开始执行时仍须重新查询两个 PR、分支和 check-runs。下列 SHA 是已核实参考，不代表可以覆盖发生分歧的本地工作区。
 
@@ -108,9 +114,6 @@ Deliver one consolidated English completion report only after the entire package
   - Repo `README.md` / `README.zh-CN.md` 与 `docs/FULL.md` / `docs/FULL.zh-CN.md`：完成入口页剩余正文审查，并固定指向选定 Full HEAD 的最终语言专属不可变链接。
   - 内嵌的人类可读分发说明，以及任何尚未完成语义接受的范围内正文。
   全语料语义审查、审计记录更新、最终 Repo 导航固定链接及最终精确 HEAD 验证仍是强制要求。不得仅因译本存在或之前通过定向对照就将条目标记为验收通过。
-
-380487](https://github.com/RXY712200/LayerKeySort/actions/runs/45587380487)、C17 push/PR [45587374419](https://github.com/RXY712200/LayerKeySort/actions/runs/45587374419) / [45587384140](https://github.com/RXY712200/LayerKeySort/actions/runs/45587384140)、Mini [45587383871](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383871)、Workbench [45587383968](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383968) 和 Measurement Evidence [45587383818](https://github.com/RXY712200/LayerKeySort/actions/runs/45587383818)。Repo HEAD 发生变化后必须重新核验；policy self-test 不能代替真实 trusted gate。
-- 双语清单有 89 行，目前 89 项均已有对应译本或内嵌双语版本。这只证明文件存在，不代表语义验收。剩余语义审查、完整指南与源码／历史核对、Repo 入口页最终导航固定链接，以及最终精确 HEAD 验证仍是必需工作。不得仅凭文件存在或之前检查过哈希／链接就标记验收通过。
 
 开始修改前检查两个 remote、分支、本地 HEAD、状态和完整 diff。保留所有既有本地修改；任何快进前都应安全保存并协调既有修改。绝不 force、reset、clean 或覆盖。上述远端状态不能证明本地工作区干净。
 
