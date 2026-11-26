@@ -2,6 +2,8 @@
 
 > 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
 
+本轮 `preview12_block_tags` 还将中间块置零，验证跨零块的相等、递减标签均被拒绝，再恢复标签并运行原有饱和回退断言。诊断源码为 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`。原先的 Preview.1.2 证据如下；本轮结果见 [决策报告](V4_2_0_PREVIEW1_2_1.md)。
+
 tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整 Handle 顺序和标签单调性；再构造有效但饱和的标签，验证有界回退、双向先后与 AVL 不变量。Windows GCC Release 39/39，独立 OrdWeave 候选测试 12/12。 [候选验证](V4_2_0_PREVIEW1_2.md)。
 
 > Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。

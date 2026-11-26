@@ -1,5 +1,13 @@
 # Full 外部消费者交接与变更台账
 
+## Preview.1.2 ceiling study — 2026-11-24 — diagnostic only
+
+- **From / To:** accepted `61e9290ec5ba47b9092bcb8ae7d61f13104ea839` → diagnostic `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`; [engineering Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3), [study and verification](V4_2_0_PREVIEW1_2_1.md), [draft PR #30](https://github.com/RXY712200/LayerKeySort/pull/30).
+- **Source:** `src/order.c::v4_check_node` verifies strict increase of nonzero tags, retaining the last value across fallback blocks in diagnostic builds. `tests/v4_mutation.c` covers equal and descending labels across an untagged block and restores them before continuing.
+- **Core contract:** B64, tagged comparison, bounded repair and AVL fallback stay in Preview.1.2. Public API/errors, Handle identity/lifetime, ownership/callbacks, OOM, revision, synchronization, LS1, LKS4SNP1 and LK1 import remain the same. Restore and C17/C++ source/install/amalgamation interfaces stay compatible. There is no new version.
+- **Results:** The two-host mutation and capacity screens did not support production adoption. The stage report preserves B32's Linux speed benefit, added requested memory and bulk-built label pressure, plus the other adverse cells.
+- **Adapter verdict and actions:** Isolated Windows OrdWeave at `b12a007c50c2f9efcbee500a14d3cf09dcc74f10` passed 12/12 with this diagnostic source checkout. Its official pin stays v4.1.0. No migration, dependency or adapter change is implied. See the stage report and its draft PR for exact core CI and independent-review status.
+
 ## Full Preview.1 → Preview.1.2 — 2026-11-24 — development candidate
 
 - **From / To:** `22544cf283694dd27cef203caba9cf1838845947` → `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`; [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3), [scope #27](https://github.com/RXY712200/LayerKeySort/issues/27), and [extension report and exact-head evidence](V4_2_0_PREVIEW1_2.md). Stable remains v4.1.0.

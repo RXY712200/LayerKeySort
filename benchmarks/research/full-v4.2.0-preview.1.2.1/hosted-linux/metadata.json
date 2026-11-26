@@ -1,0 +1,169 @@
+{
+  "platform": "Linux-7.0.0-1020-azure-x86_64-with-glibc2.43",
+  "processor": "",
+  "compiler": "gcc (Ubuntu 15.2.0-16ubuntu1) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "pin": "61e9290ec5ba47b9092bcb8ae7d61f13104ea839",
+  "guard_bytes": 536870912,
+  "binaries": {
+    "base/build/prod": "a120de8226330240567b4fb2f34ff23cb27cee7b8bf54d34825f11b3e1553c06",
+    "base/build/structure-prod": "cd3bba2f9bbf80fe79bb51777d6cb0162a528e5866186adaf1cc7d51074276f4",
+    "base/build/diag": "70e83363362157db5878c552a1b2fd0dd161a6220955f53b8276aba6afc1496f",
+    "base/build/structure-diag": "65e7709781f48939419d09417f24ae33a2f16897c0478b0d11b687327c7d9c06",
+    "transfer/build/prod": "258808e9db1974da54ad30e3bb11ce29a3669ad1d945c3b47c6fb8ec1309290c",
+    "transfer/build/structure-prod": "1d796b4f056fc5967c67bdc6db964f483a0561121b93b53339cdcd3b950f2b04",
+    "transfer/build/diag": "bcd52174a449e00cf55a897a7e3b2c216df38c82e9cee5734c0517b3c88786ae",
+    "transfer/build/structure-diag": "e71ab2f9489063f0836d1094ca59a2954ce39efd3272ab6a79b66607e39e6674",
+    "b32/build/prod": "ae17ff0abb6419cfe4a0862e50a79b0dc1b36583d11ff0db629ced891979e069",
+    "b32/build/structure-prod": "54e5129eea6b2019f143a01599fe452e11989ce5dd36494e7a5b8d6f604c178e",
+    "b32/build/diag": "61c641f6e8d4c26c68a33d0df8cd3a8f47b8083244968bddc7865e9d7e724bfc",
+    "b32/build/structure-diag": "e1e1600efbad5bbabf7fc20eaf1801a045b472ae9350ed35375ec98550c2bde9",
+    "b128/build/prod": "7e998df34620718518d4a41513675dfdfbbb6ccafb0be51430ea03425f554a35",
+    "b128/build/structure-prod": "d26c64693db4f25b36b42c2917e91806feded18c0bcc0c1b08a02a5c45b0b3aa",
+    "b128/build/diag": "89fd5c4e49ca0e4338bc74b64f8e787f61fa4d51f2c7e55871e036c555f67989",
+    "b128/build/structure-diag": "f596273be2688071584cf7ad4dad9323800950c5774b4af98f63df8b06e0d84b"
+  },
+  "patched_sources": {
+    "base": "b7e08d5a52836fbfab0d3e48bb0d47992e095d8ccbc2ee314a11843671f4584f",
+    "transfer": "a9029cfd558afa7e9a94c0ba37f0d2e5907d35b333dfd7a3d52f47b19ada74f8",
+    "b32": "b7e08d5a52836fbfab0d3e48bb0d47992e095d8ccbc2ee314a11843671f4584f",
+    "b128": "b7e08d5a52836fbfab0d3e48bb0d47992e095d8ccbc2ee314a11843671f4584f"
+  },
+  "source_tar_sha256": "060a5e5fd9d5a829fa9bf0957b80ce69966efcbf0fd843c76ce11d1dee1d1bcc",
+  "traces": [
+    {
+      "name": "1000-17-compare-heavy.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "ddb30ce582b919ca77b5ba5a79b0f2255044cce0d5781a0144709ad5e9e267a6",
+      "final_n": 976
+    },
+    {
+      "name": "1000-17-update-heavy.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "ffd81d966e32cabc8c8a00612a61c395f3907ee1bb9bff4e1578cdf52599fc84",
+      "final_n": 1033
+    },
+    {
+      "name": "1000-17-short.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "99cf87c2e720f454946b59697eeb708bc5df88eb4772f76251c98fa4b370ecce",
+      "final_n": 890
+    },
+    {
+      "name": "1000-17-long.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "c85502e38a02ef830c534f7554b59ea982d5b0bfe7fe13e6df3109a6fc864b3b",
+      "final_n": 890
+    },
+    {
+      "name": "1000-17-hotspot.trace",
+      "n": 1000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "2ab2ea962d8387332453a6e39f9152630818800cc4e49ee136469531ce10a26f",
+      "final_n": 5077
+    },
+    {
+      "name": "10000-17-compare-heavy.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "7f8df6c378d56ea9cf43c81ae891e678a6967b44eec9f7070594cf4e4bebc9fe",
+      "final_n": 9944
+    },
+    {
+      "name": "10000-17-update-heavy.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc",
+      "final_n": 9979
+    },
+    {
+      "name": "10000-17-short.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "ea0e7c73c7f11fccbea772d5d56559700c57df1890f89cc92bd73fd22efb6650",
+      "final_n": 9896
+    },
+    {
+      "name": "10000-17-long.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad",
+      "final_n": 9896
+    },
+    {
+      "name": "10000-17-hotspot.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "e69304d247ee0822ebc6dddc43b5e235688df0398b5575d663ef207e8c3a0832",
+      "final_n": 13937
+    },
+    {
+      "name": "100000-17-compare-heavy.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "d9f01ee5bd30d4b1d437680338abe146758cda6fd6e3f516d2ceccee4f767f9b",
+      "final_n": 99988
+    },
+    {
+      "name": "100000-17-update-heavy.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d",
+      "final_n": 99848
+    },
+    {
+      "name": "100000-17-short.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "e8916981e7d63006330451e5e1734bc99cb9b5e42383c650b5c51f9c8796d991",
+      "final_n": 100027
+    },
+    {
+      "name": "100000-17-long.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6",
+      "final_n": 100027
+    },
+    {
+      "name": "100000-17-hotspot.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "0661db24012d41299439bd54f17a70694d46e60d47915f669bd3ba31e9f3dc9e",
+      "final_n": 104141
+    }
+  ]
+}

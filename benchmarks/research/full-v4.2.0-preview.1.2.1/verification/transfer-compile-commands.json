@@ -1,0 +1,578 @@
+[
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\lks_alloc.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\lks_alloc.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/lks_alloc.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/lks_alloc.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\lks_base.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\lks_base.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/lks_base.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/lks_base.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\path.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/path.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\path_text.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_text.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_text.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/path_text.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\path_order_key.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_order_key.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_order_key.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/path_order_key.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\slot_codec.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\slot_codec.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/slot_codec.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/slot_codec.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\path_compare.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_compare.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_compare.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/path_compare.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\managed_order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\managed_order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/managed_order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/managed_order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\snapshot.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/snapshot.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\snapshot_key.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_key.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_key.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/snapshot_key.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\snapshot_wire.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_wire.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_wire.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/snapshot_wire.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\snapshot_restore.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_restore.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_restore.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/snapshot_restore.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\order_bulk.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\order_bulk.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/order_bulk.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/order_bulk.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\immutable_group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\immutable_group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/immutable_group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/immutable_group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort.dir\\src\\sort.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\sort.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/sort.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort.dir/src/sort.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_group_snapshot_example.dir\\examples\\immutable_group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\immutable_group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/immutable_group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_group_snapshot_example.dir/examples/immutable_group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_snapshot_example.dir\\examples\\snapshot.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\snapshot.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/snapshot.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_snapshot_example.dir/examples/snapshot.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_example.dir\\examples\\basic.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\basic.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/basic.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_example.dir/examples/basic.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_ordered_example.dir\\examples\\ordered_tree.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\ordered_tree.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/ordered_tree.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_ordered_example.dir/examples/ordered_tree.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_layer_list_example.dir\\examples\\layer_list.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\layer_list.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/layer_list.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_layer_list_example.dir/examples/layer_list.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_order_example.dir\\examples\\live_order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\live_order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/live_order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_order_example.dir/examples/live_order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_managed_order_example.dir\\examples\\managed_order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\examples\\managed_order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/examples/managed_order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_managed_order_example.dir/examples/managed_order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\lks_alloc.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\lks_alloc.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/lks_alloc.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/lks_alloc.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\lks_base.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\lks_base.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/lks_base.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/lks_base.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\path.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/path.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\path_text.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_text.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_text.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/path_text.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\path_order_key.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_order_key.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_order_key.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/path_order_key.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\slot_codec.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\slot_codec.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/slot_codec.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/slot_codec.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\path_compare.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_compare.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_compare.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/path_compare.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\managed_order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\managed_order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/managed_order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/managed_order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\snapshot.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\snapshot_key.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_key.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_key.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot_key.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\snapshot_wire.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_wire.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_wire.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot_wire.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\snapshot_restore.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_restore.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_restore.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/snapshot_restore.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\order_bulk.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\order_bulk.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/order_bulk.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/order_bulk.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\immutable_group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\immutable_group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/immutable_group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/immutable_group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\sort.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\sort.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/sort.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/sort.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\gap.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\gap.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/gap.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/gap.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\tree.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\tree.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/tree.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/tree.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_legacy_bench.dir\\src\\bulk.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\bulk.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/bulk.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_legacy_bench.dir/src/bulk.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_trace.dir\\benchmarks\\v4_trace.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_trace.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_trace.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_trace.dir/benchmarks/v4_trace.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_benchmark.dir\\benchmarks\\current_benchmark.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\current_benchmark.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/current_benchmark.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_benchmark.dir/benchmarks/current_benchmark.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_snapshot_smoke.dir\\benchmarks\\v4_snapshot_smoke.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_snapshot_smoke.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_snapshot_smoke.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_snapshot_smoke.dir/benchmarks/v4_snapshot_smoke.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_smoke.dir\\benchmarks\\v4_core_smoke.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_core_smoke.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_core_smoke.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_smoke.dir/benchmarks/v4_core_smoke.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_mutation_smoke.dir\\benchmarks\\v4_mutation_smoke.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_mutation_smoke.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_mutation_smoke.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_mutation_smoke.dir/benchmarks/v4_mutation_smoke.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_workload.dir\\benchmarks\\workload_simulator.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\workload_simulator.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/workload_simulator.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_workload.dir/benchmarks/workload_simulator.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_api_compile.dir\\tests\\v4_api_compile.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_api_compile.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_api_compile.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_api_compile.dir/tests/v4_api_compile.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_freeze.dir\\tests\\v4_freeze.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_freeze.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_freeze.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_freeze.dir/tests/v4_freeze.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_rc_torture.dir\\tests\\v4_rc_torture.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_rc_torture.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_rc_torture.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_rc_torture.dir/tests/v4_rc_torture.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_wire_probe.dir\\tests\\v4_wire_probe.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_wire_probe.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_wire_probe.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_wire_probe.dir/tests/v4_wire_probe.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\lks_alloc.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\lks_alloc.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/lks_alloc.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/lks_alloc.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\lks_base.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\lks_base.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/lks_base.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/lks_base.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\path.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/path.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\path_text.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_text.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_text.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/path_text.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\path_order_key.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_order_key.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_order_key.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/path_order_key.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\slot_codec.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\slot_codec.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/slot_codec.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/slot_codec.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\path_compare.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\path_compare.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/path_compare.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/path_compare.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\managed_order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\managed_order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/managed_order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/managed_order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\snapshot.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\snapshot_key.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_key.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_key.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot_key.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\snapshot_wire.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_wire.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_wire.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot_wire.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\snapshot_restore.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\snapshot_restore.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/snapshot_restore.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/snapshot_restore.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\order_bulk.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\order_bulk.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/order_bulk.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/order_bulk.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\immutable_group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\immutable_group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/immutable_group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/immutable_group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\sort.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\sort.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/sort.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/sort.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\gap.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\gap.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/gap.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/gap.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\tree.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\tree.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/tree.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/tree.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ENABLE_V1_REGRESSION_HELPERS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_diagnostics.dir\\src\\bulk.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\src\\bulk.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/src/bulk.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_diagnostics.dir/src/bulk.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\v2_main.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v2_main.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v2_main.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/v2_main.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\v2_preview.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v2_preview.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v2_preview.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/v2_preview.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\property.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\property.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/property.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/property.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\mutation.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\mutation.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/mutation.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/mutation.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\path_external.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\path_external.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/path_external.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/path_external.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\public_api_usage.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\public_api_usage.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/public_api_usage.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/public_api_usage.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_V1_REGRESSION_HELPERS -DLKS_V2_PREVIEW -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/tests -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_tests.dir\\tests\\v3_ordered.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v3_ordered.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v3_ordered.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_tests.dir/tests/v3_ordered.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_marker_threads.dir\\tests\\v4_marker_threads.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_marker_threads.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_marker_threads.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_marker_threads.dir/tests/v4_marker_threads.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_immutable_group.dir\\tests\\v4_immutable_group.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_immutable_group.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_immutable_group.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_immutable_group.dir/tests/v4_immutable_group.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_tests.dir\\tests\\v4_order.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_order.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_order.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_tests.dir/tests/v4_order.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_snapshot.dir\\tests\\v4_snapshot.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_snapshot.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_snapshot.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_snapshot.dir/tests/v4_snapshot.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_mutation.dir\\tests\\v4_mutation.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\v4_mutation.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/v4_mutation.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_mutation.dir/tests/v4_mutation.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_soak.dir\\tests\\soak.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\soak.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/soak.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_soak.dir/tests/soak.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_consumer_roundtrip.dir\\tests\\consumer_roundtrip.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\consumer_roundtrip.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/consumer_roundtrip.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_consumer_roundtrip.dir/tests/consumer_roundtrip.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_parser_torture.dir\\tests\\parser_torture.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\parser_torture.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/parser_torture.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_parser_torture.dir/tests/parser_torture.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_rc_contract.dir\\tests\\rc_contract.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\tests\\rc_contract.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/tests/rc_contract.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_rc_contract.dir/tests/rc_contract.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_storage.dir\\benchmarks\\v4_storage.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_storage.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_storage.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_storage.dir/benchmarks/v4_storage.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_groups.dir\\benchmarks\\v4_groups.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_groups.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_groups.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_groups.dir/benchmarks/v4_groups.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_groups_diagnostics.dir\\benchmarks\\v4_groups.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_groups.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_groups.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_groups_diagnostics.dir/benchmarks/v4_groups.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_trace_diagnostics.dir\\benchmarks\\v4_trace.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_trace.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_trace.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_trace_diagnostics.dir/benchmarks/v4_trace.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_snapshot_diagnostics.dir\\benchmarks\\v4_snapshot_smoke.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_snapshot_smoke.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_snapshot_smoke.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_snapshot_diagnostics.dir/benchmarks/v4_snapshot_smoke.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_ENABLE_ALLOC_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_v4_mutation_diagnostics.dir\\benchmarks\\v4_mutation_smoke.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\v4_mutation_smoke.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/v4_mutation_smoke.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_v4_mutation_diagnostics.dir/benchmarks/v4_mutation_smoke.c.obj"
+},
+{
+  "directory": "D:/LayerKeySort/.local/preview121-local-run/transfer/build",
+  "command": "D:\\msys64\\ucrt64\\bin\\gcc.exe -DLKS_WORKLOAD_DIAGNOSTICS -ID:/LayerKeySort/.local/preview121-local-run/transfer/include -ID:/LayerKeySort/.local/preview121-local-run/transfer/src -Wall -Wextra -Wpedantic -Werror -DLKS_ORDER_BLOCK_CAPACITY=64 -O3 -DNDEBUG -std=c17 -o CMakeFiles\\layerkeysort_workload_diagnostics.dir\\benchmarks\\workload_simulator.c.obj -c D:\\LayerKeySort\\.local\\preview121-local-run\\transfer\\benchmarks\\workload_simulator.c",
+  "file": "D:/LayerKeySort/.local/preview121-local-run/transfer/benchmarks/workload_simulator.c",
+  "output": "D:/LayerKeySort/.local/preview121-local-run/transfer/build/CMakeFiles/layerkeysort_workload_diagnostics.dir/benchmarks/workload_simulator.c.obj"
+}
+]

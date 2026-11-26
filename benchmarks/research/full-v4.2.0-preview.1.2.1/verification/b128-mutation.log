@@ -1,0 +1,18 @@
+cursor revision/no-op/failure/capacity cases PASS
+move spare OOM + allocation-free moves PASS
+explicit oracle seed=17 steps=30000 PASS
+explicit oracle seed=1779033703 steps=30000 PASS
+explicit oracle seed=3144134277 steps=30000 PASS
+100001-resident distant move campaign 2000 moves PASS
+managed pattern=0 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=1 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=2 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=3 N=100001 stable oracle/remove/call envelope PASS
+managed pattern=4 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=5 N=4096 stable oracle/remove/call envelope PASS
+managed pattern=6 N=4096 stable oracle/remove/call envelope PASS
+managed creation/insertion + cursor OOM sweeps PASS
+managed cursor, 5000 remove/change/reinsert cycles, comparator reentry PASS
+move operations=42186 cross=41113 noops=20 max_assignments=316 max_arrays=4 max_index=12 splits=479 repairs=1706
+managed max_insert_calls=14 max_locate_calls=37
+V4 mutation contract PASS; zero live allocations

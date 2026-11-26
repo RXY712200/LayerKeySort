@@ -1,0 +1,16 @@
+# Reproduction and receipts
+
+Run from this Full repository root with Python 3.12+, Git, GCC, CMake and Ninja:
+
+```text
+python -B benchmarks/research/full-v4.2.0-preview.1.2.1/screen.py <new-output-dir>
+python -B benchmarks/research/full-v4.2.0-preview.1.2.1/analyse.py <new-output-dir>
+```
+
+The archived run uses the screen and probes at `6883b96b3bb6c58462fc2b5a4cccdcf2a4d5e933`, exact Preview.1.2 source `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`, and the public frozen-trace and independent replay archive `f41b7be182c2ef766ee0dec1211500f7dd762f54`. If starting from a shallow clone, fetch those objects explicitly before executing. The program verifies all 45 frozen input hashes and runs the 15 seed-17 cells. It archives exact commands, input and binary hashes, platform and compiler, raw stdout/stderr and process status. It uses C17 optimized production artifacts, separate diagnostics, per-child 512 MiB admission and 120-second timeout. Footprint fields are requested bytes except the separate supported Windows working-set fields. Replay uses QPC or Linux CLOCK_MONOTONIC. Diagnostic counters and per-operation clocks are separate observations from decision timing.
+
+The private isolated hosted revision `5c5540406af5a465ceaf12f8ea3b410f5566d81c` ran both hosts under [Actions run 45397684899](https://github.com/RXY712200/lks0011/actions/runs/45397684899). The public record reproduces it without access to that repository. `hosted-windows`, `hosted-linux` and `local-windows` each contain 540 replay rows from 60 cells, 746 total command receipts, and recomputable medians, extrema, inclusive IQR and memory ratios. Run `analyse.py` on any capture directory, including archived directories with gzip receipts. Exact classical OM pins and prior comparative results remain in the [Preview.1.2 archive](../full-v4.2.0-preview.1.2/REPRODUCTION.md). The local screen prevented advancement, so the nine-adapter campaign was unnecessary.
+
+For the additional bulk-built holdout, link `bulk_shapes.c` against the staged diagnostic archive for each of B64, transfer/B64, B32 and B128. Use GCC `-std=c17 -O3 -DNDEBUG -Wall -Wextra -Wpedantic -Werror -DLKS_ENABLE_ALLOC_DIAGNOSTICS -DLKS_ORDER_BLOCK_CAPACITY=<capacity>` and that staged source's include and src directories. The replay and holdout use each variant's own headers to avoid mismatched block layouts. The diagnostic bulk constructor is also used by snapshot restore. Complete persisted decode/restore tests are in the core suite.
+
+For exact-branch checks, use strict GCC Debug and Release with `-DLKS_BUILD_BENCHMARKS=ON`, then `ctest --test-dir <build> --output-on-failure`. Run `python -B tools/verify_v4_api.py`, `python -B tools/validate_distribution.py`, and `python -B tools/validate_release_assets.py`. The `verification` directory holds run logs, native mutation model logs for the three prototypes and the production preprocessor identity check. For OrdWeave use an isolated source archive at `b12a007c50c2f9efcbee500a14d3cf09dcc74f10`, substitute Full `c977b0fd14a501d769b9783bfdcc61266bd1b5ae` at `third_party/LayerKeySort`, and run native Ninja C17 Release and CTest. The upstream gitlink remains `70d7f0ef5857b54381b863d292a213909d87459f`.

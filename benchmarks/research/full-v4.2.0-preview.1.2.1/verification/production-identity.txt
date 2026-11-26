@@ -1,0 +1,4 @@
+GCC -std=c17 -DNDEBUG -E -P order.c without allocation diagnostics
+Control: 61e9290ec5ba47b9092bcb8ae7d61f13104ea839
+Diagnostic commit: c977b0fd14a501d769b9783bfdcc61266bd1b5ae
+Identical preprocessed translation unit SHA-256: 4794ee03d414fe02a11f63655504ad123565de388078aa72dabbc465d1341333

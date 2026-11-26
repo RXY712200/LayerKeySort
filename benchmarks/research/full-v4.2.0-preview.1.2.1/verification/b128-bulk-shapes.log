@@ -1,0 +1,6 @@
+bulk-built,n=1000,blocks=8,min=125,max=125,zero=0,same=0,cross=0,full_dest=0,tag_stores=0,tag_repairs=0,tag_fallbacks=0,index_touches=0,position_writes=0,live=37272
+mixed-move,n=1000,blocks=14,min=64,max=116,zero=0,same=1332,cross=2764,full_dest=43,tag_stores=43,tag_repairs=0,tag_fallbacks=0,index_touches=454,position_writes=276965,live=43944
+bulk-built,n=10000,blocks=79,min=126,max=127,zero=0,same=0,cross=0,full_dest=0,tag_stores=0,tag_repairs=0,tag_fallbacks=0,index_touches=0,position_writes=0,live=332224
+mixed-move,n=10000,blocks=102,min=64,max=127,zero=0,same=1358,cross=2738,full_dest=43,tag_stores=43,tag_repairs=0,tag_fallbacks=0,index_touches=544,position_writes=280884,live=357800
+bulk-built,n=100000,blocks=782,min=127,max=128,zero=0,same=0,cross=0,full_dest=0,tag_stores=0,tag_repairs=0,tag_fallbacks=0,index_touches=0,position_writes=0,live=3273960
+mixed-move,n=100000,blocks=805,min=64,max=128,zero=0,same=1358,cross=2738,full_dest=43,tag_stores=43,tag_repairs=0,tag_fallbacks=0,index_touches=733,position_writes=281914,live=3299536

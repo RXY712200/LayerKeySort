@@ -564,6 +564,7 @@ typedef struct V4Check {
     const LksOrder *order;
     const LksOrderBlock *previous;
     size_t budget, residents, blocks;
+    uint64_t last_nonzero_tag;
 } V4Check;
 static int v4_check_node(V4Check *check, const LksOrderBlock *block,
     const LksOrderBlock *parent, size_t depth, int *out_height, size_t *out_blocks)
@@ -580,6 +581,12 @@ static int v4_check_node(V4Check *check, const LksOrderBlock *block,
         block->previous != check->previous ||
         (check->previous ? check->previous->next != block : check->order->first != block))
         return 0;
+    /* In-order traversal also follows the verified threaded list. Zero tags
+     * use AVL precedence and leave the last assigned label in effect. */
+    if (block->tag) {
+        if (block->tag <= check->last_nonzero_tag) return 0;
+        check->last_nonzero_tag = block->tag;
+    }
     for (i = 0; i < block->count; ++i) {
         const LksOrderHandle *record = block->records[i];
         /* A duplicated record cannot simultaneously match two locations. */
@@ -603,6 +610,7 @@ int lks_order_internal_valid(const LksOrder *order)
     if (!order) return 0;
     check.order = order; check.previous = NULL; check.budget = order->blocks;
     check.residents = check.blocks = 0;
+    check.last_nonzero_tag = 0;
     if (!v4_check_node(&check, order->root, NULL, 0, &height, &blocks) ||
         check.budget || blocks != order->blocks || check.blocks != order->blocks ||
         check.residents != order->count || check.previous != order->last ||

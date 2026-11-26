@@ -6,6 +6,8 @@
 
 > Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
 
+诊断构建中，`v4_check_node` 沿已验证的中序拓扑记录最后一个非零标签，跨越任意零标签也拒绝相等或递减标签；额外空间为验证器状态中的一个整数，不增加每块空间。详见 [本轮架构](design/V4_2_0_PREVIEW1_2_1_ARCHITECTURE.md)。
+
 Preview.1 的高度引导父链是当前无标签块的回退机制。两块均有非零标签时直接比较标签。生产 AVL 更新及批量构建继续维护 subtree_blocks，诊断检查其值；比较不读取它。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
 > 固定代码基线：`70d7f0ef5857b54381b863d292a213909d87459f`。根据本提交的全部 16 个生产 .c、主要内部头、公开 API、构建清单检查所得。`v4_*`、`snap_*`、`ig_*` 等是**私有函数，不属于外部可调用 API**。本文与 [总导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[64 API 清单](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[测试与证据](IMPLEMENTATION_VALIDATION.zh-CN.md) 相互补充。
