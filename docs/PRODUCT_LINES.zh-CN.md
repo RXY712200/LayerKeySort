@@ -5,7 +5,7 @@
 LayerKeySort 采用**单仓库、多独立产品、独立版本号**。这不是将同一套源码用开关裁剪成
 “完整版”和“精简版”。各产品的公开 API、兼容性和生命周期，以各自文档为准。
 
-准备中的 Full 版本为 v4.2.0，实现及证据见 [Full 入口](FULL.zh-CN.md)。另行发布前，已发布 Stable/Latest 仍为 v4.1.0；Mini 与 Workbench 不变。
+main 已包含 Full v4.2.0 实现及 Stable 元数据，实现及证据见 [Full 入口](FULL.zh-CN.md)。另行发布前，已发布 Stable/Latest 仍为 v4.1.0；Mini 与 Workbench 不变。
 
 ## 产品划分
 

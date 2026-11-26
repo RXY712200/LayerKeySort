@@ -62,7 +62,7 @@ CMake ≥3.21 支持 `add_subdirectory`、离线 FetchContent 或安装后 `find
 | 4.1 | 块共享 owner、紧凑快照元数据 | 源码兼容的存储缩减；十万至千万级历史结果及退化见[4.1 记录](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/V4_1_0.zh-CN.md) |
 | **4.2** | 受影响槽位更新、有界标签及 AVL 回退、固定宽度线格式转换 | 公开／线格式契约不变；累计 Windows/Linux 证据及[Stable 准备记录](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/V4_2_0.zh-CN.md) |
 
-**下载／源码状态：** 本文直接介绍固定准备版本中的 Full v4.2.0 Stable 版。另行授权集成前，main 仍为已集成的 4.2.0-rc.1。已发布 Stable 及仓库 Latest 仍为 [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)，已发布资产从该有效发行页取得。计划中的 v4.2.0 标签及资产尚未发布。[Stable 4.1 权威 API](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md)继续可用。
+**下载／源码状态：** 本文直接介绍固定准备版本中的 Full v4.2.0 Stable 版。main 现已包含已接受的 Full v4.2.0 实现及 Stable 元数据；v4.2.0 尚未打标签或发布。已发布 Stable 及仓库 Latest 仍为 [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)，已发布资产从该有效发行页取得。计划中的 v4.2.0 标签及资产尚未发布。[Stable 4.1 权威 API](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md)继续可用。
 
 ## Full 与 Mini 相互独立
 
@@ -94,4 +94,4 @@ Handle 表示存活实例，删除自身或销毁来源即失效，不是持久�
 
 [Full 路线 #3](https://github.com/RXY712200/LayerKeySort/issues/3) · [Mini 路线 #7](https://github.com/RXY712200/LayerKeySort/issues/7) · [产品线规则](PRODUCT_LINES.zh-CN.md) · [贡献说明](../CONTRIBUTING.md) · [MIT 许可](../LICENSE) · [作者独立项目目录](https://quiveld.com/projects/independent/)
 
-集成导航交接：`docs/index.html` 的两个 Repo 所有 Full 入口目前选择本准备分支，便于审核；另行授权集成后将其切换为 `blob/main/docs/FULL.md` 与 `blob/main/docs/FULL.zh-CN.md`。当前 Full 技术文档及图形继续固定于不可变 Full 准备提交；实际发布前保留 v4.1.0 下载入口。
+集成导航：`docs/index.html` 的两个 Repo 所有 Full 入口现已选择 `blob/main/docs/FULL.md` 与 `blob/main/docs/FULL.zh-CN.md`，随本导航变更集成生效。当前 Full 技术文档及图形继续固定于不可变 Full 准备提交；实际发布前保留 v4.1.0 下载入口。

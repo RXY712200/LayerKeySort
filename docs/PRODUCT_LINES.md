@@ -6,7 +6,7 @@ LayerKeySort is **one repository with independently versioned products**, not on
 product with interchangeable build modes. This policy describes repository-wide
 naming and delivery; each product's own README and API contract remain authoritative.
 
-The prepared Full edition is v4.2.0; its implementation and evidence are described in the [Full entry](FULL.md). Published Stable/Latest remains v4.1.0 until separate publication. Mini and Workbench are unchanged.
+Main includes Full v4.2.0 implementation and Stable metadata; its implementation and evidence are described in the [Full entry](FULL.md). Published Stable/Latest remains v4.1.0 until separate publication. Mini and Workbench are unchanged.
 
 ## Products and locations
 
