@@ -1,10 +1,11 @@
-# LayerKeySort Full: understanding the complete implementation (4.2.0-rc.1)
+# LayerKeySort Full: understanding the complete implementation (v4.2.0)
 
 [简体中文](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) · [Validation/source baseline](V4_2_0_PREVIEW3.md)
 
+This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
 Fixed-width wire reads/writes are tested against old golden bytes with offset-one buffers. Restored block labels and AVL fallback have targeted regressions.
 
-This edition describes the Full 4.2.0-rc.1 verification tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, including two Preview.3 regressions. Operational behavior comes from `fe00536e7bd7f4e5128432ea4a29e54158074903`. Published Stable remains 4.1.0. See the [source audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md) for lineage.
+The historical RC verification tree is `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, including two Preview.3 regressions. Operational behavior comes from `fe00536e7bd7f4e5128432ea4a29e54158074903`. See the [source audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md) for lineage.
 
 ## Reading map: four connected guides
 
@@ -19,7 +20,7 @@ Scope includes all 16 production C files, public API, related private structures
 
 ## 0. What the library does
 
-Full supports three separate data models rather than acting as a conventional one-shot `qsort` replacement or database:
+Full provides dynamic ordering, stable one-shot sorting and independently owned history through three data models:
 
 1. **Mutable live order:** `LksOrder` maintains relative order among long-lived occurrences; `LksManagedOrder` positions them through a comparator in the same structure.
 2. **Immutable historical order:** `LksSnapshot` captures logical order and application association bytes; LS1 and LKS4SNP1 provide historical coordinates and serialization.
@@ -230,7 +231,7 @@ offset  width  contents
 Repeat N times; no trailing bytes
 ~~~
 
-Total is `24 + D + 8*N + sum(Ai)`. Preview.2 snap_be_write/read specialize fixed widths while retaining explicit big-endian byte access; this is not native-struct fwrite and has no native struct alignment premise.
+Total is `24 + D + 8*N + sum(Ai)`. Preview.2 `snap_be_write` / `snap_be_read` specialize fixed widths while retaining explicit big-endian byte access; this is not native-struct fwrite and has no native struct alignment premise.
 
 `lks_snapshot_serialize` checks destination size, returns BUFFER_TOO_SMALL without writing on shortage, otherwise writes without heap allocation. `lks_snapshot_deserialize` scans/validates magic, flags, domain/count, row lengths, arithmetic and exact tail, then allocates/copies independent history. Disk transactions and checksum protection against silent corruption belong to an upper persistence protocol; versioning alone is not database reliability.
 
@@ -290,7 +291,7 @@ Completed immutable Snapshot reads can run concurrently if lifetime is externall
 
 ## 10. Performance and applicability
 
-The 4.2 candidate compares local indices within a block, nonzero labels across blocks, or AVL parent/height when either label is zero. Attachment maintains at most 64 blocks; ordinary edits update affected slots. Observed Full/Stable 4.1 median live ratios are Windows **0.629106**, Linux **0.640047**; compare-heavy **0.197718**, **0.219173**. Endpoint lifecycle versus flat history is **1.137284**, **1.136323**; live ratios do not transfer to every application. Native tag-range OM wins some conditions. See [candidate evidence](FULL_RC1_EVIDENCE.md) and [selection guide](FULL_SELECTION_GUIDE.md).
+Full v4.2.0 compares local indices within a block, nonzero labels across blocks, or AVL parent/height when either label is zero. Attachment maintains at most 64 blocks; ordinary edits update affected slots. Observed Full/Stable 4.1 median live ratios are Windows **0.629106**, Linux **0.640047**; compare-heavy **0.197718**, **0.219173**. Endpoint lifecycle versus flat history is **1.137284**, **1.136323**; live ratios do not transfer to every application. Native tag-range OM wins some conditions. See [4.2 evidence](FULL_RC1_EVIDENCE.md) and [selection guide](FULL_SELECTION_GUIDE.md).
 
 - Live structural work depends on local capacity B and AVL block count M, not rewriting every intervening external coordinate.
 - Whole Snapshot processing visits N occurrences and copies A association bytes; these explicit linear costs remain even when live edits improve.
@@ -365,7 +366,7 @@ This maps inspected source to relevant test entries; it does not claim this revi
 
 ## 13. Reproducing source review/build
 
-Pin a revision rather than following moving main:
+The following pinned checkout reproduces the historical RC tests; for Full v4.2.0 metadata use the final preparation revision identified in the release record/report:
 
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
@@ -386,7 +387,7 @@ The reconstruction inspected all 16 production C files/major headers at fixed Gi
 ## 14. Keeping explanations aligned with source
 
 - Update affected sections in the same PR as substantive implementation changes; pin revision, old/new call flow and observable semantics. Never rewrite old data to fabricate history.
-- Consumer changes go in the [handoff ledger](FULL_CONSUMER_HANDOFF.en.md). Introducing [PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) merged at 2026-11-23 06:02:54 UTC; new candidate entries remain candidate-branch content.
+- Consumer changes go in the [handoff ledger](FULL_CONSUMER_HANDOFF.en.md). Introducing [PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) merged at 2026-11-23 06:02:54 UTC; later entries are bound to their recorded source revisions.
 - This walkthrough locates the complete flow and source, rather than hiding implementation behind prose. Verify real diffs/source and appropriate tests when changing it.
 - Resolve conflicts with actual functions/diffs/reproduction, not conversation memory or treating prose as evidence of runtime behavior.
 

@@ -1,6 +1,6 @@
 # 从 Stable V2.0.0 迁移到 V3 3.x
 
-历史英文原文：[docs/V3_MIGRATION.md](https://github.com/RXY712200/LayerKeySort/blob/fd7e3e7d15b5b8fc35ff0bfb0ffbafe5c94b5111/docs/V3_MIGRATION.md)。以下适用于当时的 V3 迁移。
+历史英文原文：[docs/V3_MIGRATION.md](https://github.com/RXY712200/LayerKeySort/blob/fd7e3e7d15b5b8fc35ff0bfb0ffbafe5c94b5111/docs/V3_MIGRATION.md)。以下适用于当时的 V3 迁移。当前 Full v4.2.0 见 [V3 至 V4 迁移](MIGRATION_V3_V4.zh-CN.md)。
 
 本指南描述从历史 Stable `v2.0.0` 迁移到已发布 `v3.0.0` 引入的 API。3.1.0 源码仍有相同的 59 个公开函数。当时的 [V3.1.0 兼容契约](https://github.com/RXY712200/LayerKeySort/blob/dfa9562b9471947cfbd4ee1d1750a59434be83e2/docs/COMPATIBILITY.md) 固定于发布提交。当前分支的同名文件描述 V4。
 

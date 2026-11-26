@@ -2,12 +2,7 @@
 
 [简体中文](API.zh-CN.md)
 
-Preview.5 froze the V4.0 source contract: 64 functions, 14 public types.
-V4.0.0 Stable preserved it unchanged, and the released Full 4.1.0 retains
-the frozen API. See [4.1.0 record](V4_1_0.md) and historical [Stable record](V4_STABLE.md).
-Include `<layerkeysort.h>` only. [Freeze](V4_FREEZE.md) specifies ownership,
-statuses and persistent compatibility; [migration](MIGRATION_V3_V4.md) covers the
-major source break. [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable. V3.1.0 remains for legacy contracts.
+Full v4.2.0 retains the frozen 64-function / 14-type V4 source API, LS1 and LKS4SNP1. Include only `<layerkeysort.h>`. The [freeze](V4_FREEZE.md) defines compatibility; the [complete API guide](IMPLEMENTATION_API_REFERENCE.md) maps every function to source and detailed contracts. [V3 migration](MIGRATION_V3_V4.md) covers the major source break.
 
 ## Status / comparator / sort
 
@@ -38,6 +33,8 @@ Group owns flat copied array, borrows items, no index/Path. Stable build/fresh m
 with Base-before-Incoming equality. Batch owns sorted chunks; borrowed views expire
 with Batch, merge-all favors earlier chunks and returns independently owned Group.
 Empty build still requires comparator; chunk size must be nonzero.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
 
 ## Snapshots / LS1 / wire / restoration
 
@@ -139,5 +136,3 @@ all families. tools/verify_v4_api.py rejects unreviewed signature/layout/name ch
 
 - `lks_sort`
 - `lks_status_string`
-
-If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.

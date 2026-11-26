@@ -1,10 +1,11 @@
-# Full 4.2.0-rc.1：可复现的源码、测试、发布与审计证据地图
+# Full v4.2.0：可复现的源码、测试、发布与审计证据地图
 
 [English](IMPLEMENTATION_VALIDATION.md)
 
+本版适用于 Full v4.2.0；运行实现与 RC.1 相同，仅发布版本宏改为 4.2.0。操作与测试的精确历史 SHA 继续有效。当前准备与分发验证见 [4.2.0 记录](V4_2_0.zh-CN.md)。
 Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)。
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
+> 历史 RC 验证树为 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
 > 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
@@ -20,7 +21,7 @@ git rev-parse HEAD
 git status --short
 ~~~
 
-Full 4.1.0、Mini、Workbench 和 V3 历史回归是不同对象。不要因为它们在一个仓库，就把某个产品或实验目标的通过等同于 Full 正常生产库的行为。
+上方检出点复现历史 RC 回归基线；Stable 元数据及最终验证应使用交付报告中的确切准备 PR 版本。Full、Mini、Workbench 和 V3 历史回归是不同对象。不要因为它们在一个仓库，就把某个产品或实验目标的通过等同于 Full 正常生产库的行为。
 
 ## 2. 真正的 CMake 目标和选项
 

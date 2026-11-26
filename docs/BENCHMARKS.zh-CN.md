@@ -2,11 +2,13 @@
 
 [English](BENCHMARKS.md)
 
-当前已发布 Stable 为 [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。参见 [4.1.0 证据](V4_1_0.md)、[历史 Stable](V4_STABLE.md)和[冻结契约](V4_FREEZE.md)。历史结果保留采集时的名称和术语；Stable 发布未做新算法调优。
+Full v4.2.0 的性能以下方 4.2 配对归档为依据，涵盖实时顺序、生命周期成本与生成的下游重放。历史文件保留原始测量和术语；Stable 准备不进行新调优或计时实验。
 
 ## 当前 V4 证据
 
-[4.2 候选证据](FULL_RC1_EVIDENCE.zh-CN.md)比较同条件的 Windows/Linux 实时顺序、生命周期墙钟时间及内存。使用运行源码不变的 Preview.3 归档测量。
+相对 Stable 4.1，每平台 45 个配对条件的耗时比中位数为 Windows 0.629106／Linux 0.640047（均胜出 45/45）；比较密集比为 0.197718／0.219173。这表示总体耗时降低 37.1%／36.0%，不是吞吐量增幅。相对原生标签区间 OM 的总体比为 1.052438／1.020154；更新密集条件可能有利于 OM。相对受测逐项恢复 Treap 的相对编辑生命周期墙钟比为 0.580369／0.526053；端点平面历史组合比为 1.137284／1.136323。选型时查看证据页的完整表格、内存散点放大图和协议。
+
+[4.2 性能证据](FULL_RC1_EVIDENCE.zh-CN.md)比较同条件的 Windows/Linux 实时顺序、生命周期墙钟时间及内存。使用运行源码不变的 Preview.3 归档测量。
 
 [Preview.4 采集证据](../benchmarks/results/v4-preview4/README.md)记录 V4 历史收敛。认可的三步 Full 4.1.0 研究涵盖 100k–10m；原始运行见[最终研究分支](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)。1m/16 个历史保留状态的请求峰值由 513.594 降至 355.751 MB；通过准入的 Linux 10m/2 为 1,822.185 降至 1,317.500 MB。这是 Full 请求字节，RSS 另计。Linux 3m 随机查找相对原始 4.0.0 慢约 10.2%，还有其他退化场景。不存在通用加速结论。
 

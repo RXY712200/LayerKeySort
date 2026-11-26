@@ -2,7 +2,7 @@
 
 [English](DEVELOPMENT.md)
 
-V4.0.0 完成固定的 V4 Preview.1–5 → RC.1 → Stable 周期。当前已发布 Stable 为 [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)，其中含已接受的内部存储优化。参见 [4.1.0 记录](V4_1_0.md)、[历史 Stable](V4_STABLE.md)、[RC 记录](V4_RC1.md)和[冻结契约](V4_FREEZE.md)。当前路线见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。已关闭的 Issue #2 保留为旧路线记录。
+Full v4.2.0 保持冻结的 V4 契约，沿用已接受的 4.2 实现：受影响槽位更新、有界块标签及 AVL 回退、固定宽度线格式转换。先读 [4.2 记录](V4_2_0.zh-CN.md)、[量化证据](FULL_RC1_EVIDENCE.zh-CN.md)及[冻结契约](V4_FREEZE.zh-CN.md)。[4.1 记录](V4_1_0.zh-CN.md)及原始 V4 Preview/RC 记录属于历史证据。当前工程问题仍见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。
 
 ## 4.x 维护规则
 
@@ -36,7 +36,7 @@ B64/最小 32 块策略、AVL/块拓扑、分配策略、诊断计数及内部�
 
 仅文档且无实现或契约变更时，按实际影响编辑并保留源码出处。正常 Full 开发仍需独立审核测试、兼容性与 GitHub 分支保护。
 
-**当前候选：** 未打标签的 4.2.0-rc.1 分支保留已接受的运行实现，重建文档与验证。已发布 Stable 仍是 4.1.0。OrdWeave 保持官方 4.1.0 依赖。参见[候选证据](FULL_RC1_EVIDENCE.zh-CN.md)。
+Full v4.2.0 运行源码仍为 `fe00536e7bd7f4e5128432ea4a29e54158074903`，RC 测试／头文件基线为 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`。Stable 准备只更改版本宏和文档。OrdWeave 官方依赖保持 4.1.0。
 
 ## 文档真实性
 
@@ -44,6 +44,6 @@ V4 Preview 报告、V4 RC.1 报告、归档 V3 研究、已采集基准目录及
 
 ## V4 之后的证据优先级
 
-Preview.4 是 V4 历史开发证据。[Full 4.1.0 记录](V4_1_0.md)和[最终 A/B/C 研究](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)为更新的内部验证，覆盖 100k–10m 及回退场景。固定三步优化周期已结束。后续内部研究可针对实际成本，无需等待外部采用；主版本仍需证明确有不兼容需求。
+[4.2 配对证据](FULL_RC1_EVIDENCE.zh-CN.md)是当前性能入口。Preview.4 是 V4 历史开发证据。[Full 4.1.0 记录](V4_1_0.md)和[最终 A/B/C 研究](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)为更新的内部验证，覆盖 100k–10m 及回退场景。固定三步优化周期已结束。后续内部研究可针对实际成本，无需等待外部采用；主版本仍需证明确有不兼容需求。
 
 只有实际正确性、兼容性、用户或工作负载证据表明应该打破兼容，才考虑 V5/V6。Full、Mini、Embedded 长期构想不属于当前实现范围。

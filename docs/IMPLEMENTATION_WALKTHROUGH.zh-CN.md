@@ -1,10 +1,11 @@
-# LayerKeySort Full：从源码理解完整实现（4.2.0-rc.1）
+# LayerKeySort Full：从源码理解完整实现（v4.2.0）
 
 [English](IMPLEMENTATION_WALKTHROUGH.md) · [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)
 
+本版适用于 Full v4.2.0；运行实现与 RC.1 相同，仅发布版本宏改为 4.2.0。操作与测试的精确历史 SHA 继续有效。当前准备与分发验证见 [4.2.0 记录](V4_2_0.zh-CN.md)。
 固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
+> 历史 RC 验证树为 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
 
 
@@ -23,7 +24,7 @@
 
 ## 0. 首先读懂这个库究竟在做什么
 
-Full 不是传统的一次性 `qsort` 替代品，也不是数据库。其职责被分为三种不同数据模型：
+Full 通过三种数据模型提供动态顺序、一次性稳定排序及独立历史：
 
 1. **可变实时顺序**：`LksOrder` 为一组长期存活的 *occurrence* 管理相对先后；`LksManagedOrder` 使同一实时结构按比较器自动定位。
 2. **不可变历史顺序**：`LksSnapshot` 捕获一个时刻的逻辑顺序及调用者提供的关联字节，再由 LS1 和 LKS4SNP1 进行历史定位与序列化。
@@ -279,7 +280,7 @@ offset  width  contents
 重复 N 次；不得有多余尾部字节
 ~~~
 
-完整大小是 `24 + D + 8*N + sum(Ai)`。Preview.2 的 `snap_be_write/read` 对四字节和八字节字段使用固定宽度的无符号移位和逐字节访问，仍是显式大端，不是把 C 结构直接 `fwrite` 到文件，因此不依赖本机结构体对齐布局。
+完整大小是 `24 + D + 8*N + sum(Ai)`。Preview.2 的 `snap_be_write` / `snap_be_read` 对四字节和八字节字段使用固定宽度的无符号移位和逐字节访问，仍是显式大端，不是把 C 结构直接 `fwrite` 到文件，因此不依赖本机结构体对齐布局。
 
 `lks_snapshot_serialize` 检查调用方缓冲区长度；不足则返回 `BUFFER_TOO_SMALL` 且不修改目标缓冲区，成功后按固定格式写入，不进行内部堆分配。
 
@@ -365,7 +366,7 @@ Snapshot SourceMarker 的引用计数存在原子操作，但 **Order、ManagedO
 
 ## 10. 性能、算法成本及其适用边界
 
-4.2 候选的同块比较读取局部下标；跨块双方非零直接比较标签，任一为零才走 AVL 父链及高度。接入维护最多 64 块，普通编辑仅更新受影响槽位。已测 Full/Stable 4.1 实时中位比为 Windows 0.629106、Linux 0.640047；比较密集为 0.197718、0.219173。端点和平面历史生命周期对照中 Full 为 1.137284、1.136323，因此不能将实时比值推广到所有应用。另有 tag-range OM 在部分条件获胜。完整观测边界见[候选证据](FULL_RC1_EVIDENCE.zh-CN.md)和[选型](FULL_SELECTION_GUIDE.zh-CN.md)。
+Full v4.2.0 的同块比较读取局部下标；跨块双方非零直接比较标签，任一为零才走 AVL 父链及高度。接入维护最多 64 块，普通编辑仅更新受影响槽位。已测 Full/Stable 4.1 实时中位比为 Windows 0.629106、Linux 0.640047；比较密集为 0.197718、0.219173。端点和平面历史生命周期对照中 Full 为 1.137284、1.136323，因此不能将实时比值推广到所有应用。另有 tag-range OM 在部分条件获胜。完整观测边界见[4.2 证据](FULL_RC1_EVIDENCE.zh-CN.md)和[选型](FULL_SELECTION_GUIDE.zh-CN.md)。
 
 - Live 插入/删除/移动的结构成本与**局部块容量 B 和 AVL 块数 M**相关，而不是改变两条记录之间所有元素的外部排序 Key。
 - 读写整个 Snapshot 要遍历 N 个 occurrence，拷贝关联字节总量 A：这项成本是显式、线性的，**不会因为实时修改变快而自动消失**。
@@ -450,7 +451,7 @@ N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存�
 
 ## 13. 可复现源码审查与构建步骤
 
-取得准确提交并锁定，而不是未经约束地跟随不断更新的 `main`：
+下方固定检出点复现历史 RC 测试；Full v4.2.0 元数据应使用发布记录／交付报告注明的最终准备版本：
 
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
@@ -473,7 +474,7 @@ ctest --test-dir build -C Debug --output-on-failure
 ## 14. 源码真相优先于本文；今后怎样防止这份说明再过时？
 
 - **新实现影响本篇描述时，同 PR 更新相关章节**，标明精确 SHA、旧→新调用变化，以及用户可观察语义；勿用改写旧数据的方式制造“从未发生过”的历史。
-- Full 的消费者升级影响记录于[交接台账](FULL_CONSUMER_HANDOFF.zh-CN.md)。引入台账的 [PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 已于 2026-11-23 06:02:54 UTC 合入；候选新增条目仍以候选分支为准。
+- Full 的消费者升级影响记录于[交接台账](FULL_CONSUMER_HANDOFF.zh-CN.md)。引入台账的 [PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 已于 2026-11-23 06:02:54 UTC 合入；后续条目按各自记录的源码版本理解。
 - 本文用于**先了解完整工作流程并快速定位源码**，不是把源码藏在文档后面。实质改动时必须按该提交及现行代码直接复核，并执行适当测试。
 - 后续如发现源码与本文冲突，标出函数、真实 diff 与复现证据并修正文档；不凭聊天记忆猜测、不将文档描述反过来当作源码行为。
 

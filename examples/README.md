@@ -2,8 +2,7 @@
 
 [简体中文](README.zh-CN.md)
 
-These public-API examples apply to the current published [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). No new public functions or
-usage semantics were added by the private memory-layout improvements.
+These public-API examples apply to Full v4.2.0 and its frozen 4.x contract. For one-shot stable pointer-array sorting, see the [Usage example](../docs/USAGE.md#stable-array-sorting); no live container is required.
 
 All include only layerkeysort.h, check errors and preserve item ownership.
 

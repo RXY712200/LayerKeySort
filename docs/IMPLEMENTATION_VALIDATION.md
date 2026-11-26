@@ -1,8 +1,9 @@
-# Full 4.2.0-rc.1 validation and evidence map
+# Full v4.2.0 validation and evidence map
 
 [简体中文](IMPLEMENTATION_VALIDATION.zh-CN.md) · [Internals](IMPLEMENTATION_INTERNALS.md) · [Implementation audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
-Use RC validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, which contains both Preview.3 regressions. Operational source is `fe00536e7bd7f4e5128432ea4a29e54158074903`. Published Stable is Full 4.1.0 at `70d7f0ef5857b54381b863d292a213909d87459f`. [Preview.3 source and runs](V4_2_0_PREVIEW3.md) · [Full API index](IMPLEMENTATION_API_REFERENCE.md) · [Walkthrough](IMPLEMENTATION_WALKTHROUGH.md)
+This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
+Use RC validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, which contains both Preview.3 regressions. Operational source is `fe00536e7bd7f4e5128432ea4a29e54158074903`. [Preview.3 source and runs](V4_2_0_PREVIEW3.md) · [Full API index](IMPLEMENTATION_API_REFERENCE.md) · [Walkthrough](IMPLEMENTATION_WALKTHROUGH.md)
 
 ## 1. Confirm the validation checkout
 
@@ -14,7 +15,7 @@ git rev-parse HEAD
 git status --short
 ~~~
 
-Full Stable, the Full candidate, Mini, Workbench and historical V3 regression targets represent distinct evidence scopes.
+The checkout above reproduces the historical RC regression baseline. For Stable metadata and final-head verification use the exact preparation PR revision recorded in the delivery report. Full, Mini, Workbench and historical V3 targets have distinct evidence scopes.
 
 ## 2. CMake targets and build options
 

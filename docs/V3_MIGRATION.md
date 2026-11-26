@@ -2,8 +2,7 @@
 
 This document describes migration from historical stable `v2.0.0` to the V3
 API introduced in published `v3.0.0`. The 3.1.0 source retains the same 59
-public functions. The active 3.x compatibility contract is in
-[COMPATIBILITY.md](COMPATIBILITY.md).
+public functions. The historical 3.x contract is [pinned to v3.1.0](https://github.com/RXY712200/LayerKeySort/blob/dfa9562b9471947cfbd4ee1d1750a59434be83e2/docs/COMPATIBILITY.md). For current Full v4.2.0 use [V3-to-V4 migration](MIGRATION_V3_V4.md).
 
 V2 let one `LksTree` accept caller-selected Paths and per-operation comparators.
 An explicit insert or rekey could silently invalidate the ordering assumed by

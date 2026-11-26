@@ -2,44 +2,35 @@
 
 [简体中文](USAGE.zh-CN.md)
 
-Use the [selection guide](FULL_SELECTION_GUIDE.md) to choose explicit order, comparator-managed order, or a smaller composition. The 4.2 candidate keeps published 4.1.0 usage and ownership contracts.
+Full v4.2.0 supports five complementary workflows. Use one family or combine them; items and business identities remain application-owned.
 
-**Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
+| Work | API | Example |
+| --- | --- | --- |
+| Explicit relative editing and precedence | `LksOrder` | [basic.c](../examples/basic.c) |
+| Comparator-maintained stable order and lookup | `LksManagedOrder` | [managed_order.c](../examples/managed_order.c) |
+| Stable one-shot pointer-array sorting | `lks_sort` | Minimal example below |
+| Immutable sorted batches and stable merge | `LksGroup`, `LksGroupBatch` | [immutable_group.c](../examples/immutable_group.c) |
+| Historical associations, LS1, wire and restore | `LksSnapshot` | [snapshot.c](../examples/snapshot.c) |
 
-Include only `<layerkeysort.h>`.
+Explicit order suits editors, timelines and playlists. Managed order suits incrementally maintained priorities and comparator-based collections. Groups suit sorted chunks and batch aggregation. Sorting needs no live container. A database can use these ordering components while retaining its own transactions, identity and storage. Distributed conflict resolution requires a separate mechanism.
 
-Start with [basic.c](../examples/basic.c), then
-[managed_order.c](../examples/managed_order.c),
-[immutable_group.c](../examples/immutable_group.c) and
-[snapshot.c](../examples/snapshot.c).
+## Stable array sorting
 
-## When to use LayerKeySort
+```c
+#include <layerkeysort.h>
+static int compare_int(const void *a, const void *b, void *context) {
+    const int x = *(const int *)a, y = *(const int *)b;
+    (void)context;
+    return (x > y) - (x < y);
+}
+int main(void) {
+    int values[] = {3, 1, 1};
+    void *items[] = {&values[0], &values[1], &values[2]};
+    return lks_sort(items, 3, compare_int, NULL) == LKS_STATUS_OK ? 0 : 1;
+}
+```
 
-LayerKeySort is designed for **long-lived collections whose order keeps changing**.
-
-Typical fits include:
-
-- layer stacks,
-- timelines,
-- editor object lists,
-- node/workflow editors,
-- playlists,
-- local document/editor ordering.
-
-Use it when repeated insert/remove/move behavior and stable live residence matter more
-than one-shot sorting.
-
-## When not to use it
-
-Prefer a simpler tool when you only need:
-
-- one-shot sorting of an array,
-- a simple database `position` column,
-- distributed/CRDT conflict resolution,
-- a persistent business-identity registry,
-- database/WAL/transaction ownership.
-
-LayerKeySort manages ordering, not all surrounding application state.
+Equal pointers-to-items retain input order. `lks_sort` uses a copied pointer array and an equally sized scratch array before committing the caller's array. OOM preserves the input; fewer than two items needs no allocation, but still requires a comparator. This is a stable sorting convenience with copy/scratch costs; the live-order measurements do not compare it with `qsort` or `std::sort`.
 
 ## Choose the API family
 
@@ -66,6 +57,8 @@ Use immutable flat groups for stable batch ordering, merging and chunked build w
 
 Groups copy pointer arrays but borrow item payloads. Borrowed Batch group views expire
 with the Batch; merge results are independently owned.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
 
 ### `LksSnapshot`
 
@@ -108,17 +101,12 @@ Important costs include:
 
 No universal hard latency or universal speedup is promised.
 
-## Next evidence priority
+## Measured workload guidance
 
-The Full 4.1.0 research cycle includes independently reviewed 100k–10m
-workloads, storage gains and measured latency regressions. Future internal
-experiments should address specific engineering questions; real application
-traces are valuable but are not prerequisites to continued development.
+The [4.2 evidence](FULL_RC1_EVIDENCE.md) reports matched Windows/Linux live, lifecycle and generated application workloads. Use the [selection guide](FULL_SELECTION_GUIDE.md) for resource tradeoffs and contrary cases. The [4.1 record](V4_1_0.md) retains the separate 100k–10m storage study.
 
 Current roadmap: [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 
 [API](API.md), [compatibility](COMPATIBILITY.md) and [freeze](V4_FREEZE.md) define exact
 buffers, statuses, ownership, reentry and persistent compatibility.
 [Migration](MIGRATION_V3_V4.md) covers V3 Path/Tree workflows.
-
-If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.

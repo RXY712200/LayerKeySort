@@ -1,10 +1,11 @@
-# Full 4.2.0-rc.1：内部结构、函数执行路径和算法分支详解
+# Full v4.2.0：内部结构、函数执行路径和算法分支详解
 
 [English](IMPLEMENTATION_INTERNALS.md)
 
+本版适用于 Full v4.2.0；运行实现与 RC.1 相同，仅发布版本宏改为 4.2.0。操作与测试的精确历史 SHA 继续有效。当前准备与分发验证见 [4.2.0 记录](V4_2_0.zh-CN.md)。
 恢复后同时构造非零标签和零标签块，分别核对标签路径与 AVL 回退；验证后恢复标签，不改生产算法。 [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)。
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
+> 历史 RC 验证树为 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
 > 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
@@ -18,7 +19,7 @@
 | `managed_order.c` | `v4_managed_compare_item` 包装用户比较回调；`v4_managed_bound` 做块 AVL + 块内二分，复用 Explicit 核心 |
 | `snapshot.c` | `snap_marker_new/retain` 原子生命期计数；`lks_snapshot_new`、`snap_append`、`lks_snapshot_capture_sequence` 完成 Snapshot 的建造；`snap_live_next` 顺序遍历 |
 | `snapshot_key.c` | `snap_nibble`、`snap_key_parse` 及 LS1 格式化/验证/同域比较 |
-| `snapshot_wire.c` | `snap_be_read/write`、`lks_snapshot_serialize/deserialize` 编解码不可变快照的精确二进制格式 |
+| `snapshot_wire.c` | `snap_be_read` / `snap_be_write`、`lks_snapshot_serialize/deserialize` 编解码不可变快照的精确二进制格式 |
 | `snapshot_restore.c` | `lks_snapshot_restore_order` 通过 Resolver 还原 item；`snap_legacy_compare` 与 `lks_order_import_v3_lk1` 做 V3 旧格式导入 |
 | `order_bulk.c` | `lks_order_bulk_build` 均匀建块/新 Handle；`snap_bulk_index` 直接把块双链建成平衡 AVL |
 | `immutable_group.c` | `ig_new/ig_next`，Group、Batch 的复制/稳定归并/快照管理 |
@@ -56,7 +57,7 @@ AVL: indexes Block1/Block2 by implicit in-order sequence
 Order: root + first/last + logical count + revision
 ~~~
 
-`subtree_blocks` 数的是**块**，不等于子树内的 item 数。候选的比较不读取该字段，仍由诊断核对其值。Full 当前也没有公开的随机第 N 项访问 API。
+`subtree_blocks` 数的是**块**，不等于子树内的 item 数。当前比较不读取该字段，仍由诊断核对其值。Full 当前也没有公开的随机第 N 项访问 API。
 
 多块情形每块正常至少半满（当前最小为 32）；唯一块可以低于半满。AVL 的中序顺序、块链顺序、块内 Handle 指针顺序应当一致。
 
@@ -199,7 +200,7 @@ SourceMarker 的原子操作只是管理标记最后释放的时机，**不代�
 
 ### 10.2 Wire：明确字节序，不保存原生 C 指针
 
-`snapshot_wire.c` 的 `snap_be_read/write` 仅处理四字节与八字节字段，使用无符号移位、组合和单字节访问；不要求对齐或本机端序。仍先完整验证后分配，无新增分配点，布局：
+`snapshot_wire.c` 的 `snap_be_read` / `snap_be_write` 仅处理四字节与八字节字段，使用无符号移位、组合和单字节访问；不要求对齐或本机端序。仍先完整验证后分配，无新增分配点，布局：
 
 ~~~text
 magic = ASCII LKS4SNP1 (8)

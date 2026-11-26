@@ -2,7 +2,7 @@
 
 [English](README.md)
 
-这些公共 API 示例适用于当前已发布的 [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。私有内存布局优化保留了公共函数和使用语义。
+这些公共 API 示例适用于 Full v4.2.0 及冻结的 4.x 契约。一次性稳定指针数组排序见[使用示例](../docs/USAGE.zh-CN.md#一次性稳定排序)，无需实时容器。
 
 所有示例只包含 layerkeysort.h，检查错误，并保持业务对象由调用者拥有。
 

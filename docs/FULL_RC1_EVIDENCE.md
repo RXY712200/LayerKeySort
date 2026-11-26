@@ -1,8 +1,8 @@
-# Full 4.2.0 RC evidence
+# Full v4.2.0 performance evidence
 
 [简体中文](FULL_RC1_EVIDENCE.zh-CN.md)
 
-Published Stable and main are 4.1.0. The untagged RC inherits operational source `fe00536e7bd7f4e5128432ea4a29e54158074903`. These are archived runs of that implementation and its controls.
+Full v4.2.0 retains operational source `fe00536e7bd7f4e5128432ea4a29e54158074903`, integrated through RC.1. The tables and figures reuse archived Preview experiments of that unchanged implementation and its controls; Stable metadata introduces no measured algorithm change. This current summary is distinct from the preserved historical stage reports.
 
 ## Evolution and comparability
 
@@ -17,7 +17,7 @@ Published Stable and main are 4.1.0. The untagged RC inherits operational source
 
 ## Contemporaneous live comparison
 
-Ratios are candidate/control, percentage reduction is (1 − ratio) × 100, and speedup is 1/ratio. Each row reports median ratio across all cells, median across compare-heavy cells, and all-cell wins. Relative to Stable 4.1, the candidate reduces the median matched-cell elapsed ratio by 37.1% on Windows and 36.0% on Linux.
+Ratios are Full/control, percentage reduction is (1 − ratio) × 100, and speedup is 1/ratio. Each row reports median ratio across all cells, median across compare-heavy cells, and all-cell wins. Relative to Stable 4.1, Full reduces the median matched-cell elapsed ratio by 37.1% on Windows and 36.0% on Linux.
 
 | Control | Windows overall / compare-heavy / wins | Linux overall / compare-heavy / wins |
 | --- | --- | --- |

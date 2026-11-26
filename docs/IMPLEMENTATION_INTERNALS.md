@@ -1,8 +1,9 @@
-# Full 4.2.0-rc.1 internal structures and execution paths
+# Full v4.2.0 internal structures and execution paths
 
 [简体中文](IMPLEMENTATION_INTERNALS.zh-CN.md) · [Source audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
-Validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` contains both Preview.3 regressions. Operational behavior comes from `fe00536e7bd7f4e5128432ea4a29e54158074903`. Published Stable is 4.1.0 at `70d7f0ef5857b54381b863d292a213909d87459f`. The restored mixed-tag test temporarily introduces zero tags, checks both routes, and restores the original tags. [Stage verification](V4_2_0_PREVIEW3.md)
+This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
+Validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` contains both Preview.3 regressions. Operational behavior comes from `fe00536e7bd7f4e5128432ea4a29e54158074903`. The restored mixed-tag test temporarily introduces zero tags, checks both routes, and restores the original tags. [Stage verification](V4_2_0_PREVIEW3.md)
 
 ## 1. Production source inventory
 
@@ -14,7 +15,7 @@ Validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` contains both Preview
 | `managed_order.c` | `v4_managed_compare_item` guards the callback; `v4_managed_bound` searches AVL then the block, reusing Explicit order. |
 | `snapshot.c` | Atomic marker lifetime, `lks_snapshot_new`, `snap_append`, `lks_snapshot_capture_sequence` and `snap_live_next`. |
 | `snapshot_key.c` | `snap_nibble`, `snap_key_parse`, LS1 format, validation and same-domain comparison. |
-| `snapshot_wire.c` | `snap_be_read/write` and canonical binary serialization/deserialization. |
+| `snapshot_wire.c` | `snap_be_read` / `snap_be_write` and canonical binary serialization/deserialization. |
 | `snapshot_restore.c` | Ordered Resolver restoration and strict V3 import with `snap_legacy_compare`. |
 | `order_bulk.c` | Uniform block fill, fresh Handles, `snap_bulk_index` from the threaded list. |
 | `immutable_group.c` | `ig_new/ig_next`, copied Groups, Batch merge and snapshot management. |
@@ -112,7 +113,7 @@ All occurrences of a changed comparator-visible item in affected ManagedOrders m
 
 ### 10.2 Wire encoding
 
-`snap_be_read/write` handle four- and eight-byte fields with unsigned shifts and byte access, independent of host endianness and alignment. The layout has no trailing bytes.
+`snap_be_read` / `snap_be_write` handle four- and eight-byte fields with unsigned shifts and byte access, independent of host endianness and alignment. The layout has no trailing bytes.
 
 ~~~text
 magic = ASCII LKS4SNP1 (8)

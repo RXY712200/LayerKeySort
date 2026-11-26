@@ -1,0 +1,27 @@
+{
+  "source_predecessor": "d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+  "operational_source": "fe00536e7bd7f4e5128432ea4a29e54158074903",
+  "api_entries": {
+    "docs\\IMPLEMENTATION_API_REFERENCE.md": 64,
+    "docs\\IMPLEMENTATION_API_REFERENCE.zh-CN.md": 64
+  },
+  "types": 14,
+  "header_delta": "Only the two release-string macros",
+  "protected_trees_unchanged": true,
+  "figures_reproduced": 10,
+  "local_compiler": "gcc (Rev4, Built by MSYS2 project) 16.2.0",
+  "local_ctest": {
+    "Debug": 39,
+    "Release": 39
+  },
+  "examples": 7,
+  "sort_snippet": "compiled and executed",
+  "long_tests": [
+    "v4_mutation --long",
+    "v4_rc_torture --long"
+  ],
+  "distribution": "C/C++ source, FetchContent, install and amalgamation; passed",
+  "package_sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb",
+  "browser": "Chrome headless; ten SVGs and bilingual HTML desktop/mobile; screenshots local",
+  "platform_limit": "MSVC, Clang/sanitizers and macOS supplied by final-head hosted workflows; not local executions"
+}
