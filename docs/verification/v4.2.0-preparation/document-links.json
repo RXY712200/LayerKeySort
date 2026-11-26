@@ -1,0 +1,16 @@
+{
+  "files": 60,
+  "counts": {
+    "markdown_local": 656,
+    "immutable": 151,
+    "html": 9
+  },
+  "source_pins": [
+    "6325a6b16d2fe049b7bbc1227c017d6bfb5593b8",
+    "70d7f0ef5857b54381b863d292a213909d87459f",
+    "Full preparation working tree",
+    "c108acd72b37614f4be271c9747484c2dde5eac4"
+  ],
+  "issues": [],
+  "phase": "Pre-freeze combined-tree check; Repo draft pins resolved to the local preparation tree. Final remote pins are checked after the Full commit."
+}

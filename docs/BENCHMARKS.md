@@ -2,13 +2,13 @@
 
 [简体中文](BENCHMARKS.zh-CN.md)
 
-> [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable. See [4.1.0 evidence](V4_1_0.md), [historical Stable record](V4_STABLE.md) and [freeze](V4_FREEZE.md).
-> Historical result files keep the names and terminology that were correct when captured.
-> Stable promotion performs no new algorithm tuning.
+Full v4.2.0 performance is described by the matched 4.2 archive below. It combines live-order comparisons, lifecycle cost and generated downstream replay. Historical files retain their original measurements and terminology. Stable preparation performs no new tuning or timing campaign.
 
 ## Current V4 evidence
 
-The [4.2 candidate evidence](FULL_RC1_EVIDENCE.md) compares matched Windows and Linux live-order samples, lifecycle wall time, and memory. It uses the archived Preview.3 measurements at unchanged operational source.
+Against Stable 4.1 the median of matched elapsed ratios is 0.629106 Windows / 0.640047 Linux over 45 cells per host (45/45 wins each). Compare-heavy ratios are 0.197718 / 0.219173. This means 37.1% / 36.0% lower overall elapsed time, not throughput gains. Native tag-range OM overall ratios are 1.052438 / 1.020154; update-heavy cells can favor OM. Relative-edit lifecycle wall-time ratios versus the tested incrementally restored Treap are 0.580369 / 0.526053; endpoint flat-history ratios are 1.137284 / 1.136323. Use the full tables, memory scatter detail panels and protocols in the evidence page before selecting a representation.
+
+The [4.2 performance evidence](FULL_RC1_EVIDENCE.md) compares matched Windows and Linux live-order samples, lifecycle wall time, and memory. It uses the archived Preview.3 measurements at unchanged operational source.
 
 [Preview.4 captured evidence](../benchmarks/results/v4-preview4/README.md) records historical V4 convergence. The accepted three-step Full 4.1.0 study covers 100k–10m workloads, with raw runs preserved on the
 [final research branch](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md).

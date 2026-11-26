@@ -1,12 +1,8 @@
+# Full v4.2.0 benchmark guide
+
 [简体中文](README.zh-CN.md)
 
-> Current published Full Stable: [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). See [4.1.0 memory/performance study and limitations](../docs/V4_1_0.md), [historical Stable record](../docs/V4_STABLE.md) and [freeze](../docs/V4_FREEZE.md).
-
-The [4.2 RC evidence](../docs/FULL_RC1_EVIDENCE.md) derives charts and summaries from archived final Preview.3 runs. Keep historical raw data unchanged when regenerating them.
-> Measurements below retain historical names; Preview.4 is convergence evidence.
-> Stable promotion performs no new tuning. Old provisional names below are historical.
-
-With benchmarks enabled, the current build retains `layerkeysort_benchmark` for historical V3/V2 comparisons. CMake links it to `layerkeysort_legacy_bench`, which includes legacy sources and private headers. For current Full comparisons, use the archived RC evidence and its linked replay protocol.
+For Full v4.2.0 start with the [current evidence summary](../docs/FULL_RC1_EVIDENCE.md), its complete matched controls, lifecycle wall-time comparisons and Windows/Linux scatter figures. The operational source is unchanged from the measured Preview.3 archive. Reproduction regenerates derived presentation, not timing data. The historical harnesses below retain their own V2/V3/V4 scopes; use the linked protocol for each campaign.
 
 # Historical V3 benchmark harness (3.1.0 source)
 

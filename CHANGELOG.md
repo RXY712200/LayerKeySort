@@ -2,6 +2,15 @@
 
 [简体中文](docs/CHANGELOG.zh-CN.md)
 
+## [4.2.0] - Stable preparation (not published)
+
+- Consolidate the accepted Preview.1–RC.1 implementation: affected-slot updates, bounded block labels with AVL fallback, and fixed-width snapshot wire conversion.
+- Preserve the 64-function / 14-type API, source compatibility, Handles, ownership, failure semantics, LS1/LKS4SNP1 bytes and strict V3 LK1 migration.
+- Upgrade both language editions for dynamic editing, managed ordering, stable one-shot sorting, immutable batch processing and historical workflows; expose paired performance and requested-memory figures with all controls and contrary cases.
+- Prepare Stable version strings and deterministic five-member C17 amalgamation assets. No publication date, tag, Release or Latest change is assigned here.
+- Reuse the unchanged implementation's Windows/Linux evidence: Full/4.1 median paired elapsed ratios 0.629106/0.640047 overall and 0.197718/0.219173 compare-heavy. Native OM can win update-heavy conditions; endpoint flat history remains faster in its measured lifecycle comparison. No new timing run is claimed.
+- See [complete preparation and compatibility record](docs/V4_2_0.md). Historical entries below retain their original stage/publication state.
+
 ## [4.2.0-rc.1] - Unreleased candidate
 
 - Reconstruct Full documentation against the frozen candidate, including reproducible comparative evidence.

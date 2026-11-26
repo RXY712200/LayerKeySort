@@ -1,8 +1,9 @@
-# Full 4.2.0-rc.1: complete public API and contract guide
+# Full v4.2.0: complete public API and contract guide
 
 [简体中文](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [Exact declaration index](design/V4_2_0_RC1_API_INDEX.md) · [Source reconstruction](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
-This edition covers the root Full library. Operational source is pinned to `fe00536e7bd7f4e5128432ea4a29e54158074903`; the RC metadata/test baseline is `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, containing the two Preview.3 regressions. Published Stable remains 4.1.0, at `70d7f0ef5857b54381b863d292a213909d87459f`. The [public header](../include/layerkeysort.h) and exact declaration index specify parameter order and types. The 4.x interface remains frozen. Serialization bytes, statuses, ownership and borrowing contracts are unchanged; offset-one buffers are covered by regression tests. See [validation/source evidence](V4_2_0_PREVIEW3.md).
+This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
+This edition covers the root Full library. Operational source is pinned to `fe00536e7bd7f4e5128432ea4a29e54158074903`; the RC metadata/test baseline is `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, containing the two Preview.3 regressions. The [public header](../include/layerkeysort.h) and exact declaration index specify parameter order and types. The 4.x interface remains frozen. Serialization bytes, statuses, ownership and borrowing contracts are unchanged; offset-one buffers are covered by regression tests. See [validation/source evidence](V4_2_0_PREVIEW3.md).
 
 ## A. Reading this guide
 
@@ -120,6 +121,8 @@ Snapshot capture is counted once, here. The Explicit API excluding Snapshot capt
 | `lks_group_batch_merge_all` | Width-doubling stable merge of sorted chunks into a fresh Group; earlier chunks precede later chunks on equality. | `src/immutable_group.c` |
 | `lks_group_snapshot_capture` | Captures Group order using the common Snapshot export machinery. | `src/immutable_group.c` |
 | `lks_group_snapshot_is_current` | True only for the same Group marker and revision zero; does not establish unchanged application fields. | `src/immutable_group.c` |
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
 
 ### B8. Inputs, failure and ownership by family
 
@@ -254,6 +257,8 @@ Completed immutable Snapshots permit concurrent reads when the application prote
 
 Canonical same-namespace LS1 keys have fixed 16-digit lowercase hexadecimal ordinals. Bytewise ASCII lexical order matches ordinal order. Database use of this property requires a byte-order-preserving collation; linguistic/case-insensitive order is not assumed. Cross-namespace key compare returns `DOMAIN_MISMATCH`; sorting those strings does not define business-record order. LS1 is a historical Snapshot coordinate, not persistent identity across versions, and differs from V3 LK1 Path encoding.
 
+Group pure reads require protected Group lifetime and safe payload access. Synchronize Group accessors against merge, capture, destruction and Batch merge-all involving constituent Groups. Synchronize GroupBatch accessors against merge-all and destruction. Private non-atomic busy fields are read by Group size/item and Batch size/chunk accessors and written by merge and merge-all; capture accesses Group busy and marker state. Capture guards in snapshot.c and atomic SourceMarker references protect reentry/marker lifetime, not container locking. Immutable Snapshot concurrent reads still require lifetime protection throughout reading.
+
 ## F. Getting started and further reading
 
 C/C++ consumers use only the public header and library target. Snapshot byte views last until destruction; callers synchronize Order reads/writes/destruction. A loaded Snapshot can be restored but lacks the original live marker.
@@ -270,6 +275,3 @@ Read in this order:
 8. [Validation map](IMPLEMENTATION_VALIDATION.md): tests, evidence and reproducible commands.
 
 This guide explains every public function's purpose, implementation entry point and principal constraints. Source inspection remains necessary for line-level behavior; the guide is not a formal proof of every caller interaction.
-
-If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
-Group pure reads require protected Group lifetime and safe payload access. Synchronize Group accessors against merge, capture, destruction and Batch merge-all involving constituent Groups. Synchronize GroupBatch accessors against merge-all and destruction. Private non-atomic busy fields are read by Group size/item and Batch size/chunk accessors and written by merge and merge-all; capture accesses Group busy and marker state. Capture guards in snapshot.c and atomic SourceMarker references protect reentry/marker lifetime, not container locking. Immutable Snapshot concurrent reads still require lifetime protection throughout reading.

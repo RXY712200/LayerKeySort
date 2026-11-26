@@ -1,0 +1,158 @@
+[
+  {
+    "command": [
+      "python",
+      "tools/verify_v4_api.py"
+    ],
+    "exit_code": 0,
+    "log": "00-python.log.gz",
+    "sha256": "c1dce9127c64e81983f08a1d0292ec4a27b91dc7f4787a2755c522925daea18a",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "build/stable-debug",
+      "--output-on-failure",
+      "-j",
+      "3"
+    ],
+    "exit_code": 0,
+    "log": "01-ctest.log.gz",
+    "sha256": "8cfc79be23e1eb861c46e1973d0bc217dd1f64a1ab5edc2a122849f62102cd35",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "ctest",
+      "--test-dir",
+      "build/stable-release",
+      "--output-on-failure",
+      "-j",
+      "3"
+    ],
+    "exit_code": 0,
+    "log": "02-ctest.log.gz",
+    "sha256": "cdbc42f0288326ed779de747cf4f814f57e935ab6b83aa4d3bb0855d901515ce",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "03-layerkeysort_example.log.gz",
+    "sha256": "40c00fd756c4a0c25d777795ec35e99cf5ec190133a408c69b41cbbe8e65bd17",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_ordered_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "04-layerkeysort_ordered_example.log.gz",
+    "sha256": "b9915fc17d6be8cb95c95626c3f87912f3df13c1affa9ee04936f95e87a0096b",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_layer_list_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "05-layerkeysort_layer_list_example.log.gz",
+    "sha256": "8ac13dc916f6c14ffd6e8079cb706214c47f627cc2592b50a3ff2e353baef44a",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_order_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "06-layerkeysort_order_example.log.gz",
+    "sha256": "d4ce86cc514f4c25b1c0a9071611507cea34f88f9f8139a9d23e44de63c8d1c7",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_managed_order_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "07-layerkeysort_managed_order_example.log.gz",
+    "sha256": "9aae1e01fcc5098f6d30aad5417bb60b7a62c7d6403b4a098a36e7238dec6551",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_snapshot_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "08-layerkeysort_snapshot_example.log.gz",
+    "sha256": "765f06a1609ce329ef017ffe494c0490cd15a1365fddedb54d2d6eafc7315e2a",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_group_snapshot_example.exe"
+    ],
+    "exit_code": 0,
+    "log": "09-layerkeysort_group_snapshot_example.log.gz",
+    "sha256": "c44f789dc86022812b0c9b53bb744ce16f7aa2f732f1509bddc1a13bda201ecc",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_v4_mutation.exe",
+      "--long"
+    ],
+    "exit_code": 0,
+    "log": "10-layerkeysort_v4_mutation.log.gz",
+    "sha256": "75ebca17facc962532d15ff509b4d9d7a45a44ea11f0c9e7c8fa6c89c51a2bbc",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "build/stable-debug/layerkeysort_v4_rc_torture.exe",
+      "--long"
+    ],
+    "exit_code": 0,
+    "log": "11-layerkeysort_v4_rc_torture.log.gz",
+    "sha256": "5b8f4a3f9076bef31ee7763d6fb82a341ef69ae91fc7b3d1352115b028f45ef2",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "python",
+      "tools/validate_distribution.py",
+      "--generator",
+      "Ninja"
+    ],
+    "exit_code": 0,
+    "log": "12-python.log.gz",
+    "sha256": "2d3f31f7bc6c52bd93e55c88084dc31018644edf70c7b962ddb395b349b43db8",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "python",
+      "tools/verify_release_assets.py",
+      "build/stable-assets"
+    ],
+    "exit_code": 0,
+    "log": "13-python.log.gz",
+    "sha256": "bb8525c018fe8680f9dd92127eab616542612b4a2a5a09cb0b0b56fb6038d27d",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  },
+  {
+    "command": [
+      "python",
+      "tools/validate_release_assets.py",
+      "--asset-dir",
+      "build/stable-assets"
+    ],
+    "exit_code": 0,
+    "log": "14-python.log.gz",
+    "sha256": "807417f4923e2455223a4b4ec5721a03be562b898c55cab19ffbdce8e48431c5",
+    "compression": "gzip; sha256 is of original uncompressed command output"
+  }
+]

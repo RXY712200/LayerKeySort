@@ -2,6 +2,14 @@
 
 [English edition](FULL_CONSUMER_HANDOFF.en.md) · [简体中文全篇](FULL_CONSUMER_HANDOFF.zh-CN.md)
 
+## Full v4.2.0 Stable 准备
+
+- 源码前驱为已集成 RC main `d7f3bdfe387ed80d2c3cff3b0413775a858afca3`。准备后继由最终 PR HEAD 和交付记录确定，避免文件引用自己的提交。
+- 只修改两个版本宏：预发布字段为空，完整版本改为 `4.2.0`。运行源码仍为 `fe00536e7bd7f4e5128432ea4a29e54158074903`。无函数、结构或生产调用路径变化。测试、冻结声明、LS1、LKS4SNP1 及严格 LK1 导入均保留。
+- 数据库核心／中间适配器影响：**未发现需要变化**。不更改依赖或迁移。获准采用后应重验确切版本编译、顺序、关联、重开／恢复及应用失败行为。OrdWeave 官方仍固定于 4.1.0。
+- 文档直接说明 v4.2.0 工作流、实际成本和契约；[发布准备](V4_2_0.zh-CN.md)及双语审核台账区分受测源码、当前元数据和发布事件。四份指南同步矩阵在该记录中。打包保留五个成员及双语 README；版本化 ZIP 名与摘要改变。
+- 实际验证与最终精确 HEAD CI 见准备验证记录。任何另行授权发布前，必须从最终集成目标重建并校验资产。
+
 ## Full 4.2.0-rc.1 candidate
 
 - From Preview.3 `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0` to verification baseline `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`. Operational code remains `fe00536e7bd7f4e5128432ea4a29e54158074903`. Only the two public version strings changed. See the [reconstruction ledger](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md).

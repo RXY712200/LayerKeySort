@@ -2,16 +2,7 @@
 
 [简体中文](DEVELOPMENT.zh-CN.md)
 
-V4.0.0 completes the fixed V4 Preview.1–5 → RC.1 → Stable development cycle.
-
-[Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable,
-including the accepted internal storage optimizations.
-See [4.1.0 record](V4_1_0.md), [historical Stable record](V4_STABLE.md),
-[RC record](V4_RC1.md) and [freeze](V4_FREEZE.md).
-
-The active post-v4 roadmap is
-[Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
-Historical Issue #2 is closed and should remain unchanged as the older roadmap record.
+Full v4.2.0 maintains the frozen V4 contracts and the accepted 4.2 implementation: affected-slot mutation updates, bounded block labels with AVL fallback, and fixed-width wire conversion. Start with the [4.2 record](V4_2_0.md), [quantitative evidence](FULL_RC1_EVIDENCE.md) and [freeze](V4_FREEZE.md). The [4.1 record](V4_1_0.md) and original V4 Preview/RC records are historical evidence. Current engineering questions remain in [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 
 ## 4.x maintenance rule
 
@@ -79,7 +70,7 @@ Contributors making a Full implementation or contract change must:
 
 A **documentation-only** change without implementation/contract changes does not create a fake new algorithm baseline or require cosmetic rewriting of all four guides; update only documents truly affected while preserving valid source provenance. Normal Full development still requires independently reviewed tests, compatibility and GitHub branch protections; documentation alone is not sufficient for PASS.
 
-**Current Full candidate:** The untagged 4.2.0-rc.1 branch freezes the accepted operational implementation and reconstructs its documentation and verification. Published Stable remains 4.1.0. OrdWeave keeps its official 4.1.0 dependency. See the [candidate evidence](FULL_RC1_EVIDENCE.md).
+Full v4.2.0 operational source remains `fe00536e7bd7f4e5128432ea4a29e54158074903`; its RC test/header baseline is `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`. Stable preparation changes only version macros and documentation. OrdWeave retains its official 4.1.0 dependency.
 
 ## Documentation truth model
 
@@ -105,7 +96,7 @@ Rule:
 
 ## Evidence priority after V4
 
-Preview.4 is historical V4 development evidence. The [Full 4.1.0 record](V4_1_0.md)
+The [4.2 matched evidence](FULL_RC1_EVIDENCE.md) is the current performance entrypoint. Preview.4 is historical V4 development evidence. The [Full 4.1.0 record](V4_1_0.md)
 and [final A/B/C research](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)
 are the newer internally validated 100k–10m evidence, including regressions.
 The fixed three-step optimization cycle is closed. Future internal research may

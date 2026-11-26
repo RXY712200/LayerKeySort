@@ -2,6 +2,14 @@
 
 [简体中文](FULL_CONSUMER_HANDOFF.zh-CN.md) · [Original bilingual-source record](FULL_CONSUMER_HANDOFF.md)
 
+## Full v4.2.0 Stable preparation
+
+- Source predecessor: integrated RC main `d7f3bdfe387ed80d2c3cff3b0413775a858afca3`. The preparation successor is identified by the final PR HEAD and delivery receipt, avoiding a self-referential commit pin.
+- Only two version macros change: prerelease becomes empty; full version becomes `4.2.0`. Operational source remains `fe00536e7bd7f4e5128432ea4a29e54158074903`. No functions, structures or production call paths change. Tests, frozen declarations, LS1, LKS4SNP1 and strict LK1 import are preserved.
+- Database core / intermediary adapter impact: **none indicated**. No dependency or migration change is made. An authorized adoption should retest exact-pin compilation, order, associations, reopen/recovery and application failure behavior. OrdWeave remains officially pinned to 4.1.0.
+- Documentation directly describes v4.2.0 workflows, practical costs and contracts; [release preparation](V4_2_0.md) and its bilingual review ledger distinguish measured source, current metadata and publication. The four-guide synchronization matrix is there. Packaging retains five members and bilingual README instructions; the version-named ZIP and digest change.
+- Actual validation and final exact-head CI belong to the preparation receipt. Rebuild/verify assets on the final integrated target before any separately authorized publication.
+
 ## Full 4.2.0-rc.1 candidate
 
 - From Preview.3 `168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0` to verification baseline `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`. Operational code remains `fe00536e7bd7f4e5128432ea4a29e54158074903`. Only the two public version strings changed. See the [reconstruction ledger](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md).

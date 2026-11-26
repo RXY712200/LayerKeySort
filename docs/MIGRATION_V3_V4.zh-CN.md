@@ -1,8 +1,9 @@
 # V3 到 V4 的迁移
 
+适用于 Full v4.2.0；V3 至 V4 的源码变化与严格旧 LK1 导入语义不变。见[当前集成说明](INTEGRATION.zh-CN.md)。
 [English](MIGRATION_V3_V4.md)
 
-本指南描述 v4.0.0 Stable 引入且当前已发布的 [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 延续的冻结迁移契约。V4 主版本打破源码兼容。需要分层 Path/Tree 契约时可继续使用 v3.1.0。迁移需针对 V4 最终公开头重建，库没有别名层。应用改用取决于当前容器的实时 Handle，继续拥有业务身份，并通过严格导入保留已发布 V3 LK1 数据。
+本指南描述 v4.0.0 Stable 引入且Full v4.2.0 延续的冻结迁移契约。V4 主版本打破源码兼容。需要分层 Path/Tree 契约时可继续使用 v3.1.0。迁移需针对 V4 最终公开头重建，库没有别名层。应用改用取决于当前容器的实时 Handle，继续拥有业务身份，并通过严格导入保留已发布 V3 LK1 数据。
 
 | 原流程 | V4 对应流程 |
 | --- | --- |
@@ -13,13 +14,13 @@
 | 持久化实时 Path/LK1 | 捕获 Snapshot，持久化 LS1 与 LKS4SNP1 |
 | 加载已发布 V3 LK1 | 严格 lks_order_import_v3_lk1，业务对象仍由调用者拥有 |
 
-旧调用：`lks_tree_insert(tree, path, item, &node)`。V4 调用：`lks_order_insert_before(order, anchor, item, &handle)`。无关修改和移动保留 Handle，删除其所属实例或销毁来源时失效。业务身份独立保存；指针数值不表示顺序。托管顺序不提供任意移动，修改键时先删除、编辑、再插入。
+旧调用：`lks_tree_insert(tree, path, item, &node)`。V4 调用：`lks_order_insert_before(order, anchor, item, &handle)`。无关修改和移动保留 Handle，删除其所属实例或销毁来源时失效。业务身份独立保存；指针数值不表示顺序。托管顺序不提供任意移动。修改键前须处理全部相关容器中的受影响实例，并重建排序前提失效的 Group/Batch；重插可能失败，恢复由应用负责。见[完整契约](IMPLEMENTATION_API_REFERENCE.zh-CN.md)。
 
 Preview.4 的 LksImmutableGroup/Batch 改为 LksGroup/Batch。14 个 lks_immutable_group_* 名称改为 lks_group_* 或 lks_group_batch_*。V3 中的同名 Group 语义不同，应迁移调用方式。指针数组输入会被复制，有效载荷所有权保持不变。
 
 严格导入按已发布的 LK1 语义排序，拒绝畸形、非规范、溢出或重复的坐标，创建新的实时 Handle。超出本机 SIZE_MAX 的层级被拒绝。键不会被保留；Path 不公开。
 
-快照捕获复制应用提供的命名空间和身份关联。加载的快照没有来源当前性。Resolver 将关联映射到调用者拥有的对象；恢复借用这些对象并创建新 Handle。历史快照在来源及业务对象销毁后仍可用。LS1 是命名空间内的序号；实时位置有独立机制。命名空间唯一性由应用负责。Full 捕获与导出成本为 O(N+A)。参见[冻结契约](V4_FREEZE.md)、[API](API.zh-CN.md)及[公开快照示例](../examples/snapshot.c)。当前发布的 Full v4.1.0 Stable 保留此迁移行为。V3.1.0 仍作为历史 Stable 提供。
+快照捕获复制应用提供的命名空间和身份关联。加载的快照没有来源当前性。Resolver 将关联映射到调用者拥有的对象；恢复借用这些对象并创建新 Handle。历史快照在来源及业务对象销毁后仍可用。LS1 是命名空间内的序号；实时位置有独立机制。命名空间唯一性由应用负责。Full 捕获与导出成本为 O(N+A)。参见[冻结契约](V4_FREEZE.zh-CN.md)、[API](API.zh-CN.md)及[公开快照示例](../examples/snapshot.c)。Full v4.2.0 保留此迁移行为。V3.1.0 仍作为历史 Stable 提供。
 
 ## 历史 Preview 专用改名表
 
@@ -93,4 +94,4 @@ V4 主公开头不含下列 V3 名称。
 
 V3 中被复用的旧 `lks_group_*` 名称现在使用平面 V4 语义。57 个 V3 专用契约均被移除或替换，保留的是通用排序及状态接口。
 
-Full 4.1.0 保留 Preview.5 冻结的声明及格式。参见 [4.1.0 源码记录](V4_1_0.md)和[历史 v4.0.0 Stable 记录](V4_STABLE.md)。保留旧 Path/Tree 的应用可继续使用 V3.1.0。
+Full v4.2.0 保留 Preview.5 冻结的声明及格式。参见 [4.2.0 源码记录](V4_2_0.zh-CN.md)和[历史 v4.0.0 Stable 记录](V4_STABLE.zh-CN.md)。保留旧 Path/Tree 的应用可继续使用 V3.1.0。

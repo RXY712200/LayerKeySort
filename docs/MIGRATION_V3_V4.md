@@ -1,9 +1,10 @@
 # V3 to V4 migration
 
+Applies to Full v4.2.0; the V3-to-V4 source break and strict legacy LK1 import semantics are unchanged. See [current integration](INTEGRATION.md).
 [简体中文](MIGRATION_V3_V4.zh-CN.md)
 
 This guide describes the frozen Full **4.x** migration contract introduced in
-v4.0.0 Stable and preserved by the current published [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0).
+v4.0.0 Stable and preserved by Full v4.2.0.
 
 V4 is a source-breaking major release. Keep v3.1.0 if hierarchical Path/Tree
 contracts are required. Rebuild against the final V4 header; no alias layer.
@@ -25,7 +26,7 @@ V3 call: `lks_tree_insert(tree, path, item, &node)`.
 V4 call: `lks_order_insert_before(order, anchor, item, &handle)`.
 Handles survive unrelated mutations and moves; own removal/source destruction
 expires them. Keep business IDs independently; numerical pointer values are not order.
-Managed order has no arbitrary move facade: remove/edit/reinsert to change keys.
+Managed order has no arbitrary move facade. Before key mutation, handle every affected occurrence in all relevant containers, reconstruct incompatible Group/Batch data, and plan for fallible reinsertion and application recovery; see the [complete contract](IMPLEMENTATION_API_REFERENCE.md#e-less-obvious-error-handling-boundaries).
 
 Preview.4 LksImmutableGroup/Batch becomes LksGroup/Batch; all 14
 lks_immutable_group_* names become lks_group_* / lks_group_batch_*.
@@ -42,7 +43,7 @@ to caller-owned objects; restore borrows those objects and gives fresh handles.
 Historical snapshot remains after source/item destruction. LS1 is an ordinal
 within a namespace, not live position. Namespace uniqueness belongs to application.
 Full capture/export costs O(N+A). See [freeze](V4_FREEZE.md), [API](API.md) and
-[public snapshot example](../examples/snapshot.c). [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable and retains this migration behavior.
+[public snapshot example](../examples/snapshot.c). Full v4.2.0 retains this migration behavior.
 V3.1.0 remains historical Stable for applications retaining V3 contracts.
 
 ## Historical Preview-only rename table
@@ -118,6 +119,6 @@ The following V3 names are absent from the primary V4 header:
 Old V3 `lks_group_*` names that are reused now implement flat V4 semantics.
 All 57 V3-specific contracts are removed/replaced; only generic sort/status remain.
 
-Full 4.1.0 retains the unchanged Preview.5 frozen declarations and formats;
-see [current source record](V4_1_0.md) and the historical
+Full v4.2.0 retains the Preview.5 frozen declarations and formats;
+see [current source record](V4_2_0.md) and the historical
 [v4.0.0 Stable record](V4_STABLE.md). V3.1.0 is available for legacy Path/Tree applications.

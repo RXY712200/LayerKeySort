@@ -1,6 +1,6 @@
 # v3.1.0 发布后合成负载证据
 
-[历史英文原文](WORKLOAD_EVIDENCE.md)。4.2 候选见[后续 Preview.3 配对和资源证据](FULL_RC1_EVIDENCE.zh-CN.md)。
+[历史英文原文](WORKLOAD_EVIDENCE.md)。Full v4.2.0 见[后续 Preview.3 配对和资源证据](FULL_RC1_EVIDENCE.zh-CN.md)。
 
 当时建议在未来 3.2 研究兼容尾延迟改善。近尾时间线出现罕见但可复现的全区间重标暂停。它属于负载证据，未发现生产正确性缺陷，也未据此改动算法、API、版本、Path/LK1、打包或发布。
 

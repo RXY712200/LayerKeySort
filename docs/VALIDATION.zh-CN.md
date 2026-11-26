@@ -2,9 +2,10 @@
 
 [English](VALIDATION.md)
 
-复现 4.2 候选版的源码和测试基线时，检出 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，其中包含 RC 元数据和两个 Preview.3 回归。较早的运行源码提交缺少这些测试。参见[候选定量证据](FULL_RC1_EVIDENCE.zh-CN.md)。 最终 PR 验证须在该 PR 的实际 HEAD 上执行。
+Full v4.2.0 保留全部 64 个函数、14 个公开类型、LS1/LKS4SNP1 固定样例及严格 V3 迁移。准备工作只更改发布元数据，不改变运行语义。见 [4.2 验证记录](V4_2_0.zh-CN.md)。
+复现 Full v4.2.0 延续的运行源码及测试基线时，可检出历史 RC 验证版本 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，其中包含 RC 元数据和两个 Preview.3 回归。该历史版本仍使用 RC 元数据，并非最终 Stable 准备 HEAD；较早的运行源码提交缺少这些测试。参见[4.2 定量证据](FULL_RC1_EVIDENCE.zh-CN.md)。 最终 PR 验证须在该 PR 的实际 HEAD 上执行。
 
-当前已发布 Stable 为 [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。4.x API 和线格式保持冻结，见 [4.1.0 说明](V4_1_0.md)。V4.0.0 Stable 在 Preview.5 冻结及独立审查 RC.1 后发布。Stable 发布保留冻结的生产实现和兼容契约，只改发布元数据与呈现。
+4.x API 和线格式保持冻结。历史存储演进见 [4.1.0 说明](V4_1_0.zh-CN.md)。V4.0.0 Stable 在 Preview.5 冻结及独立审查 RC.1 后发布。Stable 发布保留冻结的生产实现和兼容契约，只改发布元数据与呈现。
 
 ## 当前自动验证门槛
 
@@ -26,9 +27,9 @@
 
 CI 执行全部七个公开示例。
 
-## 候选版回归证据
+## 4.2 保留的回归证据
 
-候选版保留提交 `754b3088c160564f6666ee520284168ee5da6ac7` 的未对齐快照缓冲区回归，以及提交 `3ac82d26301ea12876a3ebdba6319fe8233621f3` 的恢复后混合标签比较回归。两者位于 `tests/v4_snapshot.c`。前者在偏移一字节的缓冲区上解码和编码，并核对字面线格式字节；后者刻意清零两个恢复后块的标签，检查内部不变量及回退路径的双向比较，再还原标签。它们验证保留于 `fe00536e7bd7f4e5128432ea4a29e54158074903` 的生产实现。最终托管结果须注明实际文档 PR 提交。
+Full v4.2.0 保留提交 `754b3088c160564f6666ee520284168ee5da6ac7` 的未对齐快照缓冲区回归，以及提交 `3ac82d26301ea12876a3ebdba6319fe8233621f3` 的恢复后混合标签比较回归。两者位于 `tests/v4_snapshot.c`。前者在偏移一字节的缓冲区上解码和编码，并核对字面线格式字节；后者刻意清零两个恢复后块的标签，检查内部不变量及回退路径的双向比较，再还原标签。它们验证保留于 `fe00536e7bd7f4e5128432ea4a29e54158074903` 的生产实现。最终托管结果须注明实际文档 PR 提交。
 
 ## 平台矩阵
 
@@ -38,7 +39,7 @@ CI 执行全部七个公开示例。
 
 历史 v4.0.0 RC 扩展测试包括三个种子、每个 200k 步的显式顺序修改、长时间对抗性解析、大规模远距移动和周转、来源标记寿命压力，以及针对性的 Preview.4 计数回放。
 
-Preview.4 记录 V4 的历史收敛过程。后续 4.1.0 三步整合 [A/B/C 研究](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)记录 1,548 个完成的原生进程、36 项安全跳过及 11,802 个确切顺序指纹，保留收益与回退。参见 [RC 记录](V4_RC1.md)及 [Stable 记录](V4_STABLE.md)。
+Preview.4 记录 V4 的历史收敛过程。后续 4.1.0 三步整合 [A/B/C 研究](https://github.com/RXY712200/LayerKeySort/blob/6325a6b16d2fe049b7bbc1227c017d6bfb5593b8/benchmarks/research/final-step3/REPORT.md)记录 1,548 个完成的原生进程、36 项安全跳过及 11,802 个确切顺序指纹，保留收益与回退。参见 [RC 记录](V4_RC1.md)及 [Stable 记录](V4_STABLE.zh-CN.md)。
 
 ## 验证范围
 

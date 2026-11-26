@@ -1,0 +1,13 @@
+{
+  "benchmarks\\research\\full-v4.2.0-rc.1\\linux-compare-heavy.svg": "b5291ac077040332826554af30f32de991f84844ac15b2f880ea6959cd8c58f4",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\linux-compare-heavy.zh-CN.svg": "19e3d74c85cc940fa6e9d2ed0a276e1da14d20edfbd61907fb75893a7eada1d3",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\linux-update-heavy.svg": "a300f114293e0a6823039bf7ffa06da7f6ad4ed0e696e50040c8c98d659cc244",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\linux-update-heavy.zh-CN.svg": "f99bd39b90bb41b64e9f2834227f3a215603cf6cced45dbdb418cf9a5d511c13",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\live-ratios.svg": "1b9a64f45ef1ed7f05d558d995eb003056b168657f4cf8a3e6fca168c0648850",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\live-ratios.zh-CN.svg": "a48cce10bf507b61ac82f263bcd3640326ded322bc4edbb1afb2a913e32019a4",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\windows-compare-heavy.svg": "cbf9828a6b8d5771722d90dfac322e9076d6fdd4bd7e3a317570756a210aca99",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\windows-compare-heavy.zh-CN.svg": "d67084920f5f6e99f2709fe7e3841866565a22b3c9f10c352b6f964914064298",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\windows-update-heavy.svg": "3b5de78773307e86d697d9b841a60d4eb4785593629ad7bf35f735a31271f544",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\windows-update-heavy.zh-CN.svg": "72ee1b90f64e04d048fc2d02cbf3d422c281c3c184427dba78788ac65ef4ed50",
+  "benchmarks\\research\\full-v4.2.0-rc.1\\live-derived.json": "d9230a60fdb15ff9a2ffbdd5a65d2fc97dbdebb77843619ef45b40a91cfa2f22"
+}

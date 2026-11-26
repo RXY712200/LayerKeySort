@@ -4,7 +4,7 @@
 
 逐文件执行路径（块和 AVL 维护、快照线格式与恢复、旧格式兼容及相关测试）见[实现导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[64 个公开 API 的源码映射](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[私有机制和算法](IMPLEMENTATION_INTERNALS.zh-CN.md)与[复现及打包验证](IMPLEMENTATION_VALIDATION.zh-CN.md)。
 
-V4 区分早期版本中相互耦合的两个问题：**实时位置取决于当前容器，历史和导出位置不可变。** 已发布 Full 4.1.0 延续这一边界。LayerKeySort 负责顺序；业务身份、有效载荷、存储和更高层领域逻辑均由应用负责。
+V4 区分早期版本中相互耦合的两个问题：**实时位置取决于当前容器，历史和导出位置不可变。** Full v4.2.0 在这一边界下提供动态顺序、稳定排序、批处理及独立历史。业务身份、有效载荷、存储和更高层领域逻辑均由应用负责。
 
 ## 1. 可变实时顺序
 
@@ -12,7 +12,7 @@ V4 区分早期版本中相互耦合的两个问题：**实时位置取决于当
 
 Full 4.1.0 将 Order 的 owner 指针移至 Block，由记录共享。实测 x64 记录由 32 字节降至 24 字节，块增加 8 字节。Handle 的独立分配和地址保持不变，分配频率、B64 和 AVL 算法也保持不变；不同负载的耗时变化不同。
 
-当前 4.2 候选先使用块内位置；跨块时直接比较两个非零标签。任一为零时根据 AVL 祖先关系判断顺序。接入块时的标签维护工作有界，块可能保持零标签。普通位移只更新受影响槽位；结构变化才执行完整位置修复。见[候选证据](FULL_RC1_EVIDENCE.zh-CN.md)。B64 和最小 32 的策略属于私有实现，可在保持 API、线格式及持久兼容性的前提下改变。
+Full v4.2.0 先使用块内位置；跨块时直接比较两个非零标签。任一为零时根据 AVL 祖先关系判断顺序。接入块时的标签维护工作有界，块可能保持零标签。普通位移只更新受影响槽位；结构变化才执行完整位置修复。见[配对性能证据](FULL_RC1_EVIDENCE.zh-CN.md)。B64 和最小 32 的策略属于私有实现，可在保持 API、线格式及持久兼容性的前提下改变。
 
 ## 2. 比较器托管的实时顺序
 
@@ -21,6 +21,8 @@ Full 4.1.0 将 Order 的 owner 指针移至 Block，由记录共享。实测 x64
 ## 3. 不可变 Group 与 Batch
 
 `LksGroup` 是借用对象的平面不可变序列。`LksGroupBatch` 拥有排序后的不可变分块，并可按约定的等值优先规则稳定合并。二者用于批处理，无需重新引入实时 Path 或 Tree。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
 
 ## 4. 不可变历史表示
 
@@ -44,9 +46,8 @@ V4 主公开头不导出实时 V3 Path、Tree 或 OrderedTree API。内部严格
 
 业务对象、比较器上下文、业务身份和外部存储由应用拥有。结构对象和复制的快照字节由 LayerKeySort 拥有。外部保护生命周期时，不可变 Snapshot 支持并发读取。Group 的纯读／读并发还要求应用载荷访问安全；读取必须与合并、捕获、销毁及相关 Batch 活动（包括涉及其分片 Group 的 merge-all）进行外部同步。可变实时来源须由调用者串行访问。回调重入守卫和原子 SourceMarker 生命周期管理都不是容器锁。详见[完整并发契约](IMPLEMENTATION_API_REFERENCE.zh-CN.md)。
 
+Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。
+
 ## 7. 长期产品边界
 
 产品聚焦可变顺序引擎、不可变历史表示和不可变批处理工具。数据库、CRDT 引擎、持久身份注册表和通用应用状态属于其他层。路线与债务见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。[冻结契约](V4_FREEZE.md)定义 V4.0 兼容性，[4.1.0 记录](V4_1_0.md)说明已发布优化，[v4.0.0 Stable 记录](V4_STABLE.md)保留历史证据。
-
-GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
-Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。

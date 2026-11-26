@@ -1,8 +1,9 @@
-# Full 4.2.0-rc.1：完整公开 API 索引与关键契约指南
+# Full v4.2.0：完整公开 API 索引与关键契约指南
 
 [English](IMPLEMENTATION_API_REFERENCE.md) · [精确声明索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md) · [源码重建](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)
 
-> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
+本版适用于 Full v4.2.0；运行实现与 RC.1 相同，仅发布版本宏改为 4.2.0。操作与测试的精确历史 SHA 继续有效。当前准备与分发验证见 [4.2.0 记录](V4_2_0.zh-CN.md)。
+> 历史 RC 验证树为 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
 已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。serialize/deserialize 的字节、状态、所有权与借用规则保持不变，偏移一字节的缓冲区由回归测试覆盖。参见[实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
@@ -122,6 +123,8 @@
 | `lks_group_batch_merge_all` | 将已排序 chunk 按宽度翻倍的稳定归并合成一个新 Group；早期 chunk 相等项优先。 | `src/immutable_group.c` |
 | `lks_group_snapshot_capture` | 将不可变 Group 的当前顺序捕获到通用 Snapshot 格式；使用与 Order 相同的导出逻辑。 | `src/immutable_group.c` |
 | `lks_group_snapshot_is_current` | 同一 Group 标记且 Snapshot revision 为 0 才为真；不代表 Group 的业务字段仍未变化。 | `src/immutable_group.c` |
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
 
 ### B8. 按家族核对输入、失败和所有权
 
@@ -256,6 +259,8 @@ static LksStatus remove_all(LksOrder *order)
 
 同一 namespace 的规范 LS1 键使用固定 16 位小写十六进制 ordinal，故其**字节级 ASCII 词典序与 ordinal 顺序一致**。外部数据库依赖该性质时须采用保持字节顺序的 collation，不能假定语言或忽略大小写的排序规则适用。不同 namespace 的 `lks_snapshot_key_compare` 返回 `DOMAIN_MISMATCH`；对这些字符串直接排序不建立有意义的业务记录先后。LS1 是历史快照坐标，不是跨快照版本的持久记录 ID；这与 V3 LK1 的 Path 顺序编码是不同契约。
 
+Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。
+
 ## F. 低风险入门流程与进一步阅读
 
 C/C++ 仅使用公开头与目标库。快照借用的字节视图在快照销毁前有效；读写同一 Order 与销毁操作由调用者同步。解码得到的 Snapshot 可再恢复，但不带原 live marker。
@@ -272,6 +277,3 @@ C/C++ 仅使用公开头与目标库。快照借用的字节视图在快照销�
 8. [`docs/IMPLEMENTATION_VALIDATION.zh-CN.md`](IMPLEMENTATION_VALIDATION.zh-CN.md)：对应测试/证据与可复现命令。
 
 本手册解释了所有公开函数的**意图、真实实现入口及关键限制**，但不替换源码逐行检视，也不承诺 100% 的调用方行为均可被一份文字形式化证明。
-
-GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
-Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。

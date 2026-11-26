@@ -2,7 +2,7 @@
 
 [English](API.md)
 
-Preview.5 冻结了 V4.0 源码契约，共 64 个函数和 14 个公开类型。V4.0.0 Stable 与已发布的 Full 4.1.0 均保留了该 API。参见 [4.1.0 记录](V4_1_0.md) 和[历史 Stable 记录](V4_STABLE.md)。只需包含 `<layerkeysort.h>`。[冻结契约](V4_FREEZE.md) 规定所有权、状态及持久兼容性；[迁移指南](MIGRATION_V3_V4.md) 解释主版本源码不兼容。当前已发布 Stable 为 [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。V3.1.0 仍可用于旧契约。
+Full v4.2.0 保留冻结的 V4 源码 API（64 个函数、14 个公开类型）、LS1 和 LKS4SNP1。只需包含 `<layerkeysort.h>`。[冻结契约](V4_FREEZE.zh-CN.md)定义兼容性；[完整 API 指南](IMPLEMENTATION_API_REFERENCE.zh-CN.md)逐函数映射源码与详细契约。[V3 迁移](MIGRATION_V3_V4.zh-CN.md)说明主版本源码变化。
 
 ## 状态、比较器与排序
 
@@ -19,6 +19,8 @@ Order 拥有结构并借用非空业务对象。相对位置及端点插入创�
 ## 不可变 Group 和 Batch
 
 Group 拥有平面数组副本并借用对象，不含索引或 Path。稳定构建和独立合并都保留等值顺序，合并时 Base 先于 Incoming。Batch 拥有已排序的分块；借用视图随 Batch 失效。合并所有分块时，较早分块优先，返回独立拥有的 Group。空构建也需要比较器，分块大小必须非零。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
 
 ## 快照、LS1、线格式与恢复
 
@@ -106,5 +108,3 @@ Group 拥有平面数组副本并借用对象，不含索引或 Path。稳定构
 
 - `lks_sort`
 - `lks_status_string`
-
-GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。

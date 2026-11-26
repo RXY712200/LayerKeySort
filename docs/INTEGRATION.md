@@ -2,7 +2,7 @@
 
 [简体中文](INTEGRATION.zh-CN.md)
 
-The untagged 4.2 candidate uses the same C/C++ source and install interfaces. Pin an exact reviewed commit when evaluating it. The published download instructions below remain for Stable.
+Full v4.2.0 supports source, installed CMake and two-file amalgamation integration. Pin a reviewed source revision; rebuild for your compiler, architecture and CRT.
 
 **Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
 
@@ -31,9 +31,9 @@ target_link_libraries(app PRIVATE LayerKeySort::layerkeysort)
 
 16 production modules in cmake/ProductionSources.cmake; four legacy live modules
 regression-only. Rebuild static package for compiler/architecture/CRT settings.
-Current `main` CMake and public header report version **4.1.0**. The package
+The prepared Full v4.2.0 CMake package and public header both report **4.2.0**. The package
 uses `SameMajorVersion` for rebuild-from-source compatibility; no shared ABI
-is shipped. Pin the published `v4.1.0` tag for source integration, or download
+is shipped. Until 4.2.0 publication, the published `v4.1.0` tag and assets remain available. Download
 the verified [Full v4.1.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) assets.
 
 ZIP contains layerkeysort.h, layerkeysort.c, example.c, LICENSE and README.txt.
