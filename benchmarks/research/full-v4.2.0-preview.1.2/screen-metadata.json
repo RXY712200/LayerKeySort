@@ -1,0 +1,371 @@
+{
+  "platform": "Windows-11-10.0.26300-SP0",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "compiler": "gcc (Rev4, Built by MSYS2 project) 16.2.0\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "inputs": [
+    {
+      "name": "10000-17-compare-heavy.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "7f8df6c378d56ea9cf43c81ae891e678a6967b44eec9f7070594cf4e4bebc9fe",
+      "final_n": 9944
+    },
+    {
+      "name": "10000-17-update-heavy.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "476a14535f4cbd77b4320e2c74d7ecd3c77265c3430d4dc23970d5a10fb5a8bc",
+      "final_n": 9979
+    },
+    {
+      "name": "10000-17-short.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "ea0e7c73c7f11fccbea772d5d56559700c57df1890f89cc92bd73fd22efb6650",
+      "final_n": 9896
+    },
+    {
+      "name": "10000-17-long.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "a7e7013046ffd848ebeea9f7d2ff3d0c53c76c8bb83a9038a85744b0b5a792ad",
+      "final_n": 9896
+    },
+    {
+      "name": "10000-17-hotspot.trace",
+      "n": 10000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "e69304d247ee0822ebc6dddc43b5e235688df0398b5575d663ef207e8c3a0832",
+      "final_n": 13937
+    },
+    {
+      "name": "100000-17-compare-heavy.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "compare-heavy",
+      "operations": 20000,
+      "sha256": "d9f01ee5bd30d4b1d437680338abe146758cda6fd6e3f516d2ceccee4f767f9b",
+      "final_n": 99988
+    },
+    {
+      "name": "100000-17-update-heavy.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "update-heavy",
+      "operations": 20000,
+      "sha256": "a8ccb48bb559711fe917047bf7825f1c4cd1089741d333a4c2f33bcc979ed69d",
+      "final_n": 99848
+    },
+    {
+      "name": "100000-17-short.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "short",
+      "operations": 20000,
+      "sha256": "e8916981e7d63006330451e5e1734bc99cb9b5e42383c650b5c51f9c8796d991",
+      "final_n": 100027
+    },
+    {
+      "name": "100000-17-long.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "long",
+      "operations": 20000,
+      "sha256": "439cd3047f3e8a7cda059b98ff38a3f6074afb2e2aba4ad96bb0bad6d4d5f4a6",
+      "final_n": 100027
+    },
+    {
+      "name": "100000-17-hotspot.trace",
+      "n": 100000,
+      "seed": 17,
+      "scenario": "hotspot",
+      "operations": 20000,
+      "sha256": "0661db24012d41299439bd54f17a70694d46e60d47915f669bd3ba31e9f3dc9e",
+      "final_n": 104141
+    }
+  ],
+  "commands": {
+    "control-prod-replay.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\src",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview12-control\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\control-prod-replay.exe"
+      ],
+      "sha256": "8b815f5447a0bd7224e9a39c655f8cb646632910a9f7b621041d7341da85a17d"
+    },
+    "control-prod-hotspot.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\src",
+        "D:\\LayerKeySort\\.local\\full-current-v05\\benchmarks\\research\\full-v4.2.0-preview.1.2\\hotspot.c",
+        "D:\\LayerKeySort\\.local\\preview12-control\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\control-prod-hotspot.exe"
+      ],
+      "sha256": "cf37fa055c73d32049e3aec3f4e50c673df5e679ab5cbc94f5ea7d0d3729daea"
+    },
+    "control-diag-replay.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\src",
+        "-DDIAGNOSTIC",
+        "-DLKS_ENABLE_ALLOC_DIAGNOSTICS",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview12-control\\build\\liblayerkeysort_diagnostics.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\control-diag-replay.exe"
+      ],
+      "sha256": "cd22b75c263d31e92b53ee8fe9825de4bb7aeb25d59eacb06021d0049cf040ce"
+    },
+    "control-diag-hotspot.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-control\\src",
+        "-DDIAGNOSTIC",
+        "-DLKS_ENABLE_ALLOC_DIAGNOSTICS",
+        "D:\\LayerKeySort\\.local\\full-current-v05\\benchmarks\\research\\full-v4.2.0-preview.1.2\\hotspot.c",
+        "D:\\LayerKeySort\\.local\\preview12-control\\build\\liblayerkeysort_diagnostics.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\control-diag-hotspot.exe"
+      ],
+      "sha256": "b8451a39986fceacbd9e796727119ab689298bbc97cedd25350d239555a6700c"
+    },
+    "tags-prod-replay.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\src",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview12-tags\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\tags-prod-replay.exe"
+      ],
+      "sha256": "887089a737d078a8df5ff0e214bc2dbee0b51ffa7b55fbfdb2076d94888660e1"
+    },
+    "tags-prod-hotspot.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\src",
+        "D:\\LayerKeySort\\.local\\full-current-v05\\benchmarks\\research\\full-v4.2.0-preview.1.2\\hotspot.c",
+        "-DPREVIEW_TAGS",
+        "D:\\LayerKeySort\\.local\\preview12-tags\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\tags-prod-hotspot.exe"
+      ],
+      "sha256": "c6171e40a15081ec0969e8ce55705779f6ea4ee275f86d342b4f8ef8291275c3"
+    },
+    "tags-diag-replay.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\src",
+        "-DDIAGNOSTIC",
+        "-DLKS_ENABLE_ALLOC_DIAGNOSTICS",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview12-tags\\build\\liblayerkeysort_diagnostics.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\tags-diag-replay.exe"
+      ],
+      "sha256": "2f69deddca694427478bcc2551743d016bf580be8c7adb3ae66a5226612403ec"
+    },
+    "tags-diag-hotspot.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-tags\\src",
+        "-DDIAGNOSTIC",
+        "-DLKS_ENABLE_ALLOC_DIAGNOSTICS",
+        "D:\\LayerKeySort\\.local\\full-current-v05\\benchmarks\\research\\full-v4.2.0-preview.1.2\\hotspot.c",
+        "-DPREVIEW_TAGS",
+        "D:\\LayerKeySort\\.local\\preview12-tags\\build\\liblayerkeysort_diagnostics.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\tags-diag-hotspot.exe"
+      ],
+      "sha256": "482a9592b68e685a7ea9273f8b705a95e8c706a2f6fd68fa6d8678920fbceaed"
+    },
+    "no-count-prod-replay.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\src",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview12-no-count\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\no-count-prod-replay.exe"
+      ],
+      "sha256": "2c78817d04a7ae79289b185825729dfbe31826012b4a070280b0c5087511b1db"
+    },
+    "no-count-prod-hotspot.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\src",
+        "D:\\LayerKeySort\\.local\\full-current-v05\\benchmarks\\research\\full-v4.2.0-preview.1.2\\hotspot.c",
+        "D:\\LayerKeySort\\.local\\preview12-no-count\\build\\liblayerkeysort.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\no-count-prod-hotspot.exe"
+      ],
+      "sha256": "4fd4ab1f92839464a7fed75d314b6009ff3099d1d2d4c999c68dd8565468f59d"
+    },
+    "no-count-diag-replay.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\src",
+        "-DDIAGNOSTIC",
+        "-DLKS_ENABLE_ALLOC_DIAGNOSTICS",
+        "-DFULL=1",
+        "-DTREE=0",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\harness.c",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\baseline.c",
+        "D:\\LayerKeySort\\.local\\preview12-no-count\\build\\liblayerkeysort_diagnostics.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\no-count-diag-replay.exe"
+      ],
+      "sha256": "5d3e9d1a5c82f7a18bd2bd2304392637ff905d3afb814351f03b5df016d9a628"
+    },
+    "no-count-diag-hotspot.exe": {
+      "build": [
+        "gcc",
+        "-std=c17",
+        "-O3",
+        "-DNDEBUG",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\include",
+        "-ID:\\LayerKeySort\\.local\\preview12-no-count\\src",
+        "-DDIAGNOSTIC",
+        "-DLKS_ENABLE_ALLOC_DIAGNOSTICS",
+        "D:\\LayerKeySort\\.local\\full-current-v05\\benchmarks\\research\\full-v4.2.0-preview.1.2\\hotspot.c",
+        "D:\\LayerKeySort\\.local\\preview12-no-count\\build\\liblayerkeysort_diagnostics.a",
+        "-lpsapi",
+        "-o",
+        "D:\\LayerKeySort\\.local\\preview12-screen\\no-count-diag-hotspot.exe"
+      ],
+      "sha256": "2ed0d9be4cc725792e895a5056eb6a25f62fa41cc6b0c2f5cda9a91f14f40e89"
+    }
+  }
+}

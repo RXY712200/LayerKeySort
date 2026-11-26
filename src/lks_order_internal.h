@@ -28,6 +28,7 @@ struct LksOrderBlock {
     LksOrderBlock *left, *right, *parent;
     LksOrderBlock *previous, *next;
     size_t subtree_blocks, count;
+    uint64_t tag;
     int height;
     LksOrderHandle *records[LKS_ORDER_BLOCK_CAPACITY + 1u];
 };
@@ -56,6 +57,7 @@ struct LksOrder {
     LksSourceMarker *source_marker;
 #ifdef LKS_ENABLE_ALLOC_DIAGNOSTICS
     LksOrderWork work;
+    size_t tag_writes, tag_repairs, tag_fallbacks, max_tag_writes;
 #endif
 };
 

@@ -1,5 +1,9 @@
 # Full v4.1.0：可复现的源码、测试、发布与审计证据地图
 
+> 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
+
+tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整 Handle 顺序和标签单调性；再构造有效但饱和的标签，验证有界回退、双向先后与 AVL 不变量。Windows GCC Release 39/39，独立 OrdWeave 候选测试 12/12。 [候选验证](V4_2_0_PREVIEW1_2.md)。
+
 > Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
 
 候选版本元数据完成后，本地 Windows GCC Debug 和 Release 分别通过 39/39 CTest；独立 C/C++ 分发消费者及发行资产验证通过。Windows 轨迹消融的原始结果见候选报告。 见 [候选证据](V4_2_0_PREVIEW1.md)。

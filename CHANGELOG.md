@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.2.0-preview.1.2] - Unreleased
+
+- Maintain private block order labels with bounded range redistribution and AVL fallback for untagged blocks.
+
 ## [4.2.0-preview.1] - Unreleased
 
 - Shorten cross-block comparison and update only affected resident locations on ordinary shifts.

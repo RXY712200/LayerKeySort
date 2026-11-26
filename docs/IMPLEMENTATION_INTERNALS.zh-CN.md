@@ -1,8 +1,12 @@
 # Full v4.1.0：内部结构、函数执行路径和算法分支详解
 
+> 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
+
+标签维护只在接入新块后执行。搜索区间不超过 64 个块，边界必须有效，写入严格递增且不越过边界。失败时只保留新块的零标签；后续成功的区间维护可重新标记它。删除释放块，旋转不重标；快照恢复批量赋等距标签。参见候选架构。诊断 tag_writes 统计赋值，tag_repairs 统计宽度大于一的维护，tag_fallbacks 统计无标签接入，max_tag_writes 统计单次最大赋值数。 [候选验证](V4_2_0_PREVIEW1_2.md)。
+
 > Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
 
-跨块比较利用 AVL 的高度严格递增性质提升较低的一侧，直到找到祖先或兄弟关系。生产 AVL 更新及批量构建继续维护 subtree_blocks，诊断检查其值；比较不读取它。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+Preview.1 的高度引导父链是当前无标签块的回退机制。两块均有非零标签时直接比较标签。生产 AVL 更新及批量构建继续维护 subtree_blocks，诊断检查其值；比较不读取它。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
 > 固定代码基线：`70d7f0ef5857b54381b863d292a213909d87459f`。根据本提交的全部 16 个生产 .c、主要内部头、公开 API、构建清单检查所得。`v4_*`、`snap_*`、`ig_*` 等是**私有函数，不属于外部可调用 API**。本文与 [总导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[64 API 清单](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[测试与证据](IMPLEMENTATION_VALIDATION.zh-CN.md) 相互补充。
 
@@ -35,7 +39,7 @@
 
 `LksOrderHandle` 是一次独立插入的 occurrence，存三个字段：`block`、`local`、`item`。Handle 由堆单独分配，指针地址在自身仍存活时稳定。多个 Handle 可以引用同一个业务 `item`。
 
-`LksOrderBlock` 持有：`owner`；AVL 左/右/父指针；按顺序排列的 `previous/next`；`subtree_blocks` 和 `height`；`count`；`records[CAPACITY+1]` 这个 Handle 指针数组。默认 CAPACITY=64，额外一个槽位用于插入中的临时状态，正常提交时不超过 64。
+`LksOrderBlock` 持有：`owner`；AVL 左/右/父指针；按顺序排列的 `previous/next`；`subtree_blocks` 和 `height`；`count`；私有 `uint64_t tag`（0 表示回退）；`records[CAPACITY+1]` 这个 Handle 指针数组。默认 CAPACITY=64，额外一个槽位用于插入中的临时状态，正常提交时不超过 64。
 
 `LksOrder` 持有 AVL 根 `root`、块链首尾 `first/last`、`count/blocks`、`revision`、`callback_active` 和 `source_marker`。
 
@@ -208,7 +212,7 @@ end-of-input，不能有尾随垃圾
 
 - 根据 N、内部块容量计算块数，平均分配每块居民数；
 - 从左到右逐块分配 Block、每次 occurrence 的 Handle，建立块双链；
-- `snap_bulk_index` 以**中序从链表消耗块**的递归方法，先建左半子树、取中间块、再建右半子树，回填 parent/height/subtree_blocks；
+- `snap_bulk_index` 以**中序从链表消耗块**的递归方法，先建左半子树、取中间块、再建右半子树，回填 parent/height/subtree_blocks。块按初始顺序以等距标签初始化；
 - 建立全部成功后才交出新 Order，失败清理全部内部资源。
 
 恢复的 Handle 全是**新分配的**，不能跨进程恢复旧 Handle 地址；内部私有函数不会通过公共接口暴露。
