@@ -142,3 +142,5 @@ FULL-RI-001／002保B64／标签／AVL／区间更新及有界原生比较证据
 本轮明确Batch访问冲突、借用分片及共享对象修改后的重建。依据为immutable_group.c访问器／merge_all／捕获、非原子busy和snapshot.c捕获／标记路径。旧1,099、中间1,101及后续1,109链接对应不同文档版本，均非HTML验证。下述最终数在本次修改后重算；HTML另在Repo分支检查。
 
 最终Markdown检查：169个范围内跟踪Markdown，1,109个本地行内链接目标／片段，缺失路径及锚点为零。方法：build/check_rc_links.py解析相对行内Markdown链接及GitHub标题／HTML-ID锚点，排远程URL与Mini／Workbench树。这不是HTML导航审查。
+
+Repo导航补查：独立用HTMLParser解析docs/index.html，60链接、14个ID，本地路径及片段有效；核双语修改指导、中文API及基准指向候选中文版。Repo Markdown为56文件、389本地链接，改用不可变中文链接后缺失为零。与Full的169／1,109分开，单改候选SHA不改变计数。
