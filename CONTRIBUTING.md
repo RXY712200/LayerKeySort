@@ -52,7 +52,7 @@ review, including examples, diagrams, and GitHub Pages navigation. The
 
 ### 产品、构建及版本
 
-根目录构建和[开发指南](docs/DEVELOPMENT.md)对应 **Full**。使用 **Mini** 时，请参见 [mini/README.md](mini/README.md)和 [mini/docs/DEVELOPMENT.md](mini/docs/DEVELOPMENT.md)。改变标签、发行打包或共享工作流前，请查阅[产品线和发布策略](docs/PRODUCT_LINES.zh-CN.md)。Full 与 Mini 有独立的版本及 API 契约；跨产品改动须审查并执行两边的检查。Full 的验证见[验证指南](docs/VALIDATION.md)。
+根目录构建和[开发指南](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/DEVELOPMENT.zh-CN.md)对应 **Full**。使用 **Mini** 时，请参见 [mini/README.md](mini/README.md)和 [mini/docs/DEVELOPMENT.md](mini/docs/DEVELOPMENT.md)。改变标签、发行打包或共享工作流前，请查阅[产品线和发布策略](docs/PRODUCT_LINES.zh-CN.md)。Full 与 Mini 有独立的版本及 API 契约；跨产品改动须审查并执行两边的检查。Full 的验证见[验证指南](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/VALIDATION.zh-CN.md)。
 
 ### 测试
 
@@ -60,12 +60,12 @@ review, including examples, diagrams, and GitHub Pages navigation. The
 
 ### 公共 API 变更
 
-公共 API 变更应是有意的决定，并写入文档。说明行为和兼容性影响。Full 请核对 [V4 契约](docs/V4_FREEZE.md)及[兼容性说明](docs/COMPATIBILITY.md)。Mini 请核对 [Mini 契约](mini/docs/CONTRACT.md)。两条产品线的兼容声明各自适用。
+公共 API 变更应是有意的决定，并写入文档。说明行为和兼容性影响。Full 请核对 [V4 契约](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_FREEZE.zh-CN.md)及[兼容性说明](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/COMPATIBILITY.zh-CN.md)。Mini 请核对 [Mini 契约](mini/docs/CONTRACT.md)。两条产品线的兼容声明各自适用。
 
 ### Pull Request
 
 提供简明的改动内容、理由、已执行测试及行为或兼容影响。
 
-影响发布的改动还须完整检查文档与公开呈现，包括示例、图表和 GitHub Pages 导航。[开发指南](docs/DEVELOPMENT.md)描述 Stable 发布检查。
+影响发布的改动还须完整检查文档与公开呈现，包括示例、图表和 GitHub Pages 导航。[开发指南](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/DEVELOPMENT.zh-CN.md)描述 Stable 发布检查。
 
 [治理基线](docs/governance/BASELINE.zh-CN.md) · [归属](docs/governance/OWNERSHIP.zh-CN.md) · [规则部署](docs/governance/RULESETS.zh-CN.md)

@@ -73,7 +73,7 @@
       <aside class="aside" aria-labelledby="models-title">
         <h3 id="models-title">Which API?</h3>
         <ul>
-          <li><code>LksManagedOrder</code> binds comparator order; remove/edit/reinsert when keys change.</li>
+          <li><code>LksManagedOrder</code> binds comparator order; handle all affected occurrences across ManagedOrders and other sorted borrowers before changing keys. Reconstruct Group/Batch where needed; removal expires Handles, reinsertion can fail, and recovery is application-managed. See the <a href="https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/USAGE.md">complete usage contract</a>.</li>
           <li><code>LksOrder</code> supports relative insertion and resident-preserving moves.</li>
           <li><code>lks_sort()</code> stably sorts a pointer array once.</li>
         </ul>
@@ -132,7 +132,7 @@
           <span class="card-kicker">构建</span><strong>获取库</strong>
           <span>双文件下载、CMake 源码依赖、直接纳入源码以及本地安装。</span>
         </a>
-        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/API.md">
+        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/API.zh-CN.md">
           <span class="card-kicker">参考</span><strong>阅读 API</strong>
           <span>确切函数、所有权、错误、实时 Handle、快照和 LS1 键。</span>
         </a>
@@ -154,7 +154,7 @@
       <aside class="aside" aria-labelledby="zh-models-title">
         <h3 id="zh-models-title">如何选用 API？</h3>
         <ul>
-          <li><code>LksManagedOrder</code>绑定比较器顺序；键变化时先删除、再修改、最后重新插入。</li>
+          <li><code>LksManagedOrder</code>绑定比较器顺序；修改键前处理所有相关托管顺序及其他有序借用结构中的全部受影响实例，必要时重建Group／Batch。删除使Handle立即失效，重插可失败，应用负责恢复。参见<a href="https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/USAGE.zh-CN.md">完整使用契约</a>。</li>
           <li><code>LksOrder</code>支持相对插入和保留居民实例的移动。</li>
           <li><code>lks_sort()</code>执行一次稳定指针数组排序。</li>
         </ul>
@@ -174,7 +174,7 @@
     <section class="section shell limits" aria-labelledby="zh-limits-title">
       <p class="eyebrow">采用之前</p>
       <h2 id="zh-limits-title">测量自己的目标负载</h2>
-      <p>V4 避免实时 Path 增长和全集坐标重标。仍有局部块及索引维护、分配和比较器成本；完整导出及历史保留可能主导耗时与内存。较适合反复执行插入、删除及移动的长期编辑型集合。一次性排序或分布式/CRDT 顺序有其他需求。参见 <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">基准证据</a>，运行自己的负载，并关注 <a href="https://github.com/RXY712200/LayerKeySort/issues/3">V4 之后的路线</a>。</p>
+      <p>V4 避免实时 Path 增长和全集坐标重标。仍有局部块及索引维护、分配和比较器成本；完整导出及历史保留可能主导耗时与内存。较适合反复执行插入、删除及移动的长期编辑型集合。一次性排序或分布式/CRDT 顺序有其他需求。参见 <a href="https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/BENCHMARKS.zh-CN.md">基准证据</a>，运行自己的负载，并关注 <a href="https://github.com/RXY712200/LayerKeySort/issues/3">V4 之后的路线</a>。</p>
     </section>
     <div class="section shell">
       <p>LayerKeySort Full · MIT 许可的 C17 库</p>

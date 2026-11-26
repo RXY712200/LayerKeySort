@@ -4,21 +4,21 @@
 
 主分支和已发布 Stable 均为 **4.1.0**。需要可下载的源码或发行包时，请使用 [Stable 发行页](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。独立的 4.2 候选分支仍在审查，尚未合并、打标签或发布。Mini 使用独立的版本和发布路径。
 
-Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据](https://github.com/RXY712200/LayerKeySort/blob/72aa68154f6529daa5b079805cb0e32badd96f26/docs/FULL_RC1_EVIDENCE.zh-CN.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
+Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/FULL_RC1_EVIDENCE.zh-CN.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
 
 | 负载 | Windows | Linux |
 | --- | ---: | ---: |
 | 全部实时顺序条件 | 0.629（降低 37.1%） | 0.640（降低 36.0%） |
 | 比较密集条件 | 0.198（降低 80.2%） | 0.219（降低 78.1%） |
 
-比值为候选耗时除以对照耗时。先分别计算同一平台每个匹配条件的耗时比，再取这些比值的中位数。初始规模为 1k、10k 和 100k 个实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证](https://github.com/RXY712200/LayerKeySort/blob/72aa68154f6529daa5b079805cb0e32badd96f26/docs/V4_2_0_RC1.zh-CN.md) 与 [候选实现导读](https://github.com/RXY712200/LayerKeySort/blob/72aa68154f6529daa5b079805cb0e32badd96f26/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。另见[历史 V4 架构设计的完整中文译本](https://github.com/RXY712200/LayerKeySort/blob/72aa68154f6529daa5b079805cb0e32badd96f26/docs/design/V4_ARCHITECTURE.zh-CN.md)。下文仓库内链接描述主分支的 Stable 基线。
+比值为候选耗时除以对照耗时。先分别计算同一平台每个匹配条件的耗时比，再取这些比值的中位数。初始规模为 1k、10k 和 100k 个实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_2_0_RC1.zh-CN.md) 与 [候选实现导读](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。另见[历史 V4 架构设计的完整中文译本](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/design/V4_ARCHITECTURE.zh-CN.md)。下文仓库内链接描述主分支的 Stable 基线。
 
-![两平台的配对耗时比](https://raw.githubusercontent.com/RXY712200/LayerKeySort/72aa68154f6529daa5b079805cb0e32badd96f26/benchmarks/research/full-v4.2.0-rc.1/live-ratios.zh-CN.svg)
+![两平台的配对耗时比](https://raw.githubusercontent.com/RXY712200/LayerKeySort/701c1d989541928868101991861d340f44574275/benchmarks/research/full-v4.2.0-rc.1/live-ratios.zh-CN.svg)
 
 
 [← LayerKeySort 产品家族首页](../README.zh-CN.md) | [English](FULL.md) | 简体中文
 
-本页专门介绍仓库根目录的 **Full** 产品，而不是 Mini。公共 API、持久化格式与兼容性契约以 [V4_FREEZE](V4_FREEZE.md) 等权威文档为准。
+本页专门介绍仓库根目录的 **Full** 产品，而不是 Mini。公共 API、持久化格式与兼容性契约以 [V4_FREEZE](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_FREEZE.zh-CN.md) 等权威文档为准。
 
 LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把一组元素一次排好”，
 而是“一个集合长期存在，并且持续发生插入、删除、移动、遍历、保存历史顺序和恢复”。
@@ -27,7 +27,7 @@ LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把�
 
 **[LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已发布的 Stable 版本。**
 该 Release 提供与注解源码标签对应、经过校验的 amalgamation ZIP 和 SHA-256 清单。
-[4.1.0 更新记录](V4_1_0.md)说明了内存优化与已测出的部分性能回退。
+[4.1.0 更新记录](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_1_0.zh-CN.md)说明了内存优化与已测出的部分性能回退。
 V4 的 Preview.1–5 → RC.1 → v4.0.0 Stable 历史开发周期仍然保留。
 V3.1.0 仍作为历史 Stable 保留给依赖 Path/Tree 契约的应用；V4 是源码级大版本变化，
 不是可以直接替换头文件的兼容升级。
@@ -114,9 +114,9 @@ int main(void) {
 
 - [中文集成指南](INTEGRATION.zh-CN.md)
 - [英文完整集成指南](INTEGRATION.md)
-- [API 参考](API.md)
+- [API 参考](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/API.zh-CN.md)
 - [使用指南](USAGE.zh-CN.md)
-- [V3 → V4 迁移](MIGRATION_V3_V4.md)
+- [V3 → V4 迁移](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/MIGRATION_V3_V4.zh-CN.md)
 
 ## 已知成本与边界
 
@@ -132,10 +132,10 @@ V4 不再为 live resident 维护 Path/LK1，因此避免了 V3 的全范围 liv
 调用者须串行访问可变来源，维持应用对象和比较器上下文的生命周期及排序语义。移除后不得用悬空句柄查询其有效性。不承诺所有操作的统一硬延迟上界，
 也不承诺 universal binary ABI、CRDT、持久化 live handle 或数据库职责。
 
-较新的 [4.1.0 更新记录](V4_1_0.md)包含 10 万至千万级研究、
+较新的 [4.1.0 更新记录](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_1_0.zh-CN.md)包含 10 万至千万级研究、
 内存收益和真实的性能回退；不保证所有负载都更快。早期的
 [Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) 和
-[v4.0.0 Stable 历史记录](V4_STABLE.md)仍然完整保留。
+[v4.0.0 Stable 历史记录](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_STABLE.zh-CN.md)仍然完整保留。
 
 ## 长期方向
 
@@ -155,13 +155,13 @@ Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 �
 
 ## 文档
 
-- [架构](ARCHITECTURE.md)
-- [API](API.md)
-- [兼容性](COMPATIBILITY.md)
-- [验证](VALIDATION.md)
-- [开发维护](DEVELOPMENT.md)
-- [4.1.0 更新记录](V4_1_0.md)
-- [v4.0.0 Stable 历史记录](V4_STABLE.md)
+- [架构](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/ARCHITECTURE.zh-CN.md)
+- [API](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/API.zh-CN.md)
+- [兼容性](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/COMPATIBILITY.zh-CN.md)
+- [验证](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/VALIDATION.zh-CN.md)
+- [开发维护](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/DEVELOPMENT.zh-CN.md)
+- [4.1.0 更新记录](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_1_0.zh-CN.md)
+- [v4.0.0 Stable 历史记录](https://github.com/RXY712200/LayerKeySort/blob/701c1d989541928868101991861d340f44574275/docs/V4_STABLE.zh-CN.md)
 - [Changelog](../CHANGELOG.md)
 
 License: [MIT](../LICENSE)。
