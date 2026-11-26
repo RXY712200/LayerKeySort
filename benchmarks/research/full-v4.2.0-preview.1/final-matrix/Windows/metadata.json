@@ -1,0 +1,28 @@
+{
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "processor": "Intel64 Family 6 Model 207 Stepping 2, GenuineIntel",
+  "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+  "cpus": 2,
+  "research_sha": "a6dfe8319ce98b95ba7cc7a34dec191e328032e9",
+  "started_utc": "2026-11-24T08:41:58Z",
+  "suite": "components",
+  "guard_bytes": 536870912,
+  "timeout_seconds": 120,
+  "compiler": "gcc (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+  "finished_utc": "2026-11-24T08:51:46Z",
+  "binaries": {
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\full_diag.exe": "8b59c8da2f52ca615fb3ea6b7b193604715148fe12cc6d552b76e1bca48e80bf",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\list_diag.exe": "0a756fa7fc953691ef1be3e0771555b3f319538b9fb058f6838fceaca4e9676e",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\tree_diag.exe": "2acf6cc081615c46e2d7ee10527bb061c4ea2ce0ef68ce3104440c5f3a6858f0",
+    "D:\\a\\lks0011\\lks0011\\.local\\om-diag\\release\\ist-v05-om.exe": "4ea9012cf3fa7b59ea4c2cb1f95000a073a0246f605dd0b4984a635da98bb74e",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable40-build\\full_diag.exe": "94e62e6c8c0ba2d6c1697dc6bcc88a0aafeca0a6b69a208c00b939ae28cd4326",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable41-build\\full_diag.exe": "479aef88ccefc684e2abf730bfa480911d0a23a6776d1ff6d37d9fe1cdc67a7e",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable40-build\\full_prod.exe": "f67479013bf199c63275b7b5aadafda06e2334aefd940311f30bbfa9b2435077",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable41-build\\full_prod.exe": "c22d17fee5e114a4c586c756589a7242db0a44b6368bb0292c712cd0da2099ff",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\full_prod.exe": "3288676366a969378ee2f42cee6ed088be1e717f90bf4e9241c6f33255b23828",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\list_prod.exe": "1e5a2bc34e437e276178723a3fc95fdb29b49a7794a8d5e6c760f72be016272d",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\tree_prod.exe": "951ec403dde4da7c407ee3fe3e144c3d8b0c6cb579211e1acc8087def098d045",
+    "D:\\a\\lks0011\\lks0011\\.local\\om-prod\\release\\ist-v05-om.exe": "5b157ea3f35ff56db8db73f1c8ccb021db40c3b2f114d5b4ae86612f5af531da"
+  },
+  "completed_rows": 2835
+}

@@ -1,5 +1,9 @@
 # Full v4.1.0：可复现的源码、测试、发布与审计证据地图
 
+> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
+
+候选版本元数据完成后，本地 Windows GCC Debug 和 Release 分别通过 39/39 CTest；独立 C/C++ 分发消费者及发行资产验证通过。Windows 轨迹消融的原始结果见候选报告。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+
 > 固定基线：`70d7f0ef5857b54381b863d292a213909d87459f`。依据该 SHA 的根 `CMakeLists.txt`、真实测试入口、CI/构建脚本、API/Golden 文件整理。**本轮建立文档没有自行执行完整本地 CTest 和跨平台矩阵**；“测试覆盖什么”是静态阅读相关测试源码后的范围说明，不能冒充新的独立运行 PASS。
 >
 > 文档体系：[总体实现导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) · [64 API 逐项索引](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [私有机制详解](IMPLEMENTATION_INTERNALS.zh-CN.md)。

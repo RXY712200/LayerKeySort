@@ -1,5 +1,16 @@
 # Full 外部消费者交接与变更台账
 
+## Preview.1 implementation ledger
+
+- **From:** Full v4.1.0 `70d7f0ef5857b54381b863d292a213909d87459f`; development base `c108acd72b37614f4be271c9747484c2dde5eac4` has matching production source.
+- **To:** provisional Full 4.2.0-preview.1 implementation `22544cf283694dd27cef203caba9cf1838845947`. The review head also carries tests, documentation and evidence.
+- **Source and call paths:** in `src/order.c`, cross-block `lks_order_compare` formerly called the absolute block rank helper twice. It now follows height and parent links and decides precedence from sibling or ancestor relationships. `v4_place`, `lks_order_remove` and cross-block `v4_move` use suffix-only local updates when membership is preserved. Splits, merges and redistributions still use full location repair. The AVL and resident layouts are unchanged.
+- **Contracts:** frozen API signatures, borrowed items, surviving handle addresses, callback reentry and output initialization, no-op and revision rules, allocation before mutation and OOM behavior remain applicable. LS1, LKS4SNP1 and V3 LK1 formats and semantics are unchanged. Candidate CMake and header versions differ from Stable. Consumers should rebuild against the selected dependency.
+- **Performance and resources:** the production candidate reduced Windows median C-matrix cell time by 28.0% overall and 45.7% on compare-heavy traces relative to v4.1.0. Seven supplemental profiles had matching requested-memory peaks and fewer location assignments. Managed-churn median p99 increased by one 0.1 μs timer step. See [candidate evidence](V4_2_0_PREVIEW1.md) for measured scope and cross-host results.
+- **Database adapter:** no API or ownership migration is indicated. Rebuild and verify ID-to-handle mapping, duplicate records, explicit order and managed indexes before any dependency change.
+- **Database core:** Full does not alter database revisions, WAL policy or native checkpoint format. Isolated Windows GCC Release OrdWeave at `b12a007c50c2f9efcbee500a14d3cf09dcc74f10` substituted the candidate implementation and passed 12/12 CTests including persistence, checkpoint, history and adversarial recovery. Its official pin stays at Full v4.1.0. A future upgrade needs its own review and application-specific performance testing.
+- **Verification:** Windows Release passed 39/39 with the focused precedence and location regression. The stage report and draft PR identify the exact platform/CI and analytical evidence revisions. The bounded OrdWeave run does not measure database component costs or certify power-loss behavior.
+
 > **项目归属：LayerKeySort Full** · **首次建立：2026-11-15** · **维护者：Full 项目维护者**
 >
 > 本文为数据库及未来其他外部消费者提供**持续、可追溯的跨项目交接**。历史结论、精确源码变更、验证证据与升级动作应记录在可追溯的 GitHub 文档和变更台账中。本文不是数据库设计文档，也不构成修改 API 或发布新版本的授权。
@@ -13,8 +24,8 @@
 - 数据库的永久记录 ID、查询、索引、磁盘存储、事务、服务、以及 ID→Handle 转换，原则上是数据库侧职责。Full 不因数据库存在而变成数据库专用库。
 - 数据库提出新 API 需求时，须提交明确的使用场景、现有接口不足及复现证据；Full 项目独立评估它是否具有**通用的顺序管理价值**。允许拒绝数据库专属功能，或建议留在适配层。
 - Mini 是另外一条独立产品线；数据库未来是否接入 Mini 由数据库项目评估。本文**只维护 Full**。Full 和 Mini 版本、API、发布契约不应混同。
-- 目前数据库是**计划中的外部消费者**；未经真实接入提交和验证，不宣称它已在生产使用 Full。
-- **当前工作优先级（2026-11-15）：** 用户决定暂缓 Full 的主动内存/算法优化，先让独立数据库及中转层形成真实使用场景和负载。它是阶段性安排，**不是永久冻结**：已证实的正确性/兼容性问题仍可按授权维护；未来优化依证据和用户重新授权立项，不为版本号或想象的数据库需求提前改 Full。
+- OrdWeave 已通过公开 Full 接口实现集合顺序、原生快照、检查点及 WAL 恢复。当前源码为 `b12a007c50c2f9efcbee500a14d3cf09dcc74f10`，正式依赖仍固定于 Full v4.1.0 `70d7f0ef5857b54381b863d292a213909d87459f`。候选验证在隔离副本进行。
+- **历史工作优先级（2026-11-15，已由 Preview.1 授权重启取代）：** 用户决定暂缓 Full 的主动内存/算法优化，先让独立数据库及中转层形成真实使用场景和负载。它是阶段性安排，**不是永久冻结**：已证实的正确性/兼容性问题仍可按授权维护；未来优化依证据和用户重新授权立项，不为版本号或想象的数据库需求提前改 Full。
 
 ## 二、强制同步：四份源码实现文档必须与 Full 当前实现一致
 

@@ -336,6 +336,48 @@ static void managed_interactions(void)
       lks_order_cursor_destroy(r.cursor);lks_managed_order_destroy(r.order); }
     puts("managed cursor, 5000 remove/change/reinsert cycles, comparator reentry PASS");
 }
+static void preview1_precedence_and_shifts(void)
+{
+    enum { N = 321 };
+    int payload = 7;
+    void *items[N];
+    const LksOrderHandle *seq[N], *fresh, *foreign;
+    LksOrder *order = NULL, *other = lks_order_create();
+    CHECK(other);
+    CHECK(lks_order_insert_back(other, &payload, &foreign) == LKS_STATUS_OK);
+    for (size_t i = 0; i < N; ++i) items[i] = &payload;
+    CHECK(lks_order_bulk_build(items, N, &order) == LKS_STATUS_OK);
+    const LksOrderHandle *handle = lks_order_first(order);
+    for (size_t i = 0; i < N; ++i) {
+        CHECK(handle);
+        seq[i] = handle;
+        handle = lks_order_next(handle);
+    }
+    CHECK(!handle);
+    for (size_t i = 0; i < N; ++i) {
+        for (size_t j = 0; j < N; ++j) {
+            int result = 7;
+            CHECK(lks_order_compare(order, seq[i], seq[j], &result) == LKS_STATUS_OK);
+            CHECK(result == (i > j) - (i < j));
+        }
+    }
+    int result = 7;
+    CHECK(lks_order_compare(order, seq[0], foreign, &result) == LKS_STATUS_INVALID_ARGUMENT && result == 0);
+    CHECK(lks_order_compare(order, seq[0], seq[1], NULL) == LKS_STATUS_INVALID_ARGUMENT);
+    LksOrderBlock *block = seq[0]->block;
+    size_t count = block->count;
+    CHECK(count > 8 && count < LKS_ORDER_BLOCK_CAPACITY);
+    CHECK(lks_order_insert_before(order, seq[8], &payload, &fresh) == LKS_STATUS_OK);
+    CHECK(fresh->block == block && fresh->local == 8);
+    CHECK(order->work.records_reassigned == count - 8 + 1);
+    CHECK(lks_order_remove(order, fresh, NULL) == LKS_STATUS_OK);
+    CHECK(order->work.records_reassigned == count - 8);
+    CHECK(block->records[count] == NULL);
+    sequence_check(order, seq, N);
+    lks_order_destroy(other);
+    lks_order_destroy(order);
+}
+
 int main(int argc, char **argv)
 {
     unsigned p;size_t steps=30000;
@@ -343,6 +385,7 @@ int main(int argc, char **argv)
     if(argc==2 && !strcmp(argv[1],"--long"))steps=200000;
     else if(argc!=1){fputs("usage: v4_mutation [--long]\n",stderr);return 2;}
     CHECK(lks_alloc_stats_reset()==0);
+    preview1_precedence_and_shifts();
     cursor_tests();move_boundaries();move_oom();
     explicit_random(17,steps);explicit_random(UINT32_C(1779033703),steps);explicit_random(UINT32_C(3144134277),steps);long_moves();
     for(p=0;p<7;++p)managed_campaign(p,p==3?100001:4096);

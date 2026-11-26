@@ -1,0 +1,202 @@
+From https://github.com/RXY712200/LayerKeySort
+ * branch            f41b7be182c2ef766ee0dec1211500f7dd762f54 -> FETCH_HEAD
+Initialized empty Git repository in D:/LayerKeySort/.local/preview1-public-smoke/stable40-src/.git/
+From https://github.com/RXY712200/LayerKeySort
+ * branch            80004ae732daf696f7e9192e417de0edb0b2aafa -> FETCH_HEAD
+HEAD is now at 80004ae docs: align Stable release date with publication day
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (0.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/LayerKeySort/.local/preview1-public-smoke/stable40-build
+[1/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/lks_base.c.obj
+[2/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/lks_alloc.c.obj
+[3/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path.c.obj
+[4/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path_text.c.obj
+[5/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path_order_key.c.obj
+[6/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/slot_codec.c.obj
+[7/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path_compare.c.obj
+[8/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/managed_order.c.obj
+[9/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot.c.obj
+[10/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot_key.c.obj
+[11/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/order.c.obj
+[12/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot_wire.c.obj
+[13/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot_restore.c.obj
+[14/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/order_bulk.c.obj
+[15/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/sort.c.obj
+[16/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/immutable_group.c.obj
+[17/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/lks_alloc.c.obj
+[18/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/lks_base.c.obj
+[19/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path_text.c.obj
+[20/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path.c.obj
+[21/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path_order_key.c.obj
+[22/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/slot_codec.c.obj
+[23/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/path_compare.c.obj
+[24/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/managed_order.c.obj
+[25/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot.c.obj
+[26/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot_key.c.obj
+[27/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/order.c.obj
+[28/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot_wire.c.obj
+[29/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/snapshot_restore.c.obj
+[30/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/order_bulk.c.obj
+[31/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/sort.c.obj
+[32/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable40-src/src/immutable_group.c.obj
+[33/52] Linking C static library libfull_library_prod.a
+[34/52] Building C object CMakeFiles/full_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[35/52] Building C object CMakeFiles/list_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[36/52] Building C object CMakeFiles/full_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[37/52] Building C object CMakeFiles/list_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[38/52] Building C object CMakeFiles/tree_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[39/52] Building C object CMakeFiles/tree_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[40/52] Linking C static library libfull_library_diag.a
+[41/52] Building C object CMakeFiles/full_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[42/52] Building C object CMakeFiles/list_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[43/52] Building C object CMakeFiles/list_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[44/52] Building C object CMakeFiles/full_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[45/52] Building C object CMakeFiles/tree_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[46/52] Linking C executable full_prod.exe
+[47/52] Building C object CMakeFiles/tree_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[48/52] Linking C executable list_prod.exe
+[49/52] Linking C executable tree_prod.exe
+[50/52] Linking C executable full_diag.exe
+[51/52] Linking C executable list_diag.exe
+[52/52] Linking C executable tree_diag.exe
+Initialized empty Git repository in D:/LayerKeySort/.local/preview1-public-smoke/stable41-src/.git/
+From https://github.com/RXY712200/LayerKeySort
+ * branch            70d7f0ef5857b54381b863d292a213909d87459f -> FETCH_HEAD
+HEAD is now at 70d7f0e Merge bilingual Full v4.1.0 published entry points
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/LayerKeySort/.local/preview1-public-smoke/stable41-build
+[1/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/lks_base.c.obj
+[2/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/lks_alloc.c.obj
+[3/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path.c.obj
+[4/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path_text.c.obj
+[5/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path_order_key.c.obj
+[6/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/slot_codec.c.obj
+[7/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path_compare.c.obj
+[8/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/managed_order.c.obj
+[9/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot.c.obj
+[10/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot_key.c.obj
+[11/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/order.c.obj
+[12/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot_restore.c.obj
+[13/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot_wire.c.obj
+[14/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/order_bulk.c.obj
+[15/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/sort.c.obj
+[16/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/immutable_group.c.obj
+[17/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/lks_alloc.c.obj
+[18/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/lks_base.c.obj
+[19/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path_text.c.obj
+[20/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path.c.obj
+[21/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path_order_key.c.obj
+[22/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/slot_codec.c.obj
+[23/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/path_compare.c.obj
+[24/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/managed_order.c.obj
+[25/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot.c.obj
+[26/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot_key.c.obj
+[27/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/order.c.obj
+[28/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot_wire.c.obj
+[29/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/snapshot_restore.c.obj
+[30/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/order_bulk.c.obj
+[31/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/immutable_group.c.obj
+[32/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/stable41-src/src/sort.c.obj
+[33/52] Linking C static library libfull_library_prod.a
+[34/52] Building C object CMakeFiles/full_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[35/52] Building C object CMakeFiles/list_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[36/52] Building C object CMakeFiles/full_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[37/52] Building C object CMakeFiles/list_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[38/52] Building C object CMakeFiles/tree_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[39/52] Building C object CMakeFiles/tree_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[40/52] Linking C static library libfull_library_diag.a
+[41/52] Building C object CMakeFiles/full_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[42/52] Building C object CMakeFiles/list_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[43/52] Building C object CMakeFiles/list_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[44/52] Building C object CMakeFiles/full_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[45/52] Building C object CMakeFiles/tree_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[46/52] Linking C executable full_prod.exe
+[47/52] Building C object CMakeFiles/tree_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[48/52] Linking C executable list_prod.exe
+[49/52] Linking C executable tree_prod.exe
+[50/52] Linking C executable full_diag.exe
+[51/52] Linking C executable list_diag.exe
+[52/52] Linking C executable tree_diag.exe
+Initialized empty Git repository in D:/LayerKeySort/.local/preview1-public-smoke/candidate-src/.git/
+From https://github.com/RXY712200/LayerKeySort
+ * branch            22544cf283694dd27cef203caba9cf1838845947 -> FETCH_HEAD
+HEAD is now at 22544cf perf(full): shorten precedence walks and resident location updates
+-- The C compiler identification is GNU 16.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: D:/msys64/ucrt64/bin/gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (0.8s)
+-- Generating done (0.1s)
+-- Build files have been written to: D:/LayerKeySort/.local/preview1-public-smoke/candidate-build
+[1/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/lks_base.c.obj
+[2/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/lks_alloc.c.obj
+[3/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path.c.obj
+[4/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path_text.c.obj
+[5/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path_order_key.c.obj
+[6/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/slot_codec.c.obj
+[7/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path_compare.c.obj
+[8/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/managed_order.c.obj
+[9/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot.c.obj
+[10/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot_key.c.obj
+[11/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/order.c.obj
+[12/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot_restore.c.obj
+[13/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot_wire.c.obj
+[14/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/order_bulk.c.obj
+[15/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/sort.c.obj
+[16/52] Building C object CMakeFiles/full_library_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/immutable_group.c.obj
+[17/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/lks_alloc.c.obj
+[18/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/lks_base.c.obj
+[19/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path_text.c.obj
+[20/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path_order_key.c.obj
+[21/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path.c.obj
+[22/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/slot_codec.c.obj
+[23/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/path_compare.c.obj
+[24/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/managed_order.c.obj
+[25/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot.c.obj
+[26/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot_key.c.obj
+[27/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/order.c.obj
+[28/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot_wire.c.obj
+[29/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/snapshot_restore.c.obj
+[30/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/order_bulk.c.obj
+[31/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/immutable_group.c.obj
+[32/52] Building C object CMakeFiles/full_library_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/candidate-src/src/sort.c.obj
+[33/52] Linking C static library libfull_library_prod.a
+[34/52] Building C object CMakeFiles/full_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[35/52] Building C object CMakeFiles/list_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[36/52] Building C object CMakeFiles/full_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[37/52] Building C object CMakeFiles/list_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[38/52] Building C object CMakeFiles/tree_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[39/52] Linking C static library libfull_library_diag.a
+[40/52] Building C object CMakeFiles/tree_prod.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[41/52] Building C object CMakeFiles/full_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[42/52] Building C object CMakeFiles/list_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[43/52] Building C object CMakeFiles/full_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[44/52] Building C object CMakeFiles/list_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[45/52] Building C object CMakeFiles/tree_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/baseline.c.obj
+[46/52] Linking C executable full_prod.exe
+[47/52] Building C object CMakeFiles/tree_diag.dir/D_/LayerKeySort/.local/preview1-public-smoke/baseline/harness.c.obj
+[48/52] Linking C executable list_prod.exe
+[49/52] Linking C executable tree_prod.exe
+[50/52] Linking C executable full_diag.exe
+[51/52] Linking C executable list_diag.exe
+[52/52] Linking C executable tree_diag.exe
+0.000004300,5088,5088,8,1,0,5156864,5156864,25,5,0,0,0,0,8
+0.000016400,5056,5056,8,1,0,5152768,5152768,25,5,0,0,0,0,8
+0.000005100,5056,5056,8,1,0,5259264,5259264,22,5,0,0,0,0,8
+0.000001500,144,144,7,1,0,5128192,5128192,0,0,0,0,0,0,7
+0.000002700,360,360,7,1,0,5132288,5132288,0,0,0,0,0,0,7

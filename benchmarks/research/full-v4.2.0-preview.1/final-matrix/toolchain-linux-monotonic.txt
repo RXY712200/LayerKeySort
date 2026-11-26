@@ -1,0 +1,7 @@
+matrix (ubuntu-latest)	Build pinned Full controls and classical adapters	2026-11-24T08:52:18.9487220Z -- The C compiler identification is GNU 15.2.0
+matrix (ubuntu-latest)	Build pinned Full controls and classical adapters	2026-11-24T08:52:30.6001115Z -- The C compiler identification is GNU 15.2.0
+matrix (ubuntu-latest)	Build pinned Full controls and classical adapters	2026-11-24T08:52:34.5625666Z -- The C compiler identification is GNU 15.2.0
+matrix (ubuntu-latest)	Build pinned Full controls and classical adapters	2026-11-24T08:52:38.0761631Z rustc 1.100.0 (0ef1bc386 2026-11-09)
+matrix (ubuntu-latest)	Build pinned Full controls and classical adapters	2026-11-24T08:52:38.0765950Z host: x86_64-unknown-linux-gnu
+matrix (ubuntu-latest)	Verify frozen inputs and replay	2026-11-24T08:52:59.7264853Z Verified45 original hashes; generated27 separately identified DB traces
+matrix (ubuntu-latest)	Verify frozen inputs and replay	2026-11-24T08:55:50.7112885Z components 2800

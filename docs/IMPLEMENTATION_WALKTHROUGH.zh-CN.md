@@ -1,5 +1,9 @@
 # LayerKeySort Full：从源码理解完整实现（v4.1.0）
 
+> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
+
+普通插入仅设置新 Handle 的 block，之后仅回填受影响的 local 后缀。删除和移动源块的普通路径同样只回填后缀。分裂、合并和重分配继续完整回填。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+
 > **定位：面向新维护者、独立审计者和直接集成 Full 的 C/C++ 开发者的源码执行导读。**
 >
 > **核对基线**：2026-11-15，仓库 `RXY712200/LayerKeySort`、`main`、完整 SHA `70d7f0ef5857b54381b863d292a213909d87459f`，对应已发布 Full **v4.1.0 Stable**。审读范围为根目录 Full，**不是** `mini/` 产品。
@@ -99,15 +103,15 @@ Order
 - 每个存活 Handle 分开分配，移动记录时可以调整其 `block/local`，但**不会改变 Handle 自身的地址**。
 - 每个块的 `height` 与 `subtree_blocks` 必须匹配 AVL 实际子树；`subtree_blocks` 数的是**块数**，不是记录数。
 - AVL 中序遍历与块双向链顺序必须相同；块的 `records` 顺序与真实逻辑顺序相同。
-- `v4_locations` 在块内插入、分裂或合并后重写受影响 Handle 的 `block/local`，并清掉不用的数组槽位。
+- 普通插入设置新 Handle 的 `block`，再由 `v4_shifted_locations` 回填位移后缀的 `local`。普通删除清除刚腾出的尾槽。分裂、合并、重分配由 `v4_locations` 完整更新成员位置及空槽。
 
 调试构建的 `lks_order_internal_valid` 检查高度、父子指针、占用范围、块双链、Handle 所在位置、总量和正反遍历；**这是私有检查器，不是公开 API，也不能检测已经释放的悬空指针**。
 
 ### 2.3 为什么能快速比较位置？
 
-`lks_order_compare`：若两个 Handle 在同块，直接比较 `local`；否则用 `v4_rank` 结合每个 AVL 节点的 `subtree_blocks` 算出其块序号，再比较块序号。
+跨块比较沿 AVL 父链提升高度较小的一侧，由祖先或兄弟的左右关系决定先后。
 
-所以不同块时访问的是 AVL 高度上的父指针与子树**块数量**，不是遍历两个元素之间的全部记录。公开复杂度为同块 O(1)、跨块 O(log(1+M))，其中 M 为块数量。
+所以不同块时沿 AVL 父链比较节点高度及父子方向，不读取 `subtree_blocks` 来计算排名，也不遍历两个元素之间的全部记录。公开复杂度为同块 O(1)、跨块 O(log(1+M))，其中 M 为块数量。
 
 `lks_order_next/previous` 直接在块内邻居或相邻块首尾之间跳转；不通过 AVL 逐项查找。调用者不能凭 C 指针的数值大小判断顺序。
 

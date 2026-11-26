@@ -191,6 +191,16 @@ static void v4_locations(LksOrder *order, LksOrderBlock *block)
     }
     for (; i <= LKS_ORDER_BLOCK_CAPACITY; ++i) block->records[i] = NULL;
 }
+/* Ordinary shifts preserve block membership. Structural repair still uses
+ * v4_locations because it can migrate residents between blocks. */
+static void v4_shifted_locations(LksOrder *order, LksOrderBlock *block, size_t first)
+{
+    V4_COUNT(order, local_blocks);
+    for (size_t i = first; i < block->count; ++i) {
+        block->records[i]->local = i;
+        V4_COUNT(order, records_reassigned);
+    }
+}
 LksOrder *lks_order_create(void)
 {
     LksOrder *order = (LksOrder *)lks_alloc(sizeof(*order));
@@ -234,7 +244,10 @@ static void v4_place(LksOrder *order, LksOrderBlock *block, size_t at,
         v4_locations(order, block); v4_locations(order, spare);
         v4_link_after(order, block, spare);
         V4_COUNT(order, splits);
-    } else v4_locations(order, block);
+    } else {
+        record->block = block;
+        v4_shifted_locations(order, block, at);
+    }
 }
 
 static LksStatus v4_insert(LksOrder *order, LksOrderBlock *block, size_t at,
@@ -334,7 +347,10 @@ LksStatus lks_order_remove(LksOrder *order, const LksOrderHandle *handle,
         v4_detach(order, block); lks_free(block);
     } else if (order->blocks > 1 && block->count < LKS_ORDER_BLOCK_MIN)
         v4_repair(order, block);
-    else v4_locations(order, block);
+    else {
+        block->records[block->count] = NULL;
+        v4_shifted_locations(order, block, record->local);
+    }
     ++order->revision;
     lks_free(record);
     if (out_item) *out_item = item;
@@ -363,27 +379,37 @@ const LksOrderHandle *lks_order_previous(const LksOrderHandle *handle)
 }
 void *lks_order_item(const LksOrderHandle *handle)
 { return handle && !handle->block->owner->callback_active ? handle->item : NULL; }
-static size_t v4_rank(const LksOrderBlock *block)
+LksStatus lks_order_compare(const LksOrder *order, const LksOrderHandle *a,
+                            const LksOrderHandle *b, int *out)
 {
-    size_t rank = v4_subtree(block->left);
-    while (block->parent) {
-        if (block->parent->right == block)
-            rank += 1 + v4_subtree(block->parent->left);
-        block = block->parent;
-    }
-    return rank;
-}
-LksStatus lks_order_compare(const LksOrder *order, const LksOrderHandle *left,
-    const LksOrderHandle *right, int *out_order)
-{
-    size_t a, b;
-    if (out_order) *out_order = 0;
-    if (!order || !left || !right || !out_order ||
-        left->block->owner != order || right->block->owner != order) return LKS_STATUS_INVALID_ARGUMENT;
+    if (out) *out = 0;
+    if (!order || !a || !b || !out || a->block->owner != order || b->block->owner != order)
+        return LKS_STATUS_INVALID_ARGUMENT;
     if (order->callback_active) return LKS_STATUS_REENTRANT;
-    if (left->block == right->block) { a = left->local; b = right->local; }
-    else { a = v4_rank(left->block); b = v4_rank(right->block); }
-    *out_order = (a > b) - (a < b);
+    const LksOrderBlock *left = a->block, *right = b->block;
+    if (left == right) {
+        *out = (a->local > b->local) - (a->local < b->local);
+        return LKS_STATUS_OK;
+    }
+    /* Height strictly increases along each parent edge. Advance the lower
+     * block until the walks meet as siblings or one reaches the other.
+     * Relative precedence then follows from the first divergent child. */
+    while (left->parent != right->parent) {
+        if (left->height < right->height) {
+            if (left->parent == right) {
+                *out = right->left == left ? -1 : 1;
+                return LKS_STATUS_OK;
+            }
+            left = left->parent;
+        } else {
+            if (right->parent == left) {
+                *out = left->right == right ? -1 : 1;
+                return LKS_STATUS_OK;
+            }
+            right = right->parent;
+        }
+    }
+    *out = left->parent->left == left ? -1 : 1;
     return LKS_STATUS_OK;
 }
 
@@ -431,7 +457,7 @@ static LksStatus v4_move(LksOrder *order, const LksOrderHandle *handle,
         to = anchor->local + (size_t)after;
         v4_place(order, anchor->block, to, record, spare);
         if (source->count < LKS_ORDER_BLOCK_MIN) v4_repair(order, source);
-        else v4_locations(order, source);
+        else v4_shifted_locations(order, source, from);
         V4_COUNT(order, cross_block_moves);
     }
     ++order->revision;

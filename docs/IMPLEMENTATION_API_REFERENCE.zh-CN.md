@@ -1,5 +1,9 @@
 # Full v4.1.0：完整公开 API 索引与关键契约指南
 
+> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
+
+64 个函数的冻结清单通过。本候选修改内部比较和位置回填，不改变公开签名、所有权、重入、输出清零或 Handle 生命周期。 见 [候选证据](V4_2_0_PREVIEW1.md)。
+
 > 审查基线：`main` `70d7f0ef5857b54381b863d292a213909d87459f`；接口最高事实来源为 [`include/layerkeysort.h`](../include/layerkeysort.h) 与其生产实现。本文与 [完整执行导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[内部算法详解](IMPLEMENTATION_INTERNALS.zh-CN.md)、[测试与证据地图](IMPLEMENTATION_VALIDATION.zh-CN.md) 配套。**本文不是可编译的替代头文件；签名、参数顺序、准确返回值以该固定 SHA 的公开头为准**。4.x 公开契约冻结，不在本文发明额外 API。
 
 ## A. 如何读取本手册
@@ -40,7 +44,7 @@
 | `lks_order_next` | 同块访问下一个下标，跨块跳至下一块首项，尾部返回 NULL。 | `src/order.c` |
 | `lks_order_previous` | 同块向前一项，跨块跳至上一块末项，首部返回 NULL。 | `src/order.c` |
 | `lks_order_item` | 从存活 Handle 取出调用者提供的原始 item 指针；不复制、不转移所有权。 | `src/order.c` |
-| `lks_order_compare` | 比较同一 Order 内两个存活 Handle 的先后；同块比较局部下标，跨块比较隐式 AVL 块 rank；输出负/零/正。 | `src/order.c` |
+| `lks_order_compare` | 比较同一 Order 内两个存活 Handle 的先后；同块比较局部下标，跨块沿 AVL 父链按高度推进，由祖先或兄弟的左右关系确定先后；输出负/零/正。 | `src/order.c` |
 | `lks_order_move_front` | 将现有 occurrence 移动到开头；Handle 本身保持有效；本来就在首部则是 noop。 | `src/order.c` |
 | `lks_order_move_back` | 将现有 occurrence 移动到尾部；本来就在尾部则 noop。 | `src/order.c` |
 | `lks_order_move_before` | 将存活 occurrence 移到同一 Order anchor 之前；自己/已邻接位置 noop，不递增 revision。 | `src/order.c` |
