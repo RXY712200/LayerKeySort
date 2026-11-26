@@ -14,6 +14,15 @@ C——修补重查：编译运行新排序片段、严格Debug/Release CTest、
 
 浏览器以1280px／390px渲染全部十个归档SVG及双语HTML。首次直接打开SVG截图超时；关闭GPU并以同样SVG内容渲染后成功。截图为本地审核材料。没有重跑计时实验。最后的证据审查发现 Git 对 Windows 日志进行了换行规范化；现以确定性 gzip 保存原始字节流，并将每个解压日志重新与记录的 SHA-256 核对；保留原生 CRLF 输出，不将其当作文档尾空格。
 
+
+### A—C 轮次内的独立审查修补
+
+审查发现四个中文语言切换链接指向自身、历史 RC 检出说明与当前适用性混淆，以及比值分子表述不明确。使用、兼容性、V3→V4 迁移及验证页现指向对应英文原文。两版验证说明区分历史 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` 与最终准备 HEAD，并保留两个 Preview.3 回归身份。中文证据页明确比值为 Full 耗时／对照耗时，未改动归档实现或测量值。
+
+原有十五条[命令回执](../verification/v4.2.0-preparation/commands.json)遗漏了已报告的 Usage 片段命令；这些回执保持原样。[sort-repair-commands.json](../verification/v4.2.0-preparation/sort-repair-commands.json)记录的是**本次重新执行**，不是补造历史输出。[复现脚本](../verification/v4.2.0-preparation/reproduce-sort.py)从两版 Usage 提取完全相同的 C 片段，采用 GCC C17、警告即错误及规范清单中的全部十六个生产模块编译并运行。独立的[稳定性核验程序](../verification/v4.2.0-preparation/sort-stability-harness.c)检查成功状态、键排序、八个实例的确切地址、比较器等值项的输入先后及比较器上下文。五条新命令全部成功；编译与最小片段运行的成功输出确实为空。原十五条和新增五条日志解压后的 SHA-256 均核对通过。先前冻结前的链接回执继续作为历史保存。
+
+定向契约复核保留所有相关实例／共享容器条款、Group/Batch 重建、Handle 失效、可能失败且非事务性的重新插入、应用恢复及同步要求。核对来源为 `src/sort.c`、`src/managed_order.c`、`src/immutable_group.c`、`src/snapshot.c`、私有 Group 状态、冻结公共头、已接受 main 及双语详细 API 指南。四指南矩阵仍适用，无须更改指南、源码或契约。当前语言切换目标按清单检查，不重写历史切换链接。推送后的交付另附按归属及版本解析的目标审计和精确 HEAD CI，不把本前序版本记录当作最终 HEAD 验证。
+
 ## 逐文件结果
 
 | 路径 | 归属／语言 | 分类 | 章节／源码依据／动作 |

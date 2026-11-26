@@ -1,9 +1,9 @@
 # V4 Stable 验证
 
-[English](VALIDATION.zh-CN.md)
+[English](VALIDATION.md)
 
 Full v4.2.0 保留全部 64 个函数、14 个公开类型、LS1/LKS4SNP1 固定样例及严格 V3 迁移。准备工作只更改发布元数据，不改变运行语义。见 [4.2 验证记录](V4_2_0.zh-CN.md)。
-复现 4.2 候选版的源码和测试基线时，检出 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，其中包含 RC 元数据和两个 Preview.3 回归。较早的运行源码提交缺少这些测试。参见[候选定量证据](FULL_RC1_EVIDENCE.zh-CN.md)。 最终 PR 验证须在该 PR 的实际 HEAD 上执行。
+复现 Full v4.2.0 延续的运行源码及测试基线时，可检出历史 RC 验证版本 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，其中包含 RC 元数据和两个 Preview.3 回归。该历史版本仍使用 RC 元数据，并非最终 Stable 准备 HEAD；较早的运行源码提交缺少这些测试。参见[4.2 定量证据](FULL_RC1_EVIDENCE.zh-CN.md)。 最终 PR 验证须在该 PR 的实际 HEAD 上执行。
 
 4.x API 和线格式保持冻结。历史存储演进见 [4.1.0 说明](V4_1_0.zh-CN.md)。V4.0.0 Stable 在 Preview.5 冻结及独立审查 RC.1 后发布。Stable 发布保留冻结的生产实现和兼容契约，只改发布元数据与呈现。
 

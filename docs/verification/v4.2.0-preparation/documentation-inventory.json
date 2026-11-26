@@ -1239,7 +1239,12 @@
     "finding_action": "Update 4.2 applicability; retain source rebuild and private-symbol boundary / 更新4.2适用性；保留源码重建与私有符号边界",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "a35ece8f6e4ceb4b288b3eee94063bfa333c2240557c659d6242230bd29a458c"
+    "original_sha256": "a35ece8f6e4ceb4b288b3eee94063bfa333c2240557c659d6242230bd29a458c",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Repair English counterpart to COMPATIBILITY.md; contract unchanged.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/DEVELOPMENT.md",
@@ -1482,7 +1487,12 @@
     "finding_action": "Current 4.2 summary; recompute all figures/JSON byte-identically; retain archive / 现行4.2汇总；重算图／JSON字节一致；保留归档",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "7c270df955d93de718172a13c7a594e15a10f0e3f44eccb5e4c7e2c3c827665f"
+    "original_sha256": "7c270df955d93de718172a13c7a594e15a10f0e3f44eccb5e4c7e2c3c827665f",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Define Full/control elapsed ratio explicitly; preserve all archived measurements.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/FULL_SELECTION_GUIDE.md",
@@ -1875,7 +1885,12 @@
     "finding_action": "Retain migration tables; reconcile all-occurrence mutation and 4.2 applicability / 保留迁移表；统一全部实例修改及4.2适用性",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "35de427a485ee572e94c6f245d1c09672a2a85808fde36d7cc6bba452a5d5b9f"
+    "original_sha256": "35de427a485ee572e94c6f245d1c09672a2a85808fde36d7cc6bba452a5d5b9f",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Repair English counterpart to MIGRATION_V3_V4.md; strict migration unchanged.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/PRODUCT_LINES.md",
@@ -1942,7 +1957,12 @@
     "finding_action": "Replace one-shot exclusion; compiled stable-sort example; retain all-occurrence recovery / 移除一次排序排斥；实际编译稳定排序例；保留全部实例恢复",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "3c46b508dc2dc9cf7f86dea151369e40461fabc8d5448605143f3bf2b08c7e76"
+    "original_sha256": "3c46b508dc2dc9cf7f86dea151369e40461fabc8d5448605143f3bf2b08c7e76",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Clarify comparator equality; exact C snippet rerun against all 16 canonical production modules with recorded empty-success output; independent distinct-address stability harness.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/USAGE.zh-CN.md",
@@ -1966,7 +1986,12 @@
     "finding_action": "Replace one-shot exclusion; compiled stable-sort example; retain all-occurrence recovery / 移除一次排序排斥；实际编译稳定排序例；保留全部实例恢复",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "db68a1ab8e4c8732570b3b2af202a4f7772f4a8f7fca6ef5cb9d664737a02f85"
+    "original_sha256": "db68a1ab8e4c8732570b3b2af202a4f7772f4a8f7fca6ef5cb9d664737a02f85",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Repair English counterpart; clarify distinct-address equal keys; exact snippet identical to English and freshly executed.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/V3_MIGRATION.md",
@@ -2645,7 +2670,12 @@
     "finding_action": "Distinguish historical regression SHA from final preparation execution / 区分历史回归SHA与最终准备执行",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "5caf1a911be07f7e2211c04312e222b9a926a9340390eb837d2997a1bdf5d14d"
+    "original_sha256": "5caf1a911be07f7e2211c04312e222b9a926a9340390eb837d2997a1bdf5d14d",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Explicitly distinguish historical RC source/test checkout from final Stable preparation HEAD.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/VALIDATION.zh-CN.md",
@@ -2666,7 +2696,12 @@
     "finding_action": "Distinguish historical regression SHA from final preparation execution / 区分历史回归SHA与最终准备执行",
     "final_applicability": "Full v4.2.0",
     "changed": true,
-    "original_sha256": "38043c123b80cf86f05f953829c86309d1068ad8add47bbb0da6ac10a441b948"
+    "original_sha256": "38043c123b80cf86f05f953829c86309d1068ad8add47bbb0da6ac10a441b948",
+    "independent_review_repair": {
+      "reviewed_against": "f9c7762d48dad57a19ed9750b94e397154317509 and accepted main d7f3bdfe387ed80d2c3cff3b0413775a858afca3",
+      "action": "Repair English counterpart and historical/current source applicability; use current 4.2 quantitative-evidence label; preserve both regression pins.",
+      "source": "src/sort.c, include/layerkeysort.h, English counterparts; original historical records preserved"
+    }
   },
   {
     "path": "docs/WORKLOAD_EVIDENCE.md",

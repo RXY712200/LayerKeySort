@@ -30,7 +30,7 @@ int main(void) {
 }
 ```
 
-Equal pointers-to-items retain input order. `lks_sort` uses a copied pointer array and an equally sized scratch array before committing the caller's array. OOM preserves the input; fewer than two items needs no allocation, but still requires a comparator. This is a stable sorting convenience with copy/scratch costs; the live-order measurements do not compare it with `qsort` or `std::sort`.
+Items that compare equal retain their input order, including distinct item addresses with equal keys. `lks_sort` uses a copied pointer array and an equally sized scratch array before committing the caller's array. OOM preserves the input; fewer than two items needs no allocation, but still requires a comparator. This is a stable sorting convenience with copy/scratch costs; the live-order measurements do not compare it with `qsort` or `std::sort`.
 
 ## Choose the API family
 

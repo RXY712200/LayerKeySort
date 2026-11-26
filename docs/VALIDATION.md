@@ -3,7 +3,7 @@
 [简体中文](VALIDATION.zh-CN.md)
 
 Full v4.2.0 retains all 64 functions, 14 public types, LS1/LKS4SNP1 fixtures and strict V3 migration. Its preparation changes release metadata, not operational semantics. See the [4.2 verification record](V4_2_0.md).
-To reproduce the Full v4.2.0 operational source and test baseline, use checkout `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` for the RC metadata and both Preview.3 regressions. The earlier operational source pin alone lacks these tests. See the [4.2 quantitative evidence](FULL_RC1_EVIDENCE.md). For final PR validation, run the required checks at the actual PR head.
+To reproduce the Full v4.2.0 operational source and test baseline, use checkout `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` for the historical RC metadata and both Preview.3 regressions; this is not the final Stable preparation HEAD. The earlier operational source pin alone lacks these tests. See the [4.2 quantitative evidence](FULL_RC1_EVIDENCE.md). For final PR validation, run the required checks at the actual PR head.
 
 
 V4.0.0 Stable was promoted only after Preview.5 freeze and independently reviewed RC.1.

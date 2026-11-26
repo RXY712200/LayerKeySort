@@ -23,5 +23,18 @@
   "distribution": "C/C++ source, FetchContent, install and amalgamation; passed",
   "package_sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb",
   "browser": "Chrome headless; ten SVGs and bilingual HTML desktop/mobile; screenshots local",
-  "platform_limit": "MSVC, Clang/sanitizers and macOS supplied by final-head hosted workflows; not local executions"
+  "platform_limit": "MSVC, Clang/sanitizers and macOS supplied by final-head hosted workflows; not local executions",
+  "sort_receipt_correction": {
+    "original_claim": "Earlier snippet execution was reported but its compile/run commands were omitted from commands.json. The 15 original command receipts are unchanged.",
+    "new_execution": "sort-repair-commands.json records a fresh exact bilingual-snippet execution and independent stability harness, not recovered original logs.",
+    "checks": [
+      "OK status",
+      "sorted keys",
+      "exact occurrence addresses",
+      "stable comparator-equal order",
+      "comparator context"
+    ],
+    "original_receipts_verified": 15,
+    "new_receipts_verified": 5
+  }
 }

@@ -1,7 +1,7 @@
 # V3 到 V4 的迁移
 
 适用于 Full v4.2.0；V3 至 V4 的源码变化与严格旧 LK1 导入语义不变。见[当前集成说明](INTEGRATION.zh-CN.md)。
-[English](MIGRATION_V3_V4.zh-CN.md)
+[English](MIGRATION_V3_V4.md)
 
 本指南描述 v4.0.0 Stable 引入且Full v4.2.0 延续的冻结迁移契约。V4 主版本打破源码兼容。需要分层 Path/Tree 契约时可继续使用 v3.1.0。迁移需针对 V4 最终公开头重建，库没有别名层。应用改用取决于当前容器的实时 Handle，继续拥有业务身份，并通过严格导入保留已发布 V3 LK1 数据。
 

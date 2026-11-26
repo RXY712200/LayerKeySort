@@ -14,6 +14,15 @@ C — Repair recheck: compile/run the new sort snippet, strict Debug/Release CTe
 
 Browser review rendered all ten archived SVGs and the bilingual HTML at 1280px/390px. The first direct-SVG Chrome screenshot timed out; rendering the same SVG content with GPU disabled succeeded. Screenshots remain local review artifacts. No timing experiment was rerun. A final evidence audit detected Git line-ending normalization of captured Windows logs; the original byte streams are now stored in deterministic gzip files, and every decompressed log was rechecked against its recorded SHA-256. Native CRLF output is retained without treating it as Markdown whitespace.
 
+
+### Independent-review repair within passes A–C
+
+The review found four Chinese language switches selecting their own pages, historical RC checkout wording presented as current applicability, and an ambiguous ratio subject. Usage, Compatibility, V3→V4 Migration and Validation now select their actual English counterparts. Both Validation editions distinguish historical `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` from the final preparation HEAD; both Preview.3 regression identities remain. The Chinese evidence page explicitly defines Full/control elapsed time, preserving the archived implementation and measurements.
+
+The original 15 [command receipts](../verification/v4.2.0-preparation/commands.json) did not capture the reported Usage snippet commands. They remain unchanged. A **new execution**, not reconstructed historical output, is recorded in [sort-repair-commands.json](../verification/v4.2.0-preparation/sort-repair-commands.json). The [reproduction script](../verification/v4.2.0-preparation/reproduce-sort.py) extracts the exact identical C snippet from both Usage editions, compiles all 16 canonical production modules with GCC C17 and warnings as errors, and executes it. An isolated [stability harness](../verification/v4.2.0-preparation/sort-stability-harness.c) checks OK status, sorted keys, eight exact occurrence addresses, stable equal-key order and comparator context. All five new commands succeeded; compile and snippet-run output is correctly empty. SHA-256 checks cover the original 15 and new five decompressed logs. The previous pre-freeze link receipt remains historical.
+
+Targeted contract recheck preserved every affected-occurrence/shared-container clause, Group/Batch reconstruction, Handle expiry, fallible nontransactional reinsertion, caller recovery and synchronization. Sources checked: `src/sort.c`, `src/managed_order.c`, `src/immutable_group.c`, `src/snapshot.c`, private Group state and the frozen public header, alongside accepted main and both detailed API editions. The four-guide matrix remains applicable; no guide/source/contract changes are needed. Current counterpart targets are checked across the inventory; historical switches are not rewritten. The post-push delivery supplies an owner/revision-aware target audit and exact-head CI, rather than interpreting this predecessor-bound record as final-head verification.
+
 ## Per-file outcomes
 
 | Path | Owner / language | Classification | Sections / source basis / action |
