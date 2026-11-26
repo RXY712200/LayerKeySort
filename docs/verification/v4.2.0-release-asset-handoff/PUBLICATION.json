@@ -1,0 +1,71 @@
+{
+  "status": "PREPARED ONLY; awaiting explicit final owner authorization. No tag object/ref or Release created.",
+  "target_sha": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+  "target_tree": "18261736d37cba995a20d9a3132313d954ff3ef1",
+  "annotated_tag": {
+    "name": "v4.2.0",
+    "type": "annotated",
+    "target": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+    "annotation": "LayerKeySort v4.2.0",
+    "created": false
+  },
+  "release": {
+    "title": "LayerKeySort v4.2.0",
+    "tag_name": "v4.2.0",
+    "draft": false,
+    "prerelease": false,
+    "make_latest": true,
+    "created": false
+  },
+  "release_notes": [
+    "RELEASE_NOTES.en.md",
+    "RELEASE_NOTES.zh-CN.md"
+  ],
+  "assets": {
+    "LayerKeySort-4.2.0-amalgamation.zip": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb",
+    "LayerKeySort-4.2.0-SHA256SUMS.txt": "36e06a53ad41f0a01ee0435e5c81ec81b8611b61df2351f5cf322ea1acd6f68e"
+  },
+  "zip_members": [
+    "LayerKeySort-4.2.0-amalgamation/example.c",
+    "LayerKeySort-4.2.0-amalgamation/layerkeysort.c",
+    "LayerKeySort-4.2.0-amalgamation/layerkeysort.h",
+    "LayerKeySort-4.2.0-amalgamation/LICENSE",
+    "LayerKeySort-4.2.0-amalgamation/README.txt"
+  ],
+  "commands_receipt": "commands.json",
+  "asset_generation_cwd": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e",
+  "built_utc": "2026-11-26T13:47:19.914536+00:00",
+  "authorization_boundary": "Stop before tag creation, tag push and Release publication. Recheck this target and absence of conflicting tag/Release when authorized.",
+  "final_main_ci": {
+    "45832456582": {
+      "headSha": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+      "event": "push",
+      "conclusion": "success",
+      "url": "https://github.com/RXY712200/LayerKeySort/actions/runs/45832456582"
+    },
+    "45832456787": {
+      "headSha": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+      "event": "push",
+      "conclusion": "success",
+      "url": "https://github.com/RXY712200/LayerKeySort/actions/runs/45832456787"
+    },
+    "45832455183": {
+      "headSha": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+      "event": "dynamic",
+      "conclusion": "success",
+      "url": "https://github.com/RXY712200/LayerKeySort/actions/runs/45832455183"
+    },
+    "45832456709": {
+      "headSha": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+      "event": "push",
+      "conclusion": "success",
+      "url": "https://github.com/RXY712200/LayerKeySort/actions/runs/45832456709"
+    },
+    "45832456797": {
+      "headSha": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+      "event": "push",
+      "conclusion": "success",
+      "url": "https://github.com/RXY712200/LayerKeySort/actions/runs/45832456797"
+    }
+  }
+}

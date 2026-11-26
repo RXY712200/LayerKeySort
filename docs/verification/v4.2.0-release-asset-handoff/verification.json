@@ -1,0 +1,1053 @@
+{
+  "pinned_commit": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+  "task_document": "D:\\LayerKeySort\\.local\\tasks\\2026-11-27-v420-original-release-asset-verification.md",
+  "handoff_directory": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7",
+  "started_utc": "2026-11-26T16:41:26.196211+00:00",
+  "method": "Inspect original archives and compare existing member sections to pinned Git blobs; no generator entrypoint imported or executed and no replacement asset/member written.",
+  "initial_git_state": {
+    "head": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+    "branch": "main",
+    "status_short": "",
+    "refs": "refs/heads/dev/full-v4.2.0-preview.1 2d14510a8aae131bcd35679b940ab3d3b36fb8fa\nrefs/heads/dev/full-v4.2.0-preview.1.2 83367fd9b3b7297db1642c2eea6159bf395ef286\nrefs/heads/dev/full-v4.2.0-preview.1.2.1 07b739de1841256ed89236b4096d130f88206956\nrefs/heads/dev/full-v4.2.0-preview.2 01bc01e2d9ddbda448d9ef0807150f419203b580\nrefs/heads/dev/full-v4.2.0-preview.3 168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\nrefs/heads/dev/full-v4.2.0-rc.1 16bdde588b1bbf996bf5b6392a5fb91fb45d3576\nrefs/heads/dev/full-v4.2.0-stable-preparation c119c930b36becbc24392f6bb29bef761e72ea09\nrefs/heads/docs/full-v4.2.0-rc.1-navigation 932adc15771fc6294e37e637eaf0faf4172aad7a\nrefs/heads/docs/full-v4.2.0-stable-navigation 4dec48e146777ac993b51a3ab688d5e8cd68e3b6\nrefs/heads/main f751e1ee2afd682874281d6dc495969f9eca49eb\nrefs/heads/research/full-ri-20261124 f41b7be182c2ef766ee0dec1211500f7dd762f54\nrefs/remotes/origin/HEAD f751e1ee2afd682874281d6dc495969f9eca49eb\nrefs/remotes/origin/dev/full-v4.2.0-preview.1 af5e5ff25d700d38b2381ad80235c10716a55f52\nrefs/remotes/origin/dev/full-v4.2.0-preview.1.2 83367fd9b3b7297db1642c2eea6159bf395ef286\nrefs/remotes/origin/dev/full-v4.2.0-preview.1.2.1 07b739de1841256ed89236b4096d130f88206956\nrefs/remotes/origin/dev/full-v4.2.0-preview.2 01bc01e2d9ddbda448d9ef0807150f419203b580\nrefs/remotes/origin/dev/full-v4.2.0-preview.3 1418f33202ddfd199751a9b93f9157db3421cf97\nrefs/remotes/origin/dev/full-v4.2.0-rc.1 c4ef94497cd7d7c653b09dba0aa58eb27c70f0be\nrefs/remotes/origin/dev/full-v4.2.0-stable-preparation c119c930b36becbc24392f6bb29bef761e72ea09\nrefs/remotes/origin/docs/full-v4.2.0-rc.1-navigation 0f63d002595fd778399fc33115f60cd87226646c\nrefs/remotes/origin/docs/full-v4.2.0-stable-navigation 4dec48e146777ac993b51a3ab688d5e8cd68e3b6\nrefs/remotes/origin/main f751e1ee2afd682874281d6dc495969f9eca49eb\nrefs/tags/hpsort-v1.0.0-pre-rename 063496f8c9dae8e825147dc1853cf894b037c98d\nrefs/tags/mini-v1.0.0 122f381400dc034e965679776ed26961236e46a1\nrefs/tags/v1.0.0 321723d015a30a609ecb9138a07fb836e99f7057\nrefs/tags/v2.0.0 00c7660d553c207d435316aabc1db9029056ac83\nrefs/tags/v2.0.0-preview.1 b58f45164a9e862d7b842c5d23b541a89afdf3fa\nrefs/tags/v2.0.0-preview.2 9151a0fc1a8278747ed27946dc56ce555bca34e0\nrefs/tags/v2.0.0-preview.3 5b3735f1f20a656492eae8453b48fa112e6632bc\nrefs/tags/v2.0.0-preview.4 2b0e0dff6a2950077d49cde40a853aef54bc1ccd\nrefs/tags/v2.0.0-preview.5 022f6df8111265423225e5805738e6184e11c104\nrefs/tags/v2.0.0-rc.1 72db491e0e22be91370ce7d7d01c24dc30cf4637\nrefs/tags/v3.0.0 4e6a6a2035a10c1e0ff4811510d306db00a21b0e\nrefs/tags/v3.0.0-preview.1 2f9b4e728b9c8e6506e68971efe222e611368caf\nrefs/tags/v3.0.0-preview.2 0755a04740c399f8155be974576de5b721bff295\nrefs/tags/v3.0.0-preview.5 3c0a4cb7b1fce00ed2de6a5f4c691443da55563d\nrefs/tags/v3.0.0-rc.1 e2e7c31aea365f2a7b987282f87b50548b9b87e1\nrefs/tags/v3.1.0 76152e5ae94bea6e88f6c19eee5ac96d24233da1\nrefs/tags/v4.0.0 83d67d3ef5dacaf6117db320d9bbea68b199e23e\nrefs/tags/v4.1.0 bdf29c22a44001d5bf1f988bf06dc2324d5f7512\n"
+  },
+  "pinned_tree": "18261736d37cba995a20d9a3132313d954ff3ef1",
+  "git_worktrees": [
+    "D:/LayerKeySort/.local/full-current-v05",
+    "D:/LayerKeySort/.local/full-rc1",
+    "D:/LayerKeySort/.local/full-rc1-navigation",
+    "D:/LayerKeySort/.local/full-stable-navigation",
+    "D:/LayerKeySort/.local/full-stable-preparation",
+    "D:/LayerKeySort/.local/full-v4.2.0-final-f751e1e"
+  ],
+  "storage_note": "D:/LayerKeySort is a workspace container, not a Git root. .local/tasks and .local/handoff are outside all listed Git worktrees and cannot enter their Git inventories. No ignore rule is created or changed. The original build/ directory is ignored by the pinned worktree existing rule.",
+  "independent_original_hashes": {
+    "executable": "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1123-915-0_26.1123.915.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.EXE",
+    "tool": "PowerShell Get-FileHash -Algorithm SHA256 (.NET)",
+    "results": [
+      {
+        "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\assets\\LayerKeySort-4.2.0-amalgamation.zip",
+        "sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb"
+      },
+      {
+        "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\assets\\LayerKeySort-4.2.0-SHA256SUMS.txt",
+        "sha256": "36e06a53ad41f0a01ee0435e5c81ec81b8611b61df2351f5cf322ea1acd6f68e"
+      },
+      {
+        "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\PUBLICATION.json",
+        "sha256": "c3fd0015eb2e1ee31a15f028e1a3489fcf1dbb8388bc4b170a30e51431a74b33"
+      }
+    ]
+  },
+  "independent_staged_hashes": {
+    "executable": "C:\\Program Files\\WindowsApps\\OpenAI.CodexPrimaryRuntime.v26-1123-915-0_26.1123.915.0_x64__3k8sg7r9htsxt\\dependencies\\native\\powershell\\pwsh.EXE",
+    "tool": "PowerShell Get-FileHash -Algorithm SHA256 (.NET)",
+    "results": [
+      {
+        "path": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7\\LayerKeySort-4.2.0-amalgamation.zip",
+        "sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb"
+      },
+      {
+        "path": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7\\LayerKeySort-4.2.0-SHA256SUMS.txt",
+        "sha256": "36e06a53ad41f0a01ee0435e5c81ec81b8611b61df2351f5cf322ea1acd6f68e"
+      },
+      {
+        "path": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7\\PUBLICATION.json",
+        "sha256": "c3fd0015eb2e1ee31a15f028e1a3489fcf1dbb8388bc4b170a30e51431a74b33"
+      }
+    ]
+  },
+  "member_manifest": {
+    "source": "tools/verify_release_assets.py: members comprehension in verify()",
+    "basenames": [
+      "layerkeysort.h",
+      "layerkeysort.c",
+      "example.c",
+      "LICENSE",
+      "README.txt"
+    ],
+    "root": "LayerKeySort-4.2.0-amalgamation/"
+  },
+  "production_modules": [
+    "src/lks_alloc.c",
+    "src/lks_base.c",
+    "src/path.c",
+    "src/path_text.c",
+    "src/path_order_key.c",
+    "src/slot_codec.c",
+    "src/path_compare.c",
+    "src/order.c",
+    "src/managed_order.c",
+    "src/snapshot.c",
+    "src/snapshot_key.c",
+    "src/snapshot_wire.c",
+    "src/snapshot_restore.c",
+    "src/order_bulk.c",
+    "src/immutable_group.c",
+    "src/sort.c"
+  ],
+  "private_header_order": [
+    "src/lks_alloc_internal.h",
+    "src/lks_legacy_internal.h",
+    "src/lks_path_internal.h",
+    "src/lks_slot_codec_internal.h",
+    "src/lks_order_internal.h",
+    "src/lks_snapshot_internal.h",
+    "src/lks_immutable_group_internal.h",
+    "src/lks_sort_internal.h"
+  ],
+  "final_git_state": {
+    "head": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+    "branch": "main",
+    "status_short": "",
+    "refs": "refs/heads/dev/full-v4.2.0-preview.1 2d14510a8aae131bcd35679b940ab3d3b36fb8fa\nrefs/heads/dev/full-v4.2.0-preview.1.2 83367fd9b3b7297db1642c2eea6159bf395ef286\nrefs/heads/dev/full-v4.2.0-preview.1.2.1 07b739de1841256ed89236b4096d130f88206956\nrefs/heads/dev/full-v4.2.0-preview.2 01bc01e2d9ddbda448d9ef0807150f419203b580\nrefs/heads/dev/full-v4.2.0-preview.3 168debfbd5dd82ef005a4af2fc6a9c06fc9abdd0\nrefs/heads/dev/full-v4.2.0-rc.1 16bdde588b1bbf996bf5b6392a5fb91fb45d3576\nrefs/heads/dev/full-v4.2.0-stable-preparation c119c930b36becbc24392f6bb29bef761e72ea09\nrefs/heads/docs/full-v4.2.0-rc.1-navigation 932adc15771fc6294e37e637eaf0faf4172aad7a\nrefs/heads/docs/full-v4.2.0-stable-navigation 4dec48e146777ac993b51a3ab688d5e8cd68e3b6\nrefs/heads/main f751e1ee2afd682874281d6dc495969f9eca49eb\nrefs/heads/research/full-ri-20261124 f41b7be182c2ef766ee0dec1211500f7dd762f54\nrefs/remotes/origin/HEAD f751e1ee2afd682874281d6dc495969f9eca49eb\nrefs/remotes/origin/dev/full-v4.2.0-preview.1 af5e5ff25d700d38b2381ad80235c10716a55f52\nrefs/remotes/origin/dev/full-v4.2.0-preview.1.2 83367fd9b3b7297db1642c2eea6159bf395ef286\nrefs/remotes/origin/dev/full-v4.2.0-preview.1.2.1 07b739de1841256ed89236b4096d130f88206956\nrefs/remotes/origin/dev/full-v4.2.0-preview.2 01bc01e2d9ddbda448d9ef0807150f419203b580\nrefs/remotes/origin/dev/full-v4.2.0-preview.3 1418f33202ddfd199751a9b93f9157db3421cf97\nrefs/remotes/origin/dev/full-v4.2.0-rc.1 c4ef94497cd7d7c653b09dba0aa58eb27c70f0be\nrefs/remotes/origin/dev/full-v4.2.0-stable-preparation c119c930b36becbc24392f6bb29bef761e72ea09\nrefs/remotes/origin/docs/full-v4.2.0-rc.1-navigation 0f63d002595fd778399fc33115f60cd87226646c\nrefs/remotes/origin/docs/full-v4.2.0-stable-navigation 4dec48e146777ac993b51a3ab688d5e8cd68e3b6\nrefs/remotes/origin/main f751e1ee2afd682874281d6dc495969f9eca49eb\nrefs/tags/hpsort-v1.0.0-pre-rename 063496f8c9dae8e825147dc1853cf894b037c98d\nrefs/tags/mini-v1.0.0 122f381400dc034e965679776ed26961236e46a1\nrefs/tags/v1.0.0 321723d015a30a609ecb9138a07fb836e99f7057\nrefs/tags/v2.0.0 00c7660d553c207d435316aabc1db9029056ac83\nrefs/tags/v2.0.0-preview.1 b58f45164a9e862d7b842c5d23b541a89afdf3fa\nrefs/tags/v2.0.0-preview.2 9151a0fc1a8278747ed27946dc56ce555bca34e0\nrefs/tags/v2.0.0-preview.3 5b3735f1f20a656492eae8453b48fa112e6632bc\nrefs/tags/v2.0.0-preview.4 2b0e0dff6a2950077d49cde40a853aef54bc1ccd\nrefs/tags/v2.0.0-preview.5 022f6df8111265423225e5805738e6184e11c104\nrefs/tags/v2.0.0-rc.1 72db491e0e22be91370ce7d7d01c24dc30cf4637\nrefs/tags/v3.0.0 4e6a6a2035a10c1e0ff4811510d306db00a21b0e\nrefs/tags/v3.0.0-preview.1 2f9b4e728b9c8e6506e68971efe222e611368caf\nrefs/tags/v3.0.0-preview.2 0755a04740c399f8155be974576de5b721bff295\nrefs/tags/v3.0.0-preview.5 3c0a4cb7b1fce00ed2de6a5f4c691443da55563d\nrefs/tags/v3.0.0-rc.1 e2e7c31aea365f2a7b987282f87b50548b9b87e1\nrefs/tags/v3.1.0 76152e5ae94bea6e88f6c19eee5ac96d24233da1\nrefs/tags/v4.0.0 83d67d3ef5dacaf6117db320d9bbea68b199e23e\nrefs/tags/v4.1.0 bdf29c22a44001d5bf1f988bf06dc2324d5f7512\n"
+  },
+  "result": "VERIFIED",
+  "checks": [
+    {
+      "check": "Pinned object is a Git commit",
+      "passed": true
+    },
+    {
+      "check": "D:\\LayerKeySort\\.local\\tasks\\2026-11-27-v420-original-release-asset-verification.md is outside every Git worktree",
+      "passed": true
+    },
+    {
+      "check": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7 is outside every Git worktree",
+      "passed": true
+    },
+    {
+      "check": "Original publication build directory is already Git-ignored",
+      "passed": true
+    },
+    {
+      "check": "Original is a regular non-symlink file: LayerKeySort-4.2.0-amalgamation.zip",
+      "passed": true
+    },
+    {
+      "check": "Original SHA-256 matches supplied expectation: LayerKeySort-4.2.0-amalgamation.zip",
+      "passed": true
+    },
+    {
+      "check": "Staged copy is byte-for-byte identical: LayerKeySort-4.2.0-amalgamation.zip",
+      "passed": true
+    },
+    {
+      "check": "Original is a regular non-symlink file: LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "check": "Original SHA-256 matches supplied expectation: LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "check": "Staged copy is byte-for-byte identical: LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "check": "Original is a regular non-symlink file: PUBLICATION.json",
+      "passed": true
+    },
+    {
+      "check": "Original SHA-256 matches supplied expectation: PUBLICATION.json",
+      "passed": true
+    },
+    {
+      "check": "Staged copy is byte-for-byte identical: PUBLICATION.json",
+      "passed": true
+    },
+    {
+      "check": "independent_original_hashes: Python hashlib and .NET agree for LayerKeySort-4.2.0-amalgamation.zip",
+      "passed": true
+    },
+    {
+      "check": "independent_original_hashes: Python hashlib and .NET agree for LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "check": "independent_original_hashes: Python hashlib and .NET agree for PUBLICATION.json",
+      "passed": true
+    },
+    {
+      "check": "independent_staged_hashes: Python hashlib and .NET agree for LayerKeySort-4.2.0-amalgamation.zip",
+      "passed": true
+    },
+    {
+      "check": "independent_staged_hashes: Python hashlib and .NET agree for LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "check": "independent_staged_hashes: Python hashlib and .NET agree for PUBLICATION.json",
+      "passed": true
+    },
+    {
+      "check": "Canonical checksum file names the exact ZIP and independently verified hash",
+      "passed": true
+    },
+    {
+      "check": "Pinned public header and CMake identify Stable 4.2.0",
+      "passed": true
+    },
+    {
+      "check": "Exact five-member manifest identified in pinned verification script AST",
+      "passed": true
+    },
+    {
+      "check": "Pinned canonical manifest has 16 unique production modules",
+      "passed": true
+    },
+    {
+      "check": "LayerKeySort.vcxproj compile membership matches canonical manifest plus four legacy regression modules",
+      "passed": true
+    },
+    {
+      "check": "LayerKeySort.vcxproj.filters compile membership matches canonical manifest plus four legacy regression modules",
+      "passed": true
+    },
+    {
+      "check": "ZIP contains exactly the five packaging-manifest members, with no duplicates",
+      "passed": true
+    },
+    {
+      "check": "Every ZIP member decompresses successfully and passes CRC verification",
+      "passed": true
+    },
+    {
+      "check": "Safe, unencrypted regular ZIP member: LayerKeySort-4.2.0-amalgamation/example.c",
+      "passed": true
+    },
+    {
+      "check": "Declared uncompressed size matches actual bytes: LayerKeySort-4.2.0-amalgamation/example.c",
+      "passed": true
+    },
+    {
+      "check": "Safe, unencrypted regular ZIP member: LayerKeySort-4.2.0-amalgamation/layerkeysort.c",
+      "passed": true
+    },
+    {
+      "check": "Declared uncompressed size matches actual bytes: LayerKeySort-4.2.0-amalgamation/layerkeysort.c",
+      "passed": true
+    },
+    {
+      "check": "Safe, unencrypted regular ZIP member: LayerKeySort-4.2.0-amalgamation/layerkeysort.h",
+      "passed": true
+    },
+    {
+      "check": "Declared uncompressed size matches actual bytes: LayerKeySort-4.2.0-amalgamation/layerkeysort.h",
+      "passed": true
+    },
+    {
+      "check": "Safe, unencrypted regular ZIP member: LayerKeySort-4.2.0-amalgamation/LICENSE",
+      "passed": true
+    },
+    {
+      "check": "Declared uncompressed size matches actual bytes: LayerKeySort-4.2.0-amalgamation/LICENSE",
+      "passed": true
+    },
+    {
+      "check": "Safe, unencrypted regular ZIP member: LayerKeySort-4.2.0-amalgamation/README.txt",
+      "passed": true
+    },
+    {
+      "check": "Declared uncompressed size matches actual bytes: LayerKeySort-4.2.0-amalgamation/README.txt",
+      "passed": true
+    },
+    {
+      "check": "layerkeysort.h exactly matches normalized pinned include/layerkeysort.h",
+      "passed": true
+    },
+    {
+      "check": "example.c exactly matches normalized pinned examples/basic.c",
+      "passed": true
+    },
+    {
+      "check": "LICENSE exactly matches normalized pinned LICENSE",
+      "passed": true
+    },
+    {
+      "check": "README.txt exactly matches complete bilingual packaging literal in pinned tools/amalgamate.py",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamated C has exact canonical two-line preamble",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_alloc_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_alloc_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_legacy_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_legacy_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_path_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_path_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_slot_codec_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_slot_codec_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_order_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_order_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_snapshot_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_snapshot_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_immutable_group_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_immutable_group_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_sort_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_sort_internal.h",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_alloc.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_alloc.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/lks_base.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/lks_base.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/path.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/path.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/path_text.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/path_text.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/path_order_key.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/path_order_key.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/slot_codec.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/slot_codec.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/path_compare.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/path_compare.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/order.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/order.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/managed_order.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/managed_order.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/snapshot.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/snapshot.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/snapshot_key.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/snapshot_key.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/snapshot_wire.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/snapshot_wire.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/snapshot_restore.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/snapshot_restore.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/order_bulk.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/order_bulk.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/immutable_group.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/immutable_group.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section order/wrapper: src/sort.c",
+      "passed": true
+    },
+    {
+      "check": "Existing amalgamation section content equals transformed pinned source: src/sort.c",
+      "passed": true
+    },
+    {
+      "check": "No extra unverified bytes or sections in existing amalgamated C",
+      "passed": true
+    },
+    {
+      "check": "No unresolved repository-local includes after amalgamation preamble",
+      "passed": true
+    },
+    {
+      "check": "PUBLICATION.json pins exact final main commit and Git tree",
+      "passed": true
+    },
+    {
+      "check": "PUBLICATION.json asset names and hashes match actual originals and supplied expectations",
+      "passed": true
+    },
+    {
+      "check": "PUBLICATION.json exact ZIP member list and order match original archive",
+      "passed": true
+    },
+    {
+      "check": "PUBLICATION.json annotated-tag plan is correct and explicitly unexecuted",
+      "passed": true
+    },
+    {
+      "check": "PUBLICATION.json Stable release identity/flags are correct and explicitly unexecuted",
+      "passed": true
+    },
+    {
+      "check": "Recorded original asset-generation directory agrees with original final-main worktree",
+      "passed": true
+    },
+    {
+      "check": "Recorded five CI metadata entries consistently identify the pinned commit (not a new CI execution)",
+      "passed": true
+    },
+    {
+      "check": "Original bytes, size, modification and creation timestamps unchanged: LayerKeySort-4.2.0-amalgamation.zip",
+      "passed": true
+    },
+    {
+      "check": "Original bytes, size, modification and creation timestamps unchanged: LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "check": "Original bytes, size, modification and creation timestamps unchanged: PUBLICATION.json",
+      "passed": true
+    },
+    {
+      "check": "Git HEAD, branch, tracked/untracked state and all local refs unchanged",
+      "passed": true
+    }
+  ],
+  "discrepancies": [],
+  "original_and_staged_files": [
+    {
+      "name": "LayerKeySort-4.2.0-amalgamation.zip",
+      "original": {
+        "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\assets\\LayerKeySort-4.2.0-amalgamation.zip",
+        "size": 35696,
+        "mtime_ns": 1795700839518184400,
+        "birthtime_ns": 1795700839518184400,
+        "sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb"
+      },
+      "staged": {
+        "path": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7\\LayerKeySort-4.2.0-amalgamation.zip",
+        "size": 35696,
+        "mtime_ns": 1795700839518184400,
+        "birthtime_ns": 1795711286593702600,
+        "sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb"
+      },
+      "byte_identical": true
+    },
+    {
+      "name": "LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "original": {
+        "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\assets\\LayerKeySort-4.2.0-SHA256SUMS.txt",
+        "size": 102,
+        "mtime_ns": 1795700839518184400,
+        "birthtime_ns": 1795700839518184400,
+        "sha256": "36e06a53ad41f0a01ee0435e5c81ec81b8611b61df2351f5cf322ea1acd6f68e"
+      },
+      "staged": {
+        "path": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7\\LayerKeySort-4.2.0-SHA256SUMS.txt",
+        "size": 102,
+        "mtime_ns": 1795700839518184400,
+        "birthtime_ns": 1795711286601106100,
+        "sha256": "36e06a53ad41f0a01ee0435e5c81ec81b8611b61df2351f5cf322ea1acd6f68e"
+      },
+      "byte_identical": true
+    },
+    {
+      "name": "PUBLICATION.json",
+      "original": {
+        "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\PUBLICATION.json",
+        "size": 2762,
+        "mtime_ns": 1795701335077012900,
+        "birthtime_ns": 1795700839905845200,
+        "sha256": "c3fd0015eb2e1ee31a15f028e1a3489fcf1dbb8388bc4b170a30e51431a74b33"
+      },
+      "staged": {
+        "path": "D:\\LayerKeySort\\.local\\handoff\\v4.2.0-original-assets-20261127-d869d5d7\\PUBLICATION.json",
+        "size": 2762,
+        "mtime_ns": 1795701335077012900,
+        "birthtime_ns": 1795711286601106100,
+        "sha256": "c3fd0015eb2e1ee31a15f028e1a3489fcf1dbb8388bc4b170a30e51431a74b33"
+      },
+      "byte_identical": true
+    }
+  ],
+  "final_originals": {
+    "LayerKeySort-4.2.0-amalgamation.zip": {
+      "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\assets\\LayerKeySort-4.2.0-amalgamation.zip",
+      "size": 35696,
+      "mtime_ns": 1795700839518184400,
+      "birthtime_ns": 1795700839518184400,
+      "sha256": "1b02e7c8b5137bc4cae7d2c3e9859edf3158802bc02ba1aad593ebd9d1ba3bdb"
+    },
+    "LayerKeySort-4.2.0-SHA256SUMS.txt": {
+      "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\assets\\LayerKeySort-4.2.0-SHA256SUMS.txt",
+      "size": 102,
+      "mtime_ns": 1795700839518184400,
+      "birthtime_ns": 1795700839518184400,
+      "sha256": "36e06a53ad41f0a01ee0435e5c81ec81b8611b61df2351f5cf322ea1acd6f68e"
+    },
+    "PUBLICATION.json": {
+      "path": "D:\\LayerKeySort\\.local\\full-v4.2.0-final-f751e1e\\build\\v4.2.0-publication\\PUBLICATION.json",
+      "size": 2762,
+      "mtime_ns": 1795701335077012900,
+      "birthtime_ns": 1795700839905845200,
+      "sha256": "c3fd0015eb2e1ee31a15f028e1a3489fcf1dbb8388bc4b170a30e51431a74b33"
+    }
+  },
+  "zip_members": [
+    {
+      "path": "LayerKeySort-4.2.0-amalgamation/example.c",
+      "uncompressed_size": 806,
+      "compressed_size": 401,
+      "sha256": "305f5e981fd079bf09d6530b0d65b0d9e1d700377b460365d10bcebbc9e556e7",
+      "crc32": "a38ec1a0",
+      "compression_method": 8,
+      "timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "mode": "0o644"
+    },
+    {
+      "path": "LayerKeySort-4.2.0-amalgamation/layerkeysort.c",
+      "uncompressed_size": 127600,
+      "compressed_size": 27848,
+      "sha256": "ea40c37b222577784a7974471cce25a11d6bcb68395c1c5c46fae5aa0778cc10",
+      "crc32": "cf537472",
+      "compression_method": 8,
+      "timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "mode": "0o644"
+    },
+    {
+      "path": "LayerKeySort-4.2.0-amalgamation/layerkeysort.h",
+      "uncompressed_size": 16784,
+      "compressed_size": 5379,
+      "sha256": "9c755fa05ea1ed0e9d0a00860afb5b2854315c3dd10c5ac5d53b6a9e87a91c39",
+      "crc32": "2f675a9c",
+      "compression_method": 8,
+      "timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "mode": "0o644"
+    },
+    {
+      "path": "LayerKeySort-4.2.0-amalgamation/LICENSE",
+      "uncompressed_size": 1066,
+      "compressed_size": 631,
+      "sha256": "114b7a8bc6e367d27ccad97352e71f998e8b8f933db28f0f769ca3cac38a3df5",
+      "crc32": "dfa13558",
+      "compression_method": 8,
+      "timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "mode": "0o644"
+    },
+    {
+      "path": "LayerKeySort-4.2.0-amalgamation/README.txt",
+      "uncompressed_size": 1081,
+      "compressed_size": 607,
+      "sha256": "b64dbf9edcfaaf8572be58bc7a508d963e893efc56a2f16783628fed27818cca",
+      "crc32": "223c07b5",
+      "compression_method": 8,
+      "timestamp": [
+        1980,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      "mode": "0o644"
+    }
+  ],
+  "source_inputs": {
+    "tools/package_release.py": {
+      "blob": "eb70dc1b017ce94e3c1a367bec82025ea3e4539d",
+      "raw_bytes": 2237,
+      "raw_sha256": "c4e201ac115b8b8858d51ca9e4f938e8761e2d4598874baf1f900d6f3db0fc4e"
+    },
+    "tools/amalgamate.py": {
+      "blob": "d1e42c5f7621a31c5a4c02639163a4e97083b101",
+      "raw_bytes": 8802,
+      "raw_sha256": "b35e188eefcbb62336c01dd0e1fbebf42a53a2768a1fcf232f2f1a39794812af"
+    },
+    "tools/verify_release_assets.py": {
+      "blob": "f334dbdc1b27c37282added3f696463ff96b8da1",
+      "raw_bytes": 3291,
+      "raw_sha256": "5645030d262456b79cb1e38e5f1c11d181f286449018cf7deb7a942238bc780d"
+    },
+    "include/layerkeysort.h": {
+      "blob": "c3d56175500e051d8a90c6ddd482865a86b7ac45",
+      "raw_bytes": 16784,
+      "raw_sha256": "9c755fa05ea1ed0e9d0a00860afb5b2854315c3dd10c5ac5d53b6a9e87a91c39"
+    },
+    "CMakeLists.txt": {
+      "blob": "def4b74ad2732d104a2eb0f902dd197381d874c8",
+      "raw_bytes": 16647,
+      "raw_sha256": "3e3330c00bcc57f70c98d7a5628411e8ced07bb08b7f531e897889263385c52f"
+    },
+    "cmake/ProductionSources.cmake": {
+      "blob": "c7d827f1e3f200f03b1ca06e65ed592ee1595f43",
+      "raw_bytes": 497,
+      "raw_sha256": "88b7e9c2198d3ec6f7bd7e4de7fd9bb07e27d84c47924fabf2417e35941da4f6"
+    },
+    "LayerKeySort.vcxproj": {
+      "blob": "5885e5a2119679750140a37e976ae28e1a9e3b52",
+      "raw_bytes": 12138,
+      "raw_sha256": "3f979283a0f03450007c2e5d5baa85ad46022b7fa2a2b4a1a1997f742c4dbf19"
+    },
+    "LayerKeySort.vcxproj.filters": {
+      "blob": "110e145e8b33c7043f95cf136bfb2fedab7452b3",
+      "raw_bytes": 5615,
+      "raw_sha256": "9720b3066ccaba23030a48259d3c7b33a6a0f6160f08d1772e7cb062ea40f24f"
+    },
+    "src/lks_alloc.c": {
+      "blob": "f082212f0755aafae3c1da7b95b918e992f1d8ad",
+      "raw_bytes": 10181,
+      "raw_sha256": "90ac678759746beaf78571ef36ed0c53ed791b3b18fbd9223914b08efa23b752"
+    },
+    "src/lks_alloc_internal.h": {
+      "blob": "c48f1b673da08df685607c3930ca1dc0346292d8",
+      "raw_bytes": 2067,
+      "raw_sha256": "b19087b4f944cde30bf1aa004744277748911d46b24213ecbd948b9c3a291921"
+    },
+    "src/lks_base.c": {
+      "blob": "df125c22797228820535697cc56e694f1de90465",
+      "raw_bytes": 914,
+      "raw_sha256": "f802214ac98c488b7e91098a544faed6363d322c009ca1cecdd7d6b89a8ebc55"
+    },
+    "src/path.c": {
+      "blob": "94637e8da351baa1b3e4ad0b5c24135dc9cbd37e",
+      "raw_bytes": 9004,
+      "raw_sha256": "d4f0b24c31afb38d37d1401c1335e9c39b2cf806f0382ecfaa3ade98e23c7d98"
+    },
+    "src/lks_legacy_internal.h": {
+      "blob": "f97f2ae001226d15238cfdb171eb002f6d764e44",
+      "raw_bytes": 15050,
+      "raw_sha256": "6564eb3d595b2c60e7d9cd09520339935e8babd01770c356a78b9a2c24b361d5"
+    },
+    "src/lks_path_internal.h": {
+      "blob": "1f1449b1090b13c6e9fc1e112a4ef064d1eca1b4",
+      "raw_bytes": 565,
+      "raw_sha256": "d409b46a400c29cc57305499de17944fc7317dc0ea5883798e61362e430f41fb"
+    },
+    "src/path_text.c": {
+      "blob": "3a170cade21483286e4ff7d3bbaa078ea2237518",
+      "raw_bytes": 6940,
+      "raw_sha256": "1ae6bd37fb291776d4195dea12a5868ad2cc9a7b8fea783f332bc13fdb5460c9"
+    },
+    "src/lks_slot_codec_internal.h": {
+      "blob": "7432ddb391fa9cfd9ae435102a716d5086d152c7",
+      "raw_bytes": 476,
+      "raw_sha256": "b74580819010a42bb0b965a76ed076fdf00bed61912e75601c2d8d3120f767a7"
+    },
+    "src/path_order_key.c": {
+      "blob": "19f9a39f74210365795dd57015a47fb788c5b38e",
+      "raw_bytes": 7328,
+      "raw_sha256": "95eebfa3c92fcb1caf9bdd43e4562b9163ea72421eef0ee662ec8f127095f1c0"
+    },
+    "src/slot_codec.c": {
+      "blob": "ec02b027470e8efbdb922a934018019e47b4a212",
+      "raw_bytes": 1854,
+      "raw_sha256": "9cf0403472aaa7fe98264254ccd76f50ed92ca037eba313fc49b2b3342975cd9"
+    },
+    "src/path_compare.c": {
+      "blob": "06665905c8443b9fa39fcc21207ed12fc7622c20",
+      "raw_bytes": 3607,
+      "raw_sha256": "c2c8c0a04cc87216b439421451f8c05d4839333874fa5e575de6e9275d73b218"
+    },
+    "src/order.c": {
+      "blob": "cde7f4f7a349a8a228c03a6191ebcce7e702e35a",
+      "raw_bytes": 26457,
+      "raw_sha256": "b4855df70bd56aebfe80c266a4eadf411ead2c810d03332c6bc50372aa899fed"
+    },
+    "src/lks_order_internal.h": {
+      "blob": "e9d3631d109a2f64c06f42c383182277c3c3b5a0",
+      "raw_bytes": 2717,
+      "raw_sha256": "e8510ccce6a5f53516e7ab468fa37c18749accac24f0eb6247c44796052185c5"
+    },
+    "src/managed_order.c": {
+      "blob": "194df6ce65525f9370d1827595c3750727d8220e",
+      "raw_bytes": 5326,
+      "raw_sha256": "d03e428b294c6b75533551e06fa5dcc070e319614ee8104760f960e339964247"
+    },
+    "src/snapshot.c": {
+      "blob": "643619d7f608383311aa07e4acbace8d13af6522",
+      "raw_bytes": 8242,
+      "raw_sha256": "f0808ef169cb28c248e0119061fe7b4ac1373c50aa6e2c1055807697c9bd32e2"
+    },
+    "src/lks_snapshot_internal.h": {
+      "blob": "2b41aa9765a60a9883724557efa62ba80ae4a942",
+      "raw_bytes": 1534,
+      "raw_sha256": "7fe64c2b59b724ae2c753a846e8fcbd89459d84f6ed5efe006f72ae99e50f5bf"
+    },
+    "src/snapshot_key.c": {
+      "blob": "2f4a848ace40b0553de1e1be44f4cc2c8f661193",
+      "raw_bytes": 2410,
+      "raw_sha256": "30ef08cfe89d78002bbbce1ef0558658c50fb2f921e8cf1cd838d7e8719b0721"
+    },
+    "src/snapshot_wire.c": {
+      "blob": "66edbca124562ee49660e4a7d2b0d6209b8cfc87",
+      "raw_bytes": 3702,
+      "raw_sha256": "fd1d6f90874ce401db00471b93207dcffa4d808842657d0123e371b05f181c26"
+    },
+    "src/snapshot_restore.c": {
+      "blob": "1ac5e3c5c1d72addb8a5b0ecc9846e4240cae4fd",
+      "raw_bytes": 2951,
+      "raw_sha256": "cfadf461e578673e377b195f28dc649fc3d6fa48582793592849142f56f8da1b"
+    },
+    "src/order_bulk.c": {
+      "blob": "32f8983686224770be825da81fa77ed89ec7bd50",
+      "raw_bytes": 2245,
+      "raw_sha256": "24c7f2b95a7ea4839f54971bff518ccf2ddf8379700d5e4aeab40e33e8187448"
+    },
+    "src/immutable_group.c": {
+      "blob": "0ad62923e49074349b5dd76f882c8426e9684630",
+      "raw_bytes": 7321,
+      "raw_sha256": "6886a8b28a53cbe183d68ec5dcb1bbb2feb4937c745335ea0fc02014e1ae09da"
+    },
+    "src/lks_immutable_group_internal.h": {
+      "blob": "45bbaaede6919278fd8a07d36bc9b76f4f7492f2",
+      "raw_bytes": 365,
+      "raw_sha256": "96aa0546e514d8d4cf835e35079205baf8b29da7ad0db12dbcd335156108f179"
+    },
+    "src/lks_sort_internal.h": {
+      "blob": "859653d2b9c66e9494d842bf3aecf3399cb6b07b",
+      "raw_bytes": 381,
+      "raw_sha256": "f79d33fe3ad151a12e3a747fa185fe5f91af4793a17f10b8e4c434e806de0159"
+    },
+    "src/sort.c": {
+      "blob": "4214d1d5f1eb64eff865df4f4672ab46d04d3b21",
+      "raw_bytes": 2975,
+      "raw_sha256": "0d870990f456c50fc30b360889e5e9888100565c700f449ef4957b62b3c32208"
+    },
+    "examples/basic.c": {
+      "blob": "997a831ded6414823bbd02a1451bf59871fd1ae5",
+      "raw_bytes": 806,
+      "raw_sha256": "305f5e981fd079bf09d6530b0d65b0d9e1d700377b460365d10bcebbc9e556e7"
+    },
+    "LICENSE": {
+      "blob": "82dbe349e2440d2d4ca4f17924ecb50d83b9e6d5",
+      "raw_bytes": 1066,
+      "raw_sha256": "114b7a8bc6e367d27ccad97352e71f998e8b8f933db28f0f769ca3cac38a3df5"
+    }
+  },
+  "amalgamation_sections": [
+    {
+      "kind": "private header",
+      "source": "src/lks_alloc_internal.h",
+      "blob": "c48f1b673da08df685607c3930ca1dc0346292d8",
+      "existing_payload_sha256": "b19087b4f944cde30bf1aa004744277748911d46b24213ecbd948b9c3a291921",
+      "expected_section_sha256": "b19087b4f944cde30bf1aa004744277748911d46b24213ecbd948b9c3a291921",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_legacy_internal.h",
+      "blob": "f97f2ae001226d15238cfdb171eb002f6d764e44",
+      "existing_payload_sha256": "92bc8ea7a3b8b7b81f6307dd1c8604c935328f8c713e5a6961a1c0b6cd3ea3fb",
+      "expected_section_sha256": "92bc8ea7a3b8b7b81f6307dd1c8604c935328f8c713e5a6961a1c0b6cd3ea3fb",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_path_internal.h",
+      "blob": "1f1449b1090b13c6e9fc1e112a4ef064d1eca1b4",
+      "existing_payload_sha256": "7d00edcb5449219de3176fa85ff67b9b572610dfd995c439c81283ff5117c107",
+      "expected_section_sha256": "7d00edcb5449219de3176fa85ff67b9b572610dfd995c439c81283ff5117c107",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_slot_codec_internal.h",
+      "blob": "7432ddb391fa9cfd9ae435102a716d5086d152c7",
+      "existing_payload_sha256": "15ea57ba76e10e3867d03de9871def3c206e8f82dcbe4722bbdd8767b450dfa8",
+      "expected_section_sha256": "15ea57ba76e10e3867d03de9871def3c206e8f82dcbe4722bbdd8767b450dfa8",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_order_internal.h",
+      "blob": "e9d3631d109a2f64c06f42c383182277c3c3b5a0",
+      "existing_payload_sha256": "8c557167f8a35ee19053cfdfec15981057268308048341ec2e96fa5d820b3cd4",
+      "expected_section_sha256": "8c557167f8a35ee19053cfdfec15981057268308048341ec2e96fa5d820b3cd4",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_snapshot_internal.h",
+      "blob": "2b41aa9765a60a9883724557efa62ba80ae4a942",
+      "existing_payload_sha256": "cc3278bf2c9f9d9fe8057d63bf8f1d7a38ef88f4f73c729dd60351cb54d1b6f4",
+      "expected_section_sha256": "cc3278bf2c9f9d9fe8057d63bf8f1d7a38ef88f4f73c729dd60351cb54d1b6f4",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_immutable_group_internal.h",
+      "blob": "45bbaaede6919278fd8a07d36bc9b76f4f7492f2",
+      "existing_payload_sha256": "b60cb0693eeaaa4fde0a2673c34442272b8e0e7cff4cbb209a088a1687d24ab2",
+      "expected_section_sha256": "b60cb0693eeaaa4fde0a2673c34442272b8e0e7cff4cbb209a088a1687d24ab2",
+      "matches": true
+    },
+    {
+      "kind": "private header",
+      "source": "src/lks_sort_internal.h",
+      "blob": "859653d2b9c66e9494d842bf3aecf3399cb6b07b",
+      "existing_payload_sha256": "170dd9e3a912322832fcefcfc5b631ea8473556546bde6eceb9a9a943aa9fa47",
+      "expected_section_sha256": "170dd9e3a912322832fcefcfc5b631ea8473556546bde6eceb9a9a943aa9fa47",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/lks_alloc.c",
+      "blob": "f082212f0755aafae3c1da7b95b918e992f1d8ad",
+      "existing_payload_sha256": "a38e71103360169d42e8c9f8c6fc7358055b0c2dcca45d466c3f6f2d003c2e45",
+      "expected_section_sha256": "a38e71103360169d42e8c9f8c6fc7358055b0c2dcca45d466c3f6f2d003c2e45",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/lks_base.c",
+      "blob": "df125c22797228820535697cc56e694f1de90465",
+      "existing_payload_sha256": "eee835e03f0d49da35b07b073aa243f9a7913b29465bddddb3c21890f429d840",
+      "expected_section_sha256": "eee835e03f0d49da35b07b073aa243f9a7913b29465bddddb3c21890f429d840",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/path.c",
+      "blob": "94637e8da351baa1b3e4ad0b5c24135dc9cbd37e",
+      "existing_payload_sha256": "95965fc1059c24d928ff92f872f68a9e0429a2f30bc6b19fb888666bf9ffdbe2",
+      "expected_section_sha256": "95965fc1059c24d928ff92f872f68a9e0429a2f30bc6b19fb888666bf9ffdbe2",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/path_text.c",
+      "blob": "3a170cade21483286e4ff7d3bbaa078ea2237518",
+      "existing_payload_sha256": "b35940d17169ba7493406dbf0b7b9dd9b4fe96401fb9445c7cf8f3f339d0346e",
+      "expected_section_sha256": "b35940d17169ba7493406dbf0b7b9dd9b4fe96401fb9445c7cf8f3f339d0346e",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/path_order_key.c",
+      "blob": "19f9a39f74210365795dd57015a47fb788c5b38e",
+      "existing_payload_sha256": "81b887f2a41ac972a374133662a23bf9ee78f9a5c51c263e2baab6c0c61b780f",
+      "expected_section_sha256": "81b887f2a41ac972a374133662a23bf9ee78f9a5c51c263e2baab6c0c61b780f",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/slot_codec.c",
+      "blob": "ec02b027470e8efbdb922a934018019e47b4a212",
+      "existing_payload_sha256": "a155016b8ec8d77b002dfb41165a13a7909d0dc91283ae414427daf639840ebd",
+      "expected_section_sha256": "a155016b8ec8d77b002dfb41165a13a7909d0dc91283ae414427daf639840ebd",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/path_compare.c",
+      "blob": "06665905c8443b9fa39fcc21207ed12fc7622c20",
+      "existing_payload_sha256": "198b23a9086afffa4e3399a4f603c5bd35b4663b4539399544878d2f95a30fa7",
+      "expected_section_sha256": "198b23a9086afffa4e3399a4f603c5bd35b4663b4539399544878d2f95a30fa7",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/order.c",
+      "blob": "cde7f4f7a349a8a228c03a6191ebcce7e702e35a",
+      "existing_payload_sha256": "2fd913ac040b895883aa7ed8c45f034b930bac3104a09adfd22c580081755c1c",
+      "expected_section_sha256": "2fd913ac040b895883aa7ed8c45f034b930bac3104a09adfd22c580081755c1c",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/managed_order.c",
+      "blob": "194df6ce65525f9370d1827595c3750727d8220e",
+      "existing_payload_sha256": "4302e5d78be4e16c4d759d863d2f240b7a756bccbe40db399408a4aa40ca1032",
+      "expected_section_sha256": "4302e5d78be4e16c4d759d863d2f240b7a756bccbe40db399408a4aa40ca1032",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/snapshot.c",
+      "blob": "643619d7f608383311aa07e4acbace8d13af6522",
+      "existing_payload_sha256": "c3bd678e40937acd026215c82d6a834be8ca2883a1dc56ea57f92c17b2587a88",
+      "expected_section_sha256": "c3bd678e40937acd026215c82d6a834be8ca2883a1dc56ea57f92c17b2587a88",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/snapshot_key.c",
+      "blob": "2f4a848ace40b0553de1e1be44f4cc2c8f661193",
+      "existing_payload_sha256": "af3801f8a9f0f5a43f7dd7984a197785c5be6c09cf7fa10d0a3c057cac0f4872",
+      "expected_section_sha256": "af3801f8a9f0f5a43f7dd7984a197785c5be6c09cf7fa10d0a3c057cac0f4872",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/snapshot_wire.c",
+      "blob": "66edbca124562ee49660e4a7d2b0d6209b8cfc87",
+      "existing_payload_sha256": "a00151d509d5574973ebebaab47ef9e5c9ee70156b08e5939e96f4eaceca470a",
+      "expected_section_sha256": "a00151d509d5574973ebebaab47ef9e5c9ee70156b08e5939e96f4eaceca470a",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/snapshot_restore.c",
+      "blob": "1ac5e3c5c1d72addb8a5b0ecc9846e4240cae4fd",
+      "existing_payload_sha256": "318c2acf131ed73ae73e233a88e567c806ce89c3736dbb1af830785226de3306",
+      "expected_section_sha256": "318c2acf131ed73ae73e233a88e567c806ce89c3736dbb1af830785226de3306",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/order_bulk.c",
+      "blob": "32f8983686224770be825da81fa77ed89ec7bd50",
+      "existing_payload_sha256": "cd017e8e1a8968d8d7e9706f0c752e2ea8eda715d8eac3f67b1757defc366b4a",
+      "expected_section_sha256": "cd017e8e1a8968d8d7e9706f0c752e2ea8eda715d8eac3f67b1757defc366b4a",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/immutable_group.c",
+      "blob": "0ad62923e49074349b5dd76f882c8426e9684630",
+      "existing_payload_sha256": "d52b9be7194e06b405063ed8afca7e201c8b42bdce5aea90767208e161a418e1",
+      "expected_section_sha256": "d52b9be7194e06b405063ed8afca7e201c8b42bdce5aea90767208e161a418e1",
+      "matches": true
+    },
+    {
+      "kind": "production source",
+      "source": "src/sort.c",
+      "blob": "4214d1d5f1eb64eff865df4f4672ab46d04d3b21",
+      "existing_payload_sha256": "8de1ea8232de564d65bb99c358362c2e7ea8dbb7a460aaae2837bd6fa858da93",
+      "expected_section_sha256": "8de1ea8232de564d65bb99c358362c2e7ea8dbb7a460aaae2837bd6fa858da93",
+      "matches": true
+    }
+  ],
+  "completed_utc": "2026-11-26T16:41:30.327061+00:00"
+}
