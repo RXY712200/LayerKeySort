@@ -52,7 +52,7 @@ Handle 表示一个 live occurrence。它可以跨无关 mutation 和 move 保�
 顺序由 comparator 决定时使用。
 
 resident 期间 comparator 可见的数据必须保持一致。要修改排序 key：
-remove → 修改 → reinsert。
+修改比较器可见数据前，必须先移除或妥善处理每个相关 ManagedOrder 中的所有受影响实例，并考虑借用同一对象的其他有序结构。若排序前提将失效，不可变 Group 须由应用重建或替换。删除立即使该实例的 Handle 失效；重新插入可能失败。删除／修改／重插不是库提供的原子事务，应用恢复由调用者负责。详见[完整修改契约](IMPLEMENTATION_API_REFERENCE.zh-CN.md)。
 
 ### `LksGroup` / `LksGroupBatch`
 

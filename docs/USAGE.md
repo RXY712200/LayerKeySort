@@ -58,7 +58,7 @@ or source destruction.
 Use comparator-managed order when placement is derived from application comparison data.
 
 Keep comparator context and comparator-visible resident data stable. To change a key:
-remove → edit → reinsert.
+Every affected occurrence in every relevant ManagedOrder must be removed or otherwise safely handled before changing comparator-visible data. Account for other sorted structures borrowing the same item; immutable Groups require application-managed reconstruction or replacement if their ordering prerequisites would be violated. Removal immediately expires that occurrence’s Handle. Reinsertion can fail: remove/edit/reinsert is not an atomic library transaction, and application recovery is the caller’s responsibility. See the [complete mutation contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ### `LksGroup` / `LksGroupBatch`
 

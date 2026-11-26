@@ -30,7 +30,7 @@ handle access. Destroy cursor before source. See complete header error comments.
 
 Comparator-managed contextual core, stable upper-bound insertion. Locate gives
 predecessor/first equal/successor. Remove uses handle; no arbitrary move/core escape.
-Remove before changing comparison-relevant data then reinsert, or reconstruct.
+Every affected occurrence in every relevant ManagedOrder must be removed or otherwise safely handled before changing comparator-visible data. Account for other sorted structures borrowing the same item; immutable Groups require application-managed reconstruction or replacement if their ordering prerequisites would be violated. Removal immediately expires that occurrence’s Handle. Reinsertion can fail: remove/edit/reinsert is not an atomic library transaction, and application recovery is the caller’s responsibility. See the [complete mutation contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ## Immutable Group / Batch
 

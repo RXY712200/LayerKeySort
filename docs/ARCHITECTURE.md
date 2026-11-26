@@ -52,7 +52,7 @@ of API, wire or persistence compatibility.
 
 It provides stable comparator-equal insertion and comparator-based locate without
 creating a second ordering engine. Comparator-visible item data must remain consistent
-while resident; change it by remove → edit → reinsert.
+while resident. Every affected occurrence in every relevant ManagedOrder must be removed or otherwise safely handled before changing comparator-visible data. Account for other sorted structures borrowing the same item; immutable Groups require application-managed reconstruction or replacement if their ordering prerequisites would be violated. Removal immediately expires that occurrence’s Handle. Reinsertion can fail: remove/edit/reinsert is not an atomic library transaction, and application recovery is the caller’s responsibility. See the [complete mutation contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ## 3. Immutable Group and Batch
 
