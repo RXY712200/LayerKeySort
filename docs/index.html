@@ -1,211 +1,36 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="LayerKeySort Full provides dynamic ordering in C17 with stable live handles and sortable immutable snapshot keys. Find the code, integration guides, and historical V3 visualizer.">
-  <title>LayerKeySort Full — keep changing collections in order</title>
-  <link rel="stylesheet" href="site.css">
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="shell header-row">
-      <a class="brand" href="./" aria-label="LayerKeySort Full home">LayerKeySort Full</a>
-      <nav aria-label="Primary">
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">Products</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.md">Full docs</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.md">Mini</a>
-        <a href="#zh-cn" lang="zh-CN">简体中文</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/issues/3">Roadmap</a>
-        <a href="v3/">V3 visualizer</a>
-      </nav>
-    </div>
-  </header>
-  <main id="main">
-    <section class="hero shell" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow">LayerKeySort Full · C17 library · v4.1.0 Stable</p><p>Main contains integrated 4.2.0-rc.1, untagged and unpublished. Published Stable and Latest remain v4.1.0.</p>
-        <h1 id="hero-title">Keep changing collections in order.</h1>
-        <p class="lede">LayerKeySort keeps changing collections in explicit or comparator-managed order. Live occurrences have stable contextual handles; immutable snapshots provide sortable historical keys. Your application owns item identity.</p>
-        <div class="actions">
-          <a class="button primary" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.md">Get the library</a>
-          <a class="button" href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md" lang="zh-CN">简体中文入门</a>
-        </div>
-      </div>
-      <div class="model" aria-label="An Effects layer inserted between Player and HUD">
-        <p class="model-title">A small change in position</p>
-        <div class="model-row"><span class="row-label">Before</span><span>Background</span><span>Player</span><span>HUD</span></div>
-        <div class="model-row"><span class="row-label">After</span><span>Background</span><span>Player</span><span class="new-item">Effects</span><span>HUD</span></div>
-        <p>Live moves preserve resident handles. Capture an immutable snapshot when historical or persistent order is needed; snapshot keys are not live positions or permanent item IDs.</p>
-      </div>
-    </section>
-
-    <section class="section shell" aria-labelledby="start-title">
-      <div class="section-heading">
-        <p class="eyebrow">Start here</p>
-        <h2 id="start-title">Choose your next step</h2>
-      </div>
-      <div class="card-grid">
-        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.md">
-          <span class="card-kicker">Build</span><strong>Get the library</strong>
-          <span>Two-file download, CMake source dependency, vendoring, and local install.</span>
-        </a>
-        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/API.md">
-          <span class="card-kicker">Reference</span><strong>Read the API</strong>
-          <span>Exact functions, ownership, errors, live handles, snapshots and LS1 keys.</span>
-        </a>
-        <a class="card" href="v3/">
-          <span class="card-kicker">Explore</span><strong>Open the V3 visualizer</strong>
-          <span>Historical V3: recorded ordering changes and Path relabels.</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="section shell split" aria-labelledby="get-title">
-      <div>
-        <p class="eyebrow">Getting the code</p>
-        <h2 id="get-title">One library, several ways to use it</h2>
-        <p>For a small C project, download the two-file amalgamation from <a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">the Full v4.1.0 Release</a>. Copy <code>layerkeysort.h</code> and <code>layerkeysort.c</code> into your project and compile the implementation as C17.</p>
-        <p>Already using CMake? Choose <code>FetchContent</code>, <code>add_subdirectory</code>, or a local install with <code>find_package</code>. The <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.md">integration guide</a> has complete commands; <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md" lang="zh-CN">中文集成指南</a> covers the same first-use paths.</p>
-        <p class="release-note"><a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">LayerKeySort Full v4.1.0</a> is the current published Stable Release, with compatible memory optimizations, a verified amalgamation ZIP and SHA-256 manifest. Performance remains workload-dependent. V3.1.0 remains available for legacy Path/Tree contracts.</p>
-      </div>
-      <aside class="aside" aria-labelledby="models-title">
-        <h3 id="models-title">Which API?</h3>
-        <ul>
-          <li><code>LksManagedOrder</code> binds comparator order; handle all affected occurrences across ManagedOrders and other sorted borrowers before changing keys. Reconstruct Group/Batch where needed; removal expires Handles, reinsertion can fail, and recovery is application-managed. See the <a href="https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/USAGE.md">RC.1 candidate usage contract (integrated; untagged/unpublished)</a>.</li>
-          <li><code>LksOrder</code> supports relative insertion and resident-preserving moves.</li>
-          <li><code>lks_sort()</code> stably sorts a pointer array once.</li>
-        </ul>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/USAGE.md">Usage guide →</a>
-      </aside>
-    </section>
-
-    <section class="section shell visual" aria-labelledby="visual-title">
-      <div>
-        <p class="eyebrow">See the model</p>
-        <h2 id="visual-title">Watch positions change</h2>
-        <p>The historical <a href="v3/">V3 visualizer</a> replays Path snapshots recorded from the production C implementation. It helps explain manual and comparator-managed Trees; the browser does not execute the C library.</p>
-      </div>
-      <a class="button primary" href="v3/">Open visualizer</a>
-    </section>
-
-    <section class="section shell limits" aria-labelledby="limits-title">
-      <p class="eyebrow">Before you adopt it</p>
-      <h2 id="limits-title">Measure the workload that matters to you</h2>
-      <p>V4 avoids live Path growth and collection-wide coordinate relabel. Local block/index work, allocation and comparator costs remain; full snapshot export and retained history can dominate time and memory. The strongest fit is a long-lived editor-like collection with repeated insert/remove/move operations, not one-shot sorting or distributed/CRDT ordering. Read the <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/BENCHMARKS.md">benchmark evidence</a>, test your own workload, and follow the <a href="https://github.com/RXY712200/LayerKeySort/issues/3">post-v4 roadmap</a>.</p>
-    </section>
-  <section id="zh-cn" lang="zh-CN" aria-label="简体中文">
-    <nav class="shell" aria-label="中文主导航">
-      <a href="#main" lang="en">English</a> ·
-      <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md">产品</a> ·
-      <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.zh-CN.md">Full 文档</a> ·
-      <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.zh-CN.md">Mini</a> ·
-      <a href="https://github.com/RXY712200/LayerKeySort/issues/3">路线图</a> ·
-      <a href="v3/">V3 可视化</a>
-    </nav>
-    <section class="hero shell" aria-labelledby="zh-hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow">LayerKeySort Full · C17 库 · v4.1.0 Stable</p><p>固定候选提交中的中文 API 与使用指南描述已集成至 main、尚未发布的 4.2.0-rc.1；历史译文仍按原版本理解。已发布 4.1.0 的权威说明见 <a href="https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md">Stable API（英文）</a>。</p>
-        <h1 id="zh-hero-title">让不断变化的集合保持顺序</h1>
-        <p class="lede">LayerKeySort 以显式或比较器托管方式维护变化中的集合。实时实例有稳定的上下文 Handle；不可变快照提供可排序的历史键。对象身份由应用管理。</p>
-        <div class="actions">
-          <a class="button primary" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md">获取库</a>
-          <a class="button" href="#main" lang="en">English</a>
-        </div>
-      </div>
-      <div class="model" aria-label="效果图层插入到角色与界面之间">
-        <p class="model-title">一次局部位置变化</p>
-        <div class="model-row"><span class="row-label">之前</span><span>背景</span><span>角色</span><span>界面</span></div>
-        <div class="model-row"><span class="row-label">之后</span><span>背景</span><span>角色</span><span class="new-item">效果</span><span>界面</span></div>
-        <p>实时移动保留居民 Handle。需要历史或持久顺序时捕获不可变快照；快照键独立于实时位置和永久对象身份。</p>
-      </div>
-    </section>
-
-    <section class="section shell" aria-labelledby="zh-start-title">
-      <div class="section-heading">
-        <p class="eyebrow">从这里开始</p>
-        <h2 id="zh-start-title">选择下一步</h2>
-      </div>
-      <div class="card-grid">
-        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md">
-          <span class="card-kicker">构建</span><strong>获取库</strong>
-          <span>双文件下载、CMake 源码依赖、直接纳入源码以及本地安装。</span>
-        </a>
-        <a class="card" href="https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/API.zh-CN.md" aria-label="已集成但未发布 RC.1 中文 API">
-          <span class="card-kicker">参考</span><strong>阅读 API</strong>
-          <span>确切函数、所有权、错误、实时 Handle、快照和 LS1 键。</span>
-        </a>
-        <a class="card" href="v3/">
-          <span class="card-kicker">探索</span><strong>打开 V3 可视化</strong>
-          <span>历史 V3：回放已记录的顺序变化和 Path 重标。</span>
-        </a>
-      </div>
-    </section>
-
-    <section class="section shell split" aria-labelledby="zh-get-title">
-      <div>
-        <p class="eyebrow">获取源码</p>
-        <h2 id="zh-get-title">多种集成方式</h2>
-        <p>小型 C 项目可从 <a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">Full v4.1.0 发行页</a>下载双文件合并包。复制 <code>layerkeysort.h</code> 与 <code>layerkeysort.c</code> 到项目，并按 C17 编译实现。</p>
-        <p>使用 CMake 时可选择 <code>FetchContent</code>, <code>add_subdirectory</code>，或通过 <code>find_package</code>使用本地安装。<a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/INTEGRATION.zh-CN.md">中文集成指南</a>给出完整命令。</p>
-        <p class="release-note"><a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">LayerKeySort Full v4.1.0</a>是当前已发布 Stable，含兼容的内存优化、经过验证的合并包及 SHA-256 清单。性能取决于负载；旧 Path/Tree 契约继续由 V3.1.0 提供。</p>
-      </div>
-      <aside class="aside" aria-labelledby="zh-models-title">
-        <h3 id="zh-models-title">如何选用 API？</h3>
-        <ul>
-          <li><code>LksManagedOrder</code>绑定比较器顺序；修改键前处理所有相关托管顺序及其他有序借用结构中的全部受影响实例，必要时重建Group／Batch。删除使Handle立即失效，重插可失败，应用负责恢复。参见<a href="https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/USAGE.zh-CN.md">已集成／未发布 RC.1 使用契约</a>。</li>
-          <li><code>LksOrder</code>支持相对插入和保留居民实例的移动。</li>
-          <li><code>lks_sort()</code>执行一次稳定指针数组排序。</li>
-        </ul>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/USAGE.zh-CN.md">使用指南 →</a>
-      </aside>
-    </section>
-
-    <section class="section shell visual" aria-labelledby="zh-visual-title">
-      <div>
-        <p class="eyebrow">观察模型</p>
-        <h2 id="zh-visual-title">观察位置变化</h2>
-        <p>历史 <a href="v3/">V3 可视化</a>回放从生产 C 实现采集的 Path 快照，帮助理解手动和比较器托管 Tree。浏览器仅回放记录。</p>
-      </div>
-      <a class="button primary" href="v3/">打开可视化</a>
-    </section>
-
-    <section class="section shell limits" aria-labelledby="zh-limits-title">
-      <p class="eyebrow">采用之前</p>
-      <h2 id="zh-limits-title">测量自己的目标负载</h2>
-      <p>V4 避免实时 Path 增长和全集坐标重标。仍有局部块及索引维护、分配和比较器成本；完整导出及历史保留可能主导耗时与内存。较适合反复执行插入、删除及移动的长期编辑型集合。一次性排序或分布式/CRDT 顺序有其他需求。参见 <a href="https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/BENCHMARKS.zh-CN.md">候选快照中的中文基准证据（含历史记录）</a>，运行自己的负载，并关注 <a href="https://github.com/RXY712200/LayerKeySort/issues/3">V4 之后的路线</a>。</p>
-    </section>
-    <div class="section shell">
-      <p>LayerKeySort Full · MIT 许可的 C17 库</p>
-      <nav aria-label="中文页尾导航">
-        <a href="https://github.com/RXY712200/LayerKeySort">GitHub 仓库</a> ·
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/LICENSE">MIT 许可</a> ·
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.zh-CN.md">产品线</a> ·
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.zh-CN.md">Mini 文档</a> ·
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.zh-CN.md">Full 文档</a> ·
-        <a href="https://github.com/RXY712200/LayerKeySort/issues/3">路线与技术债</a> ·
-        <a href="v3/">V3 可视化</a> ·
-        <a href="demo/">历史 V1 可视化</a>
-      </nav>
-    </div>
-  </section>
-  </main>
-  <footer class="site-footer">
-    <div class="shell">
-      <p>LayerKeySort Full · MIT licensed C17 library</p>
-      <nav aria-label="Footer">
-        <a href="https://github.com/RXY712200/LayerKeySort">GitHub repository</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/LICENSE">MIT license</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/README.md">Product family</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.md">Mini README</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.md">Full README</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/blob/main/docs/FULL.zh-CN.md" lang="zh-CN">Full 简体中文</a>
-        <a href="https://github.com/RXY712200/LayerKeySort/issues/3">Roadmap / technical debt</a>
-        <a href="v3/">V3 visualizer</a>
-        <a href="demo/">Historical V1 visualizer</a>
-      </nav>
-    </div>
-  </footer>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="LayerKeySort Full v4.2.0: dynamic ordering, stable sorting, batch ordered processing and historical ordering in C17.">
+<title>LayerKeySort Full v4.2.0 — ordering, sorting and history</title><link rel="stylesheet" href="site.css"></head>
+<body><a class="skip-link" href="#main">Skip to content</a><header class="site-header"><div class="shell header-row"><a class="brand" href="./">LayerKeySort Full</a><nav aria-label="Language"><a href="#en">English</a><a href="#zh-cn" lang="zh-CN">简体中文</a></nav></div></header><main id="main">
+<section id="en" lang="en" class="section shell"><p class="eyebrow">LayerKeySort Full · C17 · v4.2.0</p><h1>Dynamic order, stable sorting and independent history.</h1><p class="lede">High-performance C17 ordering components. Choose explicit editing, comparator-maintained order, one-shot stable sorting, immutable batches or historical snapshots; use the families independently.</p>
+<p><a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/INTEGRATION.md">Build and integrate</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/USAGE.md">Usage</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/docs/full-v4.2.0-stable-navigation/docs/FULL.md">Full documentation</a></p>
+<p class="release-note">Target edition: Full v4.2.0 Stable. Main remains 4.2.0-rc.1 until authorized integration; published Stable/Latest remains v4.1.0. The 4.2.0 tag and assets have not been published. <a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">Published downloads</a></p>
+<div class="card-grid"><div class="card"><strong>LksOrder</strong><span>Relative insert/move/remove and precedence</span></div><div class="card"><strong>LksManagedOrder</strong><span>Stable comparator order and bound lookup</span></div><div class="card"><strong>lks_sort</strong><span>Stable one-shot pointer-array sorting</span></div><div class="card"><strong>LksGroup / LksGroupBatch</strong><span>Immutable sorted chunks and stable merge</span></div><div class="card"><strong>LksSnapshot</strong><span>Independent associations, LS1, wire and restoration</span></div></div>
+<h2>Version evolution</h2><table><thead><tr><th>Full edition</th><th>Engineering change</th></tr></thead><tbody>
+<tr><td>4.0</td><td>Stable Handles, bounded blocks/AVL, snapshots and batches</td></tr><tr><td>4.1</td><td>Shared block owner and compact Snapshot metadata</td></tr><tr><td>4.2</td><td>Affected-slot updates, bounded labels/AVL fallback and fixed-width wire</td></tr></tbody></table>
+<h2>Measured time and memory</h2>
+<p>Against 4.1: 37.1% lower Windows / 36.0% lower Linux elapsed overall; 80.2% / 78.1% lower compare-heavy elapsed. Each host has 45 cells, 1k/10k/100k initial occurrences, 20k trace operations and seven formal samples per cell/implementation.</p>
+<figure><img style="width:100%;height:auto" src="https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/live-ratios.svg" alt="Median paired Full/control elapsed ratios; lower is faster"><figcaption>Median paired Full/control elapsed ratios; lower is faster</figcaption></figure>
+<figure><img style="width:100%;height:auto" src="https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.svg" alt="Windows compare-heavy elapsed versus requested peak memory, including linear details"><figcaption>Windows compare-heavy elapsed versus requested peak memory, including linear details</figcaption></figure>
+<p>Scatter: 100,000 initial occurrences, seed 17; formal median ms on a logarithmic main axis, separately measured diagnostic peak requested memory in MiB, not process RAM. Linear details preserve measured coordinates. Native OM can win update-heavy cells; endpoint flat history is faster; bulk Treap restore is unmeasured. <a href="https://github.com/RXY712200/LayerKeySort/blob/docs/full-v4.2.0-stable-navigation/docs/FULL_RC1_EVIDENCE.md">All figures and evidence</a></p>
+<p>Applications own payloads, identity, transactions and synchronization; Handles are not durable IDs. Snapshot/export is O(N+A); history retention and restore consume memory. Full provides no database, transaction manager or CRDT.</p>
+<p><a href="https://github.com/RXY712200/LayerKeySort/blob/docs/full-v4.2.0-stable-navigation/docs/FULL_SELECTION_GUIDE.md">Selection</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_API_REFERENCE.md">64 APIs and contracts</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/examples/README.md">Examples</a></p>
+<p>Mini independently provides an 18-function lightweight linked-sequence component; Workbench is its consumer and validation application. Neither depends on Full. <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.md">Mini</a></p>
+<p>Historical visualizers: <a href="v3/">V3</a> · <a href="demo/">V1</a>. They depict older versions and do not execute Full v4.2.0.</p></section>
+<section id="zh-cn" lang="zh-CN" class="section shell"><p class="eyebrow">LayerKeySort Full · C17 · v4.2.0</p><h1>动态顺序、稳定排序与独立历史。</h1><p class="lede">高性能 C17 顺序组件。按任务选择显式编辑、比较器维护、一次性稳定排序、不可变批处理或历史快照；各家族可独立使用。</p>
+<p><a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/INTEGRATION.zh-CN.md">构建与集成</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/USAGE.zh-CN.md">使用指南</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/docs/full-v4.2.0-stable-navigation/docs/FULL.zh-CN.md">Full 文档</a></p>
+<p class="release-note">目标文档为 Full v4.2.0 Stable。授权集成前 main 仍为 4.2.0-rc.1；已发布 Stable/Latest 仍为 v4.1.0。4.2.0 标签及资产尚未发布。 <a href="https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0">已发布下载</a></p>
+<div class="card-grid"><div class="card"><strong>LksOrder</strong><span>相对插入、移动、删除与先后查询</span></div><div class="card"><strong>LksManagedOrder</strong><span>稳定比较器顺序与边界查询</span></div><div class="card"><strong>lks_sort</strong><span>一次性稳定指针数组排序</span></div><div class="card"><strong>LksGroup / LksGroupBatch</strong><span>不可变排序分片与稳定归并</span></div><div class="card"><strong>LksSnapshot</strong><span>独立关联、LS1、线格式与恢复</span></div></div>
+<h2>版本演进</h2><table><thead><tr><th>Full 版本</th><th>工程变化</th></tr></thead><tbody>
+<tr><td>4.0</td><td>稳定 Handle、有界块／AVL、快照及批处理</td></tr><tr><td>4.1</td><td>共享块 owner、紧凑快照元数据</td></tr><tr><td>4.2</td><td>受影响槽位更新、有界标签／AVL 回退、固定宽度线格式</td></tr></tbody></table>
+<h2>实测时间与内存</h2>
+<p>相对 4.1 总体耗时降低 Windows 37.1%／Linux 36.0%；比较密集降低 80.2%／78.1%。每平台 45 条件、初始 1k/10k/100k、每轨迹 20k 操作、每条件／实现七个正式样本。</p>
+<figure><img style="width:100%;height:auto" src="https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/live-ratios.zh-CN.svg" alt="配对耗时比中位数；越小越快"><figcaption>配对耗时比中位数；越小越快</figcaption></figure>
+<figure><img style="width:100%;height:auto" src="https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.zh-CN.svg" alt="Windows 比较密集：耗时与峰值请求内存，含线性放大图"><figcaption>Windows 比较密集：耗时与峰值请求内存，含线性放大图</figcaption></figure>
+<p>散点固定初始 100,000 项、种子 17。耗时中位数以 ms 展示，主图对数轴；独立诊断峰值请求内存以 MiB 展示，不是进程 RAM。线性放大保留实测坐标。原生 OM 可在更新密集条件胜出；端点平面历史更快；Treap 批量恢复尚未测量。 <a href="https://github.com/RXY712200/LayerKeySort/blob/docs/full-v4.2.0-stable-navigation/docs/FULL_RC1_EVIDENCE.zh-CN.md">全部图表与证据</a></p>
+<p>应用拥有载荷、身份、事务与同步；Handle 不是持久 ID。快照／导出 O(N+A)，历史保留及恢复需要内存。Full 不提供数据库、事务管理器或 CRDT。</p>
+<p><a href="https://github.com/RXY712200/LayerKeySort/blob/docs/full-v4.2.0-stable-navigation/docs/FULL_SELECTION_GUIDE.zh-CN.md">选型</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md">64 API 与契约</a> · <a href="https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/examples/README.zh-CN.md">示例</a></p>
+<p>Mini 独立提供 18 函数的轻量双向链表顺序组件，Workbench 为其消费者与验证应用；两者均不依赖 Full。 <a href="https://github.com/RXY712200/LayerKeySort/blob/main/mini/README.zh-CN.md">Mini</a></p>
+<p>历史可视化：<a href="v3/">V3</a> · <a href="demo/">V1</a>. 它们展示旧版本，不执行 Full v4.2.0。</p></section>
+</main><footer class="shell">LayerKeySort · MIT · <a href="https://github.com/RXY712200/LayerKeySort">GitHub</a></footer></body></html>

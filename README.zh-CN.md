@@ -1,94 +1,85 @@
 # LayerKeySort
 
-文档版本：以下固定候选提交中的中文指南属于已集成至 main、尚未发布的 Full 4.2.0-rc.1 文档；历史记录译本只解释其原版本，不表示候选实现已发布。已发布 Stable 4.1.0 的权威文档仍见 [Stable API（英文）](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md)、[Stable 使用说明（英文）](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/USAGE.md)及[原始变更日志](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/CHANGELOG.md)。
-
-## Full：Stable 与候选版
-
-主分支现已集成 **4.2.0-rc.1**；已发布 Stable 和 Latest 仍为 **4.1.0**。需要可下载的源码或发行包时，请使用 [Stable 发行页](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。RC.1 已合入 main，尚未打标签或发布。Mini 使用独立的版本和发布路径。
-
-Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/FULL_RC1_EVIDENCE.zh-CN.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
-
-| 负载 | Windows | Linux |
-| --- | ---: | ---: |
-| 全部实时顺序条件 | 0.629（降低 37.1%） | 0.640（降低 36.0%） |
-| 比较密集条件 | 0.198（降低 80.2%） | 0.219（降低 78.1%） |
-
-比值为候选耗时除以对照耗时。先分别计算同一平台每个匹配条件的耗时比，再取这些比值的中位数。初始规模为 1k、10k 和 100k 个实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.zh-CN.md) 与 [候选实现导读；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。另见[历史 V4 架构设计的完整中文译本；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.zh-CN.md)。下文仓库内链接随 main 说明已集成 RC.1；已发布 Stable 仍为 v4.1.0，固定链接保留其版本标签。
-
-
 [English](README.md) | 简体中文
 
-**面向持续变化的集合顺序，提供多个彼此独立的 C17 动态顺序维护库。**
+**面向动态顺序、稳定排序、批量有序处理和历史顺序的高性能 C17 库。** Full 将稳定实例 Handle、有界局部块、标签／AVL 先后查询与独立快照结合起来。各类接口可以独立使用，也可以组合。
 
-LayerKeySort 解决的是集合长期使用时不断插入、删除、移动实例的顺序管理问题，而不是 `qsort` 一类的一次性排序。业务对象及业务身份由应用自己管理；每个产品拥有独立的顺序管理契约。
+## 按任务选择工作流
 
-## Full 核心实现：建议从这四份源码文档开始
-
-**想知道 LayerKeySort Full 究竟是怎样实现的，而不只是照着 API 调用？** 这四份中文文档是理解 Full 内部机制的主要入口。它们以已集成的 **Full 4.2.0-rc.1 固定源码提交**为依据，覆盖全部 **16 个生产 C 模块**及其主要执行路径；**不适用于 Mini**，也不替代公开头文件和冻结的兼容性契约。
-
-1. **[① 完整实现导读：从源码理解 Full](docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)** — **建议先读。** 从整体架构和数据模型入手，解释 Block、AVL、稳定 Handle 如何维护动态顺序，并沿实际调用链梳理插入、移动、删除、ManagedOrder、Snapshot、LS1、序列化、恢复以及新旧代码的分工。
-2. **[② 公开 API 索引与关键使用契约](docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md)** — 列出 **64 个公开函数**及对应源码，集中说明必填参数、错误返回、对象所有权、Handle/Cursor 生命周期、回调限制、并发边界与遍历示例。适合实际调用前查阅。
-3. **[③ 内部数据结构与算法实现详解](docs/IMPLEMENTATION_INTERNALS.zh-CN.md)** — 深入 **16 个生产 C 模块**的主要内部函数：分块与 AVL 维护、块拆分和修复、移动的不同分支、预分配与提交、批量恢复、稳定归并、内存诊断，以及 V3 LK1 兼容过程。适合想研究或修改算法的人。
-4. **[④ 测试、验证与可复现审计指南](docs/IMPLEMENTATION_VALIDATION.zh-CN.md)** — 将关键行为对应到具体测试函数与断言，说明 CMake 构建、API 和 Wire 固定样本、CI、分发验证及如何复现；同时明确区分“读过测试”和“实际执行测试”。
-
-**阅读顺序：** 想完整研究 Full，推荐按 **① → ② → ③ → ④** 阅读；如果主要想在自己的 C/C++ 程序里使用 Full，可以先看 **②**，结合 [Full 产品与集成指南](docs/FULL.zh-CN.md)实践。文档基于明确的源码 SHA，不宣称形式化证明了所有代码或所有环境下的正确性。
-
-## 选择适合你的产品
-
-| | **[Full](docs/FULL.zh-CN.md)** | **[Mini](mini/README.zh-CN.md)** |
+| 任务 | Full API | 提供的能力 |
 | --- | --- | --- |
-| 最新**已发布** Stable | **[v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)** | **[v1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)** |
-| 当前 `main` 源码 | **4.2.0-rc.1**（已集成，未打标签／发布；[已发布更新；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_1_0.zh-CN.md)） | **1.0.0**（未改动） |
-| 主要定位 | 更完整的顺序管理及历史工作流 | 轻量本地可变序列 |
-| 实时顺序管理 | 相对插入/移动、稳定实例句柄、可选比较器管理 | 相对插入/移动、稳定 occurrence 句柄 |
-| 任意两实例实时顺序比较 | 按 Full 契约支持 | 最坏 O(n) |
-| 历史快照与持久化 | 不可变快照、LS1、独立 Wire 格式与恢复 | 不提供 |
-| Group / Batch 工具 | 提供 | 不提供 |
-| 核心实现 | 有界分块与平衡索引 | 独立的非侵入式双向链表 |
-| 公开 API | 64 函数（Full v4） | 18 函数（Mini v1） |
-| 本仓库构建入口 | 根目录 `CMakeLists.txt` | `mini/CMakeLists.txt` |
+| 编辑器、时间线、播放列表中的相对编辑 | `LksOrder` | 插入、删除、移动、逻辑遍历及先后查询；存活 Handle 保持身份 |
+| 持续维护优先级或比较器集合 | `LksManagedOrder` | 稳定等值插入、边界查询与容器内先后比较 |
+| 一次性指针数组排序 | `lks_sort` | 稳定排序、复制及临时数组准备、OOM 时输入不变 |
+| 排序分片及有序批次归并 | `LksGroup`、`LksGroupBatch` | 不可变指针数组副本、稳定等值优先及独立归并结果 |
+| 保存历史顺序和关联数据 | `LksSnapshot` | 独立字节、可排序 LS1、LKS4SNP1 编码及新句柄恢复 |
 
-**Full 与 Mini 是同一个项目家族的独立产品，不存在父子依赖关系。** 二者版本号、公开 API、兼容性要求及发布周期分别管理，互不链接对方的生产源码。
+应用拥有对象和业务身份。Full 提供顺序组件；数据库可将其与自身事务、存储、恢复组合。支持一次性排序，但有指针复制和临时存储成本。下方实时顺序比较并未测试 `qsort` 或 `std::sort`。
 
-表格比较的是**能力，不是性能排名**，也不表示任何产品在所有场景下更快。只需 Mini 的轻量功能时选择 Mini；需要更完整的排序管理、快照或批量工具时选择 Full。
+## 实测价值
 
-## 从对应产品开始
+在 Windows/Linux 配对实时顺序归档研究中，Full v4.2.0 沿用的运行实现相对 4.1 **总体耗时降低 37.1%／36.0%**，**比较密集条件降低 80.2%／78.1%**。相对两个 Stable 对照，每平台均胜出 45/45 个条件。结论适用于受测负载和具体对照。
 
-| 产品 | 入门和使用 | API / 契约 | 正式下载 |
-| --- | --- | --- | --- |
-| Full | [Full 专属 README](docs/FULL.zh-CN.md) · [中文集成](docs/INTEGRATION.zh-CN.md) · [示例；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/examples/README.zh-CN.md) | [API；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/API.zh-CN.md) · [V4 冻结契约；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_FREEZE.zh-CN.md) | [已发布 v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) · [4.1.0 更新；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_1_0.zh-CN.md) |
-| Mini | [Mini 专属 README](mini/README.zh-CN.md) · [使用指南](mini/docs/USAGE.md) · [示例](mini/examples/basic.c) | [Mini v1 公开契约](mini/docs/CONTRACT.md) | [Mini v1.0.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
+![Windows 与 Linux 的 Full／对照配对耗时比中位数；越小越快](https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/live-ratios.zh-CN.svg)
 
-下载 Mini 时请使用 Release 中的 **Mini-only 源码 ZIP**；GitHub 自动生成的 Source code 压缩包包含**整个仓库**。Full 则另有两文件 amalgamation 分发包。具体集成方法以各自产品文档为准；根目录 CMake 仍默认构建 Full。
+先计算各匹配条件的 Full／对照耗时比，再取中位数；不是吞吐量百分比，也不是不相关中位数相除。每平台 45 个条件，初始 1k/10k/100k 个实例、20k 次轨迹操作，每条件／实现七次正式样本。[完整证据](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/FULL_RC1_EVIDENCE.zh-CN.md)保留全部七个对照及不利条件。
 
-## 仓库目录说明
+![Windows 比较密集：正式耗时中位数 ms 与诊断峰值请求内存 MiB，含线性放大图](https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.zh-CN.svg)
 
-- `include/`、`src/`、根 `CMakeLists.txt`、`tests/`、`benchmarks/` 和大部分 `docs/`：**Full**。
-- `mini/`：独立的 **Mini** 实现、文档、测试和构建系统。
-- `consumers/layer-order-workbench/`：**Mini 消费者工程及验证程序**，不是 Mini 生产源码，也不是第三套排序库。
-- `.github/`、部分 `tools/` 和[产品线政策](docs/PRODUCT_LINES.zh-CN.md)：仓库治理和产品专属维护工具。
+散点固定初始 100,000 个实例和种子 17。主耗时轴为对数，线性面板按实测坐标放大近邻点。内存是独立诊断的**峰值请求字节**（以 MiB 展示），不是进程 RAM。此比较密集条件 Full 为 4,278,776 字节，原生 OM 为 13,437,504 字节，约低 68%。图保留全部八种实现。
 
-未来可能研究 Embedded/MCU 版本，但**目前只是构想**，没有已发布的 Embedded 产品、API 或交付承诺。
+Full／原生标签区间 OM 总体比为 1.052/1.020；部分更新密集条件有利于原生 OM。任意相对编辑加历史的生命周期墙钟比相对受测 Treap 为 0.580/0.526（每平台五条件，Treap 逐项恢复）。端点平面历史组合更快，Full／平面为 1.137/1.136（每平台 13 条件）。Treap 批量恢复未测。实际取舍见[选型指南](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/FULL_SELECTION_GUIDE.zh-CN.md)。
 
-## 版本、兼容性与维护
+全部时间／内存图：[Windows compare-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.zh-CN.svg) · [Windows update-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/windows-update-heavy.zh-CN.svg) · [Linux compare-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/linux-compare-heavy.zh-CN.svg) · [Linux update-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/f9c7762d48dad57a19ed9750b94e397154317509/benchmarks/research/full-v4.2.0-rc.1/linux-update-heavy.zh-CN.svg)
 
-- Full 的已发布标签使用 `v*`（当前已发布 Stable 为 `v4.1.0`）。
-- Mini 的已发布标签使用 `mini-v*`（当前 Stable：`mini-v1.0.0`）。
-- GitHub 仓库级 **Latest** 不等于各产品各自的最新版本；请使用上表的独立发布页面。
-- Full 早期版本和 V1–V4 研究属于保留的历史资料，不代表 Mini 的契约。
-- 许可证：[MIT](LICENSE)。各产品独立维护自己的文档及验收标准。
+## 构建与首次运行
 
-跨产品修改前请阅读[产品线与发布管理规范](docs/PRODUCT_LINES.zh-CN.md)（[English](docs/PRODUCT_LINES.md)）及[贡献指南](CONTRIBUTING.md)。
+```sh
+cmake -S . -B build -DLKS_BUILD_BENCHMARKS=ON
+cmake --build build --config Debug --parallel
+ctest --test-dir build -C Debug --output-on-failure
+```
 
-## 路线图与验证资料
+运行 `build/layerkeysort_example`（MSVC：`build/Debug/layerkeysort_example.exe`）。[basic.c](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/examples/basic.c)完成创建、插入、查询、删除和销毁。[使用说明](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/USAGE.zh-CN.md)含稳定排序，[七个公开示例](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/examples/README.zh-CN.md)覆盖托管顺序、Group 和快照恢复。
 
-- **Full：** [Full 工程路线与三大步骤完成记录 Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)；[历史问题台账 Issue #4](https://github.com/RXY712200/LayerKeySort/issues/4)。
-- **Mini 与其消费者：** [Mini 路线图 Issue #7](https://github.com/RXY712200/LayerKeySort/issues/7)。
-- **Full 示例与验证：** [Full README](docs/FULL.zh-CN.md) · [验证；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/VALIDATION.zh-CN.md)。
-- **Mini 示例与验证：** [Mini README](mini/README.zh-CN.md) · [开发与验证](mini/docs/DEVELOPMENT.md)。
+CMake ≥3.21 支持 `add_subdirectory`、离线 FetchContent 或安装后 `find_package(LayerKeySort CONFIG REQUIRED)`；链接 `LayerKeySort::layerkeysort`。只包含 `<layerkeysort.h>`。两文件分发按 C17 编译，支持 C++17 调用。见[集成命令](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/INTEGRATION.zh-CN.md)。
 
-## 外部项目目录
+## Full 版本演进
 
-- [Quiveld — 作者的独立项目目录](https://quiveld.com/projects/independent/)。
+| 版本 | 主要工程变化 | 兼容性与证据 |
+| --- | --- | --- |
+| 4.0 | 稳定实例 Handle、有界块／AVL、独立历史及批处理 | 冻结 64 函数／14 类型、LS1 与 LKS4SNP1；[历史发行记录](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/V4_STABLE.zh-CN.md) |
+| 4.1 | 块共享 owner、紧凑快照元数据 | 源码兼容的存储缩减；十万至千万级历史结果及退化见[4.1 记录](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/V4_1_0.zh-CN.md) |
+| **4.2** | 受影响槽位更新、有界标签及 AVL 回退、固定宽度线格式转换 | 公开／线格式契约不变；累计 Windows/Linux 证据及[Stable 准备记录](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/V4_2_0.zh-CN.md) |
 
-不要从功能表推断实际采用比例、所有平台均受支持或某一产品拥有普遍性能优势。请结合实际操作负载和资源限制选型。
+**下载／源码状态：** 本文直接介绍固定准备版本中的 Full v4.2.0 Stable 版。另行授权集成前，main 仍为已集成的 4.2.0-rc.1。已发布 Stable 及仓库 Latest 仍为 [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)，已发布资产从该有效发行页取得。计划中的 v4.2.0 标签及资产尚未发布。[Stable 4.1 权威 API](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md)继续可用。
+
+## Full 与 Mini 相互独立
+
+| | Full | [Mini](mini/README.zh-CN.md) |
+| --- | --- | --- |
+| 能力 | 相对／比较器顺序、稳定排序、Group/Batch、快照及恢复 | 轻量相对编辑及稳定实例 Handle |
+| 表示 | 有界块、标签及平衡索引 | 独立非侵入式双向链表 |
+| 任意先后查询 | 标签路径与最坏对数 AVL 回退 | 最坏 O(n) |
+| 公开 API | 64 函数 | 18 函数 |
+| 构建 | 根 `CMakeLists.txt` | `mini/CMakeLists.txt` |
+| 已发布版本 | [Full 4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) | [Mini 1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
+
+两者均不链接对方生产代码。这是能力区别，不是 Mini 性能排名。Workbench 是 `consumers/layer-order-workbench/` 下的 Mini 消费者／验证应用。Embedded/MCU 仍为未来构想。
+
+## 契约及实际成本
+
+Handle 表示存活实例，删除自身或销毁来源即失效，不是持久业务 ID。修改共享载荷时，须保持比较语义及全部相关有序借用结构一致。重新插入可能失败，删除／修改／重插不是事务。冲突访问需外部同步；回调守卫与来源标记原子操作不是容器锁。
+
+局部块／索引工作受私有块策略及平衡索引维护约束，另有分配器／比较器成本。快照捕获／导出为 O(N+A)，保留历史及恢复临时数组占用内存。Full 不提供通用二进制 ABI、数据库、事务管理器或 CRDT。[完整 API 契约](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md)与[性能证据](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/FULL_RC1_EVIDENCE.zh-CN.md)说明适用范围及未测替代方案。
+
+## 文档与维护
+
+1. [实现导读](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)——16 个生产模块的执行路径。
+2. [完整 API 指南](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_API_REFERENCE.zh-CN.md)——全部 64 函数、寿命、失败及并发。
+3. [内部算法](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_INTERNALS.zh-CN.md)——有界块、标签、AVL、线格式及稳定归并。
+4. [验证与分发](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/IMPLEMENTATION_VALIDATION.zh-CN.md)——测试、固定样例与可复现集成。
+
+[架构](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/ARCHITECTURE.zh-CN.md) · [兼容性](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/COMPATIBILITY.zh-CN.md) · [V3 迁移](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/MIGRATION_V3_V4.zh-CN.md) · [开发](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/DEVELOPMENT.zh-CN.md) · [中文变更日志](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/docs/CHANGELOG.zh-CN.md) · [原始 Changelog](https://github.com/RXY712200/LayerKeySort/blob/f9c7762d48dad57a19ed9750b94e397154317509/CHANGELOG.md)
+
+[Full 路线 #3](https://github.com/RXY712200/LayerKeySort/issues/3) · [Mini 路线 #7](https://github.com/RXY712200/LayerKeySort/issues/7) · [产品线规则](docs/PRODUCT_LINES.zh-CN.md) · [贡献说明](CONTRIBUTING.md) · [MIT 许可](LICENSE) · [作者独立项目目录](https://quiveld.com/projects/independent/)

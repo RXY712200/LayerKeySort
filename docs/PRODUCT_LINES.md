@@ -6,15 +6,17 @@ LayerKeySort is **one repository with independently versioned products**, not on
 product with interchangeable build modes. This policy describes repository-wide
 naming and delivery; each product's own README and API contract remain authoritative.
 
+The prepared Full edition is v4.2.0; its implementation and evidence are described in the [Full entry](FULL.md). Published Stable/Latest remains v4.1.0 until separate publication. Mini and Workbench are unchanged.
+
 ## Products and locations
 
-| Product | Sources, build and docs | Public identity | Status (2026-10-25) |
+| Product | Sources, build and docs | Public identity | Edition / published status |
 | --- | --- | --- | --- |
 | Full | Repository root: `include/`, `src/`, root `CMakeLists.txt`, `docs/` | `LayerKeySort`, `layerkeysort` | Current published Stable [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) |
 | Mini | Self-contained `mini/` subtree | `LayerKeySort Mini`, `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full and Mini are **alternative implementations for different requirements**,
-not a dependency hierarchy. Full offers larger ordering and snapshot workflows.
+not a dependency hierarchy. Full offers dynamic order, stable sorting, batch processing and historical workflows.
 Mini deliberately uses a separate, lightweight doubly linked list, has its own
 18-function contract and does not import Full production code. A consumer can
 copy and build `mini/` without the repository root. Neither package's numeric
