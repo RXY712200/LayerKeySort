@@ -1,18 +1,14 @@
-# Full v4.1.0：完整公开 API 索引与关键契约指南
+# Full 4.2.0-rc.1：完整公开 API 索引与关键契约指南
 
-serialize/deserialize 的字节、状态、所有权与借用规则保持不变。本轮在未对齐缓冲区上验证旧格式。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+[English](IMPLEMENTATION_API_REFERENCE.md) · [精确声明索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md) · [源码重建](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)
 
-> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
-公开比较的输出、错误、所有权、Handle 生命周期、分配与回调约束继续适用。本轮只加强诊断验证，公开比较不调用该验证器。见 [本轮验证](V4_2_0_PREVIEW1_2_1.md)。标签不公开。 [候选验证](V4_2_0_PREVIEW1_2.md)。
-
-> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
-
-64 个函数的冻结清单通过。本候选修改内部比较和位置回填，不改变公开签名、所有权、重入、输出清零或 Handle 生命周期。 见 [候选证据](V4_2_0_PREVIEW1.md)。
-
-> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
+已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。serialize/deserialize 的字节、状态、所有权与借用规则保持不变，偏移一字节的缓冲区由回归测试覆盖。参见[实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
 ## A. 如何读取本手册
+
+以下 64 项与公开头逐项对照；实际原型、实现位置及说明行见[冻结 API 索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md)。错误优先级以各入口校验顺序为准。例如 compare 先将输出归零，再查空参数和 owner，之后才检测回调重入。Handle 已失效时不得再传入。
 
 - **一次 occurrence** 指向一个非 NULL、由应用拥有的 `void *item`；同一 `item` 指针可被插入多次，但每次有独立 `LksOrderHandle`。
 - **生命周期**：Order/ManagedOrder/Group/Batch/Snapshot/Cursor 结构由 Full 分配，创建者负责销毁。业务对象、比较器上下文、关联字节来源与外部文件始终由应用负责。
@@ -262,6 +258,8 @@ static LksStatus remove_all(LksOrder *order)
 
 ## F. 低风险入门流程与进一步阅读
 
+C/C++ 仅使用公开头与目标库。快照借用的字节视图在快照销毁前有效；读写同一 Order 与销毁操作由调用者同步。解码得到的 Snapshot 可再恢复，但不带原 live marker。
+
 新读者可以依次检查：
 
 1. [`examples/live_order.c`](../examples/live_order.c) 或 [`examples/basic.c`](../examples/basic.c) 对应公开 API。
@@ -274,3 +272,6 @@ static LksStatus remove_all(LksOrder *order)
 8. [`docs/IMPLEMENTATION_VALIDATION.zh-CN.md`](IMPLEMENTATION_VALIDATION.zh-CN.md)：对应测试/证据与可复现命令。
 
 本手册解释了所有公开函数的**意图、真实实现入口及关键限制**，但不替换源码逐行检视，也不承诺 100% 的调用方行为均可被一份文字形式化证明。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
+Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。

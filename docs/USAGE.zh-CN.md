@@ -1,8 +1,12 @@
 # LayerKeySort V4 使用指南
 
+[English](USAGE.md)
+
+4.2 候选版沿用已发布 4.1.0 的调用与所有权契约。先查[选型指南](FULL_SELECTION_GUIDE.zh-CN.md)，据此选择显式顺序、比较器托管顺序或更简单的组合。
+
 **版本状态：** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) 是当前已发布的 Stable 版本。公开 API 和持久化格式保持兼容，详见 [4.1.0 说明](V4_1_0.md)。
 
-只包含 `<layerkeysort.h>` 即可。
+只包含 `<layerkeysort.h>` 即可。先运行 [basic.c](../examples/basic.c)，再参考 [managed_order.c](../examples/managed_order.c)、[immutable_group.c](../examples/immutable_group.c) 和 [snapshot.c](../examples/snapshot.c)。
 
 LayerKeySort 面向的是**长期存在并持续变化顺序的集合**，不是一次性排序。
 
@@ -48,24 +52,24 @@ Handle 表示一个 live occurrence。它可以跨无关 mutation 和 move 保�
 顺序由 comparator 决定时使用。
 
 resident 期间 comparator 可见的数据必须保持一致。要修改排序 key：
-remove → 修改 → reinsert。
+修改比较器可见数据前，必须先移除或妥善处理每个相关 ManagedOrder 中的所有受影响实例，并考虑借用同一对象的其他有序结构。若排序前提将失效，不可变 Group 须由应用重建或替换。删除立即使该实例的 Handle 失效；重新插入可能失败。删除／修改／重插不是库提供的原子事务，应用恢复由调用者负责。详见[完整修改契约](IMPLEMENTATION_API_REFERENCE.zh-CN.md)。
 
 ### `LksGroup` / `LksGroupBatch`
 
 用于不可变平面序列、稳定构建、merge 和 batch ordering。
 
-Group 复制指针数组，但不拥有 item payload。
+Group 复制指针数组，但借用应用对象载荷。Batch 返回的借用 Group 视图随 Batch 销毁而失效；合并结果则独立拥有。
 
 ### `LksSnapshot`
 
 需要历史/持久化顺序时显式 capture。
 
 Snapshot 复制 namespace 和 association bytes；可以生成 LS1、序列化成
-LKS4SNP1，并通过 resolver 恢复成新的 live order 和新的 handle。
+LKS4SNP1，严格反序列化后通过解析回调恢复成新的实时顺序和新句柄。加载的快照没有旧来源身份信息，不能判为旧来源的当前快照。
 
 ## 身份与持久化
 
-业务 ID 由应用维护。
+业务 ID 和应用对象载荷由应用拥有。对象驻留期间必须保持存活；比较器上下文必须在容器生命期内存活；游标须先于来源销毁。
 
 - Handle 不是业务 ID；
 - Handle 不能跨保存/恢复继续使用；
@@ -94,3 +98,5 @@ V4 避免 live Path 增长和全范围 live-coordinate relabel，但仍存在：
 
 详见 [API](API.md)、[兼容性](COMPATIBILITY.md)、[冻结契约](V4_FREEZE.md)、
 [迁移指南](MIGRATION_V3_V4.md)。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。

@@ -1,5 +1,7 @@
 # V4 API reference
 
+[简体中文](API.zh-CN.md)
+
 Preview.5 froze the V4.0 source contract: 64 functions, 14 public types.
 V4.0.0 Stable preserved it unchanged, and the released Full 4.1.0 retains
 the frozen API. See [4.1.0 record](V4_1_0.md) and historical [Stable record](V4_STABLE.md).
@@ -28,7 +30,7 @@ handle access. Destroy cursor before source. See complete header error comments.
 
 Comparator-managed contextual core, stable upper-bound insertion. Locate gives
 predecessor/first equal/successor. Remove uses handle; no arbitrary move/core escape.
-Remove before changing comparison-relevant data then reinsert, or reconstruct.
+Every affected occurrence in every relevant ManagedOrder must be removed or otherwise safely handled before changing comparator-visible data. Account for other sorted structures borrowing the same item; immutable Groups require application-managed reconstruction or replacement if their ordering prerequisites would be violated. Removal immediately expires that occurrence’s Handle. Reinsertion can fail: remove/edit/reinsert is not an atomic library transaction, and application recovery is the caller’s responsibility. See the [complete mutation contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ## Immutable Group / Batch
 
@@ -45,8 +47,12 @@ requires existing source marker/mutation generation; loaded snapshots never curr
 LS1 exact lower-hex namespace/ordinal grammar and LKS4SNP1 explicit BE format are
 frozen. Format/serialize allocate nothing; text length excludes NUL, binary length
 counts exact bytes; undersized destination remains untouched.
-Restore resolves non-NULL caller-owned objects into fresh live handles; failures
-publish NULL and free temporary state. Callback side effects are not rolled back.
+Deserialization validates the entire borrowed input before allocation. For a nonempty
+snapshot, restoration requires a resolver and calls it in ordinal order. The resolver
+must return a non-NULL borrowed item on success, and repeated item pointers are
+allowed. The library resolves all rows before building a fresh order with fresh handles.
+Failure leaves the output NULL and releases temporary storage. The caller retains
+ownership of resolved items and responsibility for resolver side effects.
 Strict LK1 import preserves legacy coordinates without public legacy live APIs.
 
 ## Complete frozen function list
@@ -133,3 +139,5 @@ all families. tools/verify_v4_api.py rejects unreviewed signature/layout/name ch
 
 - `lks_sort`
 - `lks_status_string`
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.

@@ -1,5 +1,7 @@
 # Public V4 examples
 
+[简体中文](README.zh-CN.md)
+
 These public-API examples apply to the current published [Full v4.1.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). No new public functions or
 usage semantics were added by the private memory-layout improvements.
 

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="历史 LayerKeySort v1 柱状演示，使用已记录的 v1 Group Path 值。">
+  <title>LayerKeySort — 历史 v1 Path 演示</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.zh-CN.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <p class="eyebrow">LayerKeySort · 历史 v1 Path 演示</p>
+    <h1>观察对象进入顺序位置</h1>
+    <p class="intro">柱高表示比较器值。默认 16 项运行展示从历史 v1 Group 构建记录的确切 Path 值。V3 输出与这些字符串不同。 <a href="../v3/">打开 V3 Tree 可视化</a>.</p>
+  </header>
+  <nav aria-label="语言版本"><a href="./index.html" lang="en">English</a> · <a href="index.zh-CN.md">中文说明</a></nav>
+  <main>
+    <section class="visualizer" aria-labelledby="chart-title">
+      <div class="chart-heading">
+        <div><h2 id="chart-title">增量构建 Group</h2><p>已放置的值形成升序阶梯，标签保留原输入顺序。</p></div>
+        <p class="legend" aria-label="图例"><span class="key queued">排队</span><span class="key current">当前项</span><span class="key boundary">定位边界</span><span class="key placed">已放置</span></p>
+      </div>
+      <div class="chart-frame"><div id="chart" class="chart" role="group" aria-label="柱状图：柱高表示比较器值"></div></div>
+      <ol id="path-strip" class="path-strip" aria-label="按当前排序柱顺序显示已分配的 Path"></ol>
+      <div class="controls" aria-label="演示控件">
+        <button id="randomize" type="button">随机输入</button>
+        <button id="step" class="primary" type="button">单步</button>
+        <button id="play" type="button">播放</button>
+        <button id="pause" type="button" disabled>暂停</button>
+        <button id="reset" type="button">重置</button>
+        <label class="speed-control" for="speed">速度 <select id="speed"><option value="1000">慢</option><option value="550" selected>正常</option><option value="220">快</option></select></label>
+      </div>
+      <div class="below-chart">
+        <section class="details" aria-labelledby="details-title" aria-live="polite" aria-atomic="true">
+          <h2 id="details-title">当前步骤</h2>
+          <p id="step-status" class="step-status">就绪。单步插入已验证演示中的下一项。</p>
+          <dl>
+            <div><dt>当前值</dt><dd id="current-value">—</dd></div>
+            <div><dt>原输入下标</dt><dd id="original-index">—</dd></div>
+            <div><dt>定位位置及边界</dt><dd id="location">尚未开始</dd></div>
+            <div><dt>分配的 Path</dt><dd id="assigned-path">尚未分配 Path</dd></div>
+            <div><dt>方向与深度</dt><dd id="direction-depth">—</dd></div>
+            <div><dt>放置关系</dt><dd id="placement">—</dd></div>
+            <div><dt>改动的既有 Path</dt><dd id="paths-changed">—</dd></div>
+          </dl>
+          <p id="path-policy" class="path-note">仅经核验的默认运行显示历史 v1 确切 Path。随机运行显示顺序并隐藏未经验证的 Path。</p>
+        </section>
+        <section class="coverage" aria-labelledby="coverage-title">
+          <h2 id="coverage-title">已出现的 Path 形态</h2>
+          <p id="coverage-note" class="coverage-note">仅在本次运行放置已验证的 Path 后点亮对应标记。</p>
+          <ul id="coverage-chips" class="coverage-chips"></ul>
+        </section>
+      </div>
+      <p id="completion" class="completion" hidden></p>
+    </section>
+    <aside class="algorithm-note"><h2>与历史 v1 算法的对应</h2><p>v1 Group 构建器按输入顺序处理对象。Tree 在有序子列表中二分查找并沿前驱子节点下探，返回定位的邻居；公开流程没有线性扫描。动画呈现采集的 v1 位置和 Path，没有虚构内部比较探针。V2 与 V3 的 Tree/Group 构建方式不同，动画仅展示历史 v1。</p><p>默认值各不相同，本次运行不用于演示稳定性。LayerKeySort 保留比较器等值对象的输入顺序。</p></aside>
+  </main>
+  <footer>这是历史 v1 说明性可视化，浏览器不执行当前生产 C。随机运行不显示确切 Path，因为未使用 JavaScript Path 生成器。 <a href="../v3/">返回 V3</a>.</footer>
+</body>
+</html>

@@ -1,5 +1,15 @@
 # Changelog
 
+[简体中文](docs/CHANGELOG.zh-CN.md)
+
+## [4.2.0-rc.1] - Unreleased candidate
+
+- Reconstruct Full documentation against the frozen candidate, including reproducible comparative evidence.
+- Retain the Preview.3 unaligned wire and restored mixed-tag regression coverage.
+- Keep the accepted Preview.2 operational implementation. Compared with Stable 4.1, ordinary shifts update only affected resident slots, and cross-block precedence uses bounded labels with an AVL parent/height fallback.
+- Specialize the four- and eight-byte wire conversions while keeping exact LKS4SNP1 bytes and validation before allocation. Restored objects receive fresh Handles; snapshots captured at the same source revision still own independent bytes.
+- Preserve the 64 public functions, 14 types, LS1 domain contract, LK1 import, caller ownership and failure publication rules.
+
 ## [4.2.0-preview.2] - Unreleased
 
 - Specialize fixed-width snapshot wire conversion while retaining exact LKS4SNP1 bytes and validation order.

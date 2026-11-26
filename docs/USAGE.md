@@ -1,5 +1,9 @@
 # LayerKeySort V4 usage
 
+[简体中文](USAGE.zh-CN.md)
+
+Use the [selection guide](FULL_SELECTION_GUIDE.md) to choose explicit order, comparator-managed order, or a smaller composition. The 4.2 candidate keeps published 4.1.0 usage and ownership contracts.
+
 **Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
 
 Include only `<layerkeysort.h>`.
@@ -54,7 +58,7 @@ or source destruction.
 Use comparator-managed order when placement is derived from application comparison data.
 
 Keep comparator context and comparator-visible resident data stable. To change a key:
-remove → edit → reinsert.
+Every affected occurrence in every relevant ManagedOrder must be removed or otherwise safely handled before changing comparator-visible data. Account for other sorted structures borrowing the same item; immutable Groups require application-managed reconstruction or replacement if their ordering prerequisites would be violated. Removal immediately expires that occurrence’s Handle. Reinsertion can fail: remove/edit/reinsert is not an atomic library transaction, and application recovery is the caller’s responsibility. See the [complete mutation contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ### `LksGroup` / `LksGroupBatch`
 
@@ -116,3 +120,5 @@ Current roadmap: [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 [API](API.md), [compatibility](COMPATIBILITY.md) and [freeze](V4_FREEZE.md) define exact
 buffers, statuses, ownership, reentry and persistent compatibility.
 [Migration](MIGRATION_V3_V4.md) covers V3 Path/Tree workflows.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.

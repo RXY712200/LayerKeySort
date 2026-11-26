@@ -1,12 +1,18 @@
+[简体中文](README.zh-CN.md)
+
 > Current published Full Stable: [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). See [4.1.0 memory/performance study and limitations](../docs/V4_1_0.md), [historical Stable record](../docs/V4_STABLE.md) and [freeze](../docs/V4_FREEZE.md).
+
+The [4.2 RC evidence](../docs/FULL_RC1_EVIDENCE.md) derives charts and summaries from archived final Preview.3 runs. Keep historical raw data unchanged when regenerating them.
 > Measurements below retain historical names; Preview.4 is convergence evidence.
 > Stable promotion performs no new tuning. Old provisional names below are historical.
 
+With benchmarks enabled, the current build retains `layerkeysort_benchmark` for historical V3/V2 comparisons. CMake links it to `layerkeysort_legacy_bench`, which includes legacy sources and private headers. For current Full comparisons, use the archived RC evidence and its linked replay protocol.
+
 # Historical V3 benchmark harness (3.1.0 source)
 
-The V3 harness/data below remain preserved. Preview.2 adds separate production
-and diagnostic mutation screens; see [Preview.2 methodology](../docs/V4_PREVIEW2.md). This local V4 Preview.1 branch also
-builds `layerkeysort_v4_smoke` with benchmarks ON. Its limited explicit-order
+The V3 harness/data below remain preserved. V4 Preview.2 added separate production
+and diagnostic mutation screens; see [Preview.2 methodology](../docs/V4_PREVIEW2.md). The historical V4 Preview.1 branch also
+built `layerkeysort_v4_smoke` with benchmarks ON. Its limited explicit-order
 sanity comparisons and adapter differences are documented in
 [V4 Preview.1](../docs/V4_PREVIEW1.md); they are not final benchmark rankings.
 
@@ -15,7 +21,7 @@ benchmark harness. Captured Preview and RC data are historical; no new 3.1.0
 timing CSV is claimed here.
 
 Stable v2.0.0 leaves captured V2 Preview.4/Stage 5 timing data unchanged. The
-current harness times V3 comparator-managed `LksOrderedTree` insertion for
+historical harness times V3 comparator-managed `LksOrderedTree` insertion for
 `tree` cases. `v3-preview1-comparison.csv` records the earlier stable V2
 versus released Preview.1 comparison. `v3-preview2-comparison.csv` records a
 direct stable V2 / Preview.1 / original Preview.2 candidate comparison.

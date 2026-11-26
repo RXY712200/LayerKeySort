@@ -1,5 +1,9 @@
 # V4 Stable validation
 
+[简体中文](VALIDATION.zh-CN.md)
+
+To reproduce the 4.2 candidate source and test baseline, use checkout `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` for the RC metadata and both Preview.3 regressions. The earlier operational source pin alone lacks these tests. See the [candidate quantitative evidence](FULL_RC1_EVIDENCE.md). For final PR validation, run the required checks at the actual PR head.
+
 **Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
 
 V4.0.0 Stable was promoted only after Preview.5 freeze and independently reviewed RC.1.
@@ -29,6 +33,10 @@ The suite covers:
 
 All seven public examples execute in CI.
 
+## Candidate regression evidence
+
+The candidate retains the unaligned snapshot-buffer regression from `754b3088c160564f6666ee520284168ee5da6ac7` and the restored mixed-tag comparison regression from `3ac82d26301ea12876a3ebdba6319fe8233621f3`. Both are in `tests/v4_snapshot.c`. The former checks decoding and encoding at byte offset one against literal wire bytes. The latter deliberately clears two restored block tags, verifies the internal invariant and both comparison directions through the fallback, then restores the tags. These tests accompany the retained production implementation at `fe00536e7bd7f4e5128432ea4a29e54158074903`. Final hosted results must identify the actual documentation PR commit.
+
 ## Platform matrix
 
 Validated release configurations include:
@@ -46,7 +54,7 @@ The project does not claim every C17 compiler/platform or a universal binary ABI
 
 ## Release evidence
 
-RC extended campaigns include:
+Historical v4.0.0 RC extended campaigns include:
 
 - three 200k-step explicit mutation seeds,
 - long hostile parser campaigns,

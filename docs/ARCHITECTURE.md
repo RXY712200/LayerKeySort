@@ -1,11 +1,13 @@
 # LayerKeySort V4 architecture
 
+[简体中文](ARCHITECTURE.zh-CN.md)
+
 > For a source-by-source execution walkthrough (including block/AVL maintenance,
 > snapshot wire/restore, legacy compatibility, and relevant tests), see the
-> [Chinese Full implementation walkthrough](IMPLEMENTATION_WALKTHROUGH.zh-CN.md),
-> [64 public APIs mapped to source](IMPLEMENTATION_API_REFERENCE.zh-CN.md),
-> [private mechanisms and algorithms](IMPLEMENTATION_INTERNALS.zh-CN.md), and
-> [reproducible validation/packaging guide](IMPLEMENTATION_VALIDATION.zh-CN.md).
+> [Full implementation walkthrough](IMPLEMENTATION_WALKTHROUGH.md),
+> [64 public APIs mapped to source](IMPLEMENTATION_API_REFERENCE.md),
+> [private mechanisms and algorithms](IMPLEMENTATION_INTERNALS.md), and
+> [reproducible validation/packaging guide](IMPLEMENTATION_VALIDATION.md).
 
 LayerKeySort V4 separates two problems that earlier versions coupled together:
 
@@ -39,6 +41,8 @@ of 32 bytes, while Block size grows by 8 bytes. Handles remain at their stable
 separately allocated addresses. Allocation frequency, B64 and AVL algorithms
 are unchanged; not every workload is faster.
 
+Current 4.2 candidate comparison first uses local positions within a block, then compares two nonzero block labels directly. When either label is zero, AVL ancestry determines the block order. Attachment bounds label work and can leave an untagged block. Ordinary shifts update affected slots; full location repair is reserved for structural changes. See the [candidate evidence](FULL_RC1_EVIDENCE.md).
+
 The current B64/minimum-32 block policy is private implementation policy. It is not part
 of API, wire or persistence compatibility.
 
@@ -48,7 +52,7 @@ of API, wire or persistence compatibility.
 
 It provides stable comparator-equal insertion and comparator-based locate without
 creating a second ordering engine. Comparator-visible item data must remain consistent
-while resident; change it by remove → edit → reinsert.
+while resident. Every affected occurrence in every relevant ManagedOrder must be removed or otherwise safely handled before changing comparator-visible data. Account for other sorted structures borrowing the same item; immutable Groups require application-managed reconstruction or replacement if their ordering prerequisites would be violated. Removal immediately expires that occurrence’s Handle. Reinsertion can fail: remove/edit/reinsert is not an atomic library transaction, and application recovery is the caller’s responsibility. See the [complete mutation contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ## 3. Immutable Group and Batch
 
@@ -111,9 +115,7 @@ Applications own item payloads, comparator contexts, business IDs and external s
 
 LayerKeySort owns its structural objects and copied snapshot bytes.
 
-Mutable live sources require caller serialization. Atomic source-marker lifetime
-bookkeeping is not a general locking scheme. Immutable snapshot/Group reads may be
-shared when object lifetime is externally protected.
+Immutable Snapshots support concurrent reads when their lifetime is externally protected. Group pure read/read concurrency additionally requires safe application payload access. Externally synchronize Group reads against merge, capture, destruction and relevant Batch operations, including merge-all activity involving constituent Groups. Mutable live sources require caller serialization. Callback reentry guards and atomic SourceMarker lifetime management are not container locks. See the [complete concurrency contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ## 7. Long-term product boundary
 
@@ -132,3 +134,6 @@ Current post-v4 roadmap and active technical debt are tracked in
 [Freeze](V4_FREEZE.md) defines the V4.0 compatibility contract.
 [4.1.0 record](V4_1_0.md) describes the compatible released optimizations;
 [v4.0.0 Stable record](V4_STABLE.md) remains historical release evidence.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
+Group pure reads require protected Group lifetime and safe payload access. Synchronize Group accessors against merge, capture, destruction and Batch merge-all involving constituent Groups. Synchronize GroupBatch accessors against merge-all and destruction. Private non-atomic busy fields are read by Group size/item and Batch size/chunk accessors and written by merge and merge-all; capture accesses Group busy and marker state. Capture guards in snapshot.c and atomic SourceMarker references protect reentry/marker lifetime, not container locking. Immutable Snapshot concurrent reads still require lifetime protection throughout reading.

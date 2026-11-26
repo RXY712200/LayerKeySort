@@ -1,5 +1,7 @@
 # V4 Stable maintenance
 
+[简体中文](DEVELOPMENT.zh-CN.md)
+
 V4.0.0 completes the fixed V4 Preview.1–5 → RC.1 → Stable development cycle.
 
 [Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable,
@@ -61,23 +63,23 @@ For **every change to Full production code, public headers, ordering/ownership/e
 
 | Guide | Review and synchronize |
 | --- | --- |
-| [Implementation walkthrough (zh-CN)](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) | Architecture and step-by-step execution, real call chains, relevant source modules, before/after behavior |
-| [Full public API index and contracts (zh-CN)](IMPLEMENTATION_API_REFERENCE.zh-CN.md) | All actual symbols, signatures/behavior, return codes, ownership, lifetime, callbacks, mapping to source; explicitly mark unaffected public API |
-| [Internal algorithms and data structures (zh-CN)](IMPLEMENTATION_INTERNALS.zh-CN.md) | Changed private helpers, invariants, Block/AVL, memory management, commit/OOM and hot paths |
-| [Validation and source-evidence map (zh-CN)](IMPLEMENTATION_VALIDATION.zh-CN.md) | Actual test functions/assertions, new/removed coverage, commands run, CI links, unverified behavior and resource evidence |
+| [Implementation walkthrough](IMPLEMENTATION_WALKTHROUGH.md) | Architecture and step-by-step execution, real call chains, relevant source modules, before/after behavior |
+| [Full public API index and contracts](IMPLEMENTATION_API_REFERENCE.md) | All actual symbols, signatures/behavior, return codes, ownership, lifetime, callbacks, mapping to source; explicitly mark unaffected public API |
+| [Internal algorithms and data structures](IMPLEMENTATION_INTERNALS.md) | Changed private helpers, invariants, Block/AVL, memory management, commit/OOM and hot paths |
+| [Validation and source-evidence map](IMPLEMENTATION_VALIDATION.md) | Actual test functions/assertions, new/removed coverage, commands run, CI links, unverified behavior and resource evidence |
 
 Contributors making a Full implementation or contract change must:
 
 1. Pin the **old Full source SHA**, verify the **target PR HEAD**, and establish the actual change from the exact diff and affected source/tests. Record the evidence examined and any unverified behavior.
 2. Inspect **each of the four guides**, revise all affected explanations and examples, and ensure the documented **applicable Full implementation SHA**, release/development status, and independently verified scope are accurate. If a guide's behavior or API mapping is unchanged, record it explicitly in the PR synchronization matrix rather than inventing changes; still ensure its current-version applicability and review status are not stale.
-3. Update the [Full consumer handoff and change ledger](FULL_CONSUMER_HANDOFF.md) **in the same PR**: old/new exact SHA, modified functions/structures/call paths, real tests, and a **database core / intermediary-adapter impact judgment** (none, retest, adapter changes, possible core changes, or unknown, with reasons). The database owns its storage, transactions, persistent IDs, and adoption decision; Full remains independent.
+3. Update the [Full consumer handoff and change ledger](FULL_CONSUMER_HANDOFF.md) ([English edition](FULL_CONSUMER_HANDOFF.en.md)) **in the same PR**: old/new exact SHA, modified functions/structures/call paths, real tests, and a **database core / intermediary-adapter impact judgment** (none, retest, adapter changes, possible core changes, or unknown, with reasons). The database owns its storage, transactions, persistent IDs, and adoption decision; Full remains independent.
 4. Update other current-facing API, Architecture, Compatibility, Usage, Integration, Development, README, examples, migration or release documentation **only when affected**. Never rewrite historical Stable/Preview/RC benchmarks, frozen fixtures or already-published facts to make a new change look older.
 5. Include a **four-row document synchronization matrix** in the PR evidence: guide, reviewed/updated sections or confirmed unchanged parts, affected source paths/functions, applicable SHA, tests and limitations. Recheck final **remote HEAD** after implementation.
 6. **FAIL / no merge** if any of the four guides is unreviewed or misleading, the ledger has no matching record, the database/adapter impact is omitted, or code and documentation source SHAs disagree. Repair within the same step/PR before claiming PASS, even if tests and CI otherwise succeed.
 
 A **documentation-only** change without implementation/contract changes does not create a fake new algorithm baseline or require cosmetic rewriting of all four guides; update only documents truly affected while preserving valid source provenance. Normal Full development still requires independently reviewed tests, compatibility and GitHub branch protections; documentation alone is not sufficient for PASS.
 
-**Current priority (2026-11-24):** Full live-core work has resumed under the Preview.1 task. The November 15 pause was a historical decision. OrdWeave now implements native checkpoints and WAL recovery on pinned Full v4.1.0. Database policy remains outside the Full contract.
+**Current Full candidate:** The untagged 4.2.0-rc.1 branch freezes the accepted operational implementation and reconstructs its documentation and verification. Published Stable remains 4.1.0. OrdWeave keeps its official 4.1.0 dependency. See the [candidate evidence](FULL_RC1_EVIDENCE.md).
 
 ## Documentation truth model
 

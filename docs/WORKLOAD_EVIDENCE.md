@@ -1,5 +1,7 @@
 # Post-release synthetic workload evidence — v3.1.0
 
+For the 4.2 candidate, the [matched comparison and resource tables](FULL_RC1_EVIDENCE.md) summarize the later Preview.3 evidence. This page retains the original workload observations.
+
 **Recommendation: investigate compatible tail-cost improvements in future 3.2 research.**
 Recent-tail timeline runs produced rare but repeatable full-range relabel pauses. This is workload evidence, not a production correctness defect or a reason to declare a breaking V4. No production algorithm, API, version, Path/LK1 encoding, packaging, or release behavior changed.
 
@@ -177,6 +179,8 @@ The modeled timeline exhibits rare, repeated full-range relabel events with appr
 ### Interpretation
 
 Choose **B: investigate a compatible 3.2 research direction**. Focus a separate study on repeated timeline-tail backfill/interior-gap exhaustion: identify triggering placement and rejected candidate/expansion work, test whether coordinate-space reuse or bounded incremental relabel preparation can reduce the full-range pause while preserving current API/LK1 and strong failure behavior. These are research questions, not accepted changes or a release commitment. Priority bucket changes deserve a second study. Keep the released implementation unchanged while reproducing the findings and collecting external application traces.
+
+**Historical V3.1 interpretation.** The decision below records the options available when this campaign ran. Full V4 was subsequently developed and released. Its current candidate evidence is tracked separately.
 
 No 3.1.x correctness fix is indicated by this campaign. No breaking V4 is justified by these data. The current contract permits relabel costs; whether an observed pause is acceptable depends on an application latency budget that these synthetic scenarios do not supply.
 

@@ -1,19 +1,13 @@
-# Full v4.1.0：可复现的源码、测试、发布与审计证据地图
+# Full 4.2.0-rc.1：可复现的源码、测试、发布与审计证据地图
 
-Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+[English](IMPLEMENTATION_VALIDATION.md)
 
-> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
+Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)。
 
-本轮 `preview12_block_tags` 还将中间块置零，验证跨零块的相等、递减标签均被拒绝，再恢复标签并运行原有饱和回退断言。诊断源码为 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`。原先的 Preview.1.2 证据如下；本轮结果见 [决策报告](V4_2_0_PREVIEW1_2_1.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
-tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整 Handle 顺序和标签单调性；再构造有效但饱和的标签，验证有界回退、双向先后与 AVL 不变量。Windows GCC Release 39/39，独立 OrdWeave 候选测试 12/12。 [候选验证](V4_2_0_PREVIEW1_2.md)。
+> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.zh-CN.md)。
 
-> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
-
-候选版本元数据完成后，本地 Windows GCC Debug 和 Release 分别通过 39/39 CTest；独立 C/C++ 分发消费者及发行资产验证通过。Windows 轨迹消融的原始结果见候选报告。 见 [候选证据](V4_2_0_PREVIEW1.md)。
-
-> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
->
 > 文档体系：[总体实现导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) · [64 API 逐项索引](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [私有机制详解](IMPLEMENTATION_INTERNALS.zh-CN.md)。
 
 ## 1. 先确认你审查的是哪份源码
@@ -21,7 +15,7 @@ tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout fe00536e7bd7f4e5128432ea4a29e54158074903
+git checkout d1132a26ca7b2c65bfd512fa2eb29f1b16793c08
 git rev-parse HEAD
 git status --short
 ~~~
@@ -56,7 +50,9 @@ ctest --test-dir build -C Debug --output-on-failure
 
 ## 3. 核心源码 → 测试源码 → 真实保障
 
-Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.md)。
+精确校验树包含 tests/v4_snapshot.c 的 offset-one golden 字节检查（754b3088）和恢复后混合标签回退检查（3ac82d26）。后者临时将两个中间块置零，断言有效性、两端标签比较以及跨零路径双向符号，随后还原标签并正反遍历全部 item。
+
+Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.zh-CN.md)。
 
 | 修改或研究的能力 | 测试入口 | 实际测试意图与范围 |
 | --- | --- | --- |
@@ -88,7 +84,7 @@ Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解�
 | Group/Batch busy destroy | `tests/v4_immutable_group.c::compare`、`association`（由 `campaign` 驱动）检查 Group getter NULL/0、嵌套 capture/merge_all REENTRANT，调用 Group/Batch destroy，外层继续使用来源并最终释放 | busy destroy 不破坏来源由后续使用/清理场景支持；未由这里直接验证并发 merge/capture 安全性 |
 | 空恢复、回调 buffer | `tests/v4_snapshot.c::capture_restore` 包含 count=0 场景；`associate` 使用文件作用域 scratch 返回字节 | 不能据此声称测试过返回自动局部数组（非法程序）的行为；空恢复 NULL Resolver 的允许性按公开头和 restore 实现确认 |
 
-证据分层：①这些测试代码存在；②本次读过表中相关断言；③本次执行的是文档结构/链接/API 清单与示例编译检查，**没有运行上述 CTest**；④历史 CI 和发布验证仍是历史证据，不转记为本次运行结果。本次检查命令和结果见 PR 修订报告，后续复测应另记 SHA、环境和日志。
+证据分层：本表记录测试源码与断言。初次 RC 本地严格 GCC Debug/Release 各执行 39/39 CTest；[初次 Full PR CI](https://github.com/RXY712200/LayerKeySort/actions/runs/45518848531) 六配置各 39/39，并执行扩展 sanitizer。候选测试检出点含两个 Preview.3 回归；后续修复的 CI 必须按各自 HEAD 独立记录。旧测试、研究数据和复查范围不得当作新执行。
 
 ### 3.2 测试文件名容易误导的地方
 
@@ -141,7 +137,7 @@ python tools/validate_distribution.py
 python tools/validate_release_assets.py
 ~~~
 
-这些是**可执行命令建议**，不是本次对它们实际运行的记录。
+初次 RC 已执行分发及资产验证，完整参数及 SHA-256 见[验证记录](V4_2_0_RC1.zh-CN.md)。此处是供复现的通用命令。
 
 ## 6. 性能与内存报告怎样才能可信？
 
@@ -156,6 +152,8 @@ python tools/validate_release_assets.py
 - 实际应用 trace 有价值，但没有 trace 不等于所有技术审计必须停止。
 
 ## 7. 哪些事实不能靠测试绿色直接推出？
+
+若 golden 失败，先比较偏移和字段宽度；不要刷新 fixture 绕过兼容检查。若恢复后比较失败，检查子树父指针、块链与标签单调性。若故障注入失败，先确认目标分配已达，再核对输出、原容器及清理。平台矩阵结果按确切 run 和 head 核对。
 
 不能推断：任意用户传入已释放 Handle 的操作可以安全检测；所有用户 Comparator 都定义总序；任何调用方的 C++ 回调可以抛异常穿越 C 库；一个 Order 可以并发读写；所有情况都有硬实时最坏延迟；库自动创建磁盘文件、支持 WAL、可崩溃恢复；动态顺序结构能在不载入 RAM 的情况下直接改磁盘页。
 
@@ -172,14 +170,14 @@ python tools/validate_release_assets.py
 | 旧 LK1 导入 | 内部详解 §13、V3 fixture 和迁移说明，不倒改旧发行版 |
 | 构建/安装/两文件发行 | 本篇 §2 / §5、Integration 文档、发行验证脚本 |
 | 新公开 API | 先正式审查 4.x 冻结契约和版本，再修改 Manifest、API 文档、消费者测试 |
-| Full 对外版本升级 | 在 [尚未合并的 PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 所拟定的交接台账中记录精确前后 SHA、API/内部差异、消费者是否需改适配层 |
+| Full 对外版本升级 | 在 [消费者交接台账](FULL_CONSUMER_HANDOFF.zh-CN.md)中记录精确前后 SHA、API/内部差异、消费者是否需改适配层 |
 
-**如果 PR #24 尚未合并，则它的交接文件还不存在于 main**；不能在发行文档里假装已生效。
+[PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 已于 2026-11-23 06:02:54 UTC 合入。台账的后续候选更新须以实际审查分支为准。
 
 ## 9. 本轮文档化的验收范围与不足
 
 - **已完成：** 固定 SHA 源码核对、全部 16 个生产 C 翻阅、主要私有头、64 个公开 API 枚举、关键内部函数/分支说明、测试入口/构建/分发工具对照、源码导航。
-- **验证边界：** 本次同步引用 Preview.3 已执行的构建及测试证据，未重复执行历史实验，也不提供任意输入的形式化正确性证明。
+- **验证边界：** 以初次 RC 和 Preview.3 的实际运行及相应 SHA 为证据；本次修复未重复历史实验，也不提供任意输入的形式化正确性证明。
 - **未授权：** 修改 Full 生产代码、修改 stable API/文件格式、直接合并 PR、打 tag 或发布新版。
 
 这份文件是一张**可复现审查地图**。将来要把“静态源码确认”升级为“实际测试 PASS”，必须记录实际运行的测试 SHA、命令、平台与日志，不得只复制上次 Codex 或 ChatGPT 的结论。

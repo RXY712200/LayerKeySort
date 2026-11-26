@@ -1,22 +1,14 @@
-# LayerKeySort Full：从源码理解完整实现（v4.1.0）
+# LayerKeySort Full：从源码理解完整实现（4.2.0-rc.1）
 
-固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+[English](IMPLEMENTATION_WALKTHROUGH.md) · [验证与源码基线](V4_2_0_PREVIEW3.zh-CN.md)
 
-> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
+固定宽度 wire 的实际读写已用偏移一字节的缓冲区与旧 golden 对照；恢复后的块标签和 AVL 回退也有针对性检查。
 
-普通块内操作不触碰标签。旋转保持中序；拆块后的新块插入可能触发有界标签更新。 [候选验证](V4_2_0_PREVIEW1_2.md)。
+> 本版适用 Full 4.2.0-rc.1 验证树 `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`，包含两个 Preview.3 回归。运行行为源自 `fe00536e7bd7f4e5128432ea4a29e54158074903`；已发布 Stable 仍为 4.1.0。完整谱系见[源码审计](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)。
 
-> Preview.1 增量源码 `22544cf283694dd27cef203caba9cf1838845947`。v4.1.0 发布记录作为历史基线保留。
 
-普通插入仅设置新 Handle 的 block，之后仅回填受影响的 local 后缀。删除和移动源块的普通路径同样只回填后缀。分裂、合并和重分配继续完整回填。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
-> **定位：面向新维护者、独立审计者和直接集成 Full 的 C/C++ 开发者的源码执行导读。**
->
-> **核对基线**：当前 Full 开发候选生产源码为 `fe00536e7bd7f4e5128432ea4a29e54158074903`；2026-11-15 原始审查使用已发布 v4.1.0 Stable `70d7f0ef5857b54381b863d292a213909d87459f`。本文覆盖根目录 Full，Mini 有独立文档。
->
-> **证据及限制**：本次重新读取了 `cmake/ProductionSources.cmake` 指定的 **16 个生产 C 文件**，公开头 `include/layerkeysort.h`，核心私有结构/内部声明，根 `CMakeLists.txt`，既有架构与兼容文档，检索了主要 V4 测试的调用与测试入口，确认了旧版本回归源码的生产/诊断边界。以下实现结论依赖这些固定 SHA 下的真实源码，文末提供定位。**没有重新在本轮独立编译和运行全测试矩阵；历史 CI 的通过不能替代新环境复测。没有审完仓库内每一份历史研究数据及每一条测试断言，更不能保证 100% 不存在隐藏缺陷。**
->
-> 如当前 `main`、版本、源清单变化，请先检查确切 Git diff；不要把本篇冻结基线导读当作未来版本的源码事实。项目历史/规范文件可能过时；生产行为必须以固定源码和可复现实验为准。
+
 
 ## 阅读导航：这不是唯一的一篇说明
 
@@ -86,6 +78,7 @@ Full 不是传统的一次性 `qsort` 替代品，也不是数据库。其职责
 - `previous/next`：整条块序列上的前后邻居；
 - `left/right/parent`、`height`、`subtree_blocks`：对**块**建立的 AVL 平衡索引；
 - `owner`：指向当前 `LksOrder`，这是 v4.1.0 相比 v4.0.0 下沉到 Block 级的元数据。
+- `tag`：内部 64 位顺序标签；非零标签递增，零表示该块比较时使用 AVL 回退。
 
 **`LksOrder`** 有 AVL `root`、顺序链首尾 `first/last`、记录数 `count`、块数 `blocks`、逻辑修改版本 `revision`、回调占用标记 `callback_active` 和快照来源标记 `source_marker`。
 
@@ -126,6 +119,8 @@ Order
 `lks_order_next/previous` 直接在块内邻居或相邻块首尾之间跳转；不通过 AVL 逐项查找。调用者不能凭 C 指针的数值大小判断顺序。
 
 ## 3. Explicit Order 的完整执行过程
+
+一次编辑的两个提交边界：插入先校验参数、回调状态和计数，再分配独立 Handle 及所需备用块。准备失败只释放临时对象。已准备的块进入链和 AVL 后，位移、位置回填、分裂及 revision 更新无需分配。删除完成块修复后释放本次 occurrence，返回借用的 item；其他 Handle 地址继续有效。
 
 核心入口在 [`src/order.c`](../src/order.c)。
 
@@ -182,13 +177,15 @@ Order
 ### 3.6 读取、Cursor 和逻辑修改版本
 
 - `first/last/next/previous/item/size` 提供普通借用式读取；在外部保证无冲突修改的前提下使用。
-- `lks_order_cursor_create` 记录当前 `revision` 和下一 Handle；`lks_order_cursor_next` **首先比对版本**，若自创建后发生真实修改就返回 `INVALIDATED`，在读取可能已被释放的缓存 Handle 之前终止。
+- `lks_order_cursor_create` 记录当前 `revision` 和下一 Handle；`lks_order_cursor_next` 先检查参数和来源回调忙状态，然后**在读取缓存 Handle 前比对版本**。若自创建后发生真实修改就返回 `INVALIDATED`，不会读取可能已被释放的缓存 Handle。
 - 不改变顺序的 move、失败操作和纯查询不增加版本，所以不使 Cursor 失效。
 - Cursor 自身借用源容器；**Cursor 必须先于源容器销毁**。
 
 存活 Handle 的有效性不冻结邻接关系或 compare 结果；普通遍历不会自动检测 revision。删除当前项前先保存 next，且保证 next 自身不被删除；需要修改检测时用 Cursor。可编译函数片段见 [API 指南 D1](IMPLEMENTATION_API_REFERENCE.zh-CN.md#d1-handle-身份不冻结相邻关系)。
 
 ## 4. ManagedOrder：不是另一个排序树
+
+托管序先使用比较器定位边界，再调用共享的内部 live 插入路径；等值项用上界插入。在比较器调用期间设置忙状态。应用若要更改参与排序的字段，应先移除该 occurrence，再修改并重新插入。业务指针相同仍可能对应多个 Handle。
 
 实现：[`src/managed_order.c`](../src/managed_order.c)，结构 `LksManagedOrder { core, comparator, active }`。
 
@@ -368,6 +365,8 @@ Snapshot SourceMarker 的引用计数存在原子操作，但 **Order、ManagedO
 
 ## 10. 性能、算法成本及其适用边界
 
+4.2 候选的同块比较读取局部下标；跨块双方非零直接比较标签，任一为零才走 AVL 父链及高度。接入维护最多 64 块，普通编辑仅更新受影响槽位。已测 Full/Stable 4.1 实时中位比为 Windows 0.629106、Linux 0.640047；比较密集为 0.197718、0.219173。端点和平面历史生命周期对照中 Full 为 1.137284、1.136323，因此不能将实时比值推广到所有应用。另有 tag-range OM 在部分条件获胜。完整观测边界见[候选证据](FULL_RC1_EVIDENCE.zh-CN.md)和[选型](FULL_SELECTION_GUIDE.zh-CN.md)。
+
 - Live 插入/删除/移动的结构成本与**局部块容量 B 和 AVL 块数 M**相关，而不是改变两条记录之间所有元素的外部排序 Key。
 - 读写整个 Snapshot 要遍历 N 个 occurrence，拷贝关联字节总量 A：这项成本是显式、线性的，**不会因为实时修改变快而自动消失**。
 - 并非所有操作都比旧版快：v4.1.0 的研究保留了随机查找、Namespace Key 格式化、宽关联序列化、部分 churn/移动/析构的回归证据。
@@ -393,6 +392,8 @@ N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存�
 这些是同时存活的请求和所有权关系，不是 RSS 上界；分配器元数据、缓存、碎片、业务对象和调用者额外 buffer 都可能增加进程内存。
 
 ## 11. 实际上从一次“编辑 → 保存 → 重新打开”会经过哪些函数？
+
+持久化由应用保存已编码的字节及应用身份。恢复时逐行调用 Resolver，全部成功后才构建并交出新的 Order。若回调失败，只撤销库拥有的临时资源；业务侧回调产生的副作用和磁盘提交由应用处理。
 
 假设外部程序维护有序图层列表 A/B/C：
 
@@ -454,7 +455,7 @@ N 为 occurrence 数，A 为关联字节总量；下表区分操作峰值共存�
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout fe00536e7bd7f4e5128432ea4a29e54158074903
+git checkout d1132a26ca7b2c65bfd512fa2eb29f1b16793c08
 git rev-parse HEAD
 cat cmake/ProductionSources.cmake
 
@@ -467,13 +468,13 @@ ctest --test-dir build -C Debug --output-on-failure
 
 **本轮审读实际已完成**：从 GitHub 固定 SHA 读取全部 16 个生产 C 文件及主要头文件，核对生产源清单、根 CMake、相关源码调用链、代表性 V4 测试入口和历史兼容/回归源码归属。
 
-**本轮没有完成、不能假装完成**：在可执行环境重新编译全部配置、重新运行 CTest、逐条独立复核所有历史基准 CSV/研究分支、覆盖全部操作系统/故障注入组合、证明整个库形式化无缺陷。若进行版本升级、修改算法或声称完整审计 PASS，仍需独立执行相应验证。
+初次 RC 提交的 Windows 严格 GCC Debug 与 Release 各执行 39/39 CTest，六项平台矩阵及扩展 sanitizer 见 [初次 Full PR CI](https://github.com/RXY712200/LayerKeySort/actions/runs/45518848531)。当前修复提交另查精确 HEAD。历史 CSV、完整系统及故障组合未在初次 RC 验证中逐项重跑。
 
 ## 14. 源码真相优先于本文；今后怎样防止这份说明再过时？
 
 - **新实现影响本篇描述时，同 PR 更新相关章节**，标明精确 SHA、旧→新调用变化，以及用户可观察语义；勿用改写旧数据的方式制造“从未发生过”的历史。
-- Full 对外消费者的升级影响另应记录在独立的 [Full Consumer Handoff PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 引入的交接规范中（**该 PR 未合并之前，请不要把其文档当成已进入 main 的文件**）。
+- Full 的消费者升级影响记录于[交接台账](FULL_CONSUMER_HANDOFF.zh-CN.md)。引入台账的 [PR #24](https://github.com/RXY712200/LayerKeySort/pull/24) 已于 2026-11-23 06:02:54 UTC 合入；候选新增条目仍以候选分支为准。
 - 本文用于**先了解完整工作流程并快速定位源码**，不是把源码藏在文档后面。实质改动时必须按该提交及现行代码直接复核，并执行适当测试。
 - 后续如发现源码与本文冲突，标出函数、真实 diff 与复现证据并修正文档；不凭聊天记忆猜测、不将文档描述反过来当作源码行为。
 
-**一句话理解 Full：它把长期变化的逻辑顺序放在“稳定 occurrence Handle + 有序块链 + 块级 AVL”中；把需要离开运行时的历史顺序放在“独立 Snapshot + LS1 + 显式二进制格式”中；把一次性排序放在“稳定复制/归并”中。三者边界清晰，业务身份与物理持久化始终属于上层应用。**
+**一句话理解 Full：它把长期变化的逻辑顺序放在“稳定 occurrence Handle + 有序块链 + 有界标签维护与块级 AVL 回退”中；把需要离开运行时的历史顺序放在“独立 Snapshot + LS1 + 显式二进制格式”中；把一次性排序放在“稳定复制/归并”中。三者边界清晰，业务身份与物理持久化始终属于上层应用。**
