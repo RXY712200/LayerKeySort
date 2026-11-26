@@ -1,6 +1,8 @@
 # Full v4.1.0：内部结构、函数执行路径和算法分支详解
 
-> 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
+恢复后同时构造非零标签和零标签块，分别核对标签路径与 AVL 回退；验证后恢复标签，不改生产算法。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+
+> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
 
 标签维护只在接入新块后执行。搜索区间不超过 64 个块，边界必须有效，写入严格递增且不越过边界。失败时只保留新块的零标签；后续成功的区间维护可重新标记它。删除释放块，旋转不重标；快照恢复批量赋等距标签。参见候选架构。诊断 tag_writes 统计赋值，tag_repairs 统计宽度大于一的维护，tag_fallbacks 统计无标签接入，max_tag_writes 统计单次最大赋值数。 [候选验证](V4_2_0_PREVIEW1_2.md)。
 
@@ -10,7 +12,7 @@
 
 Preview.1 的高度引导父链是当前无标签块的回退机制。两块均有非零标签时直接比较标签。生产 AVL 更新及批量构建继续维护 subtree_blocks，诊断检查其值；比较不读取它。records_reassigned 统计实际回填的位置条目。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
-> 固定代码基线：`70d7f0ef5857b54381b863d292a213909d87459f`。根据本提交的全部 16 个生产 .c、主要内部头、公开 API、构建清单检查所得。`v4_*`、`snap_*`、`ig_*` 等是**私有函数，不属于外部可调用 API**。本文与 [总导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[64 API 清单](IMPLEMENTATION_API_REFERENCE.zh-CN.md)、[测试与证据](IMPLEMENTATION_VALIDATION.zh-CN.md) 相互补充。
+> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
 
 ## 1. 所有 16 个生产源文件，内部机制各是什么？
 
@@ -65,6 +67,8 @@ Order: root + first/last + logical count + revision
 多块情形每块正常至少半满（当前最小为 32）；唯一块可以低于半满。AVL 的中序顺序、块链顺序、块内 Handle 指针顺序应当一致。
 
 ## 3. AVL 与块链接口：每个私有函数的职责
+
+v4_tag_attach 的分配标签工作有固定探测和写入界限；耗尽局部空间时保留零标签。lks_order_compare 在任一标签为零时使用 AVL。诊断验证整个非零子序列严格递增，跨零标签块也要检查。
 
 | 函数 | 实际逻辑 |
 | --- | --- |
@@ -207,6 +211,8 @@ end-of-input，不能有尾随垃圾
 `serialize` 在检查容量之后将整个 Snapshot 编码进**调用方提供**的 buffer；`deserialize` 第一遍完整扫描所有行并做边界检查，第二遍才分配和拷贝。失败不返回半解码状态；加载结果没有 live SourceMarker。它不是磁盘 I/O，格式本身也没有校验和、WAL、文件写入提交或断电恢复协议。
 
 ## 11. Snapshot Restore 与 Bulk Build：为何不做 N 次公开 insert？
+
+恢复先解析全部行，再批量构建；旧快照不携带实时标签、块或 Handle 地址。新增测试检查恢复后的标签间隔和 Handle 顺序，并对人为构造的有效混合标签状态验证双向 AVL 回退。
 
 `lks_snapshot_restore_order` 对非空输入先分配 N 个临时 item 指针槽。按行序调用 Resolver，首次非 OK 或 OK 但 item 为 NULL 时立即停止，后续行不调用；仅全部必需行成功后才进入未发布的 bulk Order 构建。空 Snapshot 不调用 Resolver，允许 NULL Resolver，仍需分配一个新的空 Order，因此可能 OOM。失败清理 Full 自有临时分配、输出为 NULL，但不回滚应用回调副作用、不释放已经解析出的调用方 item。全部通过才调用 `lks_order_bulk_build`，最后释放临时指针槽。
 

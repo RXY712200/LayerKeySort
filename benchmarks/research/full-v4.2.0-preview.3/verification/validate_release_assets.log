@@ -1,0 +1,7 @@
+source version: 4.2.0-preview.2
+assets: D:\LayerKeySort\.local\full-current-v05\build\release-check-wuabhcef\first\LayerKeySort-4.2.0-preview.2-amalgamation.zip, D:\LayerKeySort\.local\full-current-v05\build\release-check-wuabhcef\first\LayerKeySort-4.2.0-preview.2-SHA256SUMS.txt
+sha256: 57c5ba9cc7113cd67f42a1e613523612ea67e6c250806b51c11e2cc4ae140977
+source version: 4.2.0-preview.2
+assets: D:\LayerKeySort\.local\full-current-v05\build\release-check-wuabhcef\second\LayerKeySort-4.2.0-preview.2-amalgamation.zip, D:\LayerKeySort\.local\full-current-v05\build\release-check-wuabhcef\second\LayerKeySort-4.2.0-preview.2-SHA256SUMS.txt
+sha256: 57c5ba9cc7113cd67f42a1e613523612ea67e6c250806b51c11e2cc4ae140977
+release asset validation passed

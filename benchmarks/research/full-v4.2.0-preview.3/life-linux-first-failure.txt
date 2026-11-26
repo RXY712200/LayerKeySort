@@ -1,0 +1,2 @@
+experiment (ubuntu-latest)	Run independent lifecycle and sparse oracles	2026-11-24T16:43:42.8545329Z fatal: shallow file has changed since we read it
+experiment (ubuntu-latest)	Run independent lifecycle and sparse oracles	2026-11-24T16:43:42.8589080Z ##[error]Process completed with exit code 128.

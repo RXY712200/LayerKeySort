@@ -1,6 +1,8 @@
 # Full v4.1.0：完整公开 API 索引与关键契约指南
 
-> 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
+serialize/deserialize 的字节、状态、所有权与借用规则保持不变。本轮在未对齐缓冲区上验证旧格式。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+
+> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
 
 公开比较的输出、错误、所有权、Handle 生命周期、分配与回调约束继续适用。本轮只加强诊断验证，公开比较不调用该验证器。见 [本轮验证](V4_2_0_PREVIEW1_2_1.md)。标签不公开。 [候选验证](V4_2_0_PREVIEW1_2.md)。
 
@@ -8,7 +10,7 @@
 
 64 个函数的冻结清单通过。本候选修改内部比较和位置回填，不改变公开签名、所有权、重入、输出清零或 Handle 生命周期。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
-> 审查基线：`main` `70d7f0ef5857b54381b863d292a213909d87459f`；接口最高事实来源为 [`include/layerkeysort.h`](../include/layerkeysort.h) 与其生产实现。本文与 [完整执行导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)、[内部算法详解](IMPLEMENTATION_INTERNALS.zh-CN.md)、[测试与证据地图](IMPLEMENTATION_VALIDATION.zh-CN.md) 配套。**本文不是可编译的替代头文件；签名、参数顺序、准确返回值以该固定 SHA 的公开头为准**。4.x 公开契约冻结，不在本文发明额外 API。
+> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。签名、参数顺序及准确返回值以对应 SHA 的 [公开头](../include/layerkeysort.h) 为准。本手册覆盖根目录 Full，4.x 的接口保持冻结。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
 
 ## A. 如何读取本手册
 
@@ -196,6 +198,8 @@ static void visit_managed(const LksManagedOrder *order, void (*visit)(void *))
 
 ## D. 一次实际使用中的**所有权/失效**判断矩阵
 
+同 revision 的两次捕获也各自拥有历史字节。对于借用的快照行及命名空间，生命周期随快照；对于恢复，Resolver 按行顺序返回的 item 仍由调用者管理，新 Order 为每个 occurrence 建立新 Handle。
+
 | 事件 | Order | Handle | Cursor | Snapshot | 外部 item |
 | --- | --- | --- | --- | --- | --- |
 | 普通插入 | 不变为同一对象，版本增长 | 旧 Handle 地址不变，新 Handle 独立创建 | 已有 Cursor 失效 | 旧历史仍可读，`is_current` 变假 | 不由 Full 释放 |
@@ -231,6 +235,8 @@ static LksStatus remove_all(LksOrder *order)
 ```
 
 ## E. 错误处理中的几个“不直观”边界
+
+序列化与反序列化接受满足长度条件的逐字节缓冲区，包括偏移一字节的地址。反序列化先完整检查长度、标志和尾随数据；失败时没有部分 Snapshot 输出。回调已产生的应用副作用由应用处理。
 
 修改比较器可见字段前，应用必须处理每一个相关 ManagedOrder 中引用该对象的**全部 occurrence**，以及依赖该对象排序的 Group 等其他结构。仅删除一个 occurrence 不够；Full 不会自动追踪跨容器共享对象。Group 不可原地删除记录，应由应用安排重建或替换。
 

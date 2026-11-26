@@ -1,6 +1,8 @@
 # Full v4.1.0：可复现的源码、测试、发布与审计证据地图
 
-> 当前临时候选源码 `61e9290ec5ba47b9092bcb8ae7d61f13104ea839`。此前 Preview.1 文档修正点为 `3a2b3eabd0153531e1064457519b40deb4af9842`；下文历史 Stable 证据仍指 v4.1.0。
+Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比较断言。 [验证与源码基线](V4_2_0_PREVIEW3.md)。
+
+> Preview.3 核验的生产源码为 [fe00536](https://github.com/RXY712200/LayerKeySort/tree/fe00536e7bd7f4e5128432ea4a29e54158074903)，沿用 Preview.2 开发版。Preview.1 与 Preview.1.2 的记录保留为历史。
 
 本轮 `preview12_block_tags` 还将中间块置零，验证跨零块的相等、递减标签均被拒绝，再恢复标签并运行原有饱和回退断言。诊断源码为 `c977b0fd14a501d769b9783bfdcc61266bd1b5ae`。原先的 Preview.1.2 证据如下；本轮结果见 [决策报告](V4_2_0_PREVIEW1_2_1.md)。
 
@@ -10,7 +12,7 @@ tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整
 
 候选版本元数据完成后，本地 Windows GCC Debug 和 Release 分别通过 39/39 CTest；独立 C/C++ 分发消费者及发行资产验证通过。Windows 轨迹消融的原始结果见候选报告。 见 [候选证据](V4_2_0_PREVIEW1.md)。
 
-> 固定基线：`70d7f0ef5857b54381b863d292a213909d87459f`。依据该 SHA 的根 `CMakeLists.txt`、真实测试入口、CI/构建脚本、API/Golden 文件整理。**本轮建立文档没有自行执行完整本地 CTest 和跨平台矩阵**；“测试覆盖什么”是静态阅读相关测试源码后的范围说明，不能冒充新的独立运行 PASS。
+> 当前实现以 `fe00536e7bd7f4e5128432ea4a29e54158074903` 为准，已发布 Stable 对照为 `70d7f0ef5857b54381b863d292a213909d87459f`。本手册覆盖根目录 Full。参见 [实现审计与证据](V4_2_0_PREVIEW3.md)。
 >
 > 文档体系：[总体实现导读](IMPLEMENTATION_WALKTHROUGH.zh-CN.md) · [64 API 逐项索引](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [私有机制详解](IMPLEMENTATION_INTERNALS.zh-CN.md)。
 
@@ -19,7 +21,7 @@ tests/v4_mutation.c::preview12_block_tags 检查 10,000 次集中插入后完整
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout 70d7f0ef5857b54381b863d292a213909d87459f
+git checkout fe00536e7bd7f4e5128432ea4a29e54158074903
 git rev-parse HEAD
 git status --short
 ~~~
@@ -53,6 +55,8 @@ ctest --test-dir build -C Debug --output-on-failure
 `docs/VALIDATION.md` 的“39 个 CTest”明确有 benchmark/Python 的配置前提。具体次数以本机 `ctest -N` 和实际日志为准。
 
 ## 3. 核心源码 → 测试源码 → 真实保障
+
+Preview.3 增量：tests/v4_snapshot.c 将地址偏移 1 字节后编码和解码，逐字节比较既有 golden；同一文件对恢复后顺序和混合标签回退增加断言。此前同 revision 的快照复制隔离测试继续适用。提交及平台证据见 [阶段核验](V4_2_0_PREVIEW3.md)。
 
 | 修改或研究的能力 | 测试入口 | 实际测试意图与范围 |
 | --- | --- | --- |
@@ -141,6 +145,8 @@ python tools/validate_release_assets.py
 
 ## 6. 性能与内存报告怎样才能可信？
 
+最终生命周期分析分别列出计时阶段求和与实际进程墙钟时间，旧记录缺少墙钟列时只重算原指标。请求字节不等于系统驻留内存；应用 WAL 的 flush 子区间不得再加入父计时。
+
 需要固定来源 SHA、平台、编译器和优化参数；公布 record 数量、操作分布、Comparator/Allocator 代价、块策略、是否含 Snapshot/保留历史等约束。不能只挑一个最漂亮的结果。
 
 - requested live bytes、peak requested bytes 和进程 RSS 不同；
@@ -173,7 +179,7 @@ python tools/validate_release_assets.py
 ## 9. 本轮文档化的验收范围与不足
 
 - **已完成：** 固定 SHA 源码核对、全部 16 个生产 C 翻阅、主要私有头、64 个公开 API 枚举、关键内部函数/分支说明、测试入口/构建/分发工具对照、源码导航。
-- **未完成：** 在本轮独立运行完整 39 项 CTest、所有 CI 平台、Sanitizer、全部历史实验数据以及对任意输入的形式化正确性证明。
+- **验证边界：** 本次同步引用 Preview.3 已执行的构建及测试证据，未重复执行历史实验，也不提供任意输入的形式化正确性证明。
 - **未授权：** 修改 Full 生产代码、修改 stable API/文件格式、直接合并 PR、打 tag 或发布新版。
 
 这份文件是一张**可复现审查地图**。将来要把“静态源码确认”升级为“实际测试 PASS”，必须记录实际运行的测试 SHA、命令、平台与日志，不得只复制上次 Codex 或 ChatGPT 的结论。

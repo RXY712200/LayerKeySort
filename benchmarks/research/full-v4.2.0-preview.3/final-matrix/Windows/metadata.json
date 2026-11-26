@@ -1,0 +1,30 @@
+{
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "processor": "AMD64 Family 25 Model 17 Stepping 1, AuthenticAMD",
+  "python": "3.13.17 (tags/v3.13.17:64e080d, Oct 21 2026, 14:08:53) [MSC v.1944 64 bit (AMD64)]",
+  "cpus": 2,
+  "research_sha": "bdd59382777740f7d5a546a08cf30ee1576cde30",
+  "started_utc": "2026-11-24T16:43:03Z",
+  "suite": "components",
+  "guard_bytes": 536870912,
+  "timeout_seconds": 120,
+  "compiler": "gcc (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0",
+  "finished_utc": "2026-11-24T16:49:38Z",
+  "binaries": {
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\full_diag.exe": "13056b6e53fd88104a7479b528a1d73b995cfbabffe20031f3f16511b87c4be9",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\list_diag.exe": "dae0b12fb15ec4c4befb20b1327f33a4cbfb0d3b3912e38e634c453e14a79be0",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\tree_diag.exe": "41e0c5009ede6cf28ed9166c335b6a290052242e9f77bf1dc9a136d4fcae4339",
+    "D:\\a\\lks0011\\lks0011\\.local\\om-diag\\release\\ist-v05-om.exe": "f25e30e475858d0d32fa5d12aeb561897027225d083f196e5ed619d59ba33d51",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable40-build\\full_diag.exe": "0bd1e921c1620b9ed126aff2db4f2db503b319de374db8d75573dbe88cf89bac",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable41-build\\full_diag.exe": "9cab2a820af512865d41064763e094612dc5c7c48b4b0c940d24614d5c9cc0be",
+    "D:\\a\\lks0011\\lks0011\\.local\\preview1-build\\full_diag.exe": "9843575076a0c56196e4789fc5bc27eb4b43ad6a21d360ea1a9c652103c6beaf",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable40-build\\full_prod.exe": "b840833e05579c1d133670e38b8f39cd2744eb2ce8691bfbc170ff33fc8d064e",
+    "D:\\a\\lks0011\\lks0011\\.local\\stable41-build\\full_prod.exe": "86c79c377faa2e3e0f0837371cb7c3f946b1d2c2e1b7004cc4bcdbe12b63d2ba",
+    "D:\\a\\lks0011\\lks0011\\.local\\preview1-build\\full_prod.exe": "5317161c1cd3941168e79df3c43f66c71388a8ae7627e66624414584bac194f4",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\full_prod.exe": "87142c96063f8aa9832b404eeb57a4dbf9ea07dde8fa1c84751281ef5ac52d2c",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\list_prod.exe": "97222bfac145f711c713e47803e4a300a495c368cb4ba226f549d9233036a947",
+    "D:\\a\\lks0011\\lks0011\\.local\\candidate-build\\tree_prod.exe": "da6d6d1e52d52a56364de5dc02a8a73fcf95a45b2514fd46ab94765ea0d70f11",
+    "D:\\a\\lks0011\\lks0011\\.local\\om-prod\\release\\ist-v05-om.exe": "d237a16076fd9186e59347ff4686b3bd86353f1ac474b2d95662b693fb25001b"
+  },
+  "completed_rows": 3240
+}

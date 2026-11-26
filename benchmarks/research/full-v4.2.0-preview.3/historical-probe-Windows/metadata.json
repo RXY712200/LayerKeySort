@@ -1,0 +1,32 @@
+{
+  "pins": {
+    "final": "fe00536e7bd7f4e5128432ea4a29e54158074903",
+    "preview12": "c977b0fd14a501d769b9783bfdcc61266bd1b5ae",
+    "stable41": "70d7f0ef5857b54381b863d292a213909d87459f",
+    "stable40": "80004ae732daf696f7e9192e417de0edb0b2aafa"
+  },
+  "platform": "Windows-2025Server-10.0.26100-SP0",
+  "compiler": "gcc (x86_64-posix-seh-rev1, Built by MinGW-Builds project) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "binaries": {
+    "final-0-0.exe": "fea2c5b1f2a9e99933ddb4bef353e2de24db637b9a299fea795c6d0b7ab119f7",
+    "final-0-1.exe": "e05730f95a280a8908bef601967948cb3345df10f58c12b33d5e0b3335d64434",
+    "flat-0-0.exe": "4ca2979f33d979d3d28e5fd9d569e7c8fc10d7aa48ec0d2b292b36ea13c6f8b2",
+    "flat-0-1.exe": "508f0661e0e7674e2bad68e0c273445e6dd35d94d6f74e4045b5f5338d0b0fc0",
+    "final-1-0.exe": "80e9f6826188cd879bc46a62265afd1d015be535960b8afdcb938637a9255ff9",
+    "final-1-1.exe": "d7dedce0f2d8b0a2f0d0f52299ecf6d18abb74a0dd8285e03df294833a955138",
+    "tree-1-0.exe": "546c0b78b4a7af1f1e9225ca646ad4d07df6c496dd29f282c4eca126db3a3100",
+    "tree-1-1.exe": "d9487886716c854862e2392ba98cb14dfbf5555d5f30f02bbdef8989c3434e20",
+    "preview12-0-0.exe": "4027337f2e940b6caabffbc920cd5cf1eea2a4f4c7251935e93f9addadba29ad",
+    "preview12-0-1.exe": "3fd31a92c0041a1f6d3c7fc53ee8a2e046bebbdcdf1c1e6325ce4e12f4db6c43",
+    "preview12-1-0.exe": "c3e930d8d8b723e8d9518ae8e645282f6ebcad44e8bd64b9fb667c52f2a0a9f1",
+    "preview12-1-1.exe": "da7b3a7903a4814aecc89d3b2294fa3f8ecb625609560d014155c9b4fda93b15",
+    "stable41-0-0.exe": "f48c111e16f7ce78e0eb39a669a1d44a8af04f6a11681676277beef89d62eed2",
+    "stable41-0-1.exe": "531cd64876c5c36ee23552a5f68746e56be9770033f175ca7a11bfb78ffa804f",
+    "stable41-1-0.exe": "550c1865fa699f5a150101c5af3c60c80fa8f9ea32a45569d8d8371625b10a90",
+    "stable41-1-1.exe": "0bd22d6f52721c10ff406743b3eadef2d425255b07ec1c9a9c5b937e3e25265e",
+    "stable40-0-0.exe": "1a22b5a600febd438aeb57cf7ddf23cfb0cc52d133fb297f5d3b5cc9bc886cca",
+    "stable40-0-1.exe": "59c7d03928f2182d380adef58f4ebfe652092065e24ba8e429349e60fe4aea8c",
+    "stable40-1-0.exe": "defe1d6c796677ad41359a2d2a02d4da8c76dfa84521d4239ba5b1887aa7bf19",
+    "stable40-1-1.exe": "4cdb5c60423019371493fa9c691590a39686aa37ca84f662cc5f97fb800eb670"
+  }
+}
