@@ -5,15 +5,16 @@
 LayerKeySort 采用**单仓库、多独立产品、独立版本号**。这不是将同一套源码用开关裁剪成
 “完整版”和“精简版”。各产品的公开 API、兼容性和生命周期，以各自文档为准。
 
+main 已包含 Full v4.2.0 实现及 Stable 元数据，实现及证据见 [Full 入口](FULL.zh-CN.md)。另行发布前，已发布 Stable/Latest 仍为 v4.1.0；Mini 与 Workbench 不变。
+
 ## 产品划分
 
-| 产品 | 所在目录与构建入口 | 名称 | 当前状态（2026-10-25） |
+| 产品 | 所在目录与构建入口 | 名称 | 版本／发布状态 |
 | --- | --- | --- | --- |
 | Full | 仓库根目录：`include/`、`src/`、根 `CMakeLists.txt`、`docs/` | `LayerKeySort` / `layerkeysort` | 当前已发布 Stable：[v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) |
 | Mini | 自包含的 `mini/` 子目录 | `LayerKeySort Mini` / `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
-Full 与 Mini 是针对不同需求的**并行产品**，不是父子依赖关系。Full 面向更完整的
-顺序管理和快照工作流；Mini 使用独立的简单双向链表实现，冻结 18 个公开函数，不依赖
+Full 与 Mini 是针对不同需求的**并行产品**，不是父子依赖关系。Full 面向动态顺序、稳定排序、批处理及历史工作流；Mini 使用独立的简单双向链表实现，冻结 18 个公开函数，不依赖
 Full 的生产源码。只复制 `mini/` 就能单独构建，两个产品的数字版本之间没有兼容关系。
 
 不为了目录对称而将已有 Full 从仓库根目录迁移到 `full/`。默认根构建面向 Full；

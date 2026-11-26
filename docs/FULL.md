@@ -1,75 +1,48 @@
-# LayerKeySort Full — v4.1.0 Stable
+# LayerKeySort Full — v4.2.0 Stable
 
-## Full Stable and the 4.2 candidate
+English | [简体中文](FULL.zh-CN.md)
 
-Main now contains **4.2.0-rc.1**. Published Stable and Latest remain **4.1.0**. For downloadable source and distribution assets, use the [Stable release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). RC.1 has been integrated into main, but has not been tagged or published. Mini follows an independent release line.
+**High-performance C17 libraries for dynamic ordering, stable sorting, batch ordered processing and historical ordering.** Full combines stable occurrence Handles, bounded local blocks and label/AVL precedence with independently owned snapshots. Choose one API family or combine them.
 
-Full provides stable Handles for live occurrences. The application owns payload, durable identity and transactions. The 4.2 candidate uses bounded labels for cross-block precedence, with AVL fallback. The [pinned evidence](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/FULL_RC1_EVIDENCE.md) compares candidate elapsed time with Stable 4.1 on matched workloads.
+## Choose the workflow
 
-| Workload | Windows | Linux |
-| --- | ---: | ---: |
-| All live-order cells | 0.629 (37.1% lower) | 0.640 (36.0% lower) |
-| Compare-heavy cells | 0.198 (80.2% lower) | 0.219 (78.1% lower) |
+| Your job | Full API | What it provides |
+| --- | --- | --- |
+| Edit relative positions in an editor, timeline or playlist | `LksOrder` | Insert, remove, move, logical traversal and precedence; surviving Handles retain identity |
+| Maintain priorities or comparator-based collections | `LksManagedOrder` | Stable equal insertion, bound lookup and contextual comparison |
+| Sort a pointer array once | `lks_sort` | Stable ordering, copied/scratch preparation, input unchanged on OOM |
+| Sort chunks and merge ordered batches | `LksGroup`, `LksGroupBatch` | Immutable copied pointer arrays, stable equality precedence and fresh merge results |
+| Save historical order and associations | `LksSnapshot` | Independent bytes, sortable LS1 keys, LKS4SNP1 encoding and fresh-handle restoration |
 
-Each ratio divides candidate by control elapsed time, and the table reports the median of those ratios across matched conditions on each host. Initial populations were 1k, 10k and 100k occurrences. A flat-history composition was faster for endpoint-only lifecycle workloads. For relative edits with history and restore, compare using the target workload. See the [candidate verification record](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.md) and [candidate implementation walkthrough](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.md). The [historical V4 architecture design](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.md) remains available as design history. Local links below describe the integrated RC.1 on main; the published Stable remains v4.1.0.
+Applications own payloads and business identities. Full supplies ordering components; a database can use them alongside its own transactions, storage and recovery. One-shot sorting is supported, with pointer-copy and scratch costs. The live-order comparisons below do not benchmark `qsort` or `std::sort`.
 
-![Matched live-order elapsed ratios by host](https://raw.githubusercontent.com/RXY712200/LayerKeySort/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/benchmarks/research/full-v4.2.0-rc.1/live-ratios.svg)
+## Measured value
 
+In the archived Windows/Linux matched live-order study, Full v4.2.0's unchanged operational implementation used **37.1% / 36.0% less elapsed time than 4.1 overall**, and **80.2% / 78.1% less in compare-heavy cells**. It won 45/45 cells per host against both Stable controls. Results depend on the tested workload and control.
 
-[← LayerKeySort product family](../README.md) | English | [简体中文](FULL.zh-CN.md)
+![Median paired Full/control elapsed ratios on Windows and Linux; lower is faster](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/live-ratios.svg)
 
-This page documents **Full**, the original library at the repository root. It is not the Mini API. For authoritative compatibility and format contracts, consult [V4_FREEZE](V4_FREEZE.md), not this onboarding page.
+Ratios are Full/control elapsed time: the median of paired cell ratios, not throughput percentage or a ratio of unrelated medians. Each host has 45 matched cells, 1k/10k/100k initial occurrences, 20k trace operations and seven formal samples per cell/implementation. All seven controls and adverse conditions are retained in [the full evidence](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/FULL_RC1_EVIDENCE.md).
 
-Dynamic ordering for changing collections in C17, with stable live handles and
-sortable immutable snapshot keys.
+![Windows compare-heavy: formal median elapsed in ms against diagnostic peak requested memory in MiB, with linear detail panels](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.svg)
 
-**Live order: contextual handles. Historical/persistent order: immutable snapshot keys.**
+The scatter fixes 100,000 initial occurrences and seed 17. Main elapsed axis is logarithmic; linear panels show near-coincident points at their measured coordinates. Memory is separately measured diagnostic **peak requested bytes**, shown in MiB, rather than process RAM. In this compare-heavy example Full requested 4,278,776 bytes versus native OM 13,437,504 bytes, about 68% lower. The graph retains all eight variants.
 
-**[LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable Release.**
-The Release provides the verified amalgamation ZIP and SHA-256 manifest from the annotated source tag.
-[4.1.0 update details](V4_1_0.md) document smaller Resident/Snapshot storage and workload-specific regressions.
-[V4_FREEZE](V4_FREEZE.md) freezes the V4.0 API, LS1 and LKS4SNP1 contracts.
-V4 completes the fixed Preview.1–5 / RC.1 development cycle.
-[Historical v4.0.0 Stable record](V4_STABLE.md), [RC validation record](V4_RC1.md).
-V3.1.0 remains a historical Stable release for applications requiring Path/Tree contracts;
-V4 is a major source break, not a drop-in upgrade.
+Full/native tag-range OM overall ratios were 1.052/1.020; some update-heavy conditions favor native OM. For arbitrary relative editing with history, Full/tested Treap lifecycle wall-time ratios were 0.580/0.526 (five cells/host, incremental Treap restore). Endpoint flat history was faster: Full/flat 1.137/1.136 (13 cells/host). Bulk Treap restore is unmeasured. See [selection guidance](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/FULL_SELECTION_GUIDE.md) for practical tradeoffs.
 
-The active post-v4 roadmap and current technical debt are tracked in
-[Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3). Historical Issue #2
-is closed and preserved as the V2/V3/V4-development record.
+## Complete time/memory comparison
 
-## What problem does LayerKeySort solve?
+![Windows compare-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.svg)
 
-LayerKeySort is **not a replacement for one-shot array sorting** such as `qsort`
-or `std::sort`. It is for collections that stay alive and keep changing order:
+![Windows update-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/windows-update-heavy.svg)
 
-- layer stacks and editor object lists,
-- video/audio timelines,
-- CAD/game/node/workflow editors,
-- playlists and local document editors,
-- other long-lived collections with repeated insert/remove/move operations.
+![Linux compare-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/linux-compare-heavy.svg)
 
-The core question is not “sort these N items once”, but “keep this collection in
-order while it is edited for minutes or hours, then capture or persist a historical
-ordering when needed”.
+![Linux update-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/linux-update-heavy.svg)
 
-LayerKeySort is usually the wrong tool if all you need is a one-shot sort, a simple
-database `position` column, distributed/CRDT ordering, or persistent business identity.
-Applications own identity and storage; LayerKeySort owns ordering semantics.
+Each plot uses the same initial size, seed, units and linear-detail rules. Open the SVG for full-size inspection; exact coordinates, accounting and raw hashes are in the evidence linked above.
 
-## Choose a workflow
-
-- LksOrder: editable relative order, stable resident handles, before/after moves.
-- LksManagedOrder: comparator-managed order, stable equal insertion.
-- LksGroup/LksGroupBatch: flat immutable sequences and stable merge.
-- LksSnapshot: copied historical associations, LS1 and explicit wire persistence;
-  restoration gives fresh live handles.
-
-Items/business identity remain application-owned. Handle is not persistent;
-snapshot key is not live position. V3 Path/Tree APIs are absent from the V4 header;
-see [migration](MIGRATION_V3_V4.md).
-
-## First successful run
+## Build and first use
 
 ```sh
 cmake -S . -B build -DLKS_BUILD_BENCHMARKS=ON
@@ -77,55 +50,48 @@ cmake --build build --config Debug --parallel
 ctest --test-dir build -C Debug --output-on-failure
 ```
 
-Run build/layerkeysort_example (MSVC: build/Debug/layerkeysort_example.exe).
-[Minimal example](../examples/basic.c): create, insert, query, remove and destroy.
-[Seven examples](../examples/README.md) use only public headers.
+Run `build/layerkeysort_example` (MSVC: `build/Debug/layerkeysort_example.exe`). [basic.c](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/examples/basic.c) creates a container, inserts, queries, removes and destroys it. [Usage](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/USAGE.md) includes stable sorting; [seven public examples](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/examples/README.md) cover managed order, Groups and snapshot restore.
 
-```c
-#include <layerkeysort.h>
-int main(void) {
-    int item = 42;
-    const LksOrderHandle *handle = NULL;
-    LksOrder *order = lks_order_create();
-    if (!order) return 1;
-    if (lks_order_insert_back(order, &item, &handle) != LKS_STATUS_OK) {
-        lks_order_destroy(order); return 2;
-    }
-    lks_order_destroy(order); /* item remains application-owned */
-    return 0;
-}
-```
+CMake ≥3.21: `add_subdirectory`, offline FetchContent or installed `find_package(LayerKeySort CONFIG REQUIRED)`; link `LayerKeySort::layerkeysort`. Include only `<layerkeysort.h>`. The two-file distribution compiles as C17 and supports C++17 callers. [Integration commands](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/INTEGRATION.md).
 
-## Integrate
+## Full version evolution
 
-CMake >=3.21: add_subdirectory, offline FetchContent or installed
-find_package(LayerKeySort CONFIG REQUIRED), target LayerKeySort::layerkeysort.
-No Python/private headers for ordinary consumers. Deterministic two-file C17
-source ZIP plus SHA256SUMS; C++17 clients link the C library.
-[Integration guide](INTEGRATION.md).
+| Edition | Main engineering change | Compatibility and evidence |
+| --- | --- | --- |
+| 4.0 | Stable occurrence Handles, bounded blocks/AVL, immutable history and batch utilities | Frozen 64 functions / 14 types, LS1 and LKS4SNP1; [historical release record](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/V4_STABLE.md) |
+| 4.1 | Shared Block owner and compact Snapshot metadata | Source-compatible storage reduction; historical 100k–10m results and regressions in [4.1 record](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/V4_1_0.md) |
+| **4.2** | Affected-slot updates, bounded labels with AVL fallback, fixed-width wire conversion | Same public/wire contracts; cumulative Windows/Linux evidence and [Stable preparation record](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/V4_2_0.md) |
 
-## Limits and evidence
+**Download/source status:** This documentation presents the prepared Full v4.2.0 Stable edition at an immutable preparation revision. Main now includes the accepted Full v4.2.0 implementation and Stable metadata; v4.2.0 is not yet tagged or published. Published Stable and repository Latest remain [v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0); use that working release for published assets. The planned v4.2.0 tag and assets have not been published. [Stable 4.1 API](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md) remains accessible.
 
-V4 avoids resident Path growth/global relabel. Structural work O(B+log M),
-private B64; allocator/comparator/callback/OS costs remain. No whole-library hard
-latency or universal speed guarantee. Full snapshot export O(N+A); frequent
-exports/retained history can dominate time/memory. Mutable sources require caller
-serialization; items/contexts stay alive, ordering semantics stay consistent.
-Dangling handles cannot safely be tested after removal.
+## Full and Mini are independent
 
-The [4.1.0 update record](V4_1_0.md) links newer 100k–10m internal studies,
-including improved requested storage and documented performance regressions.
-Earlier [Preview.4 evidence](../benchmarks/results/v4-preview4/README.md) and
-[v4.0.0 Stable evidence](V4_STABLE.md) remain historical. New internal
-research should answer concrete engineering questions; external adoption or
-editor traces are useful but not mandatory prerequisites.
+| | Full | [Mini](../mini/README.md) |
+| --- | --- | --- |
+| Capabilities | Relative and comparator order, stable sort, Group/Batch, snapshots and restore | Lightweight relative edits and stable occurrence Handles |
+| Representation | Bounded blocks, labels and balanced index | Independent non-intrusive doubly linked list |
+| Arbitrary precedence | Label path with logarithmic AVL fallback | O(n) worst case |
+| Public API | 64 functions | 18 functions |
+| Build | Root `CMakeLists.txt` | `mini/CMakeLists.txt` |
+| Published release | [Full 4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) | [Mini 1.0.0](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
-## Documentation
+Neither product links the other's production code. These are capability distinctions, not Mini performance rankings. Workbench is a Mini consumer/validation application under `consumers/layer-order-workbench/`. Embedded/MCU remains a future concept.
 
-- [Usage](USAGE.md), [API](API.md), [Examples](../examples/README.md)
-- [Compatibility](COMPATIBILITY.md), [Migration](MIGRATION_V3_V4.md)
-- [Validation](VALIDATION.md), [Development](DEVELOPMENT.md)
-- [Architecture](ARCHITECTURE.md), [Changelog](../CHANGELOG.md)
+## Contracts and practical costs
 
-Earlier Preview guides and captured V3 benchmarks are historical, not the current
-primary API. License: [MIT](../LICENSE).
+Handles represent live occurrences and expire on own removal/source destruction; they are not durable application IDs. Keep comparator semantics and all affected sorted borrowers consistent when editing shared payloads. Reinsertion can fail and remove/edit/reinsert is not transactional. Caller synchronization is required for conflicting access; callback guards and marker atomics are not container locks.
+
+Local block/index work is bounded by private block policy plus balanced-index maintenance, with allocator/comparator costs in addition. Snapshot capture/export is O(N+A); retained histories and restore scratch consume memory. Full supplies no general binary ABI, database, transaction manager or CRDT. The [complete API contracts](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/IMPLEMENTATION_API_REFERENCE.md) and [performance evidence](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/FULL_RC1_EVIDENCE.md) describe applicability and unmeasured alternatives.
+
+## Documentation and maintenance
+
+1. [Implementation walkthrough](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/IMPLEMENTATION_WALKTHROUGH.md) — execution paths across 16 production modules.
+2. [Complete API guide](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/IMPLEMENTATION_API_REFERENCE.md) — all 64 functions, lifetime, failure and concurrency.
+3. [Internal algorithms](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/IMPLEMENTATION_INTERNALS.md) — bounded blocks, labels, AVL, wire and stable merging.
+4. [Validation and distribution](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/IMPLEMENTATION_VALIDATION.md) — tests, fixtures and reproducible integration.
+
+[Architecture](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/ARCHITECTURE.md) · [Compatibility](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/COMPATIBILITY.md) · [V3 migration](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/MIGRATION_V3_V4.md) · [Development](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/docs/DEVELOPMENT.md) · [Changelog](https://github.com/RXY712200/LayerKeySort/blob/c119c930b36becbc24392f6bb29bef761e72ea09/CHANGELOG.md)
+
+[Full roadmap #3](https://github.com/RXY712200/LayerKeySort/issues/3) · [Mini roadmap #7](https://github.com/RXY712200/LayerKeySort/issues/7) · [Product-line policy](PRODUCT_LINES.md) · [Contributing](../CONTRIBUTING.md) · [MIT license](../LICENSE) · [Author’s independent project directory](https://quiveld.com/projects/independent/)
+
+Integration navigation: the two Repo-owned Full entries in `docs/index.html` now select `blob/main/docs/FULL.md` and `blob/main/docs/FULL.zh-CN.md`, taking effect with this navigation integration. Current Full technical documents and figures remain pinned to the immutable Full preparation revision; retain v4.1.0 download access until publication.
