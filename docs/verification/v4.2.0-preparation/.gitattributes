@@ -1,2 +1,0 @@
-# Preserve captured command output bytes and the recorded SHA-256 digests.
-*.log -text
