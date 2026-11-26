@@ -2,7 +2,7 @@
 
 ## Full Stable and the 4.2 candidate
 
-Main and published Stable are **4.1.0**. For downloadable source and distribution assets, use the [Stable release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). The separate 4.2 candidate is under review, unmerged, untagged, and unpublished. Mini follows an independent release line.
+Main now contains **4.2.0-rc.1**. Published Stable and Latest remain **4.1.0**. For downloadable source and distribution assets, use the [Stable release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0). RC.1 has been integrated into main, but has not been tagged or published. Mini follows an independent release line.
 
 Full provides stable Handles for live occurrences. The application owns payload, durable identity and transactions. The 4.2 candidate uses bounded labels for cross-block precedence, with AVL fallback. The [pinned evidence](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/FULL_RC1_EVIDENCE.md) compares candidate elapsed time with Stable 4.1 on matched workloads.
 
@@ -11,7 +11,7 @@ Full provides stable Handles for live occurrences. The application owns payload,
 | All live-order cells | 0.629 (37.1% lower) | 0.640 (36.0% lower) |
 | Compare-heavy cells | 0.198 (80.2% lower) | 0.219 (78.1% lower) |
 
-Each ratio divides candidate by control elapsed time, and the table reports the median of those ratios across matched conditions on each host. Initial populations were 1k, 10k and 100k occurrences. A flat-history composition was faster for endpoint-only lifecycle workloads. For relative edits with history and restore, compare using the target workload. See the [candidate verification record](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.md) and [candidate implementation walkthrough](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.md). The [historical V4 architecture design](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.md) remains available as design history. Local links below describe the Stable baseline on main.
+Each ratio divides candidate by control elapsed time, and the table reports the median of those ratios across matched conditions on each host. Initial populations were 1k, 10k and 100k occurrences. A flat-history composition was faster for endpoint-only lifecycle workloads. For relative edits with history and restore, compare using the target workload. See the [candidate verification record](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.md) and [candidate implementation walkthrough](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.md). The [historical V4 architecture design](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.md) remains available as design history. Local links below describe the integrated RC.1 on main; the published Stable remains v4.1.0.
 
 ![Matched live-order elapsed ratios by host](https://raw.githubusercontent.com/RXY712200/LayerKeySort/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/benchmarks/research/full-v4.2.0-rc.1/live-ratios.svg)
 

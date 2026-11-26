@@ -1,26 +1,26 @@
 # LayerKeySort Full — v4.1.0 Stable
 
-文档版本：以下固定候选提交中的中文指南属于未合并、未发布的 Full 4.2.0-rc.1 文档；历史记录译本只解释其原版本，不表示候选实现已发布。已发布 Stable 4.1.0 的权威文档仍见 [Stable API（英文）](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md)、[Stable 使用说明（英文）](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/USAGE.md)及[原始变更日志](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/CHANGELOG.md)。
+文档版本：以下固定候选提交中的中文指南属于已集成至 main、尚未发布的 Full 4.2.0-rc.1 文档；历史记录译本只解释其原版本，不表示候选实现已发布。已发布 Stable 4.1.0 的权威文档仍见 [Stable API（英文）](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/API.md)、[Stable 使用说明（英文）](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/docs/USAGE.md)及[原始变更日志](https://github.com/RXY712200/LayerKeySort/blob/70d7f0ef5857b54381b863d292a213909d87459f/CHANGELOG.md)。
 
 ## Full：Stable 与候选版
 
-主分支和已发布 Stable 均为 **4.1.0**。需要可下载的源码或发行包时，请使用 [Stable 发行页](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。独立的 4.2 候选分支仍在审查，尚未合并、打标签或发布。Mini 使用独立的版本和发布路径。
+主分支现已集成 **4.2.0-rc.1**；已发布 Stable 和 Latest 仍为 **4.1.0**。需要可下载的源码或发行包时，请使用 [Stable 发行页](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。RC.1 已合入 main，尚未打标签或发布。Mini 使用独立的版本和发布路径。
 
-Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/FULL_RC1_EVIDENCE.zh-CN.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
+Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/FULL_RC1_EVIDENCE.zh-CN.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
 
 | 负载 | Windows | Linux |
 | --- | ---: | ---: |
 | 全部实时顺序条件 | 0.629（降低 37.1%） | 0.640（降低 36.0%） |
 | 比较密集条件 | 0.198（降低 80.2%） | 0.219（降低 78.1%） |
 
-比值为候选耗时除以对照耗时。先分别计算同一平台每个匹配条件的耗时比，再取这些比值的中位数。初始规模为 1k、10k 和 100k 个实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.zh-CN.md) 与 [候选实现导读；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。另见[历史 V4 架构设计的完整中文译本；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.zh-CN.md)。下文未标候选的仓库内链接描述主分支 Stable 基线；固定候选链接另有版本标签。
+比值为候选耗时除以对照耗时。先分别计算同一平台每个匹配条件的耗时比，再取这些比值的中位数。初始规模为 1k、10k 和 100k 个实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_2_0_RC1.zh-CN.md) 与 [候选实现导读；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。另见[历史 V4 架构设计的完整中文译本；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/design/V4_ARCHITECTURE.zh-CN.md)。下文仓库内链接随 main 说明已集成 RC.1；已发布 Stable 仍为 v4.1.0，固定链接保留其版本标签。
 
 ![两平台的配对耗时比](https://raw.githubusercontent.com/RXY712200/LayerKeySort/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/benchmarks/research/full-v4.2.0-rc.1/live-ratios.zh-CN.svg)
 
 
 [← LayerKeySort 产品家族首页](../README.zh-CN.md) | [English](FULL.md) | 简体中文
 
-本页专门介绍仓库根目录的 **Full** 产品，而不是 Mini。公共 API、持久化格式与兼容性契约以 [V4_FREEZE；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_FREEZE.zh-CN.md) 等权威文档为准。
+本页专门介绍仓库根目录的 **Full** 产品，而不是 Mini。公共 API、持久化格式与兼容性契约以 [V4_FREEZE；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_FREEZE.zh-CN.md) 等权威文档为准。
 
 LayerKeySort 是一个 **C17 动态顺序管理库**。它解决的不是“把一组元素一次排好”，
 而是“一个集合长期存在，并且持续发生插入、删除、移动、遍历、保存历史顺序和恢复”。
@@ -116,9 +116,9 @@ int main(void) {
 
 - [中文集成指南](INTEGRATION.zh-CN.md)
 - [英文完整集成指南](INTEGRATION.md)
-- [API 参考；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/API.zh-CN.md)
+- [API 参考；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/API.zh-CN.md)
 - [使用指南](USAGE.zh-CN.md)
-- [V3 → V4 迁移；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/MIGRATION_V3_V4.zh-CN.md)
+- [V3 → V4 迁移；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/MIGRATION_V3_V4.zh-CN.md)
 
 ## 已知成本与边界
 
@@ -157,11 +157,11 @@ Mini 已在独立的 `mini/` 目录发布 v1.0.0 Stable，但不属于 Full V4 �
 
 ## 文档
 
-- [架构；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/ARCHITECTURE.zh-CN.md)
-- [API；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/API.zh-CN.md)
-- [兼容性；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/COMPATIBILITY.zh-CN.md)
-- [验证；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/VALIDATION.zh-CN.md)
-- [开发维护；未合并 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/DEVELOPMENT.zh-CN.md)
+- [架构；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/ARCHITECTURE.zh-CN.md)
+- [API；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/API.zh-CN.md)
+- [兼容性；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/COMPATIBILITY.zh-CN.md)
+- [验证；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/VALIDATION.zh-CN.md)
+- [开发维护；已集成但未发布 RC.1 文档](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/DEVELOPMENT.zh-CN.md)
 - [4.1.0 更新记录；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_1_0.zh-CN.md)
 - [v4.0.0 Stable 历史记录；历史记录中文译本](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/V4_STABLE.zh-CN.md)
 - [中文变更日志（候选快照，含明确标记的历史发布记录）](https://github.com/RXY712200/LayerKeySort/blob/16bdde588b1bbf996bf5b6392a5fb91fb45d3576/docs/CHANGELOG.zh-CN.md) · [原始 Changelog](../CHANGELOG.md)
