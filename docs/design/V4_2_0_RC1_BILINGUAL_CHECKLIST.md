@@ -115,3 +115,8 @@ The trusted main ownership map classifies CHANGELOG.md exactly as Full but does 
 
 89/89 entries have counterparts or inline editions; none lacks a language edition. Presence is not semantic acceptance. Full content comparisons are recorded per row and in the audit; final Repo immutable pins and both exact-head hosted checks are verified at delivery, separately from independent acceptance.
 89/89 项已有对应版或内嵌双语，无缺失语言版本。文件存在非语义接受；Full实际逐项对照见本表及审计，最终Repo不可变链接与两精确提交托管检查在交付时单独核实，独立验收另行进行。
+
+## Targeted contract recheck / 定点契约复核
+
+API, Architecture and Usage: both editions corrected for all-occurrence/shared-container comparator mutation, fallible nontransactional reinsertion and expired Handles. Architecture additionally distinguishes Snapshot/Group reads and conflicting Group/Batch activity. Source evidence and unchanged freeze recorded in the reconstruction audit.
+API、架构及用法双语已修全部实例及共享容器的比较字段修改、可失败非事务重插及Handle失效；架构另分Snapshot／Group读取及冲突Group／Batch活动。源码依据及未变冻结见重建审计。

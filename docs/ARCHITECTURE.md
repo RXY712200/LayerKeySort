@@ -115,9 +115,7 @@ Applications own item payloads, comparator contexts, business IDs and external s
 
 LayerKeySort owns its structural objects and copied snapshot bytes.
 
-Mutable live sources require caller serialization. Atomic source-marker lifetime
-bookkeeping is not a general locking scheme. Immutable snapshot/Group reads may be
-shared when object lifetime is externally protected.
+Immutable Snapshots support concurrent reads when their lifetime is externally protected. Group pure read/read concurrency additionally requires safe application payload access. Externally synchronize Group reads against merge, capture, destruction and relevant Batch operations, including merge-all activity involving constituent Groups. Mutable live sources require caller serialization. Callback reentry guards and atomic SourceMarker lifetime management are not container locks. See the [complete concurrency contract](IMPLEMENTATION_API_REFERENCE.md).
 
 ## 7. Long-term product boundary
 
