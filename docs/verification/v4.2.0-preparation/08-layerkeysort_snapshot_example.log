@@ -1,0 +1,10 @@
+LS1.20261006.0000000000000000
+LS1.20261006.0000000000000001
+LS1.20261006.0000000000000002
+Historical snapshot survives source mutation and destruction:
+row 0: a
+row 1: b
+row 2: c
+draft
+review
+publish
