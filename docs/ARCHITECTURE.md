@@ -134,3 +134,6 @@ Current post-v4 roadmap and active technical debt are tracked in
 [Freeze](V4_FREEZE.md) defines the V4.0 compatibility contract.
 [4.1.0 record](V4_1_0.md) describes the compatible released optimizations;
 [v4.0.0 Stable record](V4_STABLE.md) remains historical release evidence.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
+Group pure reads require protected Group lifetime and safe payload access. Synchronize Group accessors against merge, capture, destruction and Batch merge-all involving constituent Groups. Synchronize GroupBatch accessors against merge-all and destruction. Private non-atomic busy fields are read by Group size/item and Batch size/chunk accessors and written by merge and merge-all; capture accesses Group busy and marker state. Capture guards in snapshot.c and atomic SourceMarker references protect reentry/marker lifetime, not container locking. Immutable Snapshot concurrent reads still require lifetime protection throughout reading.

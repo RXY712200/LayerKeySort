@@ -120,3 +120,6 @@ The trusted main ownership map classifies CHANGELOG.md exactly as Full but does 
 
 API, Architecture and Usage: both editions corrected for all-occurrence/shared-container comparator mutation, fallible nontransactional reinsertion and expired Handles. Architecture additionally distinguishes Snapshot/Group reads and conflicting Group/Batch activity. Source evidence and unchanged freeze recorded in the reconstruction audit.
 API、架构及用法双语已修全部实例及共享容器的比较字段修改、可失败非事务重插及Handle失效；架构另分Snapshot／Group读取及冲突Group／Batch活动。源码依据及未变冻结见重建审计。
+
+Batch follow-up: API/Architecture/Usage/detailed API bilingual contracts reviewed for shared payloads, chunk ownership and synchronization. Markdown counts and separate Repo HTML results are reported independently.
+Batch补充：双语API／架构／用法／详细API已核共享载荷、分片所有权和同步；Markdown计数与Repo HTML结果分开记录。

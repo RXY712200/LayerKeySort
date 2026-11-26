@@ -98,3 +98,5 @@ V4 避免 live Path 增长和全范围 live-coordinate relabel，但仍存在：
 
 详见 [API](API.md)、[兼容性](COMPATIBILITY.md)、[冻结契约](V4_FREEZE.md)、
 [迁移指南](MIGRATION_V3_V4.md)。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。

@@ -136,3 +136,9 @@ FULL-RI-001／002保B64／标签／AVL／区间更新及有界原生比较证据
 ## 独立审核定点契约修复
 
 审查发现普通指南的Group并发及共享对象修改说明不完整。API、架构和用法现要求处理所有相关托管容器及其他有序借用结构中的全部受影响实例，必要时重建或替换Group；明确删除Handle立即失效、重插可失败、非原子事务及应用恢复责任。架构区分快照并发读、Group纯读条件及与合并／捕获／销毁／Batch活动的外部同步。源码依据：immutable_group.c大小与读取接口访问busy，合并、批合并及捕获访问可变busy／marker；私有头busy非原子。重入守卫和原子标记寿命不是锁。冻结源码／头／测试未变。
+
+## Batch contract and count reconciliation / Batch契约及计数协调
+
+本轮明确Batch访问冲突、借用分片及共享对象修改后的重建。依据为immutable_group.c访问器／merge_all／捕获、非原子busy和snapshot.c捕获／标记路径。旧1,099、中间1,101及后续1,109链接对应不同文档版本，均非HTML验证。下述最终数在本次修改后重算；HTML另在Repo分支检查。
+
+最终Markdown检查：169个范围内跟踪Markdown，1,109个本地行内链接目标／片段，缺失路径及锚点为零。方法：build/check_rc_links.py解析相对行内Markdown链接及GitHub标题／HTML-ID锚点，排远程URL与Mini／Workbench树。这不是HTML导航审查。

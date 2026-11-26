@@ -139,3 +139,5 @@ all families. tools/verify_v4_api.py rejects unreviewed signature/layout/name ch
 
 - `lks_sort`
 - `lks_status_string`
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.

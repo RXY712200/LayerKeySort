@@ -270,3 +270,6 @@ Read in this order:
 8. [Validation map](IMPLEMENTATION_VALIDATION.md): tests, evidence and reproducible commands.
 
 This guide explains every public function's purpose, implementation entry point and principal constraints. Source inspection remains necessary for line-level behavior; the guide is not a formal proof of every caller interaction.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.
+Group pure reads require protected Group lifetime and safe payload access. Synchronize Group accessors against merge, capture, destruction and Batch merge-all involving constituent Groups. Synchronize GroupBatch accessors against merge-all and destruction. Private non-atomic busy fields are read by Group size/item and Batch size/chunk accessors and written by merge and merge-all; capture accesses Group busy and marker state. Capture guards in snapshot.c and atomic SourceMarker references protect reentry/marker lifetime, not container locking. Immutable Snapshot concurrent reads still require lifetime protection throughout reading.

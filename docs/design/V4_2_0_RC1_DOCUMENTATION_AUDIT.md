@@ -136,3 +136,9 @@ FULL-RI-001/002 retain the accepted B64/tag/AVL/range-update implementation and 
 ## Targeted independent-review contract repairs
 
 The reviewer identified incomplete Group concurrency and shared-item mutation advice in ordinary guides. API, Architecture and Usage now require handling every affected occurrence across ManagedOrders and other sorted borrowers, rebuilding/replacing Groups where ordering prerequisites change, immediate removed-Handle expiry, fallible reinsertion and application recovery rather than an atomic transaction. Architecture separately states Snapshot read concurrency, Group pure-read conditions and synchronization against merge/capture/destruction/Batch activity. Source evidence: immutable_group.c size/item readers inspect busy; merge, batch merge-all and capture access mutable busy/marker state; lks_immutable_group_internal.h busy is non-atomic. Reentry guards and atomic marker lifetime are not locks. Frozen source/header/tests remain unchanged.
+
+## Batch contract and count reconciliation / Batch契约及计数协调
+
+The targeted follow-up explicitly covers Batch accessor conflicts, borrowed chunk views and reconstruction after shared-item mutation. Source: immutable_group.c accessors/merge_all/capture, non-atomic busy declarations and snapshot.c capture/marker paths. The earlier 1,099, intermediate 1,101 and later 1,109 Markdown link counts describe different documentation revisions, not HTML coverage. The final count below is recomputed after this repair; HTML is inspected separately on the Repo branch.
+
+Final Markdown check: 169 tracked in-scope Markdown files, 1,109 local inline-link destinations/fragments, zero missing paths or anchors. Method: build/check_rc_links.py resolves relative inline Markdown links and GitHub-style heading/HTML-ID anchors; excludes remote URLs and Mini/Workbench trees. This is not an HTML navigation audit.

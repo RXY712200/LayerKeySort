@@ -47,3 +47,6 @@ V4 主公开头不导出实时 V3 Path、Tree 或 OrderedTree API。内部严格
 ## 7. 长期产品边界
 
 产品聚焦可变顺序引擎、不可变历史表示和不可变批处理工具。数据库、CRDT 引擎、持久身份注册表和通用应用状态属于其他层。路线与债务见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。[冻结契约](V4_FREEZE.md)定义 V4.0 兼容性，[4.1.0 记录](V4_1_0.md)说明已发布优化，[v4.0.0 Stable 记录](V4_STABLE.md)保留历史证据。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
+Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。

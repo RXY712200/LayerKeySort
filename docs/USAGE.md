@@ -120,3 +120,5 @@ Current roadmap: [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).
 [API](API.md), [compatibility](COMPATIBILITY.md) and [freeze](V4_FREEZE.md) define exact
 buffers, statuses, ownership, reentry and persistent compatibility.
 [Migration](MIGRATION_V3_V4.md) covers V3 Path/Tree workflows.
+
+If shared payload mutation invalidates GroupBatch sorted chunks, the application must reconstruct or replace the Batch. Borrowed Batch-owned Group views cannot be independently replaced or destroyed and remain valid only while their Batch lives.

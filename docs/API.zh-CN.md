@@ -106,3 +106,5 @@ Group 拥有平面数组副本并借用对象，不含索引或 Path。稳定构
 
 - `lks_sort`
 - `lks_status_string`
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。

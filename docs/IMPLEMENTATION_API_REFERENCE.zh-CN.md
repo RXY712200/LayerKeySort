@@ -272,3 +272,6 @@ C/C++ 仅使用公开头与目标库。快照借用的字节视图在快照销�
 8. [`docs/IMPLEMENTATION_VALIDATION.zh-CN.md`](IMPLEMENTATION_VALIDATION.zh-CN.md)：对应测试/证据与可复现命令。
 
 本手册解释了所有公开函数的**意图、真实实现入口及关键限制**，但不替换源码逐行检视，也不承诺 100% 的调用方行为均可被一份文字形式化证明。
+
+GroupBatch 的有序分片若因共享载荷修改而失效，应用必须重建或替换 Batch；借用的 Batch 所有 Group 视图不能单独替换或销毁，且仅在 Batch 仍存活时有效。
+Group 的纯读并发必须保护 Group 生命周期并安全访问载荷；Group 访问器须与合并、捕获、销毁及涉及分片的 Batch merge-all 外部同步。GroupBatch 访问器须与 merge-all 和销毁同步。私有非原子 busy 由 Group 大小／项访问器及 Batch 大小／分片访问器读取，由合并及 merge-all 写入；捕获访问 Group busy 和 marker。snapshot.c 的捕获守卫及原子 SourceMarker 引用只管理重入／标记寿命，不提供容器锁。不可变 Snapshot 并发读仍需保护整个读取期间的寿命。
