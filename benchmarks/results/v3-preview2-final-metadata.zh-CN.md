@@ -6,7 +6,7 @@
 
 测量环境为Windows 11、AMD Ryzen 9 9955HX、MSYS2 UCRT64 GCC 16.2.0、C17，严格 `-Wall -Wextra -Wpedantic -Werror`，计时有效优化 `-O3 -DNDEBUG`。原候选A使用CMake Release二进制；实验与最终候选从各自源码以相同有效优化编译。A/B/C/D计时比较应使用匹配的v3-preview2-policy-audit.csv；v3-preview2-final-comparison.csv独立确认最终源码，不是逐字节复刻。
 
-policy-audit比较A=原深度8、B16=深度16、C=无端点深度触发、Dlog=随规模对数增长端点上限。另测深度10和12。policy-cross比较主要种子 `0x91A30D47` 及保留种子 `0xDEADBEEF` 的A8/B16。最终计时CSV的非单调负载含两个种子。每行一次预热、三次测量，全部升序1m行例外为两次。最初三次主要交替比较波动约3%，因此每版本重复九次：A8/B16中位数72.991/73.080ms（主要）、71.409/71.845ms（保留）。这不支持实质交替回归。
+policy-audit比较A=原深度8、B16=深度16、C=无端点深度触发、Dlog=随规模对数增长端点上限。另测深度10和12。policy-cross比较主要种子 `0x91A30D47` 及留出种子 `0xDEADBEEF` 的A8/B16。最终计时CSV的非单调负载含两个种子。每行一次预热、三次测量，全部升序1m行例外为两次。最初三次主要交替比较波动约3%，因此每版本重复九次：A8/B16中位数72.991/73.080ms（主要）、71.409/71.845ms（留出）。这不支持实质交替回归。
 
 final-diagnostics使用独立 `-O2` 诊断构建，定义 `LKS_ENABLE_ALLOC_DIAGNOSTICS`、`LKS_BENCH_DIAGNOSTICS`、`LKS_BENCH_STAGE5_DIAGNOSTICS`。新path_max报告最终最大Path深度。诊断时间不与计时CSV比较；relabel和placement沿用benchmarks/README.md字段定义。累计请求字节计成功库分配请求；峰值为诊断分配器峰值。policy-diagnostics保留500k和1m的A8/C/Dlog/E12及最终B16深度、分配、修复、比较器、旋转、高度记录。baseline-extra补充Stable V2与Preview.1的相等300k、升序500k及降序100k/300k；500k一次预热两次测量，其他一次预热三次。
 

@@ -172,4 +172,4 @@ Insertion prepares the Handle and spare before commit; a cross-block move with a
 | Wrong legacy LK1 import | Direction/level/slot rules, canonical parse and duplicate coordinates |
 | High peak memory | Per-resident allocation, block slack, association growth and retained snapshots |
 
-These are source-derived investigation points. See the [validation map](IMPLEMENTATION_VALIDATION.zh-CN.md) for tests, commands and limits. Private mechanics are revision-specific. External consumers depend only on `include/layerkeysort.h`.
+These are source-derived investigation points. See the [validation map](IMPLEMENTATION_VALIDATION.md) for tests, commands and limits. Private mechanics are revision-specific. External consumers depend only on `include/layerkeysort.h`.

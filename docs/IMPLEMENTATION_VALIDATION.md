@@ -2,7 +2,7 @@
 
 [简体中文](IMPLEMENTATION_VALIDATION.zh-CN.md) · [Internals](IMPLEMENTATION_INTERNALS.md) · [Implementation audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
-Use RC validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, which contains both Preview.3 regressions. Operational source is `fe00536e7bd7f4e5128432ea4a29e54158074903`. Published Stable is Full 4.1.0 at `70d7f0ef5857b54381b863d292a213909d87459f`. [Preview.3 source and runs](V4_2_0_PREVIEW3.md) · [Full API index](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [Walkthrough](IMPLEMENTATION_WALKTHROUGH.zh-CN.md)
+Use RC validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, which contains both Preview.3 regressions. Operational source is `fe00536e7bd7f4e5128432ea4a29e54158074903`. Published Stable is Full 4.1.0 at `70d7f0ef5857b54381b863d292a213909d87459f`. [Preview.3 source and runs](V4_2_0_PREVIEW3.md) · [Full API index](IMPLEMENTATION_API_REFERENCE.md) · [Walkthrough](IMPLEMENTATION_WALKTHROUGH.md)
 
 ## 1. Confirm the validation checkout
 

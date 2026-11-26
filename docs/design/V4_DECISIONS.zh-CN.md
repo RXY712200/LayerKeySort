@@ -1,133 +1,175 @@
 # V4 Stage 3 决策与对抗审查（历史中文译本）
 
-原文：[V4_DECISIONS.md](V4_DECISIONS.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_DECISIONS.md)。原件保留；当时临时命名/策略为历史，最终API/wire/policy见[V4_FREEZE](../V4_FREEZE.md)。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
+原文：[V4_DECISIONS.md](V4_DECISIONS.md)，英文，固定于 [`5b59afff3bf3c8c59cb6c490059280bda195f55d`](https://github.com/RXY712200/LayerKeySort/blob/5b59afff3bf3c8c59cb6c490059280bda195f55d/docs/design/V4_DECISIONS.md)。原件保留；下列临时名称及策略属于历史，最终 API、线格式和策略见 [V4_FREEZE](../V4_FREEZE.md)。[双语清单](V4_2_0_RC1_BILINGUAL_CHECKLIST.md)。
 
-内容由 `3c0373f4bd62287766a84e79e9ee5dbc03194e38` 导入生产基线 `c33afa2ac08248bffa6dde51bd590a5d799b394a`，没有merge/cherry-pick研究commits。下列Stage3状态/证据为历史，后续实现范围见[V4 Preview.1](../V4_PREVIEW1.md)。状态：选定架构，**并非生产实现/采用**；规范[V4_ARCHITECTURE.md](V4_ARCHITECTURE.md)。基线 `cbf1862c63fa4e23bef4f1383df7e2b464051ae0`，本地分支 `v4-architecture-definition`，当时生产仍v3.1.0。
+内容由 `3c0373f4bd62287766a84e79e9ee5dbc03194e38` 导入生产基线 `c33afa2ac08248bffa6dde51bd590a5d799b394a`，没有合并或挑选研究提交。后续实现范围见 [V4 Preview.1](../V4_PREVIEW1.md)。状态为选定架构，**并非生产实现或采用**。规范见 [V4_ARCHITECTURE.md](V4_ARCHITECTURE.md)；基线 `cbf1862c63fa4e23bef4f1383df7e2b464051ae0`，本地分支 `v4-architecture-definition`，当时生产仍为 v3.1.0。
 
 ## 证据来源与分类
 
-- **实验：** Phase1/2报告、实际F/I/S代码、语义trace生成/回放、不可变captures及已有测试。
-- **选定：** block core/facade、occupancy、pointer handles、lifetime marker、snapshot domain分离及下列V3概念处置。
-- **假定/前提：** caller遵C生命周期、稳定比较器、串行mutable-core访问，提供持久occurrence映射/唯一export namespace，并接受显式全量snapshot成本。
-- **未决实现细节：** 签名/status映射、struct packing、wire grammar、portable atomic backend、精确field-write envelope、目标平台空间/性能；主架构已定。
+- **实验：** Phase1/Phase2 报告、实际 F/I/S 代码、语义轨迹生成器与回放器、不可变捕获记录及已有测试。
+- **选定决策：** 块核心及外观层、占用规则、指针句柄、生命期标记、快照域分离及下列 V3 概念处置。
+- **假设与前提：** 调用者遵守 C 生命期，提供稳定比较器，串行访问可变核心，提供持久出现身份映射及唯一导出命名空间，并接受显式完整快照成本。
+- **未决实现细节：** 签名及状态映射、结构体布局、线格式语法、可移植原子操作后端、精确字段写入范围和目标平台空间／性能。主架构选择已经确定。
 
-已审 `include/layerkeysort.h`、`src/tree.c` Tree/OrderedTree、私有tree/group/path headers、Path构造/比较/文本、`src/path_order_key.c`、Group/Batch、`src/sort.c`、allocator ownership/failure、API/compatibility/migration/development/design-history。研究审查含 `models.h`、`models.c`、`flat_attempt.py`、`campaign.py`、`replay.c`及prototype tests，非仅摘要。
+当时审阅的代码与契约包括 `include/layerkeysort.h`、`src/tree.c` 中的 Tree/OrderedTree、私有 Tree/Group/Path 头文件、Path 构造／比较／文本、`src/path_order_key.c`、Group/Batch、`src/sort.c`、分配器所有权和失败行为，以及 API、兼容性、迁移、开发和设计历史文档。研究专属审查包含 `models.h`、`models.c`、`flat_attempt.py`、`campaign.py`、`replay.c` 和原型测试，而非只读摘要。
 
 历史内永久证据：
 
-- [Phase1报告](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/docs/research/V4_ROOT_CAUSE_PHASE1.md)、[capture](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/benchmarks/results/v4-root-cause-phase1/)。
+- [Phase1报告](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/docs/research/V4_ROOT_CAUSE_PHASE1.md)、[捕获](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/benchmarks/results/v4-root-cause-phase1/)。
 - [Phase2报告](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/docs/research/V4_ARCHITECTURE_PHASE2.md)、[metadata](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/benchmarks/results/v4-architecture-phase2/metadata.json)、[comparison](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/benchmarks/results/v4-architecture-phase2/comparison.csv)、[maintenance](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/benchmarks/results/v4-architecture-phase2/maintenance.csv)、[validation](https://github.com/RXY712200/LayerKeySort/blob/3c0373f4bd62287766a84e79e9ee5dbc03194e38/benchmarks/results/v4-architecture-phase2/validation.json)。
 - 冻结Phase2测量实现 `1b8e9f39f5d13983690daba493ff3d8900c93c5d`；最终受审研究基线 `cbf1862c63fa4e23bef4f1383df7e2b464051ae0` 含后续验证/文档。
 
 ### 证据勘误
 
-Phase2正文称大型timeline五次full events，但maintenance.csv的 `run 12 / timeline-17-100000-100000 / V / capacity 128` 行为 **5 relabel events、4 full relabels**，568153次坐标替换，最大172867区域。以机器记录为准；旧正文作归档保留，不静改。此差异不改outcome D，不代表不同mutation trace。
+Phase2 正文将大型时间线描述为五次全范围事件；`maintenance.csv` 中 `run 12 / timeline-17-100000-100000 / V / capacity 128` 的机器记录实际为 **5 次重标记、其中 4 次全范围重标记**，坐标替换 568153 次，最大替换区域 172867 项。以捕获计数为准；旧正文保留为归档，不静默修改。差异不改变结果 D，也不意味着使用了不同变更轨迹。
 
-### 实验建立的内容及边界
+### 实验结论及其边界
 
-Phase1支持generation/validation/cleanup混合尾成本，非仅AVL；不改契约减少relabel会换来Path/LK1增长，未建立下界或普遍不可能性定理。
+Phase1 支持生成、验证和清理共同造成尾部成本，而非仅归因于 AVL。在不改变契约时减少重标记，以 Path/LK1 增长换取尾延迟变化。实验没有建立下界定理或普遍不可能性结论。
 
-Phase2验证25scenarios、81paired comparisons/162replays、2.2million语义操作、13.56million重复engine操作，144000prototype differential steps以独立flat order参考。failpoint覆盖prototype insert/split/move/snapshot preparation。这些是历史计数，非Stage3重跑计时。
+Phase2 验证了 25 个场景、81 组配对比较／162 次回放、220 万次语义操作和 1356 万次重复引擎操作；144000 个原型差分步骤采用独立扁平参考顺序。失败注入覆盖原型插入、分裂、移动及快照准备。这些是历史计数，不是 Stage 3 新执行的计时。
 
-大timeline（100000初始/100000操作/179886最终resident）：V3 observed max273.2439 ms、I128为0.3208、S为0.0807；requested resident metadata25.190/6.536/11.513 MB。prototype不含共享caller registry或allocator headers，非RSS或最终V4对象大小。
+大型时间线有 100000 个初始项、100000 次操作、179886 个最终驻留项。V3 观测最大耗时为 273.2439 ms，I128 为 0.3208 ms，S 为 0.0807 ms；请求的驻留元数据分别为 25.190／6.536／11.513 MB。原型计数不含共享调用者注册表及分配器头部，不是 RSS 或最终 V4 对象大小。
 
-I反复有界reindex writes：long churn143993638 item-field assignments，不是等量不同item；S该处更少index assignment，但每resident index record64-byte。I capacity32/128/256呈不同取舍，单机无通用最佳capacity。
+I 反复执行有界下标更新：长期增删记录了 143993638 次对象字段赋值，并非影响了同样数量的不同对象。S 在该条件下下标赋值较少，但每个驻留项的索引记录为 64 字节。I 的容量 32／128／256 呈现不同取舍；单机结果不能确定通用最佳容量。
 
-export另计。long-project同mutation history每100操作export，V/I/S build+cleanup共252.73/531.25/453.41 ms；每1000则26.75/49.62/43.28。不能称contextual order让export-heavy应用一律更快。
+导出成本另计。long-project 的相同变更历史每 100 次操作导出时，V/I/S 的导出构建加清理总耗时为 252.73／531.25／453.41 ms；间隔 1000 次时为 26.75／49.62／43.28 ms。因此不能声称上下文顺序让高导出频率应用一律更快。
 
-prototype I的AI1编码epoch/block rank/local ordinal，S的AS1编码epoch/rank，都是实验fixture非最终持久设计。prototype owner-counter/wrap与source destroy后snapshot未形成完整公共生命周期，Stage3明确解决而非意外继承。
+I 原型的 AI1 键编码代数、块秩和局部序号；S 的 AS1 键编码代数和秩。它们是实验固定数据，不是最终持久化设计。原型的所有者计数器／回绕处理，以及来源销毁后快照的行为，尚未形成完整公共生命期契约；Stage 3 显式确定这些语义，而不意外继承原型做法。
 
-## 决策1 — 上下文live order，显式历史export
+## 决策 1 — 上下文实时顺序，显式历史导出
 
-**选定：** 顺序属于container，live handle在该context查询；snapshot拥有历史row/key关联，无需后来重写。**理由：** Phase1揭generation/repair及增长取舍；Phase2 I/S去掉全部resident坐标替换并验证精确逻辑顺序，而全量export仍实测有成本，应分离工作域，非暗中发布变化live keys。**拒绝：** 每个独立live Path仍作V4规范位置、块标签作持续持久全局序、未验owner/revision就称历史key为current。**成本：** live查询需context，当前storage key需显式capture；export-heavy可选V3，是major契约变更。
+**选定：** 顺序属于容器；存活句柄在该上下文中查询。快照拥有历史行及键关联，之后无需重写。
 
-## 决策2 — 单block core及独占comparator facade
+**理由：** Phase1 揭示生成／修复成本和坐标增长取舍。Phase2 I/S 去除了全驻留项坐标替换，并验证精确逻辑顺序，但完整导出仍有实测成本。因此分离两类工作，而非静默发布不断变化的实时键。
 
-**选定：** 显式neighbor顺序为存储core，comparator facade拥有私有实例，保稳定等值/不可变binding。**理由：** V3已分manual Path和comparator invariant；Phase2共享identity/neighbor trace支持共同mutation engine，无据维护两算法。**拒绝：** I/S双生产engine、facade暴露可变core、仅为source兼容保两旧type。
+**拒绝：** 将每个独立实时 Path 保留为 V4 规范位置，将块标签当作持续持久化的全局顺序，或不检查所有者／修订号便将历史键称为当前键。
 
-托管search找首block maximum严格大于query，再做local upper bound。全局sorted concatenation使maxima单调；duplicates跨块不会漏掉更早greater item或变线性equal-run扫描。resident期间比较器可见数据不可变；任意move仅explicit core。
+**成本：** 实时查询需要上下文，当前存储键需要显式捕获。高导出频率用户可能更适合 V3；这是主版本契约不兼容。
 
-## 决策3 — 有界pointer arrays及implicit block AVL
+## 决策 2 — 单一块核心和独占比较器外观层
 
-**选定：** 初始B128、B+1scratch、独立稳定records、含subtree block count和threaded neighbors的implicit AVL；非单块时occupancy H..B，split一次，underflow merge/redistribute一次。**理由：** Phase2 I有紧凑contextual frontier，Phase1非指AVL为主因；计算block rank不新增top-level relabel；threads让export线性，避免prototype I每row查rank。
+**选定：** 显式邻居顺序作为存储核心；比较器外观层拥有一个私有实例，保留稳定等值顺序和不可变绑定。
 
-**新设计与证据区别：** half-full occupancy/redistribution非prototype原策略，旨在删除churn时按当前population约束metadata。规范代数证明count终止，array/index实现仍需differential/OOM。**拒绝：** 全resident growable数组、全局block-rank标签、级联repair窗、任意块搬迁、推测性B-tree替换。B128可调，非最优证明或兼容承诺。
+**理由：** V3 已经分离手动 Path 与比较器不变量；Phase2 共享身份／邻居轨迹验证了共同的逻辑变更引擎，没有证据支持维护两套存储算法。
 
-## 决策4 — 稳定pointer handle及显式C生命周期
+**拒绝：** I/S 双生产引擎、外观层暴露可变核心，或仅为源码兼容而保留两个旧类型。
 
-**选定：** opaque resident-record pointers，地址跨shift/block变更/rotation稳定；remove终止本次residence，business ID应用拥有；still-live foreign owner拒绝，已free stale handle无效。**理由：** I/S验证稳定resident identity，避免V3 unrelated mutation后重取；强stale检测需带独立lifetime/high-water/generation的registry，当前无实测必要。**拒绝：** handle即Path、序列化pointer、默按pointer数值排、跨进程持久handle、宣称检测dangling。**成本：** caller清除removed handle并跟踪container生命；防御性stale-token查询由business-ID map提供，不是free pointer保证。
+托管搜索先找块最大值严格大于查询值的首块，再执行块内上界查询。全局有序连接使块最大值单调；跨块重复值因此不会漏掉更早的较大项，也不会造成线性等值序列扫描。驻留期间比较器可见数据必须稳定；任意移动只属于显式核心。
 
-## 决策5 — 历史snapshot所有权与source身份
+## 决策 3 — 有界指针数组和隐式块 AVL
 
-**选定：** snapshot复制association/key，保小型不可变source marker，不保source container/items；marker引用生命周期防source-address ABA。currentness须显式live source+revision；revision不wrap，counter满时actual mutation先失败不改状态。**理由：** prototype证capture/immutable但未完整测source destroy；历史archive须存活且不把复用core地址误认source。**拒绝：** durable rows借item、悬挂旧core指针、未同步全局owner counter、revision wrap。marker refcount须portable atomic lifetime，独立对象destroy不共享隐蔽race；不增加container锁，backend仍实现gate。
+**选定：** 初始 B128，B+1 个暂存槽，独立稳定记录，隐式 AVL 维护子树块数及前驱／后继链接。除单块外，占用为 H..B；至多一次分裂，占用不足时至多一次合并或重新分配。
 
-## 决策6 — 新snapshot key家族，退出主Path/LK1
+**理由：** Phase2 I 呈现紧凑的上下文顺序取舍，Phase1 未将 AVL 识别为主要问题。计算块秩避免新的顶层重标记；前驱／后继链接支持线性导出，不必像 I 原型一样逐行查询秩。
 
-**选定：** 新版本家族，显式export domain+flat ordinal，仅同domain有residence-order意义；wire规范/golden review前不冻结字节。**理由：** AI1 block ranks暴露偶然拓扑，复用LK1让历史rank看似live层次坐标；V3 golden保护已发布数据，不能改义。**拒绝：** 挪用LK1v1、export block/local index、用epoch比较跨snapshot item先后、无应用契约宣称namespace全局唯一。caller提供/copied namespace，不同状态需不同namespace，唯一性在core外。**成本：** 应用跟踪domain/occurrence；新core load保order不保source marker/旧handle，保旧bytes需留旧artifact；仅LK1用户经已发布codec/tooling迁移。
+**新设计与证据的区别：** 至少半满及重新分配不是原型的原有策略；采用它们是为了在持续删除时按当前项数约束元数据。规范中的代数论证说明数量修复终止；数组及索引实现仍须差分和内存不足测试。
 
-## 决策7 — Flat不可变Group/Batch及显式持久化
+**拒绝：** 全驻留项可增长数组、全局块秩标签、级联修复窗口、任意块搬迁及推测性 B 树替换。B128 可以调整，不是数学最优值或兼容承诺。
 
-**选定：** 保稳定immutable item序列、chunk/equality语义；V4移除Group-owned Path/index；通过完成snapshot/occurrence mapping保存/恢复逻辑序，load建新优化blocks。**理由：** Group本已发布不可变序，export显式后无需生成mutable-core topology/层次坐标；持久化无需恢复私有blocks/AVL形。**拒绝：** 假Path兼容带回旧生成成本、存raw struct/pointer、隐式存caller payload、保证resolver/I/O副作用回滚。
+## 决策 4 — 稳定指针句柄和显式 C 生命期
 
-## 决策8 — 无分配commit，外部串行化
+**选定：** 不透明驻留记录指针，记录地址跨位移、块变化和旋转保持稳定。移除终止该次驻留关系，业务身份由应用拥有。仍存活的外来句柄被拒绝；已经释放的失效句柄无效。
 
-**选定：** mutation前准备records/spare blocks；pointer移动、pair repair、rotations、revision publish不分配；snapshot/load独立prepare；remove不分配。callback guard拒同core reentry，不可逆commit内无callback。**理由：** V2/V3强原子性及I/S failpoint支持保prepare/commit，不为contextual move放宽。**拒绝：** unlink后分配、部分split状态调用comparator、任意外部payload/I/O事务承诺、hidden locks。counter/count/reference-retention overflow为prepare失败，不wrap。
+**理由：** I/S 验证稳定驻留身份，消除了 V3 在无关变更后重新取得借用观察的需要。强失效检测需要带独立生命期、历史高水位及代数规则的注册表，目前没有实测需要支持引入这套架构。
 
-## 决策9 — F迁移非选定路径
+**拒绝：** 句柄即 Path、序列化指针、静默按指针数值排序、跨进程持久句柄，以及保证检测悬空指针。
 
-实际 `flat_attempt.py` 的mixed-epoch反例颠倒两item：earlier `(1,0)` 对later `(0,1)`，budgets1/8/32/128均不满足invariant；无已接受F performance frontier。拒该实现，不拒数学上所有独立key OM。contextual blocks避免mixed live key generation和deferred completion义务。新定理/encoding可启未来独立研究，Stage3不因推测重开竞赛。
+**成本：** 调用者清除已移除句柄并跟踪容器生命期。需要防御性失效令牌查询的应用使用自己的业务身份映射；这不是对已释放指针的变相保证。
+
+## 决策 5 — 历史快照所有权及来源身份
+
+**选定：** 快照复制关联数据和键，只保留小型不可变来源标记，不保留来源容器或对象。标记引用生命期防止来源地址复用造成 ABA。当前性需要显式存活来源及修订号；修订号永不回绕，计数器满时实际变更在修改状态前失败。
+
+**理由：** 原型建立了捕获和不可变性证据，但没有完整测试来源销毁。历史归档必须在来源销毁后存活，也不能将复用的核心地址误认为原来源。
+
+**拒绝：** 持久行保留借用对象、悬挂的旧核心指针、未同步全局所有者计数器，以及回绕的修订身份。
+
+标记引用计数需要可移植原子生命期记账，使原本独立对象的销毁不会共享隐藏竞争。这不增加容器锁；后端仍是实现验收条件。
+
+## 决策 6 — 新快照键家族，退出主要 Path/LK1
+
+**选定：** 新版本化家族使用显式导出域和扁平序号；仅同域键具有驻留顺序含义。后续 Preview 完成线格式规范和黄金向量审查前不冻结精确字节。
+
+**理由：** AI1 块秩暴露偶然拓扑，复用 LK1 会使历史秩看似实时层次坐标。V3 黄金向量保护已发布数据，不能改变其含义。
+
+**拒绝：** 改用 LK1 版本 1、导出块／局部下标、用代数确定跨快照对象先后，或无应用契约便声称命名空间全局唯一。导出命名空间由调用者提供，库复制；不同状态需要不同命名空间，唯一性在核心之外。
+
+**成本：** 应用跟踪域及出现关联。加载新核心保留顺序，不保留来源标记或旧句柄；需要旧字节时保留历史文件。仅使用 LK1 的用户经已发布编解码器及工具迁移。
+
+## 决策 7 — 扁平不可变 Group/Batch 和显式持久化
+
+**选定：** 保留稳定不可变对象序列及数据块／等值语义，V4 表示移除 Group 自有 Path 和索引机制。用完成的快照及出现映射保存／加载逻辑序列；加载时构建新的优化块。
+
+**理由：** Group 已经发布不可变顺序；显式导出后，无需生成可变核心拓扑及层次坐标。持久化语义不要求恢复私有块或 AVL 形状。
+
+**拒绝：** 通过虚假的 Path 兼容重新引入旧生成成本，保存原生结构体或指针，隐式序列化调用者载荷，或承诺回滚解析回调／I/O 副作用。
+
+## 决策 8 — 无分配提交，外部串行化
+
+**选定：** 变更前准备记录及备用块；指针移动、成对修复、旋转和修订号发布均无分配。快照／加载准备独立结果，移除无分配。回调保护拒绝同核心重入，不可逆提交内没有回调。
+
+**理由：** V2/V3 强原子性和 I/S 失败注入结果支持保留准备／提交，不为上下文移动放宽。
+
+**拒绝：** 摘除后分配，在部分分裂状态调用比较器，为任意外部载荷／I/O 承诺事务，以及隐藏锁。计数器、数量和引用保留溢出都属于准备失败，不回绕。
+
+## 决策 9 — F 迁移不是选定路径
+
+实际 `flat_attempt.py` 的混合代数反例将两个对象的顺序颠倒：较早项 `(1,0)`，较晚项 `(0,1)`；预算 1／8／32／128 均不能保持其不变量。没有测得已接受的 F 性能取舍前沿。这拒绝的是该实现，不是数学上所有可能的独立键顺序维护方案。
+
+选择上下文块避免混合实时键代数和延后完成义务。新定理或编码可以支持另行未来研究；Stage 3 不因这种推测重开架构竞赛。
 
 ## 对抗内部审查
 
-| 攻击 | 解决/剩余gate |
+| 攻击 | 解决方式／剩余验收条件 |
 | --- | --- |
-| 标签隐藏O(N) mutation | 无物化global ranks/Paths；只bounded arrays和log index ancestors。 |
-| delete变稀疏high-water blocks | half-full加一次merge/redistribution；无history-sized handle registry。 |
-| 级联split/merge | one-record mutation、B+1 split、H-1 pair证明；须实现/测精确过渡。 |
-| 跨move源/目标重叠 | 同block特殊路径；跨block先split，source repair用最终neighbors/locations。 |
-| 再造top-level relabel | AVL in-order定block序，count算rank，无数值block label。 |
-| maintenance使handle失效 | 独立稳定record分配，仅自身remove/destroy失效。 |
-| 过度承诺stale检测 | 明确freed-pointer前提，不把不安全owner dereference当验证。 |
-| source/items毁后snapshot | 全association复制、marker保留，不读旧core/item pointer。 |
-| source地址/counter复用 | 保留identity分配+revision不wrap，历史marker不复用。 |
-| 跨snapshot strcmp混淆 | 语义比较查domain，任意raw排序无live意义。 |
-| 持久化偶然block拓扑 | flat ordinal snapshot，新load布局，key独立B/AVL形。 |
-| 相等项跨块 | 单调maxima/upper bound跳过等值，保已有等值序。 |
-| iterator读retired block | 先验revision再读cached state，core须live。 |
-| 跨move unlink后OOM | 先备spare，无可失败commit，须完整failpoint。 |
-| callback reentry/data变化 | guard同core callback、稳定比较数据契约，无外部事务承诺。 |
-| marker无container锁而race | atomic lifetime；同core不许并发mutation/read。 |
-| 高频snapshot耗时/内存 | 显式O(N+A)，应用负责retention，多frequency测联合成本。 |
-| fragmentation破payload frontier | 测真实allocator headers/RSS/drain，不承诺prototype payload节省。 |
+| 标签隐藏 O(N) 变更 | 无物化全局秩／Path；只有有界数组及对数级索引祖先 |
+| 删除后留下稀疏高水位块 | 至少半满加一次合并／重新分配；没有按历史规模增长的句柄注册表 |
+| 级联分裂／合并 | 单条记录变更、B+1 分裂和 H-1 成对修复论证；实现并测试精确转换 |
+| 跨块移动来源与目标重叠 | 同块专门路径；跨块先分裂，再按最终邻居及位置修复来源 |
+| 重新引入顶层重标记 | AVL 中序定义块顺序，块数计算秩；没有数值块标签 |
+| 维护使句柄失效 | 独立稳定记录分配，仅自身移除／销毁使其失效 |
+| 过度承诺失效检测 | 明确已释放指针前提，不将不安全的所有者解引用当验证 |
+| 来源／对象销毁后使用快照 | 复制全部关联，保留标记，不读取旧核心／对象指针 |
+| 来源地址／计数器复用 | 保留身份分配，修订号不回绕；历史标记不能被复用 |
+| 跨快照 strcmp 混淆 | 语义比较检查域；任意原始排序没有实时含义 |
+| 持久化偶然块拓扑 | 扁平序号快照，加载新布局；键与 B／AVL 形状无关 |
+| 等值项跨块 | 单调最大值及上界跳过等值，保留既有等值顺序 |
+| 迭代器解引用退役块 | 读取缓存状态前检查修订号；核心须仍存活 |
+| 跨块移动摘除后内存不足 | 先准备备用块，无可失败提交；需要完整失败注入测试 |
+| 回调重入／数据改变 | 同核心回调保护及稳定比较数据契约；不承诺外部事务 |
+| 无容器锁时共享标记竞争 | 原子生命期记账；同核心不允许变更／读取并发 |
+| 高频快照耗尽时间／内存 | 显式 O(N+A)，应用负责保留；按多频率测联合成本 |
+| 碎片破坏载荷内存取舍 | 测真实分配器头部／RSS／清空；不承诺原型载荷节省 |
 
-### 剩余风险，非架构矛盾
+### 剩余风险，而非架构矛盾
 
-1. bounded local writes反复发生；更强occupancy repair可增churn，测/调B不改语义。
-2. per-record allocation/spare准备可有allocator暂停/碎片，结构界非realtime保证。
-3. portable atomic marker/ref/overflow需toolchain/concurrency测试，不能用process-global mutable ID绕过。
-4. save/load及domain/occurrence mapping为caller义务，高频full snapshots可能不适合持续索引数据库。
-5. raw-handle生命周期误用是无效C行为，不自动检测stale。
-6. AVL transplant/threads/cross-move repair顺序需invariant/OOM，prototype测试不自动证明新maintenance。
-7. 新wire grammar/namespace width/API/error names当时未freeze，以上语义约束之，不存在第二未决主设计。
-8. 外部trace/平台/更长history可能暴露不适应用，不声称普遍性能或library-wide形式界。
+1. 有界局部写入反复发生；更强占用修复可能增加部分增删成本。测量和调整 B 不改变语义。
+2. 逐记录分配和备用块准备可能造成分配器暂停／碎片。结构界不是实时保证。
+3. 可移植原子标记引用管理及溢出行为需要工具链／并发测试，不用进程全局可变 ID 绕过。
+4. 保存／加载及域／出现映射由调用者负责。高频完整快照可能不适合持续索引的数据库。
+5. 原始句柄生命期误用属于无效 C 行为，不自动检测失效。
+6. AVL 节点移植、前驱／后继链接及跨块移动修复顺序需要不变量／内存不足测试。原型测试不自动证明新维护实现。
+7. 新线格式语法、命名空间宽度、API 和错误名当时尚未冻结；以上语义约束它们，不存在第二个未决主设计。
+8. 外部轨迹、其他平台和更长历史可能暴露不适用场景；不声称通用性能或全库形式界。
 
-## Stage3 验证与退出
+## Stage 3 验证与退出
 
-本阶段只新增两架构文档；生产/研究source、public header/version/LK1 vectors/captures/build不改。无须新prototype消歧已选count策略，规范含local occupancy论证，但不证明未来pointer/index实现正确。
+本阶段只新增两份架构文档。既有生产／研究源码、公开头、版本、LK1 向量、捕获及构建配置不变。选定数量策略的局部占用论证已在规范中，无需新原型消歧；它不是未来指针／索引实现正确性的证明。
 
-本次历史run：Windows，重建既有configured目录。
+历史本轮验证在 Windows 重建既有已配置目录：
 
 | 配置 | 结果 |
 | --- | --- |
-| GCC C17、-Wall -Wextra -Wpedantic -Werror，research OFF | CTest13/13 |
-| GCC C17 strict warnings，Phase1/2 ON | CTest18/18 |
-| MSVC x64 Release，Phase1/2 ON | CTest18/18 |
-| MSVC x64 RelWithDebInfo AddressSanitizer，Phase1/2 ON | CTest18/18；无sanitizer findings |
-| 三GCC生产examples | 全执行，exit0 |
-| 本地链接/diff whitespace/source isolation | links全resolve；diffcheck通过；仅两文档变更 |
+| GCC C17、-Wall -Wextra -Wpedantic -Werror，研究 OFF | CTest 13/13 |
+| GCC C17 严格警告，Phase1/2 ON | CTest 18/18 |
+| MSVC x64 Release，Phase1/2 ON | CTest 18/18 |
+| MSVC x64 RelWithDebInfo AddressSanitizer，Phase1/2 ON | CTest 18/18；无检测器发现 |
+| 三个 GCC 生产示例 | 全部执行，退出码 0 |
+| 本地文档链接／差异空白／源码隔离 | 链接均可解析，差异检查通过，仅两份文档变更 |
 
-GCC16.2.0；MSVC用既有VS x64配置。本地Clang不可用，不声称新Clang/UBSan。目录 `build/v4-root-normal`、`build/v4-architecture`、`build/v4-architecture-msvc`（Release）、`build/v4-architecture-asan`（RelWithDebInfo，`/fsanitize=address`）。CMake重建再CTest `--output-on-failure`，GCC caches保 `-Wall -Wextra -Wpedantic -Werror`。examples：`layerkeysort_example`、`layerkeysort_ordered_example`、`layerkeysort_layer_list_example`。
+编译器为 GCC 16.2.0；MSVC 使用既有 Visual Studio x64 配置。本地 Clang 不可用，不声称新 Clang 或 UBSan 结果。目录为 `build/v4-root-normal`、`build/v4-architecture`、`build/v4-architecture-msvc`（Release）、`build/v4-architecture-asan`（RelWithDebInfo，`/fsanitize=address`）。通过 CMake 重建，再运行 CTest `--output-on-failure`；GCC 缓存保留 `-Wall -Wextra -Wpedantic -Werror`。示例为 `layerkeysort_example`、`layerkeysort_ordered_example` 和 `layerkeysort_layer_list_example`。
 
-测试含V3 core/mutation soak/consumer roundtrip/parser torture/RC contracts/workload-benchmark smoke、三个Phase1 strategy contracts、Phase2 I/S differential/OOM、F反例。通过保baseline，不测试未实现V4 API或重测全campaign；未声称新million-insert或外部benchmark。
+测试包含 V3 核心、变更长期测试、消费者往返、解析器压力、RC 契约、负载／基准冒烟、三个 Phase1 策略契约、Phase2 I/S 差分／内存不足，以及 F 反例。通过说明基线保留，不测试尚未实现的 V4 API，也不重新测量完整实验。没有声称新执行百万插入或外部基准比较。
 
-退出：**PASS，仅架构定义**。live representation/invariant、block/index、handles/moves、export/domain、Path/LK1、persistence/atomicity/ownership/threading/complexity targets/migration/non-goals均单一答案。更强occupancy、marker lifetime、wire/API为明确实现gates，未发现需重开方向的矛盾。后续可在另授权Preview实现，本commit不是Preview.1。
+退出判断：**PASS，仅架构定义**。实时表示及不变量、块／索引策略、句柄／移动、导出／域、Path/LK1、持久化、原子性、所有权、线程、复杂度目标、迁移和非目标均有单一答案。更强占用、标记生命期及线格式／API 是明确实现验收条件。没有矛盾要求重开方向。后续可在另行授权 Preview 实现本规范；本提交不是 Preview.1。

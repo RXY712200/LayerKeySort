@@ -140,7 +140,17 @@ def package(parent, header, source, version):
             "GCC/Clang: cc -std=c17 -I. layerkeysort.c example.c -o example\n"
             "MSVC Developer Command Prompt: cl /std:c17 /I. layerkeysort.c example.c\n"
             "Replace example.c with your application source. Items remain caller-owned.\n"
-            "Documentation: https://github.com/RXY712200/LayerKeySort\n")
+            "Documentation: https://github.com/RXY712200/LayerKeySort\n"
+            "\n简体中文\n"
+            "本包是从规范源码生成的 LayerKeySort C17 源码包。\n"
+            "layerkeysort.h 是公开 API，layerkeysort.c 是实现。\n"
+            "另含 example.c、LICENSE 和本 README.txt。\n"
+            "将两个 layerkeysort 文件复制到项目，在应用中包含\n"
+            "#include \"layerkeysort.h\"。\n"
+            "GCC/Clang：cc -std=c17 -I. layerkeysort.c example.c -o example\n"
+            "MSVC 开发人员命令提示符：cl /std:c17 /I. layerkeysort.c example.c\n"
+            "将 example.c 替换为应用源码。业务对象仍由调用者拥有。\n"
+            "文档：https://github.com/RXY712200/LayerKeySort\n")
     (directory / "README.txt").write_bytes(note.encode("utf-8"))
     archive = parent / f"{name}.zip"
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
