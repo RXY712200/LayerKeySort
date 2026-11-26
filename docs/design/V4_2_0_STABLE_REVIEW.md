@@ -12,7 +12,7 @@ B — Maintainer/consumer perspective: found and corrected a draft classificatio
 
 C — Repair recheck: compile/run the new sort snippet, strict Debug/Release CTest, seven examples, long mutation/parser tests, C/C++ distribution consumers, API/wire fixtures, package reproducibility/tamper rejection, link/anchor and protected-tree checks. Exact final remote checks are reported with their immutable HEADs in delivery; this ledger does not claim future CI success.
 
-Browser review rendered all ten archived SVGs and the bilingual HTML at 1280px/390px. The first direct-SVG Chrome screenshot timed out; rendering the same SVG content with GPU disabled succeeded. Screenshots remain local review artifacts. No timing experiment was rerun.
+Browser review rendered all ten archived SVGs and the bilingual HTML at 1280px/390px. The first direct-SVG Chrome screenshot timed out; rendering the same SVG content with GPU disabled succeeded. Screenshots remain local review artifacts. No timing experiment was rerun. A final evidence audit detected Git line-ending normalization of captured Windows logs; a directory-local attribute preserves raw bytes, and every committed log was rechecked against its recorded SHA-256.
 
 ## Per-file outcomes
 
