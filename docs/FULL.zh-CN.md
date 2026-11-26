@@ -4,16 +4,16 @@
 
 主分支和已发布 Stable 均为 **4.1.0**。需要可下载的源码或发行包时，请使用 [Stable 发行页](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。独立的 4.2 候选分支仍在审查，尚未合并、打标签或发布。Mini 使用独立的版本和发布路径。
 
-Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/FULL_RC1_EVIDENCE.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
+Full 用稳定 Handle 表示实时顺序中的单次存活实例；应用持有业务对象、身份和事务。4.2 候选版在跨块比较中优先使用有界标签，必要时回退到 AVL。以下是 [固定候选证据](https://github.com/RXY712200/LayerKeySort/blob/c4ef94497cd7d7c653b09dba0aa58eb27c70f0be/docs/FULL_RC1_EVIDENCE.zh-CN.md) 中相对 Stable 4.1 的配对耗时比与耗时降幅：
 
 | 负载 | Windows | Linux |
 | --- | ---: | ---: |
 | 全部实时顺序条件 | 0.629（降低 37.1%） | 0.640（降低 36.0%） |
 | 比较密集条件 | 0.198（降低 80.2%） | 0.219（降低 78.1%） |
 
-比值为候选耗时除以对照耗时。比较使用同平台同条件的中位数，覆盖 1k、10k、100k 初始实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/V4_2_0_RC1.md) 与 [候选实现导读](https://github.com/RXY712200/LayerKeySort/blob/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。下文仓库内链接描述主分支的 Stable 基线。
+比值为候选耗时除以对照耗时。先分别计算同一平台每个匹配条件的耗时比，再取这些比值的中位数。初始规模为 1k、10k 和 100k 个实例。端点编辑和平面历史的生命周期对照中，平面组合更快。需要相对编辑与历史恢复时，先按目标负载比较。参见 [候选验证](https://github.com/RXY712200/LayerKeySort/blob/c4ef94497cd7d7c653b09dba0aa58eb27c70f0be/docs/V4_2_0_RC1.zh-CN.md) 与 [候选实现导读](https://github.com/RXY712200/LayerKeySort/blob/c4ef94497cd7d7c653b09dba0aa58eb27c70f0be/docs/IMPLEMENTATION_WALKTHROUGH.zh-CN.md)。另见[历史 V4 架构设计的完整中文译本](https://github.com/RXY712200/LayerKeySort/blob/c4ef94497cd7d7c653b09dba0aa58eb27c70f0be/docs/design/V4_ARCHITECTURE.zh-CN.md)。下文仓库内链接描述主分支的 Stable 基线。
 
-![两平台的配对耗时比](https://raw.githubusercontent.com/RXY712200/LayerKeySort/643d8f79631ef8f13a6318afb8ddc02d858bf4e7/benchmarks/research/full-v4.2.0-rc.1/live-ratios.svg)
+![两平台的配对耗时比](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c4ef94497cd7d7c653b09dba0aa58eb27c70f0be/benchmarks/research/full-v4.2.0-rc.1/live-ratios.zh-CN.svg)
 
 
 [← LayerKeySort 产品家族首页](../README.zh-CN.md) | [English](FULL.md) | 简体中文
@@ -76,6 +76,14 @@ LayerKeySort 最适合长期维护复杂本地 mutable collection 的软件，�
 
 ## 最小示例
 
+```sh
+cmake -S . -B build -DLKS_BUILD_BENCHMARKS=ON
+cmake --build build --config Debug --parallel
+ctest --test-dir build -C Debug --output-on-failure
+```
+
+构建后运行 `build/layerkeysort_example`。使用 MSVC 时运行 `build/Debug/layerkeysort_example.exe`。 [最小示例源码](../examples/basic.c)
+
 ```c
 #include <layerkeysort.h>
 
@@ -100,7 +108,7 @@ int main(void) {
 ## 集成
 
 支持 CMake `add_subdirectory`、离线 FetchContent、本地安装 +
-`find_package(LayerKeySort CONFIG REQUIRED)`，也提供确定性的两文件 amalgamation。
+`find_package(LayerKeySort CONFIG REQUIRED)`。CMake 最低版本为 3.21，链接目标为 `LayerKeySort::layerkeysort`。普通使用者无需 Python 或私有头文件。发布提供可重复生成的两文件 C17 源码 ZIP 和 SHA256SUMS，C++17 应用可链接 C 库。
 
 见：
 
@@ -121,7 +129,7 @@ V4 不再为 live resident 维护 Path/LK1，因此避免了 V3 的全范围 liv
 - 完整 snapshot/export 是显式 `O(N+A)`；
 - 保留大量历史 snapshot 会占用相应历史内存。
 
-Mutable source 仍由调用方负责串行化；不承诺所有操作的统一硬延迟上界，
+调用者须串行访问可变来源，维持应用对象和比较器上下文的生命周期及排序语义。移除后不得用悬空句柄查询其有效性。不承诺所有操作的统一硬延迟上界，
 也不承诺 universal binary ABI、CRDT、持久化 live handle 或数据库职责。
 
 较新的 [4.1.0 更新记录](V4_1_0.md)包含 10 万至千万级研究、
