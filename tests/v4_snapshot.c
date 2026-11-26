@@ -397,10 +397,57 @@ static void compact_history(void)
     lks_snapshot_destroy(s);free(wire);zero_live();
     printf("compact history: %zu capture OOM points including final trim; immediate copy/callback failure/lifetime PASS\n",point-1);
 }
+static LksStatus copy_byte(void *item, uint64_t ordinal, void *context,
+    const void **data, size_t *size)
+{
+    size_t *calls = context;
+    CHECK(ordinal == (*calls)++);
+    *data = item;
+    *size = 1;
+    return LKS_STATUS_OK;
+}
+
+static void same_revision_distinct_snapshots(void)
+{
+    unsigned char *item = malloc(1), ns = 0xa5;
+    size_t calls = 0, n;
+    const void *data;
+    const LksOrderHandle *handle;
+    LksOrder *o = lks_order_create();
+    LksSnapshot *first = NULL, *second = NULL;
+    LksSnapshotOptions opts = {&ns, 1, copy_byte, &calls};
+    CHECK(item && o);
+    *item = 0x11;
+    CHECK(lks_order_insert_back(o, item, &handle) == LKS_STATUS_OK);
+    CHECK(lks_order_insert_back(o, item, &handle) == LKS_STATUS_OK);
+    CHECK(lks_order_snapshot_capture(o, &opts, &first) == LKS_STATUS_OK && calls == 2);
+    *item = 0x22;
+    ns = 0x5a;
+    calls = 0;
+    CHECK(lks_order_snapshot_capture(o, &opts, &second) == LKS_STATUS_OK && calls == 2);
+    CHECK(lks_order_snapshot_is_current(o, first) && lks_order_snapshot_is_current(o, second));
+    lks_order_destroy(o);
+    free(item);
+    CHECK(lks_snapshot_namespace(first, &data, &n) == LKS_STATUS_OK &&
+        n == 1 && *(const unsigned char *)data == 0xa5);
+    CHECK(lks_snapshot_namespace(second, &data, &n) == LKS_STATUS_OK &&
+        n == 1 && *(const unsigned char *)data == 0x5a);
+    for (size_t i = 0; i < 2; ++i) {
+        CHECK(lks_snapshot_association(first, i, &data, &n) == LKS_STATUS_OK &&
+            n == 1 && *(const unsigned char *)data == 0x11);
+        CHECK(lks_snapshot_association(second, i, &data, &n) == LKS_STATUS_OK &&
+            n == 1 && *(const unsigned char *)data == 0x22);
+    }
+    lks_snapshot_destroy(second);
+    CHECK(lks_snapshot_association(first, 1, &data, &n) == LKS_STATUS_OK &&
+        n == 1 && *(const unsigned char *)data == 0x11);
+    lks_snapshot_destroy(first);
+    zero_live();
+}
 int main(void)
 {
     static const size_t counts[]={0,1,63,64,65,127,128,129,191,192,193,1024}; size_t i;
-    keys(); wire(); callbacks_lifetime(); compact_history();
+    keys(); wire(); callbacks_lifetime(); compact_history(); same_revision_distinct_snapshots();
     for(i=0;i<sizeof(counts)/sizeof(*counts);++i) capture_restore(counts[i]);
     migration(); large_and_edges(); puts("Preview.3 snapshot keys/wire/torture/lifetime/bulk/OOM PASS"); return 0;
 }

@@ -104,6 +104,8 @@ python tools/verify_v4_api.py
 
 **LS1、LKS4SNP1 和 V3 LK1**
 
+Preview.2 固定宽度大端实现为 `fe00536e7bd7f4e5128432ea4a29e54158074903`，历史 golden 字节和解析拒绝用例保持不变。`same_revision_distinct_snapshots` 在两个当前快照之间只修改重复引用的调用者数据与 namespace，验证销毁 Order 和调用者数据后两份历史仍独立；保留现有回调、解析、恢复和分配失败覆盖。实测、平台与限制见 [Preview.2 决策报告](V4_2_0_PREVIEW2.md)。
+
 `tests/v4_wire_probe.c` 是独立的 wire 测试可执行文件；`tools/verify_v4_wire.py` 与 [`tests/fixtures/v4_wire_golden.json`](../tests/fixtures/v4_wire_golden.json)、V3 LK1 golden 对照；测试框架通过 `layerkeysort_v4_wire_golden` 检验已编译的 probe。
 
 **Golden 常量不能由当前编码器重新生成后又拿来给当前编码器打分**。历史冻结字节变化需要显式版本政策和来源审查。

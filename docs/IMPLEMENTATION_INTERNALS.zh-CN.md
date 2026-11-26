@@ -192,7 +192,7 @@ SourceMarker 的原子操作只是管理标记最后释放的时机，**不代�
 
 ### 10.2 Wire：明确字节序，不保存原生 C 指针
 
-`snapshot_wire.c` 用 `snap_be_read/write` 执行大端转换；布局：
+`snapshot_wire.c` 的 `snap_be_read/write` 仅处理四字节与八字节字段，使用无符号移位、组合和单字节访问；不要求对齐或本机端序。仍先完整验证后分配，无新增分配点，布局：
 
 ~~~text
 magic = ASCII LKS4SNP1 (8)

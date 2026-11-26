@@ -274,7 +274,7 @@ offset  width  contents
 重复 N 次；不得有多余尾部字节
 ~~~
 
-完整大小是 `24 + D + 8*N + sum(Ai)`。长度字段均按源码 `snap_be_write/read` 使用显式大端，不是把 C 结构直接 `fwrite` 到文件，因此不依赖本机结构体对齐布局。
+完整大小是 `24 + D + 8*N + sum(Ai)`。Preview.2 的 `snap_be_write/read` 对四字节和八字节字段使用固定宽度的无符号移位和逐字节访问，仍是显式大端，不是把 C 结构直接 `fwrite` 到文件，因此不依赖本机结构体对齐布局。
 
 `lks_snapshot_serialize` 检查调用方缓冲区长度；不足则返回 `BUFFER_TOO_SMALL` 且不修改目标缓冲区，成功后按固定格式写入，不进行内部堆分配。
 

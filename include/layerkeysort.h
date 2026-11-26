@@ -12,8 +12,8 @@ extern "C" {
 #define LKS_VERSION_MAJOR 4
 #define LKS_VERSION_MINOR 2
 #define LKS_VERSION_PATCH 0
-#define LKS_VERSION_PRERELEASE "preview.1.2"
-#define LKS_VERSION_STRING "4.2.0-preview.1.2"
+#define LKS_VERSION_PRERELEASE "preview.2"
+#define LKS_VERSION_STRING "4.2.0-preview.2"
 
 /* Operation results. Constructors returning pointers use NULL on failure. */
 typedef enum LksStatus {
