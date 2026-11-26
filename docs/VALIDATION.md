@@ -33,6 +33,10 @@ The suite covers:
 
 All seven public examples execute in CI.
 
+## Candidate regression evidence
+
+The candidate retains the unaligned snapshot-buffer regression from `754b3088c160564f6666ee520284168ee5da6ac7` and the restored mixed-tag comparison regression from `3ac82d26301ea12876a3ebdba6319fe8233621f3`. Both are in `tests/v4_snapshot.c`. The former checks decoding and encoding at byte offset one against literal wire bytes. The latter deliberately clears two restored block tags, verifies the internal invariant and both comparison directions through the fallback, then restores the tags. These tests accompany the retained production implementation at `fe00536e7bd7f4e5128432ea4a29e54158074903`. Final hosted results must identify the actual documentation PR commit.
+
 ## Platform matrix
 
 Validated release configurations include:
