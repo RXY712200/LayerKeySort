@@ -52,7 +52,7 @@ CMake ≥3.21: `add_subdirectory`, offline FetchContent or installed `find_packa
 | --- | --- | --- |
 | 4.0 | Stable occurrence Handles, bounded blocks/AVL, immutable history and batch utilities | Frozen 64 functions / 14 types, LS1 and LKS4SNP1; [historical release record](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_STABLE.md) |
 | 4.1 | Shared Block owner and compact Snapshot metadata | Source-compatible storage reduction; historical 100k–10m results and regressions in [4.1 record](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_1_0.md) |
-| **4.2** | Affected-slot updates, bounded labels with AVL fallback, fixed-width wire conversion | Same public/wire contracts; cumulative Windows/Linux evidence and [Stable preparation record](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_2_0.md) |
+| **4.2** | Affected-slot updates, bounded labels with AVL fallback, fixed-width wire conversion | Same public/wire contracts; cumulative Windows/Linux evidence and [Stable release record](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_2_0.md) |
 
 Published Stable/Latest: [Full v4.2.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0), released 2026-11-27. [C17 source ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-amalgamation.zip) · [SHA-256 manifest](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-SHA256SUMS.txt). Released source: `v4.2.0` / `f751e1ee2afd682874281d6dc495969f9eca49eb`. [Historical 4.1 release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0).
 

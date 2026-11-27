@@ -52,7 +52,7 @@ CMake ≥3.21 支持 `add_subdirectory`、离线 FetchContent 或安装后 `find
 | --- | --- | --- |
 | 4.0 | 稳定实例 Handle、有界块／AVL、独立历史及批处理 | 冻结 64 函数／14 类型、LS1 与 LKS4SNP1；[历史发行记录](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_STABLE.zh-CN.md) |
 | 4.1 | 块共享 owner、紧凑快照元数据 | 源码兼容的存储缩减；十万至千万级历史结果及退化见[4.1 记录](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_1_0.zh-CN.md) |
-| **4.2** | 受影响槽位更新、有界标签及 AVL 回退、固定宽度线格式转换 | 公开／线格式契约不变；累计 Windows/Linux 证据及[Stable 准备记录](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_2_0.zh-CN.md) |
+| **4.2** | 受影响槽位更新、有界标签及 AVL 回退、固定宽度线格式转换 | 公开／线格式契约不变；累计 Windows/Linux 证据及[Stable 发行记录](https://github.com/RXY712200/LayerKeySort/blob/main/docs/V4_2_0.zh-CN.md) |
 
 已发布 Stable/Latest：[Full v4.2.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0)，发布日期 2026-11-27。[C17 源码 ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-amalgamation.zip) · [SHA-256 清单](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-SHA256SUMS.txt)。发行源码：`v4.2.0`／`f751e1ee2afd682874281d6dc495969f9eca49eb`。[历史 4.1 发行](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。
 
