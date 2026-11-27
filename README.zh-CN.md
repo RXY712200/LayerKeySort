@@ -36,7 +36,9 @@ Full／原生标签区间 OM 总体比为 1.052/1.020；部分更新密集条件
 
 ## GLib 原生性能对比
 
-[Full v4.2.0 与 GLib 2.90.1 对比实验报告](https://github.com/RXY712200/LayerKeySort/blob/298079288dcf6c75ac3ec04461c8b59259c2193c/benchmarks/research/glib-full-v420/REPORT.md)
+[Full v4.2.0 与 GLib 2.90.1 — Windows/Linux 原生综合对比实验报告](https://github.com/RXY712200/LayerKeySort/blob/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/REPORT.md)
+
+[测试代码与复现说明](https://github.com/RXY712200/LayerKeySort/blob/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/README.md) · [原始数据与环境记录](https://github.com/RXY712200/LayerKeySort/tree/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/results) · [全部汇总数据](https://github.com/RXY712200/LayerKeySort/blob/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/results/summary.csv) · [初期 Windows 实验](https://github.com/RXY712200/LayerKeySort/blob/298079288dcf6c75ac3ec04461c8b59259c2193c/benchmarks/research/glib-full-v420/REPORT.md)
 
 ## 构建与首次运行
 
