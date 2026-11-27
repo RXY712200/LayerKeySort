@@ -34,6 +34,10 @@ Full/native tag-range OM overall ratios were 1.052/1.020; some update-heavy cond
 
 All time/memory figures: [Windows compare-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/windows-compare-heavy.svg) · [Windows update-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/windows-update-heavy.svg) · [Linux compare-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/linux-compare-heavy.svg) · [Linux update-heavy](https://raw.githubusercontent.com/RXY712200/LayerKeySort/c119c930b36becbc24392f6bb29bef761e72ea09/benchmarks/research/full-v4.2.0-rc.1/linux-update-heavy.svg)
 
+## Native GLib comparison
+
+[Full v4.2.0 vs. GLib 2.90.1 — benchmark report](https://github.com/RXY712200/LayerKeySort/blob/298079288dcf6c75ac3ec04461c8b59259c2193c/benchmarks/research/glib-full-v420/REPORT.md)
+
 ## Build and first use
 
 ```sh
