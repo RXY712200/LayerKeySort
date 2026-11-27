@@ -2,7 +2,7 @@
 
 [简体中文](BENCHMARKS.zh-CN.md)
 
-Full v4.2.0 performance is described by the matched 4.2 archive below. It combines live-order comparisons, lifecycle cost and generated downstream replay. Historical files retain their original measurements and terminology. Stable preparation performs no new tuning or timing campaign.
+Full v4.2.0 performance is described by the matched 4.2 archive below. It combines live-order comparisons, lifecycle cost and generated downstream replay. Historical files retain their original measurements and terminology. Stable publication reused the accepted measurements without a new tuning or timing campaign.
 
 ## Current V4 evidence
 
@@ -47,7 +47,7 @@ Track that work in [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3
 
 ## Historical V3 performance evidence
 
-Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Full v4.1.0 is the current published Stable; the Preview and v4.0.0 measurements remain historical.
+Historical Preview.4 measurement scope was **experimental Preview.4**: [flat immutable Groups/Batch and full workload evidence](V4_PREVIEW4.md), plus [immutable snapshots, LS1, persistence, restoration and V3 import](V4_PREVIEW3.md), alongside [live moves and managed order](V4_PREVIEW2.md). Full v4.2.0 is the current published Stable; the Preview and v4.0.0 measurements remain historical.
 Earlier milestone guides are historical records; Preview.5 froze the API/wire contracts, preserved through RC.1 and Stable.
 
 The local V4 Preview.1 sanity screen is described in [V4 Preview.1](V4_PREVIEW1.md).

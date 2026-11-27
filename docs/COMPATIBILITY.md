@@ -1,8 +1,10 @@
 # LayerKeySort V4 compatibility
 
+Released source: [`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0), commit `f751e1ee2afd682874281d6dc495969f9eca49eb`. RC/Preview test pins below are retained historical verification baselines.
+
 [简体中文](COMPATIBILITY.zh-CN.md)
 
-Full v4.2.0 retains all 64 functions, 14 public types, LS1/LKS4SNP1 fixtures and strict V3 migration. Its preparation changes release metadata, not operational semantics. See the [4.2 verification record](V4_2_0.md).
+Full v4.2.0 retains all 64 functions, 14 public types, LS1/LKS4SNP1 fixtures and strict V3 migration. Stable promotion changed release metadata, not operational semantics. See the [4.2 verification record](V4_2_0.md).
 [V4 freeze](V4_FREEZE.md) defines the 4.x source/layout and persistent-format contract.
 V4.0.0 Stable preserves the Preview.5 freeze after independently reviewed RC.1.
 Full 4.1.0 introduced a compatible minor storage optimization, retained in 4.2.0.

@@ -1,5 +1,7 @@
 # Full v4.2.0: complete public API and contract guide
 
+Released source: [`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0), commit `f751e1ee2afd682874281d6dc495969f9eca49eb`. RC/Preview test pins below are retained historical verification baselines.
+
 [简体中文](IMPLEMENTATION_API_REFERENCE.zh-CN.md) · [Exact declaration index](design/V4_2_0_RC1_API_INDEX.md) · [Source reconstruction](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
 This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
