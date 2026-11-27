@@ -1,0 +1,31 @@
+name: Native GLib overall research
+on:
+  push:
+    branches: [research/glib-full-v420-overall-20261127]
+    paths:
+      - '.github/workflows/research-glib-overall.yml'
+      - 'benchmarks/research/full-v420-academic-evidence/benchmark.c'
+      - 'benchmarks/research/full-v420-academic-evidence/run.py'
+      - 'benchmarks/research/full-v420-academic-evidence/linux.sh'
+permissions:
+  contents: read
+jobs:
+  native-linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Native build prerequisites
+        run: sudo apt-get update -qq && sudo apt-get install -y ninja-build pkg-config libffi-dev libpcre2-dev zlib1g-dev gettext python3-venv
+      - name: Build actual GLib and execute bounded campaign
+        run: bash benchmarks/research/full-v420-academic-evidence/linux.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-glib-overall-linux
+          path: |
+            build/glib-overall-linux-results/
+            build/glib-overall-deps/glib-build/meson-logs/meson-log.txt
+          if-no-files-found: warn
