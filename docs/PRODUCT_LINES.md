@@ -78,7 +78,7 @@ artifacts. Do not mark an unmerged or untagged candidate as released.
 Mini v1.0.0 uses `mini-v1.0.0` and its [own release page](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0).
 Full v4.2.0 is the repository-wide Latest **published Stable Release** as of
 2026-11-27. Mini remains independently published and is not designated Latest.
-See the [Full release record](V4_1_0.md).
+See the [Full release record](V4_2_0.md).
 
 ## Development, CI and review
 

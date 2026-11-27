@@ -63,7 +63,7 @@ GitHub Release 或公开发行**。正式发布必须另行明确授权，核查
 
 Mini v1.0.0 使用 `mini-v1.0.0`，正式入口为[独立 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)。
 截至 2026-11-27，仓库级 Latest 已发布 Stable Release 为 Full v4.2.0。
-Mini 保持独立发布，不占用该标识。详见 [4.1.0 发布记录](V4_1_0.md)。
+Mini 保持独立发布，不占用该标识。详见 [4.1.0 发布记录](V4_2_0.zh-CN.md)。
 
 ## 日常开发与验证
 
