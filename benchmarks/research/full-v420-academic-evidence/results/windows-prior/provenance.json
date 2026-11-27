@@ -1,0 +1,14 @@
+{
+  "commit": "298079288dcf6c75ac3ec04461c8b59259c2193c",
+  "files": [
+    {
+      "path": "benchmarks/research/glib-full-v420/results/raw.csv",
+      "sha256": "07726c364c13c7e2719328ede44727fd81b6929bd56412b6644869119c02bbdb"
+    },
+    {
+      "path": "benchmarks/research/glib-full-v420/results/environment.json",
+      "sha256": "8117f286b8c258ab6a92629a3fb01a9ab72ff90a3d5d96501832d684f5086fb4"
+    }
+  ],
+  "reused_without_new_experiments": true
+}
