@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "For academic use, cite this software and record the component and exact revision used. See CITATION.md for research-specific attribution. Citation is not a condition of the MIT license."
+type: software
+title: LayerKeySort
+authors:
+  - name: RXY712200
+repository-code: "https://github.com/RXY712200/LayerKeySort"
+url: "https://github.com/RXY712200/LayerKeySort"
+license: MIT
