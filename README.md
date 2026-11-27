@@ -36,7 +36,9 @@ All time/memory figures: [Windows compare-heavy](https://raw.githubusercontent.c
 
 ## Native GLib comparison
 
-[Full v4.2.0 vs. GLib 2.90.1 — benchmark report](https://github.com/RXY712200/LayerKeySort/blob/298079288dcf6c75ac3ec04461c8b59259c2193c/benchmarks/research/glib-full-v420/REPORT.md)
+[Full v4.2.0 vs. GLib 2.90.1 — integrated native Windows/Linux benchmark report](https://github.com/RXY712200/LayerKeySort/blob/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/REPORT.md)
+
+[Benchmark code and reproduction](https://github.com/RXY712200/LayerKeySort/blob/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/README.md) · [Raw results and environment records](https://github.com/RXY712200/LayerKeySort/tree/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/results) · [All summarized cells](https://github.com/RXY712200/LayerKeySort/blob/e36287c5ef21a96122acfb166bd4e0fc5270e98f/benchmarks/research/full-v420-academic-evidence/results/summary.csv) · [Original Windows study](https://github.com/RXY712200/LayerKeySort/blob/298079288dcf6c75ac3ec04461c8b59259c2193c/benchmarks/research/glib-full-v420/REPORT.md)
 
 ## Build and first use
 
