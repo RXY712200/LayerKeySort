@@ -1,5 +1,7 @@
 # Full v4.2.0：完整公开 API 索引与关键契约指南
 
+发行源码：[`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0)，提交 `f751e1ee2afd682874281d6dc495969f9eca49eb`。下方 RC／Preview 测试 pin 为明确保留的历史验证基线。
+
 [English](IMPLEMENTATION_API_REFERENCE.md) · [精确声明索引](design/V4_2_0_RC1_API_INDEX.zh-CN.md) · [源码重建](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.zh-CN.md)
 
 本版适用于 Full v4.2.0；运行实现与 RC.1 相同，仅发布版本宏改为 4.2.0。操作与测试的精确历史 SHA 继续有效。当前准备与分发验证见 [4.2.0 记录](V4_2_0.zh-CN.md)。

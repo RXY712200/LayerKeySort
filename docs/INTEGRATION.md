@@ -4,7 +4,7 @@
 
 Full v4.2.0 supports source, installed CMake and two-file amalgamation integration. Pin a reviewed source revision; rebuild for your compiler, architecture and CRT.
 
-**Version status:** [LayerKeySort Full v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) is the current published Stable release. The 4.x API and wire contract stay frozen; see [4.1.0 notes](V4_1_0.md).
+Published Stable/Latest: [Full v4.2.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0), released 2026-11-27. [C17 source ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-amalgamation.zip) · [SHA-256 manifest](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-SHA256SUMS.txt). Released source: `v4.2.0` / `f751e1ee2afd682874281d6dc495969f9eca49eb`. [Historical 4.1 release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0).
 
 Tested: MSVC Windows x64/x86, Linux GCC/Clang, macOS AppleClang; C17 implementation,
 C++17 consumer, eight-bit bytes. CMake >=3.21.
@@ -31,10 +31,9 @@ target_link_libraries(app PRIVATE LayerKeySort::layerkeysort)
 
 16 production modules in cmake/ProductionSources.cmake; four legacy live modules
 regression-only. Rebuild static package for compiler/architecture/CRT settings.
-The prepared Full v4.2.0 CMake package and public header both report **4.2.0**. The package
+The released Full v4.2.0 CMake package and public header both report **4.2.0**. The package
 uses `SameMajorVersion` for rebuild-from-source compatibility; no shared ABI
-is shipped. Until 4.2.0 publication, the published `v4.1.0` tag and assets remain available. Download
-the verified [Full v4.1.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) assets.
+is shipped. Download the published [Full v4.2.0 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0) assets.
 
 ZIP contains layerkeysort.h, layerkeysort.c, example.c, LICENSE and README.txt.
 Compile implementation as C17, link C/C++ application. No Python/private header
