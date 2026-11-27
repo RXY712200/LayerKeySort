@@ -4,15 +4,15 @@ Released source: [`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.
 
 [简体中文](IMPLEMENTATION_VALIDATION.zh-CN.md) · [Internals](IMPLEMENTATION_INTERNALS.md) · [Implementation audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
-This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
-Use RC validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, which contains both Preview.3 regressions. Operational source is `fe00536e7bd7f4e5128432ea4a29e54158074903`. [Preview.3 source and runs](V4_2_0_PREVIEW3.md) · [Full API index](IMPLEMENTATION_API_REFERENCE.md) · [Walkthrough](IMPLEMENTATION_WALKTHROUGH.md)
+This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 release and distribution record](V4_2_0.md).
+Historical RC validation tree: `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08`, which contains both Preview.3 regressions. Operational source is `fe00536e7bd7f4e5128432ea4a29e54158074903`. [Preview.3 source and runs](V4_2_0_PREVIEW3.md) · [Full API index](IMPLEMENTATION_API_REFERENCE.md) · [Walkthrough](IMPLEMENTATION_WALKTHROUGH.md)
 
 ## 1. Confirm the validation checkout
 
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout d1132a26ca7b2c65bfd512fa2eb29f1b16793c08
+git checkout v4.2.0
 git rev-parse HEAD
 git status --short
 ~~~

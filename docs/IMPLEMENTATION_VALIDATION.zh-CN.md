@@ -18,7 +18,7 @@ Preview.3 增加偏移一字节的 wire golden 往返及恢复后混合标签比
 ~~~sh
 git clone https://github.com/RXY712200/LayerKeySort.git
 cd LayerKeySort
-git checkout d1132a26ca7b2c65bfd512fa2eb29f1b16793c08
+git checkout v4.2.0
 git rev-parse HEAD
 git status --short
 ~~~
