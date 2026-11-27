@@ -32,7 +32,12 @@
     "tools/scope_guard.py": "repo",
     "tools/tests/test_scope_guard.py": "repo",
     "tools/governance_ci_gate.py": "repo",
-    "tools/tests/test_governance_ci_gate.py": "repo"
+    "tools/tests/test_governance_ci_gate.py": "repo",
+    "COPYRIGHT.md": "repo",
+    "NOTICE": "repo",
+    "AUTHORS.md": "repo",
+    "CITATION.cff": "repo",
+    "CITATION.md": "repo"
   },
   "prefixes": [
     {
