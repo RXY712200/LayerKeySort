@@ -2,6 +2,11 @@
 
 [简体中文](FULL_CONSUMER_HANDOFF.zh-CN.md) · [Original bilingual-source record](FULL_CONSUMER_HANDOFF.md)
 
+
+Published Stable/Latest: [Full v4.2.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0), released 2026-11-27. [C17 source ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-amalgamation.zip) · [SHA-256 manifest](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-SHA256SUMS.txt). Released source: `v4.2.0` / `f751e1ee2afd682874281d6dc495969f9eca49eb`. [Historical 4.1 release](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0).
+
+The entries below are preserved historical change records; publication status within each entry describes its own checkpoint.
+
 ## Full v4.2.0 Stable preparation
 
 - Source predecessor: integrated RC main `d7f3bdfe387ed80d2c3cff3b0413775a858afca3`. The preparation successor is identified by the final PR HEAD and delivery receipt, avoiding a self-referential commit pin.

@@ -2,6 +2,11 @@
 
 [English](FULL_CONSUMER_HANDOFF.en.md) · [原始混合语言记录](FULL_CONSUMER_HANDOFF.md)
 
+
+已发布 Stable/Latest：[Full v4.2.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0)，发布日期 2026-11-27。[C17 源码 ZIP](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-amalgamation.zip) · [SHA-256 清单](https://github.com/RXY712200/LayerKeySort/releases/download/v4.2.0/LayerKeySort-4.2.0-SHA256SUMS.txt)。发行源码：`v4.2.0`／`f751e1ee2afd682874281d6dc495969f9eca49eb`。[历史 4.1 发行](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0)。
+
+以下为保留的历史变更台账；各条目中的当时发布状态按该条目的时间理解。
+
 ## Full v4.2.0 Stable 准备
 
 - 源码前驱为已集成 RC main `d7f3bdfe387ed80d2c3cff3b0413775a858afca3`。准备后继由最终 PR HEAD 和交付记录确定，避免文件引用自己的提交。

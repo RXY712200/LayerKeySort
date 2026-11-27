@@ -1,5 +1,7 @@
 # V4 Stable 维护
 
+发行源码：[`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0)，提交 `f751e1ee2afd682874281d6dc495969f9eca49eb`。下方 RC／Preview 测试 pin 为明确保留的历史验证基线。
+
 [English](DEVELOPMENT.md)
 
 Full v4.2.0 保持冻结的 V4 契约，沿用已接受的 4.2 实现：受影响槽位更新、有界块标签及 AVL 回退、固定宽度线格式转换。先读 [4.2 记录](V4_2_0.zh-CN.md)、[量化证据](FULL_RC1_EVIDENCE.zh-CN.md)及[冻结契约](V4_FREEZE.zh-CN.md)。[4.1 记录](V4_1_0.zh-CN.md)及原始 V4 Preview/RC 记录属于历史证据。当前工程问题仍见 [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3)。

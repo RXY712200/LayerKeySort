@@ -1,8 +1,10 @@
 # Full v4.2.0 internal structures and execution paths
 
+Released source: [`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0), commit `f751e1ee2afd682874281d6dc495969f9eca49eb`. RC/Preview test pins below are retained historical verification baselines.
+
 [简体中文](IMPLEMENTATION_INTERNALS.zh-CN.md) · [Source audit](design/V4_2_0_RC1_DOCUMENTATION_AUDIT.md)
 
-This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 preparation and distribution record](V4_2_0.md).
+This edition applies to Full v4.2.0. Operational implementation and regression pins remain unchanged from RC.1; only release-version macros change to 4.2.0. See the [4.2.0 release and distribution record](V4_2_0.md).
 Validation tree `d1132a26ca7b2c65bfd512fa2eb29f1b16793c08` contains both Preview.3 regressions. Operational behavior comes from `fe00536e7bd7f4e5128432ea4a29e54158074903`. The restored mixed-tag test temporarily introduces zero tags, checks both routes, and restores the original tags. [Stage verification](V4_2_0_PREVIEW3.md)
 
 ## 1. Production source inventory

@@ -1,5 +1,7 @@
 # V4 Stable maintenance
 
+Released source: [`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0), commit `f751e1ee2afd682874281d6dc495969f9eca49eb`. RC/Preview test pins below are retained historical verification baselines.
+
 [简体中文](DEVELOPMENT.zh-CN.md)
 
 Full v4.2.0 maintains the frozen V4 contracts and the accepted 4.2 implementation: affected-slot mutation updates, bounded block labels with AVL fallback, and fixed-width wire conversion. Start with the [4.2 record](V4_2_0.md), [quantitative evidence](FULL_RC1_EVIDENCE.md) and [freeze](V4_FREEZE.md). The [4.1 record](V4_1_0.md) and original V4 Preview/RC records are historical evidence. Current engineering questions remain in [Issue #3](https://github.com/RXY712200/LayerKeySort/issues/3).

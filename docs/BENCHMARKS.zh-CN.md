@@ -2,7 +2,7 @@
 
 [English](BENCHMARKS.md)
 
-Full v4.2.0 的性能以下方 4.2 配对归档为依据，涵盖实时顺序、生命周期成本与生成的下游重放。历史文件保留原始测量和术语；Stable 准备不进行新调优或计时实验。
+Full v4.2.0 的性能以下方 4.2 配对归档为依据，涵盖实时顺序、生命周期成本与生成的下游重放。历史文件保留原始测量和术语；Stable 发布复用已接受测量，未新增调优或计时实验。
 
 ## 当前 V4 证据
 
@@ -27,7 +27,7 @@ Full v4.2.0 的性能以下方 4.2 配对归档为依据，涵盖实时顺序、
 
 ## 历史 V3 性能及 V4 Preview 背景
 
-实验性 V4 Preview.4 测量范围涵盖[平面不可变 Group/Batch 和完整负载](V4_PREVIEW4.md)、[不可变快照、LS1、持久化、恢复及 V3 导入](V4_PREVIEW3.md)、[实时移动与托管顺序](V4_PREVIEW2.md)。当前 Stable 为 Full v4.1.0；上述 Preview 和 v4.0.0 测量均为历史记录。Preview.5 冻结 API 与格式，RC.1 和 Stable 保留该契约。
+实验性 V4 Preview.4 测量范围涵盖[平面不可变 Group/Batch 和完整负载](V4_PREVIEW4.md)、[不可变快照、LS1、持久化、恢复及 V3 导入](V4_PREVIEW3.md)、[实时移动与托管顺序](V4_PREVIEW2.md)。当前 Stable 为 Full v4.2.0；上述 Preview 和 v4.0.0 测量均为历史记录。Preview.5 冻结 API 与格式，RC.1 和 Stable 保留该契约。
 
 本地 V4 Preview.1 初查见 [V4 Preview.1](V4_PREVIEW1.md)。以下 V3 数据为未改动的历史证据，适用于旧实时核心。3.1.0 保留已发布 v3.0.0 的生产排序和基准程序；未另测 3.1.0 耗时。从采集的 Preview.3 提交到 Stable 标签，相关源码和程序无变化。测量限于一种设备和列出的负载。V2 及 Preview 历史对照见[基准历史](history/BENCHMARK_HISTORY.md)。
 

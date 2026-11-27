@@ -1,8 +1,10 @@
 # LayerKeySort V4 兼容性
 
+发行源码：[`v4.2.0`](https://github.com/RXY712200/LayerKeySort/tree/v4.2.0)，提交 `f751e1ee2afd682874281d6dc495969f9eca49eb`。下方 RC／Preview 测试 pin 为明确保留的历史验证基线。
+
 [English](COMPATIBILITY.md)
 
-Full v4.2.0 保留全部 64 个函数、14 个公开类型、LS1/LKS4SNP1 固定样例及严格 V3 迁移。准备工作只更改发布元数据，不改变运行语义。见 [4.2 验证记录](V4_2_0.zh-CN.md)。
+Full v4.2.0 保留全部 64 个函数、14 个公开类型、LS1/LKS4SNP1 固定样例及严格 V3 迁移。Stable 晋升只更改发布元数据，不改变运行语义。见 [4.2 验证记录](V4_2_0.zh-CN.md)。
 [V4 冻结契约](V4_FREEZE.zh-CN.md)定义 4.x 的源码接口、布局和持久格式。V4.0.0 Stable 在 RC.1 独立审核后沿用了 Preview.5 的冻结接口。Full 4.1.0 引入兼容的小版本存储优化，4.2.0 继续保留。它保留冻结 API、LS1/LKS4SNP1 字节及严格的 V3 LK1 迁移。
 
 ## 源码兼容
