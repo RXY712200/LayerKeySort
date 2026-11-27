@@ -1,0 +1,59 @@
+{
+  "glib_pe_imports": [
+    "DLL Name: ADVAPI32.dll",
+    "DLL Name: libintl-8.dll",
+    "DLL Name: KERNEL32.dll",
+    "DLL Name: api-ms-win-crt-convert-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-environment-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-filesystem-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-heap-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-locale-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-math-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-private-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-process-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-runtime-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-stdio-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-string-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-time-l1-1-0.dll",
+    "DLL Name: api-ms-win-crt-utility-l1-1-0.dll",
+    "DLL Name: ole32.dll",
+    "DLL Name: SHELL32.dll",
+    "DLL Name: USER32.dll",
+    "DLL Name: WS2_32.dll",
+    "DLL Name: libpcre2-8-0.dll"
+  ],
+  "glib_pkgbuild_sha256": "ca768ab894a3a5b9c07cbcf56411fbca55e1c60b8243c6e6409f3496ae46e6d8",
+  "native_dependencies": [
+    {
+      "name": "libffi-8.dll",
+      "sha256": "f96cf79b75f33a10023d001673b564538023395c94b3c58e1db53114976a7c25",
+      "path": "D:\\msys64\\ucrt64\\bin\\libffi-8.dll"
+    },
+    {
+      "name": "libpcre2-8-0.dll",
+      "sha256": "752f04bb7a60d2a049788ffaec14b45602c4dec4c29534001dfcf434d26da19c",
+      "path": "D:\\msys64\\ucrt64\\bin\\libpcre2-8-0.dll"
+    },
+    {
+      "name": "libintl-8.dll",
+      "sha256": "0e5a178731e6be6d115442a6ade3df7f03265cd1fc4338f8b6f86a8001cbf582",
+      "path": "D:\\msys64\\ucrt64\\bin\\libintl-8.dll"
+    },
+    {
+      "name": "libiconv-2.dll",
+      "sha256": "94ec68fb8d342b6c91b6b48a8d95092819cdcd006a7166e0b68062f946afd08a",
+      "path": "D:\\msys64\\ucrt64\\bin\\libiconv-2.dll"
+    },
+    {
+      "name": "zlib1.dll",
+      "sha256": "11cd91171765cd65f1c3362e3df67e5f5a618a6b88c8cdec899b802eaf1c7b0d",
+      "path": "D:\\msys64\\ucrt64\\bin\\zlib1.dll"
+    }
+  ],
+  "matches_package_buildinfo": true,
+  "release_build_evidence": "Hash-matched recipe selects --buildtype=release for !debug; package .BUILDINFO has options=!debug, !lto and native GCC 16.2.0-4",
+  "glib_pkgbuild_commit": "8718c5b0ed6a01bf4b6fdd7b275a620586adf90b",
+  "glib_pkgbuild_url": "https://github.com/msys2/MINGW-packages/blob/8718c5b0ed6a01bf4b6fdd7b275a620586adf90b/mingw-w64-glib2/PKGBUILD",
+  "published_benchmark_sha256": "88924f9deab059c052492ef403ddc6923ec824d4389161fdf254e2aeea7feb0d",
+  "post_measurement_source_change": "Only one extra blank EOF line was removed from benchmark.c for git diff --check. environment.json retains the exact executed-source SHA-256. No C tokens or experiments changed."
+}
