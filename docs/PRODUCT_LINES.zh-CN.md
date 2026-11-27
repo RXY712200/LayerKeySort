@@ -5,13 +5,13 @@
 LayerKeySort 采用**单仓库、多独立产品、独立版本号**。这不是将同一套源码用开关裁剪成
 “完整版”和“精简版”。各产品的公开 API、兼容性和生命周期，以各自文档为准。
 
-main 已包含 Full v4.2.0 实现及 Stable 元数据，实现及证据见 [Full 入口](FULL.zh-CN.md)。另行发布前，已发布 Stable/Latest 仍为 v4.1.0；Mini 与 Workbench 不变。
+main 已包含 Full v4.2.0 实现及 Stable 元数据，实现及证据见 [Full 入口](FULL.zh-CN.md)。已发布 Stable/Latest 为 v4.2.0；Mini 与 Workbench 不变。
 
 ## 产品划分
 
 | 产品 | 所在目录与构建入口 | 名称 | 版本／发布状态 |
 | --- | --- | --- | --- |
-| Full | 仓库根目录：`include/`、`src/`、根 `CMakeLists.txt`、`docs/` | `LayerKeySort` / `layerkeysort` | 当前已发布 Stable：[v4.1.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.1.0) |
+| Full | 仓库根目录：`include/`、`src/`、根 `CMakeLists.txt`、`docs/` | `LayerKeySort` / `layerkeysort` | 当前已发布 Stable：[v4.2.0](https://github.com/RXY712200/LayerKeySort/releases/tag/v4.2.0) |
 | Mini | 自包含的 `mini/` 子目录 | `LayerKeySort Mini` / `layerkeysort_mini` | [v1.0.0 Stable](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0) |
 
 Full 与 Mini 是针对不同需求的**并行产品**，不是父子依赖关系。Full 面向动态顺序、稳定排序、批处理及历史工作流；Mini 使用独立的简单双向链表实现，冻结 18 个公开函数，不依赖
@@ -28,7 +28,7 @@ Full 的生产源码。只复制 `mini/` 就能单独构建，两个产品的数
 
 | 产品 | 对用户展示的版本 | 全仓库 Git Tag 示例 |
 | --- | --- | --- |
-| Full | v4.1.0 | `v4.1.0`（保留原先所有 `v*` 历史标签） |
+| Full | v4.2.0 | `v4.2.0`（保留原先所有 `v*` 历史标签） |
 | Mini | v1.0.0 | `mini-v1.0.0` |
 
 仓库已有的 `v1.0.0` 属于**历史 Full**，不是 Mini，绝对不能复用。Mini 新 Tag
@@ -62,7 +62,7 @@ GitHub Release 或公开发行**。正式发布必须另行明确授权，核查
 源码包校验值、版本、清单、Release 文案与发布文件。未合并或未打标签的候选不得标为已发布。
 
 Mini v1.0.0 使用 `mini-v1.0.0`，正式入口为[独立 Release](https://github.com/RXY712200/LayerKeySort/releases/tag/mini-v1.0.0)。
-截至 2026-10-25，仓库级 Latest 已发布 Stable Release 为 Full v4.1.0。
+截至 2026-11-27，仓库级 Latest 已发布 Stable Release 为 Full v4.2.0。
 Mini 保持独立发布，不占用该标识。详见 [4.1.0 发布记录](V4_1_0.md)。
 
 ## 日常开发与验证
