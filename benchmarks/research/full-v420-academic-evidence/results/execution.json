@@ -1,0 +1,31 @@
+{
+  "code_commit": "27ae443abf1181491ab318e22af97de5f5a3cb52",
+  "windows_command": "python benchmarks/research/full-v420-academic-evidence/run.py --gcc D:/msys64/ucrt64/bin/gcc.exe --glib-prefix D:/LayerKeySort/.local/glib-full-native/build/glib-deps/ucrt64 --output benchmarks/research/full-v420-academic-evidence/results/windows-new",
+  "production_pin": "f751e1ee2afd682874281d6dc495969f9eca49eb",
+  "validation": "1792 campaign rows; 224 host/seed cells; 112 common cross-host traces; no errors or skips; separate 224-run smoke validation",
+  "analysis_correction": "Lifecycle-only cells have an empty operation loop, so no operation-time ratio is computed for them; no measurement was altered or rerun.",
+  "linux_command": "bash benchmarks/research/full-v420-academic-evidence/linux.sh",
+  "linux_artifact": {
+    "digest": "sha256:1ac50390d7f58b9081dfa3154a4a36383a83d12cb1368120e7625a1420deef40",
+    "name": "native-glib-overall-linux",
+    "size_in_bytes": 97762,
+    "id": 15173215382
+  },
+  "linux_run": {
+    "conclusion": "success",
+    "createdAt": "2026-11-27T04:28:31Z",
+    "databaseId": 45940143494,
+    "headSha": "27ae443abf1181491ab318e22af97de5f5a3cb52",
+    "status": "completed",
+    "updatedAt": "2026-11-27T04:35:53Z",
+    "url": "https://github.com/RXY712200/LayerKeySort/actions/runs/45940143494"
+  },
+  "analysis_command": "python benchmarks/research/full-v420-academic-evidence/analyze.py",
+  "production_ci": "Existing workflows unchanged; the only added workflow is branch-restricted native Linux research execution.",
+  "meson_log_archive": {
+    "path": "linux-new/glib-meson-log.txt.gz",
+    "original_sha256": "9f097c8e67a414e2d96afa97c401396d98c3284f00968c2ee79a4f1b6f0f91bc",
+    "gzip_sha256": "277c921e5ed6f6b5d85f6f6aab9006aa033b8731c072a8cf2f020d84c7d5f2ad",
+    "note": "Lossless original log, including generated whitespace; original also preserved in workflow artifact"
+  }
+}

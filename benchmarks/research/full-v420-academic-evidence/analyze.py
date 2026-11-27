@@ -96,7 +96,9 @@ for host in ("Windows", "Linux"):
                 for field in ("create_ms", "populate_ms", "destroy_ms", "lifecycle_sum_ms", "peak_resident_bytes", "peak_private_commit_bytes", "baseline_resident_bytes"):
                     vals = [r[field] for r in group if r[field] != ""]
                     row[impl + "_" + field] = statistics.median(vals) if vals else ""
-            row["full_over_glib"] = row["full_ms"] / row["glib_ms"]
+            # Lifecycle-only cells have an intentionally empty operation loop.
+            row["full_over_glib"] = (row["full_ms"] / row["glib_ms"]
+                                     if "lifecycle" not in scenario and row["glib_ms"] > 0 else "")
             summary.append(row)
 write_csv(RESULTS / "summary.csv", summary)
 

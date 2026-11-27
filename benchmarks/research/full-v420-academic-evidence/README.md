@@ -18,6 +18,8 @@ This directory contains one bounded native Windows/Linux comparison against actu
 
 Seeds, operation probabilities, input distributions, timing boundaries and semantic differences are defined in the report. The added mixtures use arbitrary currently live query pairs; the old mixed trace retains its adjacent-pair definition. A rank oracle is necessary to validate arbitrary post-mutation answers without quadratic reference scanning. It is not a timed comparator or a third benchmark control. Its final order is also checked against independent ID-linked reference updates.
 
+The original Linux Meson log is archived losslessly as `results/linux-new/glib-meson-log.txt.gz`, including its generated whitespace. `results/execution.json` records both compressed and original SHA-256 values. Python's `gzip.decompress()` recovers the exact original bytes; the original is also retained in the workflow artifact. Source-file hashes in environment records describe the working files used by the compiler; Git may normalize Windows/Linux text line endings. Both native campaigns used executable protocol commit `27ae443abf1181491ab318e22af97de5f5a3cb52`.
+
 ## Native Windows reproduction
 
 Requirements: Python 3, native MSYS2 UCRT64 GCC and the same GLib 2.90.1-1 release package/runtime dependencies used by the original campaign. The original [instructions](https://github.com/RXY712200/LayerKeySort/blob/298079288dcf6c75ac3ec04461c8b59259c2193c/benchmarks/research/glib-full-v420/README.md) provide the package URL, dependency names and checksum. Package SHA-256: `9a7826349279bcca0c935b01880d812be9de9609aef2205be68fd7a6128c1695`; native DLL SHA-256: `3a1abec0184b238db54399cb9243393d9436d96b8fdb9bd9f2875da207c5b458`.
