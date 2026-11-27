@@ -85,3 +85,5 @@ Handle 表示存活实例，删除自身或销毁来源即失效，不是持久�
 [架构](https://github.com/RXY712200/LayerKeySort/blob/main/docs/ARCHITECTURE.zh-CN.md) · [兼容性](https://github.com/RXY712200/LayerKeySort/blob/main/docs/COMPATIBILITY.zh-CN.md) · [V3 迁移](https://github.com/RXY712200/LayerKeySort/blob/main/docs/MIGRATION_V3_V4.zh-CN.md) · [开发](https://github.com/RXY712200/LayerKeySort/blob/main/docs/DEVELOPMENT.zh-CN.md) · [中文变更日志](https://github.com/RXY712200/LayerKeySort/blob/main/docs/CHANGELOG.zh-CN.md) · [原始 Changelog](https://github.com/RXY712200/LayerKeySort/blob/main/CHANGELOG.md)
 
 [Full 路线 #3](https://github.com/RXY712200/LayerKeySort/issues/3) · [Mini 路线 #7](https://github.com/RXY712200/LayerKeySort/issues/7) · [产品线规则](docs/PRODUCT_LINES.zh-CN.md) · [贡献说明](CONTRIBUTING.md) · [MIT 许可](LICENSE) · [作者独立项目目录](https://quiveld.com/projects/independent/)
+
+[版权说明](COPYRIGHT.md) · [署名声明](NOTICE) · [作者与贡献](AUTHORS.md) · [学术引用](CITATION.md) · [引用元数据](CITATION.cff)

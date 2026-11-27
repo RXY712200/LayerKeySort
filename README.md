@@ -85,3 +85,5 @@ Local block/index work is bounded by private block policy plus balanced-index ma
 [Architecture](https://github.com/RXY712200/LayerKeySort/blob/main/docs/ARCHITECTURE.md) · [Compatibility](https://github.com/RXY712200/LayerKeySort/blob/main/docs/COMPATIBILITY.md) · [V3 migration](https://github.com/RXY712200/LayerKeySort/blob/main/docs/MIGRATION_V3_V4.md) · [Development](https://github.com/RXY712200/LayerKeySort/blob/main/docs/DEVELOPMENT.md) · [Changelog](https://github.com/RXY712200/LayerKeySort/blob/main/CHANGELOG.md)
 
 [Full roadmap #3](https://github.com/RXY712200/LayerKeySort/issues/3) · [Mini roadmap #7](https://github.com/RXY712200/LayerKeySort/issues/7) · [Product-line policy](docs/PRODUCT_LINES.md) · [Contributing](CONTRIBUTING.md) · [MIT license](LICENSE) · [Author’s independent project directory](https://quiveld.com/projects/independent/)
+
+[Copyright](COPYRIGHT.md) · [Attribution notice](NOTICE) · [Authors](AUTHORS.md) · [Academic citation](CITATION.md) · [Citation metadata](CITATION.cff)
